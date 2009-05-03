@@ -47,7 +47,15 @@ class ObjectAbstract :
     print 'to be subclassed'
 
   def PrintIDF(self,fh) :
-    print 'not implemented'
+    print(self.getClassnameIDD() + ',\n')
+    for c,fn in enumerate(self.fieldlist):
+      if c < len(self.fieldlist)-1:
+        sep = ','
+      else:
+        sep= ';'
+      fn.printIDF(sep)
+      
+
 
   def setRequired(self,req) :
     self.required = req
@@ -92,6 +100,7 @@ class ObjectAbstract :
   def ParseRawData(self) :
     remainder = []
     remainder = self.rawdatalist[:]
+#    print remainder
 #    pdb.set_trace()
     for i in range(len(self.rawdatalist)):
       if i == 0:
@@ -101,9 +110,10 @@ class ObjectAbstract :
       if i <= len(self.fieldlist):
         f = self.fieldlist[i-1]
       else:
- #       pdb.set_trace()
-        print 'ran out of fieldlists ' + self.getClassnameIDD()
-        return
+        if not self.extensible:
+          pdb.set_trace()
+          print 'ran out of fieldlists ' + self.getClassnameIDD()
+          return
       d = self.rawdatalist[i]
       del remainder[0]
       if not f.setValue(d,remainder):
@@ -118,8 +128,6 @@ class ObjectVertice(ObjectAbstract):
   def CreateFields(self) :
     print 'to be subclassed'
       
-  def PrintIDF(self,fh) :
-    print 'not implemented'
 
 class ObjectViewFactor(ObjectAbstract):
   def CreateEditWidget(self) :
@@ -128,8 +136,6 @@ class ObjectViewFactor(ObjectAbstract):
   def CreateFields(self) :
     print 'to be subclassed'
      
-  def PrintIDF(self,fh) :
-    print 'not implemented'
 
 class ObjectFluidProperty(ObjectAbstract) :
   def CreateEditWidget(self) :
@@ -138,8 +144,6 @@ class ObjectFluidProperty(ObjectAbstract) :
   def CreateFields(self) :
     print 'to be subclassed'
       
-  def PrintIDF(self,fh) :
-    print 'not implemented'
 
 class ObjectSingleLine(ObjectAbstract) :
   def CreateEditWidget(self) :
@@ -148,8 +152,6 @@ class ObjectSingleLine(ObjectAbstract) :
   def CreateFields(self) :
     print 'to be subclassed'
       
-  def PrintIDF(self,fh) :
-    print 'not implemented'
 
 class ObjectCompactSchedule(ObjectAbstract) :
   def CreateEditWidget(self) :
@@ -158,8 +160,6 @@ class ObjectCompactSchedule(ObjectAbstract) :
   def CreateFields(self) :
     print 'to be subclassed'
       
-  def PrintIDF(self,fh) :
-    print 'not implemented'
 
 class ObjectSpectral(ObjectAbstract) :
   def CreateEditWidget(self) :
@@ -168,8 +168,6 @@ class ObjectSpectral(ObjectAbstract) :
   def CreateFields(self) :
     print 'to be subclassed'
     
-  def PrintIDF(self,fh) :
-    print 'not implemented'
       
 
         
