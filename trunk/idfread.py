@@ -18,7 +18,7 @@ class idfRead :
     return self.active
   
   def parseFile(self) :
-  #  pdb.set_trace()
+    #pdb.set_trace()
     start = 1
     inclass = 0
     classblock = ''
@@ -31,28 +31,31 @@ class idfRead :
       if res and start:
         self.comment = self.comment + res.group(1)
         continue
-
+      #pdb.set_trace()
       dat = line.split('!')
 
       if re.search(",",dat[0]):
         inclass = 1
         start = 0
-        classblock = classblock + dat[0]
+        classblock = classblock + dat[0].strip()
 
       if re.search(";",dat[0]):
-        classblock = classblock + dat[0]
+        classblock = classblock + dat[0].strip()
         inclass = 0
         self.parseBlock(classblock)
         classblock = ''
 
   def parseBlock(self,textblock) :
-    blocklines = textblock.splitlines()
+    
+    blocklines = textblock.split(',')
+#    print textblock
+#    pdb.set_trace()
     classname = ''
     itemlist = []
     
     for bline in blocklines:
       bline = bline.strip()
-      items = bline.split(',')
+      items = re.split(r',|;',bline)
       if classname == '':
         #pdb.set_trace()
         classname = items[0]

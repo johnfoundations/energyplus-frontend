@@ -28,6 +28,7 @@ class IddField :
    #types real,alpha,choice,object-list
 
   def createWidgetInitLine(self):
+    self.fieldeditor = ''
     if self.Fieldattr['type'] == 'alpha':
       #(self,parent,fieldname,default,notes):
       self.fieldeditor = 'FieldText(self,'
@@ -54,7 +55,14 @@ class IddField :
       
     elif self.Fieldattr['type'] == 'real':
       #self,parent,fieldname,default,notes,min,max,mingt,maxlt
-      self.fieldeditor = 'FieldReal(self,'
+      if 'default' in self.Fieldattr :
+        if self.Fieldattr['default'] == 'autocalculate':
+          self.fieldeditor = 'FieldRealAutocalculate(self,'
+      if 'autosizable' in self.Fieldattr:
+      #  pdb.set_trace()
+        self.fieldeditor = 'FieldRealAutocalculate(self,'
+      if self.fieldeditor == '':
+        self.fieldeditor = 'FieldReal(self,'
       if 'Field' in self.Fieldattr :
         self.fieldeditor = self.fieldeditor + '"' + self.Fieldattr['Field'] + '",'
       else:
@@ -73,19 +81,19 @@ class IddField :
         self.fieldeditor = self.fieldeditor + '"",'
               
       if 'minimum' in self.Fieldattr :
-        self.fieldeditor = self.fieldeditor + '"' +self.Fieldattr['minimum'] + '",'
+        self.fieldeditor = self.fieldeditor + self.Fieldattr['minimum'] + ','
       else:
         self.fieldeditor = self.fieldeditor + '"",'
       if 'maximum' in self.Fieldattr :
-        self.fieldeditor = self.fieldeditor + '"' +self.Fieldattr['maximum'] + '",'
+        self.fieldeditor = self.fieldeditor + self.Fieldattr['maximum'] + ','
       else:
         self.fieldeditor = self.fieldeditor + '"",'
       if 'minimum>' in self.Fieldattr :
-        self.fieldeditor = self.fieldeditor + '"' +self.Fieldattr['minimum>'] + '",'
+        self.fieldeditor = self.fieldeditor + self.Fieldattr['minimum>'] + ','
       else:
         self.fieldeditor = self.fieldeditor + '"",'
       if 'maximum<' in self.Fieldattr :
-        self.fieldeditor = self.fieldeditor + '"' +self.Fieldattr['maximum<'] + '")'
+        self.fieldeditor = self.fieldeditor + self.Fieldattr['maximum<'] + ')'
       else:
         self.fieldeditor = self.fieldeditor + '"")'
           
@@ -111,19 +119,19 @@ class IddField :
         self.fieldeditor = self.fieldeditor + '"",'
               
       if 'minimum' in  self.Fieldattr :
-        self.fieldeditor = self.fieldeditor + '"' +self.Fieldattr['minimum'] + '",'
+        self.fieldeditor = self.fieldeditor + self.Fieldattr['minimum'] + ','
       else:
         self.fieldeditor = self.fieldeditor + '"",'
       if 'maximum' in self.Fieldattr :
-        self.fieldeditor = self.fieldeditor + '"' +self.Fieldattr['maximum'] + '",'
+        self.fieldeditor = self.fieldeditor + self.Fieldattr['maximum'] + ','
       else:
         self.fieldeditor = self.fieldeditor + '"",'
       if 'minimum>' in self.Fieldattr :
-        self.fieldeditor = self.fieldeditor + '"' +self.Fieldattr['minimum>'] + '",'
+        self.fieldeditor = self.fieldeditor + self.Fieldattr['minimum>'] + ','
       else:
         self.fieldeditor = self.fieldeditor + '"",'
       if 'maximum<' in self.Fieldattr :
-        self.fieldeditor = self.fieldeditor + '"' +self.Fieldattr['maximum<'] + '")'
+        self.fieldeditor = self.fieldeditor + self.Fieldattr['maximum<'] + ')'
       else:
         self.fieldeditor = self.fieldeditor + '"")'
                                 
@@ -458,13 +466,15 @@ class IddClassGen :
     if self.reqfield:
       iddfield.insertAttr('required-field','required-field')
       self.reqfield = 0
-
+    if self.autosizable:
+      iddfield.insertAttr('autosizable',True)
+      self.autosizable = False
     if not t:
     #  pdb.set_trace()
       if re.search('A',self.fieldvar):
         iddfield.insertAttr('type', 'alpha')
       else:
-        iddfield.insertAttr('type', 'integer')
+        iddfield.insertAttr('type', 'real')
     if len(self.choices) > 0 :
       iddfield.insertAttr('choices',self.choices)
       self.choices = []
@@ -491,6 +501,7 @@ class IddClassGen :
     self.memos = []
     self.notes = []
     self.references = []
+    self.autosizable = False
     # status constants. 0 = start, 1 = found either A or N1, watching for details
     # 2 = found type, looking for keys, min, max defaults
     run = 0
@@ -543,7 +554,7 @@ class IddClassGen :
           continue
         self.res = re.match(r"^[mM]inimum\s(.*)",c)
         if self.res:
-          self.min = self.res.group(1)
+          self.min = self.res.group(1).translate(None,'>')
           continue
         self.res = re.match(r"^[Mm]aximum\s(.*)",c)
         if self.res:
@@ -552,6 +563,7 @@ class IddClassGen :
         self.res = re.match(r"^[mM]inimum>\s(.*)",c)
         if self.res:
           self.mingt = self.res.group(1)
+          
           continue
         self.res = re.match(r"^[Mm]aximum<\s(.*)",c)
         if self.res:
@@ -590,7 +602,11 @@ class IddClassGen :
         if self.res:
           self.idobj.insertValue('unique-object','')
           continue
-
+        self.res = re.match(r"^autosizable.*",c)
+        if self.res:
+          #pdb.set_trace()
+          self.autosizable = True
+          continue
         self.res = re.match(r"^[Rr]eference\s(.*)",c)
         if self.res:
           self.references.append(self.res.group(1))

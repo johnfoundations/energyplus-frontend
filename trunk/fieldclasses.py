@@ -39,9 +39,10 @@ class FieldAbstract :
   def getValue(self):
     return self.value
 
-  def PrintIDF(self,fh) :
-    v = self.getValue()
-    fh.write(v + '! ' + self.fieldname)
+  def printIDF(self,sep) :
+    #pdb.set_trace()
+    v = self.value
+    print(self.value + sep + '! ' + self.fieldname)
 
   def getFieldDepends(self):
     return ''
@@ -79,13 +80,10 @@ class FieldReal(FieldAbstract) :
     return self.fieldeditor.Value()
 
   def Validate(self,val):
+    #pdb.set_trace()
     localmin = False
     localmax = False
-    try:
-      rval = val.real
-    except:
-      return False
-    
+
     if not self.minv == '':
       localmin = self.minv
     if not self.mingtv == '':
@@ -94,6 +92,16 @@ class FieldReal(FieldAbstract) :
       localmax = self.maxv
     if not self.maxltv == '':
       localmax = self.maxltv
+    if not localmax or not localmin or val == '':
+      return True
+
+    try:
+      rval = float(val)
+    except:
+      print 'fieldreal validate error. Cannot convert to float' + val
+      return False
+    
+      
     if localmax:
       if rval > localmax:
         return False
@@ -103,7 +111,14 @@ class FieldReal(FieldAbstract) :
     return True
       
     
- 
+class FieldRealAutocalculate(FieldReal) :
+
+  def Validate(self,val):
+    v = val.lower()
+    if v == 'autocalculate' or v == 'autosize' :
+      return True
+    else:
+      return FieldReal.Validate(self,val)
   
 class FieldInt(FieldAbstract) :
     def __init__(self,parent,fieldname,default,notes,minv,maxv,mingtv,maxltv) :
@@ -135,11 +150,7 @@ class FieldInt(FieldAbstract) :
     def Validate(self,val):
       localmin = False
       localmax = False
-      try:
-        rval = val.real
-      except:
-        return False
-            
+
       if not self.minv == '':
         localmin = self.minv
       if not self.mingtv == '':
@@ -148,6 +159,17 @@ class FieldInt(FieldAbstract) :
         localmax = self.maxv
       if not self.maxltv == '':
         localmax = self.maxltv
+      if not localmax or not localmin or val == '':
+        return True
+      try:
+        rval = int(val)
+      except:
+        try:
+          rval = float(val)
+        except:
+          print 'fieldint validate error. Cannot convert to int ' + val
+          return False
+        
       if localmax:
         if rval > localmax:
           return False

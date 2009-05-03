@@ -6,6 +6,8 @@ import iddclass
 import idfglobals
 import fieldclasses
 import objectclass
+import idfread
+import idftreemodel
 
 
 
@@ -20,13 +22,16 @@ class GWidget(QtGui.QWidget):
     self.horizontallayout.addWidget(self.objecttree)
     self.horizontallayout.addWidget(self.idfView)
     self.rightvert = QtGui.QVBoxLayout(self)
-    self.activeobjectlist = QtGui.QTreeWidget()
+    self.activeobjectlist = QtGui.QTreeView()
+    f = idfread.idfRead('Singlezonetemplate.idf')
+    self.activemodel = idftreemodel.TreeModel(f.getActivelist())
+    self.activeobjectlist.setModel(self.activemodel)
     self.activeobjectedit = QtGui.QWidget()
     self.rightvert.addWidget(self.activeobjectlist)
     self.rightvert.addWidget(self.activeobjectedit)
     self.horizontallayout.addLayout(self.rightvert)
-    self.connect(self.activeobjectlist, QtCore.SIGNAL('currentItemChanged (QTreeWidgetItem,QTreeWidgetItem)'),
-                 self,QtCore.SLOT('activeObjectChanged(QTreeWidgetItem,QTreeWidgetItem)'))
+    self.connect(self.activeobjectlist, QtCore.SIGNAL('activated (const QModelIndex&)'),
+                 self.activeObjectChanged)
     self.populateObjectTree()
 
   def populateObjectTree(self):
@@ -44,8 +49,11 @@ class GWidget(QtGui.QWidget):
         j = QtGui.QTreeWidgetItem(i,[ei])
         self.objecttree.addTopLevelItem(j)
 
-  def activeObjectChanged(current,previous) :
-    pass
+  def activeObjectChanged(self,Index) :
+    print 'activeObjectChanged'
+    iddcl = Index.internalPointer().iddinstance
+    if not iddcl.__class__.__name__ == 'int':
+      iddcl.PrintIDF(0)
     
   
 

@@ -14,7 +14,7 @@ class idfeditor(QtGui.QMainWindow):
        	myWidget = GWidget()
         self.setCentralWidget(myWidget)
         self.setWindowTitle('IDF Creator')
-        self.resize(800, 600)
+        self.setGeometry(QtGui.QDesktopWidget().screenGeometry())
         self.statusBar().showMessage('Click on Scene to start')
   
 
