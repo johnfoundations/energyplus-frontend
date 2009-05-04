@@ -41,11 +41,11 @@ class IddField :
       else:
         self.fieldeditor = self.fieldeditor + '"",'
       if 'notes' in self.Fieldattr:
-        note = ' '
+        note = '('
         for n in self.Fieldattr['notes'] :
-          note = note + n + ' '
-        note = re.sub(r'"','*',note)
-        self.fieldeditor = self.fieldeditor + '"' + note + '")'
+          n = re.sub(r'"','*',n)
+          note = note + '"' + n + '",'
+        self.fieldeditor = self.fieldeditor + note + '))'
       else:
         self.fieldeditor = self.fieldeditor + '"")'
       
@@ -72,11 +72,11 @@ class IddField :
       else:
         self.fieldeditor = self.fieldeditor + '0,'
       if 'notes' in self.Fieldattr:
-        note = ' '
+        note = '('
         for n in self.Fieldattr['notes'] :
-          note = note + n + ' '
-        note = re.sub(r'"','*',note)
-        self.fieldeditor = self.fieldeditor + '"' + note + '",'
+          n = re.sub(r'"','*',n)
+          note = note + '"' + n + '",'
+        self.fieldeditor = self.fieldeditor + note + '),'
       else:
         self.fieldeditor = self.fieldeditor + '"",'
               
@@ -110,11 +110,11 @@ class IddField :
       else:
         self.fieldeditor = self.fieldeditor + '0,'
       if 'notes' in self.Fieldattr:
-        note = ' '
+        note = '('
         for n in self.Fieldattr['notes'] :
-          note = note + n + ' '
-        note = re.sub(r'"','*',note)
-        self.fieldeditor = self.fieldeditor + '"' +note + '",'
+          n = re.sub(r'"','*',n)
+          note = note + '"' + n + '",'
+        self.fieldeditor = self.fieldeditor + note + '),'
       else:
         self.fieldeditor = self.fieldeditor + '"",'
               
@@ -140,8 +140,10 @@ class IddField :
       #(self,parent,fieldname,default,notes,choices):
       if 'default' in self.Fieldattr:
         if self.Fieldattr['default'] == 'On' or self.Fieldattr['default'] == 'Off' :
+          self.fieldeditor = 'FieldOnOff(self,'
+        elif self.Fieldattr['default'] == 'Yes' or self.Fieldattr['default'] == 'No' :
           self.fieldeditor = 'FieldYesNo(self,'
-        else:
+        else:  
           self.fieldeditor = 'FieldChoice(self,'
       else:
         self.fieldeditor = 'FieldChoice(self,'
@@ -154,11 +156,11 @@ class IddField :
       else:
         self.fieldeditor = self.fieldeditor + '"",'
       if 'notes' in self.Fieldattr:
-        note = ' '
+        note = '('
         for n in self.Fieldattr['notes'] :
-          note = note + n + ' '
-        note = re.sub(r'"','*',note)
-        self.fieldeditor = self.fieldeditor + '"' +note + '",'
+          n = re.sub(r'"','*',n)
+          note = note + '"' + n + '",'
+        self.fieldeditor = self.fieldeditor + note + '),'
       else:
         self.fieldeditor = self.fieldeditor + '"",'
       choice = '('
@@ -182,11 +184,11 @@ class IddField :
       else:
         self.fieldeditor = self.fieldeditor + '"",'
       if 'notes' in self.Fieldattr:
-        note = ' '
+        note = '('
         for n in self.Fieldattr['notes'] :
-          note = note + n + ' '
-        note = re.sub(r'"','*',note)
-        self.fieldeditor = self.fieldeditor + '"' +note + '",'
+          n = re.sub(r'"','*',n)
+          note = note + '"' + n + '",'
+        self.fieldeditor = self.fieldeditor + note + '),'
       else:
         self.fieldeditor = self.fieldeditor + '"",'
               
@@ -206,11 +208,11 @@ class IddField :
       else:
         self.fieldeditor = self.fieldeditor + '"",'
       if 'notes' in self.Fieldattr:
-        note = ' '
+        note = '('
         for n in self.Fieldattr['notes'] :
-          note = note + n + ' '
-        note = re.sub(r'"','*',note)
-        self.fieldeditor = self.fieldeditor + '"' +note + '")'
+          n = re.sub(r'"','*',n)
+          note = note + '"' + n + '",'
+        self.fieldeditor = self.fieldeditor + note + '))'
       else:
         self.fieldeditor = self.fieldeditor + '"")'
                   
@@ -343,8 +345,8 @@ class IddObject :
       memostr = ''
       for m in memolist:
         m = re.sub(r'"','*',m)
-        memostr = memostr + ' ' + m
-      fh.write('    self.insertMemo("' + memostr + '")\n')
+        memostr = memostr + '"' + m + '",'
+      fh.write('    self.insertMemo((' + memostr + '))\n')
 
     if 'reference' in self.iddValues:
       reflist = self.iddValues['reference']

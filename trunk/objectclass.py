@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import idfglobals
 import pdb
+from PyQt4 import QtGui, QtCore
 
 
 #base class for all the defined objects.
@@ -16,6 +17,8 @@ class ObjectAbstract :
     self.rawdatalist = []
     self.group = ''
     self.extensible = False
+    self.editwidget = None
+    self.memo = []
     self.CreateFields()
     
   def setName(self,name):
@@ -39,9 +42,28 @@ class ObjectAbstract :
   def setData(self,data):
     self.rawdatalist = data
     self.ParseRawData()
-  
+
+  def getData(self) :
+    print self.getClassnameIDD() + ' getData not implemented'
+    
   def CreateEditWidget(self) :
-    print 'not implemented'
+    self.editwidget = QtGui.QWidget()
+    vlayout = QtGui.QVBoxLayout(self.editwidget)
+    label = QtGui.QLabel(self.getClassnameIDD())
+    ms = ''
+    for m in self.memo:
+      ms = ms + m + '\n'
+    ms = ms.strip()
+    label.setToolTip(ms)
+    vlayout.addWidget(label)
+    for f in self.fieldlist:
+      vlayout.addWidget(f.CreateEditor())
+      f.setEditorValue()
+    return self.editwidget
+
+  def closeWidget(self):
+    if self.editwidget :
+      self.editwidget.close()
 
   def CreateFields(self) :
     print 'to be subclassed'
@@ -122,51 +144,33 @@ class ObjectAbstract :
 
 
 class ObjectVertice(ObjectAbstract):
-  def CreateEditWidget(self) :
-    print 'not implemented'
+  pass
     
-  def CreateFields(self) :
-    print 'to be subclassed'
       
 
 class ObjectViewFactor(ObjectAbstract):
-  def CreateEditWidget(self) :
-    print 'not implemented'
+  pass
     
-  def CreateFields(self) :
-    print 'to be subclassed'
      
 
 class ObjectFluidProperty(ObjectAbstract) :
-  def CreateEditWidget(self) :
-    print 'not implemented'
+  pass
     
-  def CreateFields(self) :
-    print 'to be subclassed'
       
 
 class ObjectSingleLine(ObjectAbstract) :
-  def CreateEditWidget(self) :
-    print 'not implemented'
+  pass
     
-  def CreateFields(self) :
-    print 'to be subclassed'
       
 
 class ObjectCompactSchedule(ObjectAbstract) :
-  def CreateEditWidget(self) :
-    print 'not implemented'
+  pass
     
-  def CreateFields(self) :
-    print 'to be subclassed'
       
 
 class ObjectSpectral(ObjectAbstract) :
-  def CreateEditWidget(self) :
-    print 'not implemented'
+  pass
   
-  def CreateFields(self) :
-    print 'to be subclassed'
     
       
 
