@@ -12,16 +12,28 @@ class FieldAbstract :
     self.parent = parent
     self.value = ''
     self.restoflist = []
+    self.default = default
+    self.notes = notes
     
 
   def createEditor(self):
     pass
-    
+
+  def getEditorValue(self) :
+    return self.fieldeditor.Value()
+
+  def setEditorValue(self):
+    print self.fieldname
+    self.fieldeditor.setValue(self.value)
+  
+
+  
   def setToolTips(self,notes) :
     tts = ''
     for n in notes:
-      tts = tts + n
-      self.fieldeditor.setTooltip(tts)
+      tts = tts + n + '\n'
+    tts = tts.strip()
+    self.fieldeditor.setToolTip(tts)
 
   def setValue(self,value,restoflist) :
     #pdb.set_trace()
@@ -79,6 +91,11 @@ class FieldReal(FieldAbstract) :
   def getEditorValue(self) :
     return self.fieldeditor.Value()
 
+  def setEditorValue(self):
+    v = float(self.value)
+    self.fieldeditor.setValue(v)
+  
+
   def Validate(self,val):
     #pdb.set_trace()
     localmin = False
@@ -129,7 +146,7 @@ class FieldInt(FieldAbstract) :
       self.maxltv = maxltv
 
     def CreateEditor(self) : 
-      self.fieldeditor = QtGui.QIntSpinBox()
+      self.fieldeditor = QtGui.QSpinBox()
       if self.minv:
         self.fieldeditor.setMinimum(self.minv)
       elif self.mingtv:
@@ -138,7 +155,7 @@ class FieldInt(FieldAbstract) :
         self.fieldeditor.setMaximum(self.maxv)
       elif self.maxltv:
         self.fieldeditor.setMaximum(self.maxltv)
-      self.setTooltip(self.notes)
+      self.setToolTips(self.notes)
       if not self.default:
         self.fieldeditor.setValue(self.default)
       return self.fieldeditor
@@ -146,6 +163,18 @@ class FieldInt(FieldAbstract) :
                     
     def getEditorValue(self) :
       return self.fieldeditor.Value()
+
+    def setEditorValue(self):
+      try:
+        v = int(self.value)
+      except:
+        try:
+          v = float(self.value)
+          v = int(v)
+        except:
+          print 'value wront for int'
+      self.fieldeditor.setValue(v)
+
 
     def Validate(self,val):
       localmin = False
@@ -185,16 +214,19 @@ class FieldText(FieldAbstract) :
     FieldAbstract.__init__(self,parent,fieldname,default,notes)
     self.value = ''
 
-  def createEditor(self) :
+  def CreateEditor(self) :
     self.fieldeditor = QtGui.QLineEdit()
-    if default:
-      self.fieldeditor.setText(default)
-    self.setToolTips(notes)
+    if self.default:
+      self.fieldeditor.setText(self.default)
+    self.setToolTips(self.notes)
     return self.fieldeditor
 
 
   def getEditorValue(self) :
     return self.fieldeditor.getText()
+
+  def setEditorValue(self):
+    self.fieldeditor.setText(self.value)
       
 
 
@@ -207,33 +239,33 @@ class FieldChoice(FieldAbstract)  :
   def CreateEditor(self)  :
     self.fieldeditor = QtGui.QComboBox()
     self.fieldeditor.addItems(self.choices)
-    self.fieldeditor.setCurrentIndex(choices.index(self.default))
+    self.fieldeditor.setCurrentIndex(self.choices.index(self.default))
     self.setToolTips(self.notes)
     return self.fieldeditor
 
-  def setEditorValue(self,value,restoflist):
-    self.fieldeditor.setCurrentIndex(self.choices.index(value))
+  def setEditorValue(self):
+    self.fieldeditor.setCurrentIndex(self.choices.index(self.value))
   
   def getEditorValue(self):
     return self.fieldeditor.currentText()
 
 
 class FieldOnOff(FieldAbstract) :
-  def __init__(self,parent,fieldname,default,notes) :
-    FieldAbstract.__init__(parent,fieldname,default,notes)
+  def __init__(self,parent,fieldname,default,notes,choices) :
+    FieldAbstract.__init__(self,parent,fieldname,default,notes)
 
   def CreateEditor(self)  :
     self.fieldeditor = QtGui.QCheckBox(self.fieldname)
-    if default :
-      self.fieldeditor.setCheckedState(2)
+    if self.default :
+      self.fieldeditor.setCheckState(2)
     else:
-      self.fieldeditor.setCheckedState(QtGui.Qt.Unchecked)
-    self.setToolTips(notes)
+      self.fieldeditor.setCheckState(QtGui.Qt.Unchecked)
+    self.setToolTips(self.notes)
     return self.fieldeditor
 
-  def setEditorValue(self,value,restoflist) :
-    if value:
-      self.fieldeditor.setChecked(1)
+  def setEditorValue(self) :
+    if self.value == 'On':
+      self.fieldeditor.setChecked(2)
     else:
       self.fieldeditor.setChecked(0)
 
@@ -251,6 +283,12 @@ class FieldYesNo(FieldOnOff):
     else:
       return 'No'
 
+  def setEditorValue(self) :
+    if self.value == 'Yes':
+      self.fieldeditor.setChecked(2)
+    else:
+      self.fieldeditor.setChecked(0)
+            
 
 class FieldObjectlist(FieldAbstract):
   def __init__(self,parent,fieldname,default,notes,objectlistname) :
@@ -264,8 +302,8 @@ class FieldObjectlist(FieldAbstract):
     self.setToolTips(self.notes)
     return self.fieldeditor
 
-  def setEditorValue(self,value,restoflist):
-    self.fieldeditor.setCurrentIndex(self.choices.index(value))
+  def setEditorValue(self):
+    self.fieldeditor.setCurrentIndex(self.choices.index(self.value))
   
   def getEditorValue(self):
     return self.fieldeditor.currentText()

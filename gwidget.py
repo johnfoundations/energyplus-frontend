@@ -21,14 +21,14 @@ class GWidget(QtGui.QWidget):
     self.objecttree.setSizePolicy(QtGui.QSizePolicy(1,7))
     self.horizontallayout.addWidget(self.objecttree)
     self.horizontallayout.addWidget(self.idfView)
-    self.rightvert = QtGui.QVBoxLayout(self)
+    self.rightvert = QtGui.QVBoxLayout()
     self.activeobjectlist = QtGui.QTreeView()
     f = idfread.idfRead('Singlezonetemplate.idf')
     self.activemodel = idftreemodel.TreeModel(f.getActivelist())
     self.activeobjectlist.setModel(self.activemodel)
-    self.activeobjectedit = QtGui.QWidget()
+    self.activeobjectedit = None
     self.rightvert.addWidget(self.activeobjectlist)
-    self.rightvert.addWidget(self.activeobjectedit)
+    #self.rightvert.addWidget(self.activeobjectedit)
     self.horizontallayout.addLayout(self.rightvert)
     self.connect(self.activeobjectlist, QtCore.SIGNAL('activated (const QModelIndex&)'),
                  self.activeObjectChanged)
@@ -50,10 +50,16 @@ class GWidget(QtGui.QWidget):
         self.objecttree.addTopLevelItem(j)
 
   def activeObjectChanged(self,Index) :
-    print 'activeObjectChanged'
     iddcl = Index.internalPointer().iddinstance
     if not iddcl.__class__.__name__ == 'int':
-      iddcl.PrintIDF(0)
+      if not self.activeobjectedit == None:
+        self.activeobjectedit.getData()
+        self.activeobjectedit.closeWidget()
+      self.activeobjectedit = iddcl
+      if not self.activeobjectedit == None:
+        self.rightvert.addWidget(self.activeobjectedit.CreateEditWidget())
+      else:
+        print 'No object to display'
     
   
 
