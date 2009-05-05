@@ -3,7 +3,7 @@
 from PyQt4 import QtGui
 import idfglobals
 import pdb
-
+from gwidgetclass import *
 
 class FieldAbstract :
   def __init__(self,parent,fieldname,default,notes):
@@ -74,7 +74,7 @@ class FieldReal(FieldAbstract) :
     self.maxltv = maxltv
     
   def CreateEditor(self)  :
-    self.fieldeditor = QtGui.QDoubleSpinBox()
+    self.fieldeditor = GFloatSpinboxWidget(self.fieldname)
     if self.minv:
       self.fieldeditor.setMinimum(self.minv)
     elif self.mingtv:
@@ -146,7 +146,7 @@ class FieldInt(FieldAbstract) :
       self.maxltv = maxltv
 
     def CreateEditor(self) : 
-      self.fieldeditor = QtGui.QSpinBox()
+      self.fieldeditor = GSpinboxWidget(self.fieldname)
       if self.minv:
         self.fieldeditor.setMinimum(self.minv)
       elif self.mingtv:
@@ -215,18 +215,18 @@ class FieldText(FieldAbstract) :
     self.value = ''
 
   def CreateEditor(self) :
-    self.fieldeditor = QtGui.QLineEdit()
+    self.fieldeditor = GEditWidget(self.fieldname)
     if self.default:
-      self.fieldeditor.setText(self.default)
+      self.fieldeditor.setValue(self.default)
     self.setToolTips(self.notes)
     return self.fieldeditor
 
 
   def getEditorValue(self) :
-    return self.fieldeditor.getText()
+    return self.fieldeditor.getValue()
 
   def setEditorValue(self):
-    self.fieldeditor.setText(self.value)
+    self.fieldeditor.setValue(self.value)
       
 
 
@@ -237,13 +237,18 @@ class FieldChoice(FieldAbstract)  :
     self.choices = choices
 
   def CreateEditor(self)  :
-    self.fieldeditor = QtGui.QComboBox()
+    self.fieldeditor = GComboBox(self.fieldname)
     self.fieldeditor.addItems(self.choices)
-    self.fieldeditor.setCurrentIndex(self.choices.index(self.default))
+    if self.default in self.choices:
+      index = self.choices.index(self.default)
+      self.fieldeditor.setCurrentIndex(index)
+    else:
+      print 'no default in choices'
     self.setToolTips(self.notes)
     return self.fieldeditor
 
   def setEditorValue(self):
+    print self.value
     self.fieldeditor.setCurrentIndex(self.choices.index(self.value))
   
   def getEditorValue(self):

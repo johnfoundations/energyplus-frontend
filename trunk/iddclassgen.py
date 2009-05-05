@@ -163,13 +163,13 @@ class IddField :
         self.fieldeditor = self.fieldeditor + note + '),'
       else:
         self.fieldeditor = self.fieldeditor + '"",'
-      choice = '('
+      choice = '['
       if 'choices' in self.Fieldattr :        
         for c in self.Fieldattr['choices'] :
           choice = choice + '"' + c + '",'
-        choice = choice + ')'
+        choice = choice + ']'
       else:
-        choice = choice + '")'
+        choice = choice + '"]'
       self.fieldeditor = self.fieldeditor + choice + ')'
       
     elif self.Fieldattr['type'] == 'object-list':
