@@ -60,6 +60,7 @@ class ObjectAbstract :
     for f in self.fieldlist:
       vlayout.addWidget(f.CreateEditor())
       f.setEditorValue()
+    vlayout.addStretch()
     return self.editwidget
 
   def closeWidget(self):
