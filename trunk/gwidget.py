@@ -17,22 +17,23 @@ class GWidget(QtGui.QWidget):
     self.idfScene = GGraphicsScene()
     self.idfView =  QtGui.QGraphicsView(self.idfScene)    
     self.horizontallayout = QtGui.QHBoxLayout(self)
-    self.objecttree = QtGui.QTreeWidget()
-    self.objecttree.setSizePolicy(QtGui.QSizePolicy(1,7))
-    self.horizontallayout.addWidget(self.objecttree)
-    self.horizontallayout.addWidget(self.idfView)
-    self.rightvert = QtGui.QVBoxLayout()
+#    self.objecttree = QtGui.QTreeWidget()
     self.activeobjectlist = QtGui.QTreeView()
+#    self.objecttree.setSizePolicy(QtGui.QSizePolicy(1,7))
+    self.horizontallayout.addWidget(self.activeobjectlist)
+    self.horizontallayout.addWidget(self.idfView)
+#    self.rightvert = QtGui.QVBoxLayout()
+    
     f = idfread.idfRead('Singlezonetemplate.idf')
     self.activemodel = idftreemodel.TreeModel(f.getActivelist())
     self.activeobjectlist.setModel(self.activemodel)
     self.activeobjectedit = None
-    self.rightvert.addWidget(self.activeobjectlist)
+#    self.rightvert.addWidget(self.activeobjectlist)
     #self.rightvert.addWidget(self.activeobjectedit)
-    self.horizontallayout.addLayout(self.rightvert)
+#    self.horizontallayout.addWidget(self.activeobjectedit)
     self.connect(self.activeobjectlist, QtCore.SIGNAL('activated (const QModelIndex&)'),
                  self.activeObjectChanged)
-    self.populateObjectTree()
+#    self.populateObjectTree()
 
   def populateObjectTree(self):
     self.objecttree.setColumnCount(1)
@@ -57,7 +58,7 @@ class GWidget(QtGui.QWidget):
         self.activeobjectedit.closeWidget()
       self.activeobjectedit = iddcl
       if not self.activeobjectedit == None:
-        self.rightvert.addWidget(self.activeobjectedit.CreateEditWidget())
+        self.horizontallayout.addWidget(self.activeobjectedit.CreateEditWidget())
       else:
         print 'No object to display'
     
