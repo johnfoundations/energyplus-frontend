@@ -1,0 +1,29 @@
+Readme for energyplus-frontend
+
+To run this application requires python, pyqt and the Energy Plus suite.
+
+http://apps1.eere.energy.gov/buildings/energyplus/
+
+http://www.riverbankcomputing.com/software/pyqt/download
+
+Development is ongoing, and some things don't work yet. Either jump in and help, or send patches.
+
+iddclassgen.py generates iddclass.py which is all the energy plus defined classes as python classes.
+They are subclasses of either the abstract or other in objectclass.py.
+The fields are classed in fieldclasses.py
+Editing widgets are created in gwidgetclass.py
+idfread.py reads the idf file and creates class instances.
+
+To run the application, first you need to generate a valid class module.
+Get the V3-1-0-Energy+.idd file from your energyplus installation. The linux installation doesn't include it,
+but the Windows one does. Put the file in your source directory and run python iddclassgen.py
+
+Then run idfeditor.py
+
+At the moment it opens a template idf file, but a file selection method will be forthcoming.
+
+The energy plus documentation is substantial and complete. Questions on aspects of the simulation are
+to be addressed to the Energy plus people.
+
+
+

@@ -10,14 +10,17 @@ import sys
 class GEditWidget(QtGui.QWidget):
   def __init__(self,label, parent=None):
     QtGui.QWidget.__init__(self,parent)
-#    gb = QtGui.QGroupBox(label,self)
     vert = QtGui.QVBoxLayout(self)
     vert.addWidget(QtGui.QLabel(label))
-    
-    self.edit = QtGui.QLineEdit()
+    self.edit = self.getEditWidget()
     vert.addWidget(self.edit)
-    #gb.setLayout(vert)
     self.valuechanged = False
+    self.connectSignal()
+
+  def getEditWidget(self):
+    return QtGui.QLineEdit()
+
+  def connectSignal(self):
     self.connect(self.edit, QtCore.SIGNAL('textChanged (const QString&)'),self.changed)
 
   def setToolTip(self,tt):
@@ -32,6 +35,59 @@ class GEditWidget(QtGui.QWidget):
   def changed(self,string):
     self.valuechanged = True
   
+
+class GFloatSpinboxWidget(GEditWidget):
+  def __init__(self,label,parent = None):
+    QtGui.QWidget.__init__(self,parent)
+    vert = QtGui.QVBoxLayout(self)
+    vert.addWidget(QtGui.QLabel(label))
+    self.edit = self.getEditWidget()
+    vert.addWidget(self.edit)
+    valuechanged = False
+
+  def connectSignal(self):
+    self.connect(self.edit,QtCore.SIGNAL('valueChanged(int)'),self.changed)
+
+  def getEditWidget(self):
+    return QtGui.QDoubleSpinBox()
+
+  def setMinimum(self,val):
+    self.edit.setMinimum(val)
+
+  def setMaximum(self,val):
+    self.edit.setMaximum(val)
+
+  def setValue(self,value):
+    self.edit.setValue(value)
+
+  def value(self) :
+    return self.edit.value()
+
+
+class GSpinboxWidget(GFloatSpinboxWidget):
+
+  def getEditWidget(self):
+    return QtGui.QSpinBox()
+
+class GComboBox(GFloatSpinboxWidget):
+
+  def getEditWidget(self):
+    return QtGui.QComboBox()
+
+  def addItems(self,items) :
+    self.edit.addItems(items)
+
+  def setCurrentIndex(self,index):
+    self.edit.setCurrentIndex(index)
+
+  def connectSignal(self):
+    self.connect(self.edit,QtCore.SIGNAL('currentIndexChanged(int)'),self.changed)
+
+
+
+
+
+
 
 
 class GAutoCalcRealWidget(GEditWidget):
