@@ -249,7 +249,8 @@ class FieldChoice(FieldAbstract)  :
 
   def setEditorValue(self):
     print self.value
-    self.fieldeditor.setCurrentIndex(self.choices.index(self.value))
+    if not self.value == '':
+      self.fieldeditor.setCurrentIndex(self.choices.index(self.value))
   
   def getEditorValue(self):
     return self.fieldeditor.currentText()

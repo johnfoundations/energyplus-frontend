@@ -49,18 +49,28 @@ class ObjectAbstract :
     
   def CreateEditWidget(self) :
     self.editwidget = QtGui.QWidget()
-    vlayout = QtGui.QVBoxLayout(self.editwidget)
-    label = QtGui.QLabel(self.getClassnameIDD())
+    hlayout = QtGui.QHBoxLayout(self.editwidget)
+    vlayout = QtGui.QVBoxLayout()
+    #labe = QtGui.QLabel(self.getClassnameIDD())
     ms = ''
     for m in self.memo:
       ms = ms + m + '\n'
     ms = ms.strip()
     label.setToolTip(ms)
     vlayout.addWidget(label)
+    count = 0
     for f in self.fieldlist:
+      count = count + 1
       vlayout.addWidget(f.CreateEditor())
       f.setEditorValue()
+      if count > 2:
+	count = 0
+        vlayout.addStretch()
+	hlayout.addLayout(vlayout)
+	vlayout = QtGui.QVBoxLayout()
     vlayout.addStretch()
+    hlayout.addLayout(vlayout)
+    hlayout.addStretch()
     return self.editwidget
 
   def closeWidget(self):

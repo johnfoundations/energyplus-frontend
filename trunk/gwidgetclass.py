@@ -124,17 +124,98 @@ class GAutoCalcRealWidget(GEditWidget):
 
 
 
-class GExtensibleWidget(QtGui.QWidget):
-  pass
+#class GExtensibleWidget(QtGui.QWidget):
+ # pass
 
 
 class GVerticeWidget(QtGui.QWidget):
-  pass
+  def __init__(self,label,parent=None) :
+    QtGui.QWidget.__init__(self,parent)
+    vlayout = QtGui.QVBoxLayout(self)
+    self.verticecount = QtGui.QSpinBox()
+    hl = QtGui.QHBoxLayout()
+    hl.addWidget(QtGui.QLabel('Number of Vertices'))
+    hl.addWidget(self.verticecount)
+    vlayout.addLayout(hl)
+    hl = QtGui.QHBoxLayout()
+    hl.addWidget(QtGui.QLabel('Width'))
+    hl.addWidget(QtGui.QLabel('Height'))
+    vlayout.addLayout(hl)
+    hl = QtGui.QHBoxLayout()
+    self.width = QtGui.QLineEdit()
+    self.width.setInputMask('0000.0')
+    self.height = QtGui.QLineEdit()
+    self.height.setInputMask('0000.0')
+    hl.addWidget(self.width)
+    hl.addWidget(self.height)
+    vlayout.addLayout(hl)
+    hl = QtGui.QHBoxLayout()
+    self.tlxyz = QtGui.QLineEdit()
+    self.tlxyz.setInputMask('0000.0,0000.0,0000.0')
+    self.trxyz = QtGui.QLineEdit()
+    self.trxyz.setInputMask('0000.0,0000.0,0000.0')
+    hl.addWidget(self.tlxyz)
+    hl.addWidget(self.trxyz)
+    vlayout.addLayout(hl)
+    hl = QtGui.QHBoxLayout()
+    hl.addStretch()
+    hl.addWidget(QtGui.QLabel("X,Y,Z"))
+    hl.addStretch()
+    vlayout.addLayout(hl)
+    hl = QtGui.QHBoxLayout()
+    self.blxyz = QtGui.QLineEdit()
+    self.blxyz.setInputMask('0000.0,0000.0,0000.0')
+    self.brxyz = QtGui.QLineEdit()
+    self.brxyz.setInputMask('0000.0,0000.0,0000.0')
+    hl.addWidget(self.blxyz)
+    hl.addWidget(self.brxyz)
+    vlayout.addLayout(hl)
+    self.connectSignal()
+    
+  def connectSignal(self):
+    self.connect(self.verticecount, QtCore.SIGNAL('valueChanged (int)'),self.changedCount)
+    self.connect(self.width, QtCore.SIGNAL('textChanged (const QString&)'),self.changedWidth)
+    self.connect(self.height, QtCore.SIGNAL('textChanged (const QString&)'),self.changedHeight)
+    self.connect(self.tlxyz, QtCore.SIGNAL('textChanged (const QString&)'),self.changedtl)
+    self.connect(self.trxyz, QtCore.SIGNAL('textChanged (const QString&)'),self.changedtr)
+    self.connect(self.blxyz, QtCore.SIGNAL('textChanged (const QString&)'),self.changedbl)
+    self.connect(self.brxyz, QtCore.SIGNAL('textChanged (const QString&)'),self.changedbr)
+  
+  def changedCount(i):
+    pass
+
+  def changedWidth(i):
+    n = float(i)
+    if self.blxyz.text() == '':
+      self.blxyz.setText('0.0.0')
+    print n
+    
+  def changedHeight(i):
+    n = float(i)
+    print n
+    
+  def changedtl(i):
+    print i
+    
+  def changedtr(i):
+    print i
+    
+  def changedbr(i):
+    print i
+    
+  def changedbl(i):
+    print i
+
+
+
+
+
+    
 
 
 if __name__ == "__main__":
   app = QtGui.QApplication(sys.argv)
-  view = GAutoCalcRealWidget('Test')
+  view = GVerticeWidget('Test')
   view.setWindowTitle("Widget test")
   view.show()
   sys.exit(app.exec_())
