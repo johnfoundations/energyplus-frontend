@@ -174,36 +174,37 @@ class GVerticeWidget(QtGui.QWidget):
     
   def connectSignal(self):
     self.connect(self.verticecount, QtCore.SIGNAL('valueChanged (int)'),self.changedCount)
-    self.connect(self.width, QtCore.SIGNAL('textChanged (const QString&)'),self.changedWidth)
+    self.connect(self.width, QtCore.SIGNAL('editingFinished ()'),self.changedWidth)
     self.connect(self.height, QtCore.SIGNAL('textChanged (const QString&)'),self.changedHeight)
     self.connect(self.tlxyz, QtCore.SIGNAL('textChanged (const QString&)'),self.changedtl)
     self.connect(self.trxyz, QtCore.SIGNAL('textChanged (const QString&)'),self.changedtr)
     self.connect(self.blxyz, QtCore.SIGNAL('textChanged (const QString&)'),self.changedbl)
     self.connect(self.brxyz, QtCore.SIGNAL('textChanged (const QString&)'),self.changedbr)
   
-  def changedCount(i):
+  def changedCount(self,i):
     pass
 
-  def changedWidth(i):
-    n = float(i)
+  def changedWidth(self):
+    n = float(self.width.text())
+    print self.blxyz.text()
     if self.blxyz.text() == '':
       self.blxyz.setText('0.0.0')
     print n
     
-  def changedHeight(i):
+  def changedHeight(self,i):
     n = float(i)
     print n
     
-  def changedtl(i):
+  def changedtl(self,i):
     print i
     
-  def changedtr(i):
+  def changedtr(self,i):
     print i
     
-  def changedbr(i):
+  def changedbr(self,i):
     print i
     
-  def changedbl(i):
+  def changedbl(self,i):
     print i
 
 
