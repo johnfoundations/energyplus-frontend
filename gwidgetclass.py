@@ -143,17 +143,18 @@ class GVerticeWidget(QtGui.QWidget):
     vlayout.addLayout(hl)
     hl = QtGui.QHBoxLayout()
     self.width = QtGui.QLineEdit()
-    self.width.setInputMask('0000.0')
+    self.width.setValidator(QtGui.QDoubleValidator(self.width))
     self.height = QtGui.QLineEdit()
-    self.height.setInputMask('0000.0')
+    self.height.setValidator(QtGui.QDoubleValidator(self.width))
     hl.addWidget(self.width)
     hl.addWidget(self.height)
     vlayout.addLayout(hl)
     hl = QtGui.QHBoxLayout()
     self.tlxyz = QtGui.QLineEdit()
-    self.tlxyz.setInputMask('0000.0,0000.0,0000.0')
+    rx = QtCore.QRegExp('[0-9]+\.[0-9]+,[0-9]+\.[0-9]+,[0-9]+\.[0-9]+')
+    self.tlxyz.setValidator(QtGui.QRegExpValidator(rx,self.tlxyz))
     self.trxyz = QtGui.QLineEdit()
-    self.trxyz.setInputMask('0000.0,0000.0,0000.0')
+    self.trxyz.setValidator(QtGui.QRegExpValidator(rx,self.trxyz))
     hl.addWidget(self.tlxyz)
     hl.addWidget(self.trxyz)
     vlayout.addLayout(hl)
@@ -164,9 +165,9 @@ class GVerticeWidget(QtGui.QWidget):
     vlayout.addLayout(hl)
     hl = QtGui.QHBoxLayout()
     self.blxyz = QtGui.QLineEdit()
-    self.blxyz.setInputMask('0000.0,0000.0,0000.0')
+    self.blxyz.setValidator(QtGui.QRegExpValidator(rx,self.blxyz))
     self.brxyz = QtGui.QLineEdit()
-    self.brxyz.setInputMask('0000.0,0000.0,0000.0')
+    self.brxyz.setValidator(QtGui.QRegExpValidator(rx,self.brxyz))
     hl.addWidget(self.blxyz)
     hl.addWidget(self.brxyz)
     vlayout.addLayout(hl)
@@ -175,36 +176,69 @@ class GVerticeWidget(QtGui.QWidget):
   def connectSignal(self):
     self.connect(self.verticecount, QtCore.SIGNAL('valueChanged (int)'),self.changedCount)
     self.connect(self.width, QtCore.SIGNAL('editingFinished ()'),self.changedWidth)
-    self.connect(self.height, QtCore.SIGNAL('textChanged (const QString&)'),self.changedHeight)
-    self.connect(self.tlxyz, QtCore.SIGNAL('textChanged (const QString&)'),self.changedtl)
-    self.connect(self.trxyz, QtCore.SIGNAL('textChanged (const QString&)'),self.changedtr)
-    self.connect(self.blxyz, QtCore.SIGNAL('textChanged (const QString&)'),self.changedbl)
-    self.connect(self.brxyz, QtCore.SIGNAL('textChanged (const QString&)'),self.changedbr)
+    self.connect(self.height, QtCore.SIGNAL('editingFinished ()'),self.changedHeight)
+    self.connect(self.tlxyz, QtCore.SIGNAL('editingFinished()'),self.changedtl)
+    self.connect(self.trxyz, QtCore.SIGNAL('editingFinished()'),self.changedtr)
+    self.connect(self.blxyz, QtCore.SIGNAL('editingFinished()'),self.changedbl)
+    self.connect(self.brxyz, QtCore.SIGNAL('editingFinished()'),self.changedbr)
   
   def changedCount(self,i):
     pass
 
+  def buildVerticeString(self,arr):
+    stri = '%g,%g,%g'%(arr[0],arr[1],arr[2])
+    return stri
+
+  def buildVerticeArray(self,s):
+    l = s.split(',')
+    f = []
+    try:
+      f.append(float(l[0]))
+    except:
+      return []
+    try:
+      f.append(float(l[1]))
+    except:
+      return []
+    try:
+      f.append(float(l[2]))
+    except:
+      return []
+    print f
+    return f
+
   def changedWidth(self):
     n = float(self.width.text())
-    print self.blxyz.text()
-    if self.blxyz.text() == '':
-      self.blxyz.setText('0.0.0')
-    print n
+    bla = self.buildVerticeArray(self.blxyz.text())
+    if not len(bla) == 3:
+      bla = self.buildVerticeArray('0.0,0.0,0.0')
+      self.blxyz.setText(self.buildVerticeString(bla))
+    bra = self.buildVerticeArray(self.brxyz.text())
+    if not len(bra) == 3:
+      bra = self.buildVerticeArray('0.0,0.0,0.0')
+    bra[0] = bla[0] + n
+    self.brxyz.setText(self.buildVerticeString(bra))
+    tra = self.buildVerticeArray(self.trxyz.text())
+    if not len(tra) == 3:
+      tra = self.buildVerticeArray('0.0,0.0,0.0')
+    tra[0] = bra[0]
+    self.trxyz.setText(self.buildVerticeString(tra))
+      
     
-  def changedHeight(self,i):
+  def changedHeight(self):
     n = float(i)
     print n
     
-  def changedtl(self,i):
+  def changedtl(self):
     print i
     
-  def changedtr(self,i):
+  def changedtr(self):
     print i
     
-  def changedbr(self,i):
+  def changedbr(self):
     print i
     
-  def changedbl(self,i):
+  def changedbl(self):
     print i
 
 
@@ -217,6 +251,7 @@ class GVerticeWidget(QtGui.QWidget):
 if __name__ == "__main__":
   app = QtGui.QApplication(sys.argv)
   view = GVerticeWidget('Test')
+  view.buildVerticeArray('38.2,44.5,60.0')
   view.setWindowTitle("Widget test")
   view.show()
   sys.exit(app.exec_())
