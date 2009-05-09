@@ -19,6 +19,7 @@ class ObjectAbstract :
     self.group = ''
     self.extensible = False
     self.editwidget = None
+    self.scrollarea = None
     self.memo = []
     self.CreateFields()
     
@@ -49,9 +50,9 @@ class ObjectAbstract :
     
   def CreateEditWidget(self) :
     self.editwidget = QtGui.QWidget()
-    hlayout = QtGui.QHBoxLayout(self.editwidget)
-    vlayout = QtGui.QVBoxLayout()
-    #labe = QtGui.QLabel(self.getClassnameIDD())
+    vlayout = QtGui.QVBoxLayout(self.editwidget)
+#    hlayout = QtGui.QVBoxLayout()
+    label = QtGui.QLabel(self.getClassnameIDD())
     ms = ''
     for m in self.memo:
       ms = ms + m + '\n'
@@ -64,18 +65,21 @@ class ObjectAbstract :
       vlayout.addWidget(f.CreateEditor())
       f.setEditorValue()
       if count > 2:
-	count = 0
-        vlayout.addStretch()
-	hlayout.addLayout(vlayout)
-	vlayout = QtGui.QVBoxLayout()
+	      count = 0
+#      vlayout.addStretch()
+#      hlayout.addLayout(vlayout)
+#      vlayout = QtGui.QVBoxLayout()
+#      vlayout.addStretch()
+#      hlayout.addLayout(vlayout)
     vlayout.addStretch()
-    hlayout.addLayout(vlayout)
-    hlayout.addStretch()
-    return self.editwidget
+    self.scrollarea = QtGui.QScrollArea()
+    self.scrollarea.setWidget(self.editwidget)
+    self.scrollarea.setWidgetResizable(True)
+    return self.scrollarea
 
   def closeWidget(self):
-    if self.editwidget :
-      self.editwidget.close()
+    if self.scrollarea :
+      self.scrollarea.close()
 
   def CreateFields(self) :
     print 'to be subclassed'

@@ -12,10 +12,30 @@ class idfRead :
     self.active = []
     self.activetree = []
     self.comment = ''
+    self.referencedict = dict()
     self.parseFile()
+    self.buildDependsTree()
 
   def getActivelist(self):
     return self.active
+
+  def getActiveReferences(self):
+    return self.referencedict
+
+  def buildDependsTree(self):
+    for i in self.active:
+      #first get a list of depend from object
+      dl = i.getDepends()
+      rl = i.getReference()
+      #look through references and build dict
+      for ref in rl:
+        if not ref in self.referencedict:
+          l = []
+          l.append(i)
+          self.referencedict[ref] = l
+        else:
+          self.referencedict[ref].append(i)
+          
   
   def parseFile(self) :
     #pdb.set_trace()

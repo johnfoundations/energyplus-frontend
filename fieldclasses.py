@@ -42,7 +42,6 @@ class FieldAbstract :
       self.restoflist = restoflist
       if self.fieldname == 'Name':
         self.parent.setName(self.value)
-      
       return True
     else:
       print 'erroneous data in ' + self.fieldname
@@ -92,7 +91,15 @@ class FieldReal(FieldAbstract) :
     return self.fieldeditor.Value()
 
   def setEditorValue(self):
-    v = float(self.value)
+    try:
+      v = float(self.value)
+    except:
+      try:
+        v = int(self.value)
+        v = float(v)
+      except:
+        print 'setEditorValue float conversion failed ' + self.fieldname + self.value
+        v = float(self.default)
     self.fieldeditor.setValue(v)
   
 
@@ -136,6 +143,26 @@ class FieldRealAutocalculate(FieldReal) :
       return True
     else:
       return FieldReal.Validate(self,val)
+
+  def CreateEditor(self)  :
+    self.fieldeditor = GAutoCalcRealWidget(self.fieldname)
+    if self.minv:
+      self.fieldeditor.setMinimum(self.minv)
+    elif self.mingtv:
+      self.fieldeditor.setMinimum(self.mingtv)
+    if self.maxv:
+      self.fieldeditor.setMaximum(self.maxv)
+    elif self.maxltv:
+      self.fieldeditor.setMaximum(self.maxltv)
+    if not self.default:
+      self.fieldeditor.setValue(self.default)
+    self.setToolTips(self.notes)
+    return self.fieldeditor
+
+  def setEditorValue(self):
+    self.fieldeditor.setValue(self.value)
+
+
   
 class FieldInt(FieldAbstract) :
     def __init__(self,parent,fieldname,default,notes,minv,maxv,mingtv,maxltv) :
@@ -235,12 +262,15 @@ class FieldChoice(FieldAbstract)  :
   def __init__(self,parent,fieldname,default,notes,choices):
     FieldAbstract.__init__(self,parent,fieldname,default,notes)
     self.choices = choices
+    self.lchoices = []
+    for lc in self.choices:
+      self.lchoices.append(lc.lower())
 
   def CreateEditor(self)  :
     self.fieldeditor = GComboBox(self.fieldname)
     self.fieldeditor.addItems(self.choices)
     if self.default in self.choices:
-      index = self.choices.index(self.default)
+      index = self.lchoices.index(self.default.lower())
       self.fieldeditor.setCurrentIndex(index)
     else:
       print 'no default in choices'
@@ -250,7 +280,7 @@ class FieldChoice(FieldAbstract)  :
   def setEditorValue(self):
     print self.value
     if not self.value == '':
-      self.fieldeditor.setCurrentIndex(self.choices.index(self.value))
+      self.fieldeditor.setCurrentIndex(self.lchoices.index(self.value.lower()))
   
   def getEditorValue(self):
     return self.fieldeditor.currentText()
@@ -302,14 +332,25 @@ class FieldObjectlist(FieldAbstract):
     self.objectlistname = objectlistname
 
   def CreateEditor(self) :  
-    self.fieldeditor = QtGui.QComboBox()
-    self.choices = getActiveObjectsList(self.objectlistname)
+    self.fieldeditor = GComboBox(self.fieldname)
+    self.choices = idfglobals.getActiveObjectsList(self.objectlistname)
+    self.fieldeditor.addItem("Null")
     self.fieldeditor.addItems(self.choices)
     self.setToolTips(self.notes)
     return self.fieldeditor
 
   def setEditorValue(self):
-    self.fieldeditor.setCurrentIndex(self.choices.index(self.value))
+    
+    if not self.value in self.choices:
+      print 'fieldobjectlist ' + self.fieldname + self.value
+      print self.choices
+    else:
+      print 'fieldobjectlist ' + self.fieldname + self.value
+      print self.choices.index(self.value)
+    try:
+      self.fieldeditor.setCurrentIndex(self.choices.index(self.value) + 1)
+    except:
+      self.fieldeditor.setCurrentIndex(0)
   
   def getEditorValue(self):
     return self.fieldeditor.currentText()
@@ -323,7 +364,9 @@ class FieldVertice(FieldAbstract):
     FieldAbstract.__init__(self,parent,fieldname,default,notes)
 
   def CreateEditor(self):
-    pass
+    self.fieldeditor = GVerticeWidget('')
+    self.setToolTips(self.notes)
+    return self.fieldeditor
 
 
 

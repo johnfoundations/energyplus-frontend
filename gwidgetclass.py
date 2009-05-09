@@ -11,7 +11,7 @@ import math
 class GEditWidget(QtGui.QWidget):
   def __init__(self,label, parent=None):
     QtGui.QWidget.__init__(self,parent)
-    vert = QtGui.QVBoxLayout(self)
+    vert = QtGui.QHBoxLayout(self)
     vert.addWidget(QtGui.QLabel(label))
     self.edit = self.getEditWidget()
     vert.addWidget(self.edit)
@@ -40,7 +40,7 @@ class GEditWidget(QtGui.QWidget):
 class GFloatSpinboxWidget(GEditWidget):
   def __init__(self,label,parent = None):
     QtGui.QWidget.__init__(self,parent)
-    vert = QtGui.QVBoxLayout(self)
+    vert = QtGui.QHBoxLayout(self)
     vert.addWidget(QtGui.QLabel(label))
     self.edit = self.getEditWidget()
     vert.addWidget(self.edit)
@@ -59,6 +59,7 @@ class GFloatSpinboxWidget(GEditWidget):
     self.edit.setMaximum(val)
 
   def setValue(self,value):
+    print value
     self.edit.setValue(value)
 
   def value(self) :
@@ -78,6 +79,9 @@ class GComboBox(GFloatSpinboxWidget):
   def addItems(self,items) :
     self.edit.addItems(items)
 
+  def addItem(self,item):
+    self.edit.addItem(item)
+
   def setCurrentIndex(self,index):
     self.edit.setCurrentIndex(index)
 
@@ -94,8 +98,9 @@ class GComboBox(GFloatSpinboxWidget):
 class GAutoCalcRealWidget(GEditWidget):
   def __init__(self,label, parent=None):
     QtGui.QWidget.__init__(self,parent)
-    vert = QtGui.QVBoxLayout(self)
-    self.cb = QtGui.QCheckBox('AutoCalculate')
+    vert = QtGui.QHBoxLayout(self)
+    vert.addWidget(QtGui.QLabel(label))
+    self.cb = QtGui.QCheckBox('Auto')
     self.cb.setChecked(True)
     vert.addWidget(self.cb)
     self.edit = QtGui.QDoubleSpinBox()
@@ -117,12 +122,27 @@ class GAutoCalcRealWidget(GEditWidget):
 
 
   def setValue(self,value):
-    if value == 'autocalculate' :
+    print value
+    v = value.lower()
+    if v == 'autocalculate' :
       self.cb.setChecked(True)
     else:
       self.cb.setChecked(False)
-      self.edit.setValue(value)
+      try:
+        v = float(v)
+      except:
+        try:
+          v = int(v)
+          v = float(v)
+        except:
+          print value + 'cannot be converted to float'
+      self.edit.setValue(v)
 
+  def setMinimum(self,value):
+    self.edit.setMinimum(value)
+    
+  def setMaximum(self,value):
+    self.edit.setMaximum(value)
 
 
 #class GExtensibleWidget(QtGui.QWidget):
@@ -210,14 +230,31 @@ class GVerticeWidget(QtGui.QWidget):
     self.tlxyz.setText(self.buildVerticeString(matrix[3]))
     self.fieldmatrix = matrix
 
+  def mstrtofloat(self,m) :
+    p = []
+    mm = []
+    for pt in m:
+      for i in pt:
+        try:
+          t = float(i)
+        except:
+          try:
+            t = int(i)
+            t = float(i)
+          except:
+            t = 0.0
+        p.append(t)
+      mm.append(p)
+    return mm
+   
 
   def setValue(self,m):
-    wv = self.transform(m[0],m[1])
-    self.width.setText(abs(dist(wv)))
-    hv = self.transform(m[0],m[3])
-    self.height.setText(abs(dist(hv)))
-    self.setFieldMatrix(m)
-    self.width
+    mm = self.mstrtofloat(m)
+    wv = self.transform(mm[0],mm[1])
+    self.width.setText(str(abs(self.dist(wv))))
+    hv = self.transform(mm[0],mm[3])
+    self.height.setText(str(abs(self.dist(hv))))
+    self.setFieldMatrix(mm)
     
   def dist(self,v):
     return math.sqrt(math.pow(v[0],2) + math.pow(v[1],2) + math.pow(v[2],2))
