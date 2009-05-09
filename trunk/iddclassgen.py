@@ -609,6 +609,10 @@ class IddClassGen :
           #pdb.set_trace()
           self.autosizable = True
           continue
+        self.res = re.match(r"^autocalculatable.*",c)
+        if self.res:
+          self.autosizable = True
+          continue
         self.res = re.match(r"^[Rr]eference\s(.*)",c)
         if self.res:
           self.references.append(self.res.group(1))

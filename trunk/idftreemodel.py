@@ -174,7 +174,7 @@ class TreeModel(QtCore.QAbstractItemModel):
         number = 0
         remaininglines = []
         remaininglines = lines[:]
-        ignoredepends = False
+        ignoredepends = True
         while number == 0:
           newremaining = []
 

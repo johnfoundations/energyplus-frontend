@@ -14,17 +14,18 @@ import idftreemodel
 class GWidget(QtGui.QWidget):
   def __init__(self, parent=None):
     QtGui.QWidget.__init__(self, parent)
-    self.idfScene = GGraphicsScene()
-    self.idfView =  QtGui.QGraphicsView(self.idfScene)    
+#    self.idfScene = GGraphicsScene()
+#    self.idfView =  QtGui.QGraphicsView(self.idfScene)    
     self.horizontallayout = QtGui.QHBoxLayout()
     self.verticallayout = QtGui.QVBoxLayout(self)
     self.activeobjectlist = QtGui.QTreeView()
     self.horizontallayout.addWidget(self.activeobjectlist)
-    self.horizontallayout.addWidget(self.idfView)
+#    self.horizontallayout.addWidget(self.idfView)
     self.verticallayout.addLayout(self.horizontallayout)
     
     f = idfread.idfRead('Singlezonetemplate.idf')
     self.activemodel = idftreemodel.TreeModel(f.getActivelist())
+    idfglobals.referencedict = f.getActiveReferences()
     self.activeobjectlist.setModel(self.activemodel)
     self.activeobjectedit = None
     self.connect(self.activeobjectlist, QtCore.SIGNAL('activated (const QModelIndex&)'),
@@ -51,7 +52,7 @@ class GWidget(QtGui.QWidget):
         self.activeobjectedit.closeWidget()
       self.activeobjectedit = iddcl
       if not self.activeobjectedit == None:
-        self.verticallayout.addWidget(self.activeobjectedit.CreateEditWidget())
+        self.horizontallayout.addWidget(self.activeobjectedit.CreateEditWidget())
       else:
         print 'No object to display'
     
