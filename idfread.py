@@ -43,6 +43,7 @@ class idfRead :
     inclass = 0
     classblock = ''
     for line in self.fh:
+      inclass = 0
       sline = string.strip(line)
       if re.match(r"^!\*.*",sline) :
         continue
@@ -60,8 +61,8 @@ class idfRead :
         classblock = classblock + dat[0].strip()
 
       if re.search(";",dat[0]):
-        classblock = classblock + dat[0].strip()
-        inclass = 0
+        if not inclass:
+          classblock = classblock + dat[0].strip()
         self.parseBlock(classblock)
         classblock = ''
 
@@ -87,6 +88,10 @@ class idfRead :
     evalstr =   'iddclass.'+ re.sub(r'[:-]','_',classname) +'()'
 #    print evalstr
     classinstance = eval (evalstr)
+#    if classname == 'BuildingSurface:Detailed':
+#      print itemlist
+#      print textblock
+#      print blocklines
     classinstance.setData(itemlist)
     self.active.append(classinstance)
     
