@@ -63,7 +63,6 @@ class FieldAbstract :
   
 
 
-
 class FieldReal(FieldAbstract) :
   def __init__(self,parent,fieldname,default,notes,minv,maxv,mingtv,maxltv) :
     FieldAbstract.__init__(self,parent,fieldname,default,notes)
@@ -255,8 +254,15 @@ class FieldText(FieldAbstract) :
   def setEditorValue(self):
     self.fieldeditor.setValue(self.value)
       
+class FieldTime(FieldText):
 
-
+  def CreateEditor(self):
+    self.fieldeditor = GTimeWidget(self.fieldname)
+    if self.default:
+      self.fieldeditor.setValue(self.default)
+    self.setToolTips(self.notes)
+    return self.fieldeditor
+      
 
 class FieldChoice(FieldAbstract)  :
   def __init__(self,parent,fieldname,default,notes,choices):
@@ -340,13 +346,6 @@ class FieldObjectlist(FieldAbstract):
     return self.fieldeditor
 
   def setEditorValue(self):
-    
-    if not self.value in self.choices:
-      print 'fieldobjectlist ' + self.fieldname + self.value
-      print self.choices
-    else:
-      print 'fieldobjectlist ' + self.fieldname + self.value
-      print self.choices.index(self.value)
     try:
       self.fieldeditor.setCurrentIndex(self.choices.index(self.value) + 1)
     except:
@@ -368,7 +367,16 @@ class FieldVertice(FieldAbstract):
     self.setToolTips(self.notes)
     return self.fieldeditor
 
+  def setEditorValue(self):
+    val = []
+    val.append(self.value)
+    val.append(self.restoflist)
+    self.fieldeditor.setValue(val)
 
-
-
+#  def setValue(self,value,restoflist):
+#    print value
+#    print restoflist
+#    self.value = value
+#    self.restoflist = restoflist
+#    return True
 

@@ -36,6 +36,15 @@ class GEditWidget(QtGui.QWidget):
   def changed(self,string):
     self.valuechanged = True
   
+class GTimeWidget(GEditWidget):
+
+  def getEditWidget(self):
+    e = QtGui.QLineEdit()
+    rx = QtGui.QRegExp('[0-9]{2}:[0-9]{2}')
+    e.setValidator(QtGui.QRegExpValidator(rx,e))
+    return e
+
+
 
 class GFloatSpinboxWidget(GEditWidget):
   def __init__(self,label,parent = None):
@@ -122,9 +131,12 @@ class GAutoCalcRealWidget(GEditWidget):
 
 
   def setValue(self,value):
-    print value
-    v = value.lower()
-    if v == 'autocalculate' :
+#    print value
+    if not value.__class__.__name__ == 'int':
+      v = value.lower()
+    else:
+      v = value
+    if v == 'autocalculate' or v == 'autosize' :
       self.cb.setChecked(True)
     else:
       self.cb.setChecked(False)
@@ -153,11 +165,8 @@ class GVerticeWidget(QtGui.QWidget):
   def __init__(self,label,parent=None) :
     QtGui.QWidget.__init__(self,parent)
     vlayout = QtGui.QVBoxLayout(self)
-    self.verticecount = QtGui.QSpinBox()
-    hl = QtGui.QHBoxLayout()
-    hl.addWidget(QtGui.QLabel('Number of Vertices'))
-    hl.addWidget(self.verticecount)
-    vlayout.addLayout(hl)
+    self.verticecount = GAutoCalcRealWidget('Vertice Count')
+    vlayout.addWidget(self.verticecount)
     hl = QtGui.QHBoxLayout()
     hl.addWidget(QtGui.QLabel('Width'))
     hl.addWidget(QtGui.QLabel('Height'))
@@ -224,35 +233,45 @@ class GVerticeWidget(QtGui.QWidget):
     return vmatrix
 
   def setFieldMatrix(self,matrix):
-    self.blxyz.setText(self.buildVerticeString(matrix[0]))
-    self.brxyz.setText(self.buildVerticeString(matrix[1]))
-    self.trxyz.setText(self.buildVerticeString(matrix[2]))
-    self.tlxyz.setText(self.buildVerticeString(matrix[3]))
+    self.tlxyz.setText(self.buildVerticeString(matrix[0]))
+    self.blxyz.setText(self.buildVerticeString(matrix[1]))
+    self.brxyz.setText(self.buildVerticeString(matrix[2]))
+    self.trxyz.setText(self.buildVerticeString(matrix[3]))
     self.fieldmatrix = matrix
 
   def mstrtofloat(self,m) :
     p = []
     mm = []
-    for pt in m:
-      for i in pt:
+    c = 0
+    for i in m:
+      try:
+        t = float(i)
+      except:
         try:
+          t = int(i)
           t = float(i)
         except:
-          try:
-            t = int(i)
-            t = float(i)
-          except:
-            t = 0.0
-        p.append(t)
-      mm.append(p)
+          t = 0.0
+      p.append(t)
+      c = c+1
+      if c == 3 :
+        c = 0
+        mm.append(p)
+        p = []
     return mm
    
 
   def setValue(self,m):
-    mm = self.mstrtofloat(m)
+    print m[0]
+    print m[1]
+    self.verticecount.setValue(m[0])
+    mm = self.mstrtofloat(m[1])
+    print mm
     wv = self.transform(mm[0],mm[1])
+    print wv
     self.width.setText(str(abs(self.dist(wv))))
     hv = self.transform(mm[0],mm[3])
+    print hv
     self.height.setText(str(abs(self.dist(hv))))
     self.setFieldMatrix(mm)
     

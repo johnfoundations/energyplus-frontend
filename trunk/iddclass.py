@@ -611,7 +611,7 @@ class Schedule_Day_Interval(ObjectAbstract):
     self.InsertField(FieldText(self,"Name","",""))
     self.InsertField(FieldObjectlist(self,"Schedule Type Limits Name","","","ScheduleTypeLimitsNames"))
     self.InsertField(FieldYesNo(self,"Interpolate to Timestep","No",("when the interval does not match the user specified timestep a Yes choice will average between the intervals request (to","timestep resolution.  a No choice will use the interval value at the simulation timestep without regard to if it matches","the boundary or not.",),["Yes","No",]))
-    self.InsertField(FieldText(self,"Time 1","",("*until* includes the time entered.",)))
+    self.InsertField(FieldTime(self,"Time 1","",("*until* includes the time entered.",)))
     self.InsertField(FieldReal(self,"Value Until Time 1",0,"","","","",""))
 
 

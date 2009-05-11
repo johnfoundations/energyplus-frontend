@@ -31,7 +31,11 @@ class IddField :
     self.fieldeditor = ''
     if self.Fieldattr['type'] == 'alpha':
       #(self,parent,fieldname,default,notes):
-      self.fieldeditor = 'FieldText(self,'
+      if 'units' in self.Fieldattr:
+        if self.Fieldattr['units'] == 'hh:mm':
+          self.fieldeditor = 'FieldTime(self,'
+      if self.fieldeditor == '':
+        self.fieldeditor = 'FieldText(self,'
       if 'Field' in self.Fieldattr :
         self.fieldeditor = self.fieldeditor + '"' + self.Fieldattr['Field'] + '",'
       else:
@@ -696,7 +700,7 @@ class IddClassGen :
       
       #
       if self.status == 0:
-        print line
+#        print line
         #pdb.set_trace()
         if re.search("\\\\",line)  :
           ls = line.split('\\')
@@ -709,7 +713,7 @@ class IddClassGen :
           self.status = 3
         if self.status == 3:
           if not self.longline == '':
-            print self.longline
+          #  print self.longline
             self.parseObject(self.longline,self.groupname)
           self.longline = ''
           self.status = 1

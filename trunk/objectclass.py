@@ -151,7 +151,7 @@ class ObjectAbstract :
         if not self.extensible:
           pdb.set_trace()
           print 'ran out of fieldlists ' + self.getClassnameIDD()
-          return
+        return
       d = self.rawdatalist[i]
       del remainder[0]
       if not f.setValue(d,remainder):
@@ -180,7 +180,12 @@ class ObjectSingleLine(ObjectAbstract) :
       
 
 class ObjectCompactSchedule(ObjectAbstract) :
-  pass
+  def __init__(self):
+    ObjectAbstract.__init__(self)
+    f = self.fieldlist.pop()
+    del f
+    
+  
     
       
 
