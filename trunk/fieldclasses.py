@@ -380,3 +380,30 @@ class FieldVertice(FieldAbstract):
 #    self.restoflist = restoflist
 #    return True
 
+class FieldCompactSchedule(FieldAbstract):
+	def __init__(self,parent,fieldname,default,notes):
+		FieldAbstract.__init__(self,parent,fieldname,default,notes)
+		self.widgetlist = []
+
+  def CreateEditor(self):
+	  self.fieldeditor = GCompactScheduleWidget()
+	  self.setToolTips(self.notes)
+	  return self.fieldeditor
+
+
+
+  def createForWidget(self):
+	  self.widgetlist.append(GCompactScheduleWidget())
+
+
+  def setEditorValue(self):
+    #array of values
+    widgetindex = 0
+    for i in self.restofdata:
+      i = i.slice()
+      res = re.match(r"^For:(.*)",i)
+      if res:
+        t = res.groups[1]
+	ta = t.split()
+	if len(self.widgetlist) < widgetindex+1:
+
