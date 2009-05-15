@@ -3,6 +3,7 @@ import idfglobals
 
 import pdb
 from PyQt4 import QtGui, QtCore
+from fieldclasses import *
 
 
 #base class for all the defined objects.
@@ -184,6 +185,7 @@ class ObjectCompactSchedule(ObjectAbstract) :
     ObjectAbstract.__init__(self)
     f = self.fieldlist.pop()
     del f
+    self.InsertField(FieldCompactSchedule(self,"Name","",""))
     
   
     
