@@ -30,6 +30,7 @@ class GCompactScheduleWidget(QtGui.QWidget):
     
   def setValue(self,value):
     #value is an array of for, until and data lines
+    print value
     widgetindex = 0
     ds = []
     for i in value:
@@ -158,6 +159,7 @@ class GForWidget(QtGui.QWidget):
         self.insertFor(w,len(self.forcombolist))
       else:
         untilar.append(l)
+    self.insertUntil(untilar)    
     self.lock = False    
       
       
@@ -170,7 +172,7 @@ class GForWidget(QtGui.QWidget):
 if __name__ == "__main__":
   app = QtGui.QApplication(sys.argv)
   view = GCompactScheduleWidget('Test')
-  schedarray = ["For: Weekdays",\
+  schedarray = ["For: Weekdays Weekends SummerDesignDay",\
   "Until: 05:00",\
   "0.05",\
   "Until: 07:00",\
@@ -209,7 +211,6 @@ if __name__ == "__main__":
   "For: Sunday Holidays AllOtherDays",\
   "Until: 24:00",\
   "0.05"]
-  
   view.setValue(schedarray)
   view.setWindowTitle("Widget test")
   view.show()

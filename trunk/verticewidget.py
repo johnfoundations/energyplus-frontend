@@ -1,4 +1,7 @@
 # -*- coding: utf-8 -*-
+
+from PyQt4 import QtGui, QtCore
+
 class GVerticeWidget(QtGui.QWidget):
   def __init__(self,label,parent=None) :
     QtGui.QWidget.__init__(self,parent)
