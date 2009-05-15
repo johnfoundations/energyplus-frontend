@@ -101,12 +101,9 @@ class idfRead :
         
 if __name__ == "__main__":
   c = idfRead('Singlezonetemplate.idf')
-  alist = c.getActivetree()
-  print alist.__class__.__name__
- # for k,v in alist.iteritems() :
-  #  print k
-  #  for li in v:
-  #    print '   ' +li.__class__.__name__
-      #getName()
-      
+  alist = c.getActivelist()
+  for o in alist:
+    if o.getClassnameIDD() == 'Zone':
+      print o.getClassnameIDD()
+      print o.getName()
           

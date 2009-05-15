@@ -28,7 +28,7 @@ import sys
 from PyQt4 import QtCore, QtGui
 
 import idfread
-#import pdb
+import pdb
 
 
 class TreeItem:
@@ -61,27 +61,37 @@ class TreeItem:
             return self.parentItem.childItems.index(self)
         return 0
 
-    def insertItem(self,idditem,ignoredepends):
-      if len(idditem.getDepends()) == 0 or ignoredepends :
-        if self.iddinstance == 0 and idditem.getGroup() == self.itemData[0] :
-          tlist = []
-          tlist.append(idditem.getClassnameIDD())
-          tlist.append(idditem.getName())
-          self.appendChild(TreeItem(tlist,idditem,self))
-          return True
-      if len(idditem.getDepends()) > 0 and not self.iddinstance ==0:
-        dep = idditem.getDepends()
-        if dep[0] in self.iddinstance.getReference()  :
-          tlist = []
-          tlist.append(idditem.getClassnameIDD())
-          tlist.append(idditem.getName())
-          self.appendChild(TreeItem(tlist,idditem,self))
-          return True
-      for l in self.childItems :
-        res = l.insertItem(idditem,ignoredepends)
-        if res :
-          return True
-      return False
+    #def insertItem(self,idditem,root=None):
+      #if not root == None:
+        #start = root
+      #else:
+        #start = self
+
+      #dep = idditem.getDepends()
+      
+      #if dep[0] in start.iddinstance.getReference()  :
+        #tlist = []
+        #tlist.append(idditem.getClassnameIDD())
+        #tlist.append(idditem.getName())
+        #self.appendChild(TreeItem(tlist,idditem,self))
+        #return True
+
+
+          
+        #if self.iddinstance == 0 and idditem.getGroup() == self.itemData[0] :
+          #tlist = []
+          #tlist.append(idditem.getClassnameIDD())
+          #tlist.append(idditem.getName())
+          #self.appendChild(TreeItem(tlist,idditem,self))
+          #return True
+      #if len(idditem.getDepends()) > 0 and not self.iddinstance ==0:
+        #dep = idditem.getDepends()
+
+      #for l in self.childItems :
+        #res = l.insertItem(idditem,ignoredepends)
+        #if res :
+          #return True
+      #return False
         
       
         
@@ -167,7 +177,118 @@ class TreeModel(QtCore.QAbstractItemModel):
 
         return parentItem.childCount()
 
-    def setupModelData(self, lines, parent):
+    def setupModelData(self,lines,parent):
+      number = 0
+      count = 0
+      inserted = False
+      simparams = TreeItem(['Simulation Parameters',''],0,parent)
+      loccli = TreeItem(['Location and Climate',''],0,parent)
+      zones = TreeItem(['Zones',''],0,parent)
+      materials = TreeItem(['Materials',''],0,parent)
+      other = TreeItem(['Other',''],0,parent)
+      schedules = TreeItem(['Schedules',''],0,parent)
+      parent.appendChild(simparams)
+      parent.appendChild(loccli)
+      parent.appendChild(zones)
+      parent.appendChild(materials)
+      parent.appendChild(schedules)
+      parent.appendChild(other)
+      remaininglines = []
+      remaininglines = lines[:]
+      while number == 0:
+        newremaining = []
+        for o in remaininglines:
+          if o.getGroup() == 'Simulation Parameters' or o.getName() == 'GlobalGeometryRules':
+            tlist = []
+            tlist.append(o.getClassnameIDD())
+            tlist.append(o.getName())
+            simparams.appendChild(TreeItem(tlist,o,simparams))
+            continue
+
+          if o.getGroup() == 'Location and Climate':
+            tlist = []
+            tlist.append(o.getClassnameIDD())
+            tlist.append(o.getName())
+            loccli.appendChild(TreeItem(tlist,o,loccli))
+            continue
+
+          if o.getGroup() == 'Schedules':
+            tlist = []
+            tlist.append(o.getClassnameIDD())
+            tlist.append(o.getName())
+            schedules.appendChild(TreeItem(tlist,o,schedules))
+            continue
+
+          if o.getGroup() == 'Compliance Objects':
+            tlist = []
+            tlist.append(o.getClassnameIDD())
+            tlist.append(o.getName())
+            simparams.appendChild(TreeItem(tlist,o,simparams))
+            continue
+              
+              
+          if o.getGroup() == 'Surface Construction Elements':
+            tlist = []
+            tlist.append(o.getClassnameIDD())
+            tlist.append(o.getName())
+            materials.appendChild(TreeItem(tlist,o,materials))
+            continue
+
+          if o.getClassnameIDD() == 'Zone':
+            tlist = []
+            tlist.append(o.getClassnameIDD())
+            tlist.append(o.getName())
+            zones.appendChild(TreeItem(tlist,o,zones))
+            continue
+          
+          if o.getGroup() == 'Internal Gains' or o.getGroup() == 'Thermal Zones and Surfaces':
+            #insert into appropriate zone
+            deps = o.getObjectDepend()
+            #pdb.set_trace()
+            for z in zones.childItems:
+              if z.iddinstance:
+                if deps == z.iddinstance.getName():
+                  #found match.now see where it goes
+                  found = 0
+                  for zc in z.childItems:
+                    if zc.data(0) == o.getGroup():
+                      tlist = []
+                      tlist.append(o.getClassnameIDD())
+                      tlist.append(o.getName())
+                      zc.appendChild(TreeItem(tlist,o,zc))
+                      found = 1
+                      inserted = True
+                      continue
+                  if found == 0:
+                    igti = TreeItem([o.getGroup(),''],0,z)
+                    tlist = []
+                    tlist.append(o.getClassnameIDD())
+                    tlist.append(o.getName())
+                    igti.appendChild(TreeItem(tlist,o,igti))
+                    z.appendChild(igti)
+                    inserted = True
+                    continue
+
+          if inserted:
+            inserted = False
+          else:
+            newremaining.append(o)
+
+        remaininglines = newremaining[:]
+        count = count + 1
+        if count > 3:
+          number = 1
+      
+                     
+                  
+              
+        
+
+      
+    
+
+
+    def setupModelDataorig(self, lines, parent):
         parents = []
         parents.append(parent)
 

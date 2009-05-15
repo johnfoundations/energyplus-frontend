@@ -136,6 +136,13 @@ class ObjectAbstract :
         dependslist.append(f.getFieldDepends())
     return dependslist
 
+  def getObjectDepend(self):
+    for f in self.fieldlist:
+      if f.getFieldDepends() :
+        if f.getFieldName() == 'Zone Name':
+          return f.getValue()
+      
+
   def ParseRawData(self) :
     remainder = []
     remainder = self.rawdatalist[:]
