@@ -63,7 +63,8 @@ class FieldAbstract :
   def Validate(self,val) :
     return True
   
-
+  def getFieldName(self):
+    return self.fieldname
 
 class FieldReal(FieldAbstract) :
   def __init__(self,parent,fieldname,default,notes,minv,maxv,mingtv,maxltv) :
