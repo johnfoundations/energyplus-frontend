@@ -23,17 +23,58 @@ import pdb
 class GCompactScheduleWidget(QtGui.QWidget):
   def __init__(self,label,parent=None) :
     QtGui.QWidget.__init__(self,parent)
+    self.throughwidgetlist = []
+    self.throughwidgetlist.append(GThroughWidget())
+    self.vlayout = QtGui.QVBoxLayout(self)
+    self.vlayout.addWidget(self.throughwidgetlist[0])
+
+    
+  def setValue(self,value):
+    #print value
+    throughdata = []
+    for v in value:
+      v = v.strip()
+      res = re.match(r"^Through:(.*)",v)
+      if res:
+        t = res.group(1)
+        if len(throughdata) == 0:
+          throughdata.append(t)
+          continue
+        else:
+          self.throughwidgetlist[-1].setValue(throughdata)
+          throughdata = []
+          throughdata.append(t)
+          self.throughwidgetlist.append(GThroughWidget())
+          self.vlayout.addWidget(self.throughwidgetlist[-1])
+          continue
+      throughdata.append(v)
+    self.throughwidgetlist[-1].setValue(throughdata)
+    self.throughwidgetlist.append(GThroughWidget())
+    self.vlayout.addWidget(self.throughwidgetlist[-1])
+
+
+
+class GThroughWidget(QtGui.QWidget):
+  def __init__(self,parent=None):
+    QtGui.QWidget.__init__(self,parent)
+    self.vlayout = QtGui.QVBoxLayout(self)
+    self.throughedit = GEditWidget('Through')
+    self.vlayout.addWidget(self.throughedit)
     self.forwidgetlist = []
     self.forwidgetlist.append(GForWidget())
-    self.vlayout = QtGui.QVBoxLayout(self)
     self.vlayout.addWidget(self.forwidgetlist[0])
-    
+
   def setValue(self,value):
     #value is an array of for, until and data lines
     print value
     widgetindex = 0
     ds = []
+    self.throughedit.setValue(value[0])
     for i in value:
+      if widgetindex == 0:
+        widgetindex = 1
+        continue
+      
       #pdb.set_trace()
       i = i.strip()
       res = re.match(r"^For:(.*)",i)
@@ -44,7 +85,7 @@ class GCompactScheduleWidget(QtGui.QWidget):
         if len(ds) == 0:
           ds.append('For:')
           ds = ds + ta
-          print ds
+          #print ds
           continue
         else:
           self.forwidgetlist[-1].setValue(ds)
@@ -53,10 +94,11 @@ class GCompactScheduleWidget(QtGui.QWidget):
           ds = []
           ds.append('For:')
           ds = ds + ta
-          print ds
+          #print ds
       ds.append(i)
     self.forwidgetlist[-1].setValue(ds)
-        
+
+
 
 
 class GForWidget(QtGui.QWidget):
@@ -100,14 +142,16 @@ class GForWidget(QtGui.QWidget):
 
   def insertUntil(self,vals):
     #print vals
+    if len(vals) < 2:
+      vals = ['','']
     tw = GTimeWidget('Until:')
     tw.setValue(vals[0])
     self.vlayout.addWidget(tw)
     if not self.lastuntilwidget == None:
       #print self.lastuntilwidget
       self.disconnect(self.lastuntilwidget,QtCore.SIGNAL('editingFinished ()'),self.untilEdit)
-    self.lastuntilwidget = QtGui.QLineEdit()
-    self.lastuntilwidget.setText(vals[1])
+    self.lastuntilwidget = GEditWidget('Data:')
+    self.lastuntilwidget.setValue(vals[1])
     self.connect(self.lastuntilwidget,QtCore.SIGNAL('editingFinished ()'),self.untilEdit)
     self.vlayout.addWidget(self.lastuntilwidget)
     
@@ -130,6 +174,7 @@ class GForWidget(QtGui.QWidget):
       self.insertFor(w,i+1)
         
   def setValue(self,v):
+    print v
     self.lock = True
     fori = False
     untilar = []
@@ -153,7 +198,7 @@ class GForWidget(QtGui.QWidget):
         except:
           index = 0
         self.forcombolist[-1].setCurrentIndex(index)
-        print self.forcombolist
+        #print self.forcombolist
         w = QtGui.QComboBox()
         self.forcombolist.append(w)
         self.insertFor(w,len(self.forcombolist))

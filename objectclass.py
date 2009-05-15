@@ -185,11 +185,8 @@ class ObjectCompactSchedule(ObjectAbstract) :
     ObjectAbstract.__init__(self)
     f = self.fieldlist.pop()
     del f
-    self.InsertField(FieldCompactSchedule(self,"Name","",""))
+    self.InsertField(FieldCompactSchedule(self,"Schedule","",""))
     
-  
-    
-      
 
 class ObjectSpectral(ObjectAbstract) :
   pass
