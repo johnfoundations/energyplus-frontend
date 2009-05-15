@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from PyQt4 import QtGui, QtCore
+from gwidgetclass import *
 
 class GVerticeWidget(QtGui.QWidget):
   def __init__(self,label,parent=None) :
@@ -31,7 +32,9 @@ class GVerticeWidget(QtGui.QWidget):
     vlayout.addLayout(hl)
     hl = QtGui.QHBoxLayout()
     hl.addStretch()
-    hl.addWidget(QtGui.QLabel("X,Y,Z"))
+    self.calcbutton = QtGui.QPushButton("X,Y,Z")
+    self.calcbutton.setToolTip('Press to calculate.\nEnter the width and height, starting point in bottom left.')
+    hl.addWidget(self.calcbutton)
     hl.addStretch()
     vlayout.addLayout(hl)
     hl = QtGui.QHBoxLayout()
@@ -47,12 +50,52 @@ class GVerticeWidget(QtGui.QWidget):
     
   def connectSignal(self):
     self.connect(self.verticecount, QtCore.SIGNAL('valueChanged (int)'),self.changedCount)
-    self.connect(self.width, QtCore.SIGNAL('editingFinished ()'),self.changedWidth)
-    self.connect(self.height, QtCore.SIGNAL('editingFinished ()'),self.changedHeight)
-    self.connect(self.tlxyz, QtCore.SIGNAL('editingFinished()'),self.changedtl)
-    self.connect(self.trxyz, QtCore.SIGNAL('editingFinished()'),self.changedtr)
-    self.connect(self.blxyz, QtCore.SIGNAL('editingFinished()'),self.changedbl)
-    self.connect(self.brxyz, QtCore.SIGNAL('editingFinished()'),self.changedbr)
+#    self.connect(self.width, QtCore.SIGNAL('editingFinished ()'),self.changedWidth)
+#    self.connect(self.height, QtCore.SIGNAL('editingFinished ()'),self.changedHeight)
+#    self.connect(self.tlxyz, QtCore.SIGNAL('editingFinished()'),self.changedtl)
+#    self.connect(self.trxyz, QtCore.SIGNAL('editingFinished()'),self.changedtr)
+#    self.connect(self.blxyz, QtCore.SIGNAL('editingFinished()'),self.changedbl)
+#    self.connect(self.brxyz, QtCore.SIGNAL('editingFinished()'),self.changedbr)
+    self.connect(self.calcbutton,QtCore.SIGNAL('clicked (bool)'),self.calcpushed)
+
+
+  def calcpushed(self):
+    w = float(self.width.text())
+    h = float(self.height.text())
+    bla = self.buildVerticeArray(self.blxyz.text())
+    if not len(bla) == 3:
+      return
+     
+    matrix = self.getFieldMatrix()
+    normbr = self.transform(matrix[1],matrix[2])
+    dist = self.dist(normbr)
+    if dist == 0:
+      delta = w
+    else:
+      delta = w/dist
+    br =  self.mult(normbr,delta)
+    matrix[2] = self.add(br,matrix[1])
+    normtl = self.transform(matrix[1],matrix[0])
+    dist = self.dist(normtl)
+    if dist == 0:
+      delta = h
+    else:
+      delta = h/dist
+    tl =  self.mult(normtl,delta)
+    matrix[0] = self.add(tl,matrix[1])
+    normtr = self.transform(matrix[2],matrix[3])
+    dist = self.dist(normtr)
+    if dist == 0:
+      delta = h
+    else:
+      delta = h/dist
+    tr =  self.mult(normtr,delta)
+    matrix[3] = self.add(tr,matrix[2])
+    self.setFieldMatrix(matrix)
+              
+
+
+    
       
   def changedCount(self,i):
     pass
@@ -63,10 +106,10 @@ class GVerticeWidget(QtGui.QWidget):
     
   def getFieldMatrix(self):
     vmatrix = []
+    vmatrix.append(self.buildVerticeArray(self.tlxyz.text()))
     vmatrix.append(self.buildVerticeArray(self.blxyz.text()))
     vmatrix.append(self.buildVerticeArray(self.brxyz.text()))
     vmatrix.append(self.buildVerticeArray(self.trxyz.text()))
-    vmatrix.append(self.buildVerticeArray(self.tlxyz.text()))
     fill = [0.0,0.0,0.0]
     for c,l in enumerate(vmatrix):
       if len(l) == 0:
@@ -108,10 +151,10 @@ class GVerticeWidget(QtGui.QWidget):
     self.verticecount.setValue(m[0])
     mm = self.mstrtofloat(m[1])
     print mm
-    wv = self.transform(mm[0],mm[1])
+    wv = self.transform(mm[1],mm[2])
     print wv
     self.width.setText(str(abs(self.dist(wv))))
-    hv = self.transform(mm[0],mm[3])
+    hv = self.transform(mm[1],mm[0])
     print hv
     self.height.setText(str(abs(self.dist(hv))))
     self.setFieldMatrix(mm)
