@@ -19,3 +19,105 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************"""
 
+from PyQt4 import QtGui, QtCore
+import sys
+
+class projectwizard(QtGui.QWizard):
+  def __init__(self,parent=0,fl=0):
+    QtGui.QWizard.__init__(self)
+    self.addPage(self.createProjectDetailsPage())
+    self.addPage(self.createBuildingTemplatePage())
+
+
+  def createProjectDetailsPage(self):
+    page = QtGui.QWizardPage()
+    layout = QtGui.QVBoxLayout()
+    layout.addWidget(QtGui.QLabel('Create a New Simulation'))
+    layout.addWidget(QtGui.QLabel('Project Name:'))
+    self.projectname = QtGui.QLineEdit()
+    layout.addWidget(self.projectname)
+    layout.addWidget(QtGui.QLabel('Will create a folder by that name'))
+    layout.addWidget(QtGui.QLabel('Project Details: Name, address, etc'))
+    self.projectdetails = QtGui.QTextEdit()
+    layout.addWidget(self.projectdetails)
+    layout.addWidget(QtGui.QLabel('Units:'))
+    self.units = QtGui.QComboBox()
+    self.units.addItems(['Imperial','Metric'])
+    layout.addWidget(self.units)
+    page.setLayout(layout)
+    return page
+
+  def createBuildingTemplatePage(self):
+    page = QtGui.QWizardPage()
+    layout = QtGui.QVBoxLayout()
+    layout.addWidget(QtGui.QLabel('Select Shape and Orientation of building'))
+    hlayout = QtGui.QHBoxLayout()
+    self.signalmapper = QtCore.QSignalMapper(self)
+    self.connect(self.signalmapper,QtCore.SIGNAL('mapped(int)'),self.templateButton)
+    pixlist = ['pixmaps/l-1.png','pixmaps/l-2.png','pixmaps/l-3.png','pixmaps/l-4.png',\
+    'pixmaps/h-1.png','pixmaps/h-2.png',\
+    'pixmaps/t-1.png','pixmaps/t-2.png','pixmaps/t-3.png','pixmaps/t-4.png',\
+    'pixmaps/u-1.png','pixmaps/u-2.png','pixmaps/u-3.png','pixmaps/u-4.png']
+    self.shapelist = ['L shaped','L90','L180','L270','H Shaped','H90','T Shaped','T90','T180','T270','U Shaped','U90','U180','U270',]
+    layoutL = QtGui.QHBoxLayout()
+    layoutH = QtGui.QHBoxLayout()
+    layoutT = QtGui.QHBoxLayout()
+    layoutU = QtGui.QHBoxLayout()
+    for c,p in enumerate(pixlist):
+      button = QtGui.QPushButton()
+      button.setIcon(QtGui.QIcon(p))
+      self.connect(button, QtCore.SIGNAL('clicked ( bool)'),self.signalmapper, QtCore.SLOT('map()'))
+      self.signalmapper.setMapping(button,c)
+      if c in [0,1,2,3]:
+        layoutL.addWidget(button)
+      if c in [4,5]:
+        layoutH.addWidget(button)
+      if c in [6,7,8,9]:
+        layoutT.addWidget(button)
+      if c in [10,11,12,13]:
+        layoutU.addWidget(button)
+
+    layoutL.addStretch()
+    layout.addLayout(layoutL)
+    layoutH.addStretch()
+    layout.addLayout(layoutH)
+    layoutT.addStretch()
+    layout.addLayout(layoutT)
+    layoutU.addStretch()
+    layout.addLayout(layoutU)
+    self.shapefield = QtGui.QLabel()
+    page.registerField("shapefield", self.shapefield);
+    layout.addWidget(self.shapefield)
+    page.setLayout(layout)
+    return page
+    
+
+
+  def templateButton(self,i):
+    print i
+    self.shapefield.setText(self.shapelist[i])
+
+  def createBuildingDimensionPage():
+    page = QtGui.QWizardPage()
+    layout = QtGui.QVBoxLayout()
+    layout.addWidget(QtGui.QLabel('Outside Dimensions of Building'))
+    
+
+
+
+
+
+
+
+
+
+
+
+
+if __name__ == "__main__":
+  app = QtGui.QApplication(sys.argv)
+  view = projectwizard()
+  view.setWindowTitle("Wizard test")
+  view.show()
+  sys.exit(app.exec_())
+  
