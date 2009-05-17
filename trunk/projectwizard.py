@@ -21,12 +21,14 @@
 
 from PyQt4 import QtGui, QtCore
 import sys
+from dimensionscene import *
 
 class projectwizard(QtGui.QWizard):
   def __init__(self,parent=0,fl=0):
     QtGui.QWizard.__init__(self)
     self.addPage(self.createProjectDetailsPage())
     self.addPage(self.createBuildingTemplatePage())
+    self.bdp = self.addPage(self.createBuildingDimensionPage())
 
 
   def createProjectDetailsPage(self):
@@ -58,7 +60,7 @@ class projectwizard(QtGui.QWizard):
     'pixmaps/h-1.png','pixmaps/h-2.png',\
     'pixmaps/t-1.png','pixmaps/t-2.png','pixmaps/t-3.png','pixmaps/t-4.png',\
     'pixmaps/u-1.png','pixmaps/u-2.png','pixmaps/u-3.png','pixmaps/u-4.png']
-    self.shapelist = ['L shaped','L90','L180','L270','H Shaped','H90','T Shaped','T90','T180','T270','U Shaped','U90','U180','U270',]
+    self.shapelist = ['L','L90','L180','L270','H','H90','T','T90','T180','T270','U','U90','U180','U270',]
     layoutL = QtGui.QHBoxLayout()
     layoutH = QtGui.QHBoxLayout()
     layoutT = QtGui.QHBoxLayout()
@@ -85,9 +87,7 @@ class projectwizard(QtGui.QWizard):
     layout.addLayout(layoutT)
     layoutU.addStretch()
     layout.addLayout(layoutU)
-    self.shapefield = QtGui.QLabel()
-    page.registerField("shapefield", self.shapefield);
-    layout.addWidget(self.shapefield)
+    self.shapefield = 'L'
     page.setLayout(layout)
     return page
     
@@ -95,15 +95,23 @@ class projectwizard(QtGui.QWizard):
 
   def templateButton(self,i):
     print i
-    self.shapefield.setText(self.shapelist[i])
+    self.shapefield = self.shapelist[i]
 
-  def createBuildingDimensionPage():
+  def createBuildingDimensionPage(self):
     page = QtGui.QWizardPage()
     layout = QtGui.QVBoxLayout()
     layout.addWidget(QtGui.QLabel('Outside Dimensions of Building'))
+    self.bdpscene = shapeDimension('L')
+    layout.addWidget(self.bdpscene)
+    page.setLayout(layout)
+    return page
     
 
-
+  def initializePage (self, id):
+    if id == self.bdp:
+      self.bdpscene.scene.clear()
+      self.bdpscene.drawShape(self.shapefield)
+    QtGui.QWizard.initializePage(self,id)
 
 
 
