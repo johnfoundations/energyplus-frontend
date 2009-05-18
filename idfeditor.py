@@ -25,6 +25,7 @@ from PyQt4 import QtGui, QtCore
 from gwidget import GWidget
 import projecttab
 import project
+import zonetab
 
 
 # We start a new class here
@@ -47,6 +48,7 @@ class idfeditor(QtGui.QMainWindow):
     self.tabs = QtGui.QTabWidget()
     self.tabs.addTab(projecttab.projectTab(),'Project')
     self.tabs.addTab(GWidget(),'Objects')
+    self.tabs.addTab(zonetab.zoneTab(),'Zones')
 
   def createActions(self):
     self.exit = QtGui.QAction('Exit', self)
