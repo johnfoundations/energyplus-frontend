@@ -22,6 +22,7 @@
 from PyQt4 import QtGui, QtCore
 import sys
 from dimensionscene import *
+import idfread
 
 class projectwizard(QtGui.QWizard):
   def __init__(self,parent=0,fl=0):
@@ -29,6 +30,20 @@ class projectwizard(QtGui.QWizard):
     self.addPage(self.createProjectDetailsPage())
     self.addPage(self.createBuildingTemplatePage())
     self.bdp = self.addPage(self.createBuildingDimensionPage())
+    self.addPage(self.createDefaultDetailPage())
+
+  def getData(self):
+    #returns dict with names and arrays of values
+    results = dict()
+    results['Name'] = str(self.projectname.text())
+    results['Details'] = str(self.projectdetails.toPlainText())
+    results['Units'] = str(self.units.currentText())
+    results['Shape'] = self.shapefield
+    results['Dimensions'] = self.bdpscene.getDimensions()
+    results['Wall'] = str(self.defaultwall.currentText())
+    results['Window'] = str(self.defaultwindow.currentText())
+    return results
+    
 
 
   def createProjectDetailsPage(self):
@@ -103,6 +118,7 @@ class projectwizard(QtGui.QWizard):
     layout.addWidget(QtGui.QLabel('Outside Dimensions of Building'))
     self.bdpscene = shapeDimension('L')
     layout.addWidget(self.bdpscene)
+    layout.addWidget(QtGui.QLabel('Click on the _ and enter the dimensions of the wall section'))
     page.setLayout(layout)
     return page
     
@@ -113,13 +129,102 @@ class projectwizard(QtGui.QWizard):
       self.bdpscene.drawShape(self.shapefield)
     QtGui.QWizard.initializePage(self,id)
 
+  def createZoneDetailPage(self):
+    page = QtGui.QWizardPage()
+    layout = QtGui.QVBoxLayout()
+    layout.addWidget(QtGui.QLabel('Zoning Details'))
+    hlayout = QtGui.QHBoxLayout()
+    self.floorname = QtGui.QLineEdit()
+    hlayout.addWidget(QtGui.QLabel('Enter Floor Name:'))
+    hlayout.addWidget(self.floorname)
+    layout.addLayout(hlayout)
+    self.floornamebutton = QtGui.QPushButton('Add Floor')
+    layout.addWidget(self.floornamebutton)
+    self.floorlist = QtGui.QComboBox()
+    layout.addWidget(self.floorlist)
+    self.zonegroupbox = QtGui.QGroupBox('Floor Details')
+    zonegblayout = QtGui.QVBoxLayout()
+    hlayout = QtGui.QHBoxLayout()
+    hlayout.addWidget(QtGui.QLabel('Enter Zone Name:'))
+    self.zonename = QtGui.QLineEdit()
+    hlayout.addWidget(self.zonename)
+    zonegblayout.addLayout(hlayout)
+    self.zonenamebutton = QtGui.QPushButton('Add Zone')
+    zonegblayout.addWidget(self.zonenamebutton)
+    self.zonelist = QtGui.QComboBox()
+    zonegblayout.addWidget(self.zonelist)
+    self.zonegroupbox.setLayout(zonegblayout)
+    layout.addWidget(self.zonegroupbox)
+    self.floorarray = []
+    self.zonearray = dict()
+    self.currentfloor = ''
+    self.connect(self.floornamebutton, QtCore.SIGNAL('clicked ( bool)'),self.floornamebuttonclicked)
+    self.connect(self.zonenamebutton, QtCore.SIGNAL('clicked ( bool)'),self.zonenamebuttonclicked)
+    self.connect(self.floorlist,QtCore.SIGNAL('currentIndexChanged (int)'),self.floorlistchanged)
+    self.connect(self.zonelist,QtCore.SIGNAL('currentIndexChanged (int)'),self.zonelistchanged)
+    page.setLayout(layout)
+    return page
+    
 
 
+  def floornamebuttonclicked(self):
+    print 'floornamebutton'
+    if not self.floorname.text() == '':
+      self.floorarray.append(self.floorname.text())
+      self.floorlist.addItem(self.floorname.text())
+      self.zonearray[str(self.floorname.text())] = []
+      self.floorname.setText('')
+    
+  def zonenamebuttonclicked(self):
+    print 'zonenamebutton'
+    if not self.zonename.text() == '':
+      print self.zonearray
+      print self.currentfloor
+      self.zonearray[self.currentfloor].append(str(self.zonename.text()))
+      self.zonelist.addItem(self.zonename.text())
+      self.zonename.setText('')
+      
+      
 
+  def floorlistchanged(self,i):
+    print 'floorlistchanged'
+    print i
+    s = self.floorlist.itemText(i)
+    self.zonegroupbox.setTitle(s + ' Zones and Details')
+    self.currentfloor = str(s)
+    self.zonelist.clear()
+    self.zonelist.addItems(self.zonearray[self.currentfloor])
 
+  def zonelistchanged(self,i):
+    print 'zonelistchanged'
+    print i
 
-
-
+  def createDefaultDetailPage(self):
+    page = QtGui.QWizardPage()
+    layout = QtGui.QVBoxLayout()
+    layout.addWidget(QtGui.QLabel('Construction Default Details'))
+    layout.addWidget(QtGui.QLabel('Default Wall Construction'))
+    ashraewallidf = idfread.idfRead('/usr/local/EnergyPlus-3-1-0/datasets/ASHRAE_2005_HOF_Materials.idf')
+    compositewallidf = idfread.idfRead('/usr/local/EnergyPlus-3-1-0/datasets/CompositeWallConstructions.idf')
+    windowidf = idfread.idfRead('/usr/local/EnergyPlus-3-1-0/datasets/WindowConstructs.idf')
+    walls = ashraewallidf.getFilteredList('Construction') + compositewallidf.getFilteredList('Construction')
+    windows = windowidf.getFilteredList('Construction')
+    wallnames = []
+    windownames = []
+    for w in walls:
+      wallnames.append(w.getName())
+    for w in windows:
+      windownames.append(w.getName())
+    self.defaultwall = QtGui.QComboBox()
+    self.defaultwall.addItems(wallnames)
+    layout.addWidget(self.defaultwall)
+    self.defaultwindow = QtGui.QComboBox()
+    self.defaultwindow.addItems(windownames)
+    layout.addWidget(QtGui.QLabel('Default Window Construction'))
+    layout.addWidget(self.defaultwindow)
+    page.setLayout(layout)
+    return page
+    
 
 
 if __name__ == "__main__":

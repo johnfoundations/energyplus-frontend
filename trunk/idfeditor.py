@@ -23,21 +23,80 @@
 import sys
 from PyQt4 import QtGui, QtCore
 from gwidget import GWidget
+import projecttab
+import project
+
 
 # We start a new class here
 # derived from QMainWindow
 # A calendar is displayed and clicking on a date makes this date be displayed on the label on the bottom
 
 class idfeditor(QtGui.QMainWindow):
-    def __init__(self):
-        QtGui.QMainWindow.__init__(self)
-       	myWidget = GWidget()
-        self.setCentralWidget(myWidget)
-        self.setWindowTitle('IDF Creator')
-        self.setGeometry(QtGui.QDesktopWidget().screenGeometry())
-        self.statusBar().showMessage('Click on Scene to start')
+  def __init__(self):
+    QtGui.QMainWindow.__init__(self)
+  	#myWidget = GWidget()
+    self.createActions()
+    self.createMenus()
+    self.createToolbar()
+    self.createTabs()
+    self.setCentralWidget(self.tabs)
+    self.setWindowTitle('IDF Creator')
+    self.setGeometry(QtGui.QDesktopWidget().screenGeometry())
   
+  def createTabs(self) :
+    self.tabs = QtGui.QTabWidget()
+    self.tabs.addTab(projecttab.projectTab(),'Project')
+    self.tabs.addTab(GWidget(),'Objects')
 
+  def createActions(self):
+    self.exit = QtGui.QAction('Exit', self)
+    self.exit.setShortcut('Ctrl+Q')
+    self.exit.setStatusTip('Exit application')
+    self.connect(self.exit, QtCore.SIGNAL('triggered()'), QtCore.SLOT('close()'))
+    self.newproject = QtGui.QAction('New Project', self)
+    self.newproject.setShortcut('Ctrl+N')
+    self.newproject.setStatusTip('Create a New Project')
+    self.connect(self.newproject, QtCore.SIGNAL('triggered()'), self.createNewProject)
+    self.openproject = QtGui.QAction('Open Project', self)
+    self.openproject.setShortcut('Ctrl+O')
+    self.openproject.setStatusTip('Open a Project')
+    self.connect(self.openproject, QtCore.SIGNAL('triggered()'), self.openProject)
+
+  def createMenus(self):
+    
+    menubar = self.menuBar()
+    filem = menubar.addMenu('&File')
+    filem.addAction(self.newproject)
+    filem.addAction(self.openproject)
+    filem.addAction(self.exit)
+
+
+  def createToolbar(self):
+    toolbar = self.addToolBar('')
+    toolbar.addAction(self.exit)
+    toolbar.addAction(self.newproject)
+    toolbar.addAction(self.openproject)
+
+  def createNewProject(self):
+    print 'createNewProject'
+    self.project = project.Project('')
+
+  def openProject(self):
+    print 'openProject'
+    fd= QtGui.QFileDialog()
+    if fd.exec_():
+      print fd.selectedFiles()
+
+
+
+
+
+
+
+
+
+
+    
 
 if __name__ == "__main__":
     app = QtGui.QApplication(sys.argv)
