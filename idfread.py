@@ -38,6 +38,15 @@ class idfRead :
   def getActivelist(self):
     return self.active
 
+  def getFilteredList(self,f):
+    #filters on iddclass
+    flist = []
+    for i in self.active:
+      if i.getClassnameIDD() == f:
+        flist.append(i)
+    return flist
+
+
   def getActiveReferences(self):
     return self.referencedict
 
