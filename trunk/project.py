@@ -35,9 +35,12 @@ class Project():
       print 'finished wizard'
       results = wiz.getData()
       print results
+      self.createOutlineArray(results['Dimensions'],results['Shape'])
+      
 
 
-
+  def getOutlineArray(self):
+    return self.outlinearray
 
   def openProject(self,name):
     pass
@@ -45,3 +48,44 @@ class Project():
 
   def saveProject(self):
     pass
+
+  def createOutlineArray(data,shape):
+    self.outlinearray = []
+    if shape == 'L':
+      pass
+    if shape == 'L90':
+      self.outlinearray.append([0,0])
+      self.outlinearray.append([data[0],0])
+      self.outlinearray.append([0,data[1]-data[3]])
+      self.outlinearray.append([data[2]-data[0],0])
+      self.outlinearray.append([0,data[1]])
+      self.outlinearray.append([-data[2],0])
+      self.outlinearray.append([0,data[3]])
+      return
+        
+    if shape == 'L180':
+      pass
+    if shape == 'L270':
+      pass
+    if shape == 'H':
+      pass
+    if shape == 'H90':
+      pass
+    if shape == 'T':
+      pass
+    if shape == 'T90':
+      pass
+    if shape == 'T180':
+      pass
+    if shape == 'T270':
+      pass
+    if shape == 'U':
+      pass
+    if shape == 'U90':
+      pass
+    if shape == 'U180':
+      pass
+    if shape == 'U270':
+      pass
+    
+    

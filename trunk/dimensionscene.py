@@ -29,26 +29,29 @@ class shapeDimension(QtGui.QWidget):
     #shape from projectwizard.py
     self.scene = QtGui.QGraphicsScene()
     self.view = QtGui.QGraphicsView(self.scene)
-    self.layout = QtGui.QVBoxLayout()
+    self.layout = QtGui.QVBoxLayout(self)
     self.layout.addWidget(self.view)
     self.createDict()
+    self.setLayout(self.layout)
 
   def drawShape(self,shape):
     s = QtCore.QPointF(0,0)
     e = QtCore.QPointF(0,0)
-    for p in self.points[shape]:
+    for p in shape:
       e.setX(e.x()+p[0])
       e.setY(e.y()+p[1])
       self.scene.addLine(QtCore.QLineF(s,e))
       s.setX(e.x())
       s.setY(e.y())
 
+  def drawDimensionEdit(self,shape):
     for p in self.edit[shape]:
       l = self.scene.addText('_')
       l.moveBy(p[0],p[1])
       l.setTextInteractionFlags(QtCore.Qt.TextEditable)
       self.measures.append(l)
 
+  def drawNorthArrow(self):
     arrow = QtGui.QPolygonF()
     arrow.append(QtCore.QPointF(-100,-60))
     arrow.append(QtCore.QPointF(-95,-50))
@@ -64,8 +67,16 @@ class shapeDimension(QtGui.QWidget):
     n.append(QtCore.QPointF(-96,-45))
     n.append(QtCore.QPointF(-96,-35))
     self.scene.addPolygon(n)
-    self.setLayout(self.layout)
+   
 
+
+  def drawPredefinedShape(self,pre):
+    self.drawShape(self.points[pre])
+    self.drawDimensionEdit(pre)
+    self.drawNorthArrow()
+  
+  
+  
 
   def createDict(self):
     self.points = dict()

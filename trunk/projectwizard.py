@@ -27,6 +27,7 @@ import idfread
 class projectwizard(QtGui.QWizard):
   def __init__(self,parent=0,fl=0):
     QtGui.QWizard.__init__(self)
+    self.addPage(self.createInitialPage())
     self.addPage(self.createProjectDetailsPage())
     self.addPage(self.createBuildingTemplatePage())
     self.bdp = self.addPage(self.createBuildingDimensionPage())
@@ -45,6 +46,27 @@ class projectwizard(QtGui.QWizard):
     return results
     
 
+
+  def createInitialPage(self):
+    page = QtGui.QWizardPage()
+    layout = QtGui.QVBoxLayout()
+    layout.addWidget(QtGui.QLabel('Click to Select'))
+    openbutton = QtGui.QPushButton('Open Existing Project')
+    idfbutton  = QtGui.QPushButton('Open Project from IDF file')
+    layout.addWidget(openbutton)
+    layout.addWidget(idfbutton)
+    layout.addWidget(QtGui.QLabel('To Create a New Project, Press Next>'))
+    page.setLayout(layout)
+    return page
+
+
+
+
+
+
+
+
+    
 
   def createProjectDetailsPage(self):
     page = QtGui.QWizardPage()
@@ -126,7 +148,7 @@ class projectwizard(QtGui.QWizard):
   def initializePage (self, id):
     if id == self.bdp:
       self.bdpscene.scene.clear()
-      self.bdpscene.drawShape(self.shapefield)
+      self.bdpscene.drawPredefinedShape(self.shapefield)
     QtGui.QWizard.initializePage(self,id)
 
   def createZoneDetailPage(self):
