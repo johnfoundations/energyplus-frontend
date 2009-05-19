@@ -53,13 +53,19 @@ class projectwizard(QtGui.QWizard):
     layout.addWidget(QtGui.QLabel('Click to Select'))
     openbutton = QtGui.QPushButton('Open Existing Project')
     idfbutton  = QtGui.QPushButton('Open Project from IDF file')
+    self.connect(openbutton, QtCore.SIGNAL('clicked ( bool)'),self.openbuttondone)
+    self.connect(idfbutton, QtCore.SIGNAL('clicked ( bool)'),self.idfbuttondone)
     layout.addWidget(openbutton)
     layout.addWidget(idfbutton)
     layout.addWidget(QtGui.QLabel('To Create a New Project, Press Next>'))
     page.setLayout(layout)
     return page
 
+  def openbuttondone(self):
+    self.done(2)
 
+  def idfbuttondone(self):
+    self.done(3)
 
 
 

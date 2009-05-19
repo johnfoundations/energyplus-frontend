@@ -43,13 +43,24 @@ class idfeditor(QtGui.QMainWindow):
     self.setCentralWidget(self.tabs)
     self.setWindowTitle('IDF Creator')
     self.setGeometry(QtGui.QDesktopWidget().screenGeometry())
+    self.openProject()
   
   def createTabs(self) :
+    self.project = project.Project()
     self.tabs = QtGui.QTabWidget()
-    self.tabs.addTab(projecttab.projectTab(),'Project')
-    self.tabs.addTab(GWidget(),'Objects')
-    self.tabs.addTab(zonetab.zoneTab(),'Zones')
-
+    ptab = projecttab.projectTab()
+    self.tabs.addTab(ptab,'Project')
+    gtab = GWidget()
+    self.tabs.addTab(gtab,'Objects')
+    ztab = zonetab.zoneTab()
+    self.tabs.addTab(ztab,'Zones')
+    self.connect(self, QtCore.SIGNAL('reloadProject()'), ptab.updateProject)
+    self.connect(self, QtCore.SIGNAL('reloadProject()'), gtab.updateProject)
+    self.connect(self, QtCore.SIGNAL('reloadProject()'), ztab.updateProject)
+    ztab.setProject(self.project)
+    gtab.setProject(self.project)
+    ptab.setProject(self.project)
+    
   def createActions(self):
     self.exit = QtGui.QAction('Exit', self)
     self.exit.setShortcut('Ctrl+Q')
@@ -68,7 +79,7 @@ class idfeditor(QtGui.QMainWindow):
     
     menubar = self.menuBar()
     filem = menubar.addMenu('&File')
-    filem.addAction(self.newproject)
+#    filem.addAction(self.newproject)
     filem.addAction(self.openproject)
     filem.addAction(self.exit)
 
@@ -76,18 +87,17 @@ class idfeditor(QtGui.QMainWindow):
   def createToolbar(self):
     toolbar = self.addToolBar('')
     toolbar.addAction(self.exit)
-    toolbar.addAction(self.newproject)
+#    toolbar.addAction(self.newproject)
     toolbar.addAction(self.openproject)
 
   def createNewProject(self):
     print 'createNewProject'
-    self.project = project.Project('')
+    
 
   def openProject(self):
     print 'openProject'
-    fd= QtGui.QFileDialog()
-    if fd.exec_():
-      print fd.selectedFiles()
+    self.project.createNewProject()
+    self.emit(QtCore.SIGNAL('reloadProject()'))
 
 
 

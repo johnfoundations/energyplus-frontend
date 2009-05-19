@@ -33,8 +33,48 @@ class shapeDimension(QtGui.QWidget):
     self.layout.addWidget(self.view)
     self.createDict()
     self.setLayout(self.layout)
+    self.polygonlist = dict()
+    self.zoom = 1.0
+    self.createActions()
+    
+  def createActions(self):
+    self.zoomin = QtGui.QAction('Zoom In', self)
+    self.zoomin.setStatusTip('Zoom In')
+    self.connect(self.zoomin, QtCore.SIGNAL('triggered()'), self.zoominslot)
+    self.zoomout = QtGui.QAction('Zoom Out', self)
+    self.zoomout.setStatusTip('Zoom Out')
+    self.connect(self.zoomout, QtCore.SIGNAL('triggered()'), self.zoomoutslot)
+
+  def zoominslot(self):
+    print 'zoominslot'
+    self.zoom = self.zoom + 0.5
+    self.rescale()
+    
+  def zoomoutslot(self):
+    print 'zoomoutslot'
+    self.zoom = self.zoom - 0.5
+    self.rescale()
+
+  def rescale(self):
+    print self.zoom
+    oldMatrix = self.view.matrix();
+    self.view.resetMatrix();
+    self.view.translate(oldMatrix.dx(), oldMatrix.dy())
+    self.view.scale(self.zoom,self.zoom);
+
+  def contextMenuEvent (self,context ):
+    print 'contextMenuEvent'
+    menu = QtGui.QMenu()
+    menu.addAction(self.zoomin)
+    menu.addAction(self.zoomout)
+    menu.exec_(context.pos())
+    
+
+
+
 
   def drawShape(self,shape):
+    print shape
     s = QtCore.QPointF(0,0)
     e = QtCore.QPointF(0,0)
     for p in shape:
@@ -43,6 +83,33 @@ class shapeDimension(QtGui.QWidget):
       self.scene.addLine(QtCore.QLineF(s,e))
       s.setX(e.x())
       s.setY(e.y())
+
+  def drawPolygon(self,points,name):
+    print points
+    print name
+    spoints = []
+    for p in points:
+      spoints.append([p[0]*self.zoom,p[1]*self.zoom])
+    s = QtCore.QPointF(spoints[0][0],points[0][1])
+    e = QtCore.QPointF(spoints[0][0],points[0][1])
+    print e
+    print s
+    poly = QtGui.QPolygonF()
+    poly.append(s)
+    for p in points:
+      e.setX(e.x()+p[0])
+      e.setY(e.y()+p[1])
+      poly.append(e)
+      s.setX(e.x())
+      s.setY(e.y())
+    pen = QtGui.QPen()
+    pen.setWidth(4)
+    if name in self.polygonlist:
+      self.polygonlist[name].setPolygon(poly)
+      self.polygonlist[name].setPen(pen)
+    else:
+      self.polygonlist[name] = self.scene.addPolygon(poly,pen)
+      
 
   def drawDimensionEdit(self,shape):
     for p in self.edit[shape]:

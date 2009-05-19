@@ -28,12 +28,13 @@ import fieldclasses
 import objectclass
 import idfread
 import idftreemodel
+import projectwidget
 
 
 
-class GWidget(QtGui.QWidget):
+class GWidget(projectwidget.projectWidget):
   def __init__(self, parent=None):
-    QtGui.QWidget.__init__(self, parent)
+    projectwidget.projectWidget.__init__(self, parent)
 #    self.idfScene = GGraphicsScene()
 #    self.idfView =  QtGui.QGraphicsView(self.idfScene)    
     self.horizontallayout = QtGui.QHBoxLayout()
