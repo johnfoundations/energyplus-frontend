@@ -22,12 +22,13 @@
 from PyQt4 import QtGui, QtCore
 import sys
 import dimensionscene
+import projectwidget
 
 
 
-class zoneTab(QtGui.QWidget):
+class zoneTab(projectwidget.projectWidget):
   def __init__(self, parent=None):
-    QtGui.QWidget.__init__(self, parent)
+    projectwidget.projectWidget.__init__(self, parent)
     hlayout = QtGui.QHBoxLayout(self)
     self.bdpscene = dimensionscene.shapeDimension('')
     vl = QtGui.QVBoxLayout()
@@ -57,14 +58,36 @@ class zoneTab(QtGui.QWidget):
     zonegblayout.addWidget(self.zonelist)
     self.zonegroupbox.setLayout(zonegblayout)
     layout.addWidget(self.zonegroupbox)
+    self.outlinebox = QtGui.QGroupBox('Edit Line Segments')
+    lseglayout = QtGui.QVBoxLayout()
+    self.linesegments = QtGui.QLineEdit()
+    lseglayout.addWidget(self.linesegments)
+    hhlayout = QtGui.QHBoxLayout()
+    self.leftsegmentbutton = QtGui.QPushButton('<--')
+    self.leftsegmentbutton.setEnabled(False)
+    self.indpoint = QtGui.QLineEdit()
+    rx = QtCore.QRegExp('-*[0-9]*\.[0-9]*,-*[0-9]*\.[0-9]*')
+    self.indpoint.setValidator(QtGui.QRegExpValidator(rx,self.indpoint))
+    hhlayout.addWidget(self.leftsegmentbutton)
+    hhlayout.addWidget(self.indpoint)
+    hhlayout.addStretch()
+    lseglayout.addLayout(hhlayout)
+    self.addsegmentbutton = QtGui.QPushButton('Add Segment')
+    lseglayout.addWidget(self.addsegmentbutton)
+    self.outlinebox.setLayout(lseglayout)
+    layout.addWidget(self.outlinebox)
     layout.addStretch()
     self.floorarray = []
     self.zonearray = dict()
     self.currentfloor = ''
+    self.currentsegmentlist = []
+    self.segmentarray = dict()
     self.connect(self.floornamebutton, QtCore.SIGNAL('clicked ( bool)'),self.floornamebuttonclicked)
     self.connect(self.zonenamebutton, QtCore.SIGNAL('clicked ( bool)'),self.zonenamebuttonclicked)
     self.connect(self.floorlist,QtCore.SIGNAL('currentIndexChanged (int)'),self.floorlistchanged)
     self.connect(self.zonelist,QtCore.SIGNAL('currentIndexChanged (int)'),self.zonelistchanged)
+    self.connect(self.leftsegmentbutton, QtCore.SIGNAL('clicked ( bool)'),self.leftsegmentbuttonclicked)
+    self.connect(self.addsegmentbutton, QtCore.SIGNAL('clicked(bool)'), self.addsegmentbuttonclicked)
     hlayout.addLayout(layout)
 
     
@@ -76,6 +99,10 @@ class zoneTab(QtGui.QWidget):
       self.floorarray.append(self.floorname.text())
       self.floorlist.addItem(self.floorname.text())
       self.zonearray[str(self.floorname.text())] = []
+      if len(self.segmentarray) == 0:
+        self.segmentarray[str(self.floorname.text())] = self.currentsegmentlist
+      else:
+        self.segmentarray[str(self.floorname.text())] = []
       self.floorname.setText('')
 
   def zonenamebuttonclicked(self):
@@ -87,7 +114,48 @@ class zoneTab(QtGui.QWidget):
       self.zonelist.addItem(self.zonename.text())
       self.zonename.setText('')
 
+  def leftsegmentbuttonclicked(self):
+    print 'leftsegmentbuttonclicked'
+    self.currentsegmentlist.pop()
+    self.segmentarray[self.floorzone] = self.currentsegmentlist[:]
+    self.bdpscene.drawPolygon(self.idftoscene(self.currentsegmentlist),self.floorzone)
+    if len(self.currentsegmentlist) == 0:
+      self.leftsegmentbutton.setEnabled(False)
+    self.linesegments.setText(self.buildSegmentStr())
 
+  def addsegmentbuttonclicked(self):
+    print 'addsegmentbuttonclicked'
+    s = self.linesegments.text()
+    self.linesegments.setText(self.linesegments.text()+ ', ' + self.indpoint.text())
+    ps = self.indpointtopoint()
+    self.currentsegmentlist.append(ps)
+    print self.floorzone
+    self.segmentarray[self.floorzone] = self.currentsegmentlist[:]
+    self.indpoint.setText('')
+    if not s == '':
+      self.bdpscene.drawPolygon(self.idftoscene(self.currentsegmentlist),self.floorzone)
+    if len(self.currentsegmentlist) > 0:
+      self.leftsegmentbutton.setEnabled(True)
+      
+
+    
+  def indpointtopoint(self):
+    s = self.indpoint.text()
+    ps = s.split(',')
+    try:
+      t0 = float(ps[0])
+      t1 = float(ps[1])
+    except:
+      print 'point is not valid'
+    return [t0,t1]
+
+  def idftoscene(self,l):
+    #first point is origin. idf y is up, scene y is down
+    ll = []
+    for items in l:
+      ll.append([items[0],-items[1]])
+    return ll
+    
 
   def floorlistchanged(self,i):
     print 'floorlistchanged'
@@ -96,10 +164,39 @@ class zoneTab(QtGui.QWidget):
     self.zonegroupbox.setTitle(s + ' Zones and Details')
     self.currentfloor = str(s)
     self.zonelist.clear()
-    self.zonelist.addItems(self.zonearray[self.currentfloor])
+    if self.currentfloor in self.zonearray:
+      self.zonelist.addItems(self.zonearray[self.currentfloor])
+    if len(self.zonearray) == 0:
+      self.floorzone = self.currentfloor
+
+  def buildSegmentStr(self):
+    s = ""
+    for seg in self.currentsegmentlist:
+      s = s + str(seg) + ','
+    return s
+
 
   def zonelistchanged(self,i):
     print 'zonelistchanged'
-    print i
+    print self.segmentarray
+    #update segments
+    self.floorzone = self.currentfloor+':'+str(self.zonelist.itemText(i))
+    print self.floorzone
+    if self.floorzone in self.segmentarray:
+      self.currentsegmentlist = self.segmentarray[self.floorzone]
+    else:
+      self.currentsegmentlist = []
+    self.linesegments.setText(self.buildSegmentStr())
 
-                
+  def updateProject(self):
+    r = self.projectlink.getOutlineArray()
+    print r
+    self.currentsegmentlist = r[:]
+    self.bdpscene.drawShape(r)
+    
+    
+
+
+
+
+    

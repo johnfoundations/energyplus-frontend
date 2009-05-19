@@ -20,10 +20,15 @@
 ***************************************************************************"""
 
 import projectwizard
-
+from PyQt4 import QtGui, QtCore
 
 class Project():
-  def __init__(self,projectname):
+  def __init__(self):
+    self.projectdir = '~/EPProjects'
+    self.results = dict()
+
+
+  def openProject(self,projectname):
     if projectname == '':
       self.createNewProject()
     else:
@@ -31,16 +36,47 @@ class Project():
 
   def createNewProject(self):
     wiz = projectwizard.projectwizard()
-    if wiz.exec_():
+    res = wiz.exec_()
+    print res
+    if res == 1:
       print 'finished wizard'
-      results = wiz.getData()
-      print results
-      self.createOutlineArray(results['Dimensions'],results['Shape'])
+      self.results = wiz.getData()
+      print self.results
+      self.createOutlineArray(self.results['Dimensions'],self.results['Shape'])
       
+
+    if res == 2:
+      print 'open project'
+      fd= QtGui.QFileDialog()
+      if fd.exec_():
+        print fd.selectedFiles()
+        
+
+    if res == 3:
+      fd= QtGui.QFileDialog()
+      if fd.exec_():
+        print fd.selectedFiles()
 
 
   def getOutlineArray(self):
     return self.outlinearray
+
+  def getProjectDetails(self):
+    print self.results
+    res = dict()
+    if 'Details' in self.results:
+      res['Details'] = self.results['Details']
+    else:
+      res['Details'] = ''
+    if 'Units' in self.results:
+      res['Units']   = self.results['Units']
+    else:
+      res['Units'] = ''
+    if 'Name' in self.results:
+      res['Name']    = self.results['Name']
+    else:
+      res['Name'] = ''
+    return res
 
   def openProject(self,name):
     pass
@@ -49,18 +85,35 @@ class Project():
   def saveProject(self):
     pass
 
-  def createOutlineArray(data,shape):
+  def createOutlineArray(self,data,shape):
     self.outlinearray = []
+    print data
+    if len(data) < 4:
+      return
+    ndata = []
+    for d in data:
+      if d == '_':
+        return
+      try:
+        t = float(d)
+      except:
+        try:
+          t = int(d)
+          t = float(t)
+        except:
+          return
+      ndata.append(t)
+                
     if shape == 'L':
       pass
     if shape == 'L90':
       self.outlinearray.append([0,0])
-      self.outlinearray.append([data[0],0])
-      self.outlinearray.append([0,data[1]-data[3]])
-      self.outlinearray.append([data[2]-data[0],0])
-      self.outlinearray.append([0,data[1]])
-      self.outlinearray.append([-data[2],0])
-      self.outlinearray.append([0,data[3]])
+      self.outlinearray.append([ndata[0],0])
+      self.outlinearray.append([0,ndata[1]-ndata[3]])
+      self.outlinearray.append([ndata[2]-ndata[0],0])
+      self.outlinearray.append([0,-ndata[1]])
+      self.outlinearray.append([-ndata[2],0])
+      self.outlinearray.append([0,ndata[3]])
       return
         
     if shape == 'L180':
