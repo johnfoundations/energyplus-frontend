@@ -27,11 +27,15 @@ import pdb
 
 class idfRead :
   def __init__(self,filename) :
-    self.fh = open(filename, 'r')
     self.active = []
     self.activetree = []
     self.comment = ''
     self.referencedict = dict()
+    
+    try:
+      self.fh = open(filename, 'r')
+    except:
+      return
     self.parseFile()
     self.buildDependsTree()
 

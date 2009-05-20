@@ -84,12 +84,22 @@ class shapeDimension(QtGui.QWidget):
       s.setX(e.x())
       s.setY(e.y())
 
+  def drawLineSegments(self,line,color):
+    print line
+    s = QtCore.QPointF(spoints[0][0],points[0][1])
+    e = QtCore.QPointF(spoints[0][0],points[0][1])
+    print e
+    print s
+    for p in line:
+      e.setX(e.x()+p[0])
+      e.setY(e.y()+p[1])
+      self.scene.addLine(QtCore.QLineF(s,e))
+      s.setX(e.x())
+      s.setY(e.y())
+
   def drawPolygon(self,points,name):
     print points
     print name
-    spoints = []
-    for p in points:
-      spoints.append([p[0]*self.zoom,p[1]*self.zoom])
     s = QtCore.QPointF(spoints[0][0],points[0][1])
     e = QtCore.QPointF(spoints[0][0],points[0][1])
     print e
