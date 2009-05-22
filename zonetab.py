@@ -23,6 +23,7 @@ from PyQt4 import QtGui, QtCore
 import sys
 import dimensionscene
 import projectwidget
+from lineroutines import *
 
 
 
@@ -33,7 +34,7 @@ class zoneTab(projectwidget.projectWidget):
     hlayout = QtGui.QHBoxLayout(self)
     self.bdpscene = dimensionscene.shapeDimension('')
     vl = QtGui.QVBoxLayout()
-    
+    self.lroutines = lineRoutines(self.bdpscene)
     vl.addWidget(self.bdpscene)
     hlayout.addLayout(vl)
     
@@ -106,6 +107,10 @@ class zoneTab(projectwidget.projectWidget):
     self.rightsegmentbutton.setShortcut(QtGui.QKeySequence("Alt+Right"))
     self.addsegmentbutton = QtGui.QPushButton('*')
     self.addsegmentbutton.setShortcut(QtGui.QKeySequence("Alt+."))
+    self.leftsegmentbutton.setEnabled(False)
+    self.rightsegmentbutton.setEnabled(False)
+    self.upsegmentbutton.setEnabled(False)
+    self.downsegmentbutton.setEnabled(False)
     hhlayout = QtGui.QHBoxLayout()
     hhlayout.addStretch()
     hhlayout.addWidget(self.upsegmentbutton)
@@ -180,10 +185,18 @@ class zoneTab(projectwidget.projectWidget):
     if not s == '':
       self.bdpscene.drawPolygon(self.idftoscene(self.currentsegmentlist),self.floorzone)
     if len(self.currentsegmentlist) > 0:
+      self.backsegmentbutton.setEnabled(True)
       self.leftsegmentbutton.setEnabled(True)
+      self.rightsegmentbutton.setEnabled(True)
+      self.upsegmentbutton.setEnabled(True)
+      self.downsegmentbutton.setEnabled(True)
       
   def leftsegmentbuttonclicked(self):
     print 'leftsegmentbuttonclicked'
+    p = self.currentsegmentlist[-1]
+    closest = self.lroutines.intersectLeft(p,self.currentsegmentlist)
+    
+    
 
   def rightsegmentbuttonclicked(self):
     print 'rightsegmentbuttonclicked'
@@ -204,13 +217,18 @@ class zoneTab(projectwidget.projectWidget):
       print 'point is not valid'
     return [t0,t1]
 
-  def idftoscene(self,l):
+  def idftoscenepolygon(self,l):
     #first point is origin. idf y is up, scene y is down
     ll = []
     for items in l:
       ll.append([items[0],-items[1]])
     return ll
     
+  def idftoscene(self,l):
+    ll = l[:]
+    ll[0] = [ll[0][0],-ll[0][1]]
+    return ll
+
 
   def floorlistchanged(self,i):
     print 'floorlistchanged'
