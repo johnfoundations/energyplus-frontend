@@ -32,7 +32,7 @@ class lineRoutines():
   def lineIntersect(self,initialpoint,directionpoint,linelist):
     #targetline is qlinef that you want to check for intersections
     #linelist is first element the origin, every element after the difference to the next point
-    targetline = QtCore.QLineF(QtCore.QPointF(initialpoint[0],initialpoint[1]),QtCoreQPointF(directionpoint[0],directionpoint[1]))
+    targetline = QtCore.QLineF(QtCore.QPointF(initialpoint[0],initialpoint[1]),QtCore.QPointF(directionpoint[0],directionpoint[1]))
     print linelist
     print targetline
     s = QtCore.QPointF(linelist[0][0],linelist[0][1])
@@ -44,9 +44,9 @@ class lineRoutines():
     for p in linelist:
       e.setX(e.x()+p[0])
       e.setY(e.y()+p[1])
-      line =QLineF(e,s)
+      line =QtCore.QLineF(e,s)
       intersectionpoint = None
-      res = targetline.intersects(line,intersectionpoint)
+      res = targetline.intersect(line,intersectionpoint)
       if res == 1:
         intersected.append(intersectionpoint)
       if res == 2:
@@ -54,7 +54,7 @@ class lineRoutines():
       s.setX(e.x())
       s.setY(e.y())
 
-    initialpointF = QtCore.QPointF(initialpoint[0],[1])
+    initialpointF = QtCore.QPointF(initialpoint[0],initialpoint[1])
     closestpoint = None
     if len(intersected) > 0:
       for p in intersected:
@@ -65,27 +65,27 @@ class lineRoutines():
           if QtCore.QLineF(initialpointF,p).length() > 0:
             closestpoint = p
 
-    if not closestpoint == None
+    if not closestpoint == None:
       return [closestpoint.x(),closestpoint.y()]
     else:
-      return initialpoint
+      return None #initialpoint
 
   def intersectLeft(self,point,linelist):
     rect = self.scene.sceneRect()
     dirpoint = [rect.x()-10,point[1]]
-    return lineIntersect(point,dirpoint,linelist)
+    return self.lineIntersect(point,dirpoint,linelist)
 
   def intersectRight(self,point,linelist):
     rect = self.scene.sceneRect()
     dirpoint = [rect.x()+rect.width()+10,point[1]]
-    return lineIntersect(point,dirpoint,linelist)
+    return self.lineIntersect(point,dirpoint,linelist)
 
   def intersectUp(self,point,linelist):
     rect = self.scene.sceneRect()
     dirpoint = [point[0],rect.y()-10]
-    return lineIntersect(point,dirpoint,linelist)
+    return self.lineIntersect(point,dirpoint,linelist)
 
   def intersectDown(self,point,linelist):
     rect = self.scene.sceneRect()
     dirpoint = [point[0],rect.y()+rect.height()+10]
-    return lineIntersect(point,dirpoint,linelist)
+    return self.lineIntersect(point,dirpoint,linelist)

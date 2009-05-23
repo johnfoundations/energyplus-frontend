@@ -34,7 +34,7 @@ class zoneTab(projectwidget.projectWidget):
     hlayout = QtGui.QHBoxLayout(self)
     self.bdpscene = dimensionscene.shapeDimension('')
     vl = QtGui.QVBoxLayout()
-    self.lroutines = lineRoutines(self.bdpscene)
+    self.lroutines = lineRoutines(self.bdpscene.scene)
     vl.addWidget(self.bdpscene)
     hlayout.addLayout(vl)
     
@@ -47,7 +47,7 @@ class zoneTab(projectwidget.projectWidget):
     hhlayout.addWidget(self.floorname)
     layout.addLayout(hhlayout)
     
-    self.floornamebutton = QtGui.QPushButton('Add &Floor')
+    self.floornamebutton = QtGui.QPushButton('Add F&loor')
     layout.addWidget(self.floornamebutton)
     self.floorlist = QtGui.QComboBox()
     layout.addWidget(self.floorlist)
@@ -80,6 +80,7 @@ class zoneTab(projectwidget.projectWidget):
     hlayout.addLayout(layout)
     self.colorindex = 0
     self.colorlist = []
+    self.proposed = []
   
 
   def dimensiontab(self):
@@ -93,7 +94,7 @@ class zoneTab(projectwidget.projectWidget):
     self.indpoint = QtGui.QLineEdit()
     rx = QtCore.QRegExp('-*[0-9]*\.[0-9]*,-*[0-9]*\.[0-9]*')
     self.indpoint.setValidator(QtGui.QRegExpValidator(rx,self.indpoint))
-    hhlayout.addWidget(self.leftsegmentbutton)
+    hhlayout.addWidget(self.backsegmentbutton)
     hhlayout.addWidget(self.indpoint)
     hhlayout.addStretch()
     lseglayout.addLayout(hhlayout)
@@ -168,13 +169,16 @@ class zoneTab(projectwidget.projectWidget):
     print 'backsegmentbuttonclicked'
     self.currentsegmentlist.pop()
     self.segmentarray[self.floorzone] = self.currentsegmentlist[:]
-    self.bdpscene.drawPolygon(self.idftoscene(self.currentsegmentlist),self.floorzone)
+    self.bdpscene.clearLastLineSegment()
     if len(self.currentsegmentlist) == 0:
       self.leftsegmentbutton.setEnabled(False)
     self.linesegments.setText(self.buildSegmentStr())
 
   def addsegmentbuttonclicked(self):
     print 'addsegmentbuttonclicked'
+    if len(self.proposed) > 0:
+      self.bdpscene.clearLastLineSegment()
+      self.proposed = []
     s = self.linesegments.text()
     self.linesegments.setText(self.linesegments.text()+ ', ' + self.indpoint.text())
     ps = self.indpointtopoint()
@@ -183,7 +187,7 @@ class zoneTab(projectwidget.projectWidget):
     self.segmentarray[self.floorzone] = self.currentsegmentlist[:]
     self.indpoint.setText('')
     if not s == '':
-      self.bdpscene.drawPolygon(self.idftoscene(self.currentsegmentlist),self.floorzone)
+      self.bdpscene.drawLineSegments(self.seglinetosceneline(self.currentsegmentlist),0)
     if len(self.currentsegmentlist) > 0:
       self.backsegmentbutton.setEnabled(True)
       self.leftsegmentbutton.setEnabled(True)
@@ -193,23 +197,79 @@ class zoneTab(projectwidget.projectWidget):
       
   def leftsegmentbuttonclicked(self):
     print 'leftsegmentbuttonclicked'
+    if len(self.proposed) > 0:
+      self.bdpscene.clearLastLineSegment()
+      self.proposed = []
     p = self.currentsegmentlist[-1]
     closest = self.lroutines.intersectLeft(p,self.currentsegmentlist)
-    
-    
+    print closest
+    if closest == None:
+      closest = [-10.0,0.0]
+    else:
+      closest = self.pointtosegoffset(self.currentsegmentlist,closest)
+    self.proposed =  closest
+    self.indpoint.setText(str(closest[0])+','+str(closest[1]))
+    l = [p,closest]
+    self.bdpscene.drawLineSegments(l,0)
 
   def rightsegmentbuttonclicked(self):
     print 'rightsegmentbuttonclicked'
-
+    if len(self.proposed) > 0:
+      self.bdpscene.clearLastLineSegment()
+      self.proposed = []
+    p = self.currentsegmentlist[-1]
+    closest = self.lroutines.intersectRight(p,self.currentsegmentlist)
+    print closest
+    if closest == None:
+      closest = [10.0,0.0]
+    else:
+      closest = self.pointtosegoffset(self.currentsegmentlist,closest)
+    self.proposed =  closest
+    self.indpoint.setText(str(closest[0])+','+str(closest[1]))
+    l = [p,closest]
+    self.bdpscene.drawLineSegments(l,0)
+        
   def upsegmentbuttonclicked(self):
     print 'upsegmentbuttonclicked'
+    if len(self.proposed) > 0:
+      self.bdpscene.clearLastLineSegment()
+      self.proposed = []
+    p = self.currentsegmentlist[-1]
+    closest = self.lroutines.intersectUp(p,self.currentsegmentlist)
+    print closest
+    if closest == None:
+      closest = [0.0,-10.0]
+    else:
+      closest = self.pointtosegoffset(self.currentsegmentlist,closest)
+    self.proposed =  closest
+    self.indpoint.setText(str(closest[0])+','+str(closest[1]))
+    l = [p,closest]
+    self.bdpscene.drawLineSegments(l,0)
+        
 
   def downsegmentbuttonclicked(self):
     print 'downsegmentbuttonclicked'
-    
+    if len(self.proposed) > 0:
+      self.bdpscene.clearLastLineSegment()
+      self.proposed = []
+    p = self.currentsegmentlist[-1]
+    closest = self.lroutines.intersectDown(p,self.currentsegmentlist)
+    print closest
+    if closest == None:
+      closest = [0.0,10.0]
+    else:
+      closest = self.pointtosegoffset(self.currentsegmentlist,closest)
+    self.proposed =  closest
+    self.indpoint.setText(str(closest[0])+','+str(closest[1]))
+    l = [p,closest]
+    self.bdpscene.drawLineSegments(l,0)
+
+        
   def indpointtopoint(self):
     s = self.indpoint.text()
     ps = s.split(',')
+    t0 = 0.0
+    t1 = 0.0
     try:
       t0 = float(ps[0])
       t1 = float(ps[1])
@@ -229,6 +289,29 @@ class zoneTab(projectwidget.projectWidget):
     ll[0] = [ll[0][0],-ll[0][1]]
     return ll
 
+  def seglinetosceneline(self,l):
+    #takes last two items in l and returns point and offset
+    print l
+    s = [0.0,0.0]
+    for item in l:
+      s[0] = s[0]+item[0]
+      s[1] = s[1]-item[1]
+    print s
+    s[0] = s[0] - l[-1][0]
+    s[1] = s[1] + l[-1][1]
+    print s
+    return [s,[l[-1][0],-l[-1][1]]]
+      
+  def pointtosegoffset(self,l,p):
+    #returns point, last in l and offset to p
+    print l
+    s = [0.0,0.0]
+    for item in l:
+      s[0] = s[0]+item[0]
+      s[1] = s[1]-item[1]
+    print s
+    #s is point
+    return [s,p[0]-s[0],p[1]+s[1]]
 
   def floorlistchanged(self,i):
     print 'floorlistchanged'
