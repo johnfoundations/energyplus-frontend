@@ -36,6 +36,7 @@ class shapeDimension(QtGui.QWidget):
     self.polygonlist = dict()
     self.zoom = 1.0
     self.createActions()
+    self.linesegments = dict()
     
   def createActions(self):
     self.zoomin = QtGui.QAction('Zoom In', self)
@@ -84,18 +85,47 @@ class shapeDimension(QtGui.QWidget):
       s.setX(e.x())
       s.setY(e.y())
 
-  def drawLineSegments(self,line,color):
+  def drawLineSegments(self,line,color,name):
     print line
-    s = QtCore.QPointF(spoints[0][0],points[0][1])
-    e = QtCore.QPointF(spoints[0][0],points[0][1])
+    if not name in self.linesegments:
+      self.linesegments[name] = []
+    lline = line[:]
+    lline.pop(0)
+    s = QtCore.QPointF(line[0][0],line[0][1])
+    e = QtCore.QPointF(line[0][0],line[0][1])
     print e
     print s
-    for p in line:
+    for p in lline:
       e.setX(e.x()+p[0])
       e.setY(e.y()+p[1])
-      self.scene.addLine(QtCore.QLineF(s,e))
+      self.linesegments[name].append(self.scene.addLine(QtCore.QLineF(s,e)))
       s.setX(e.x())
       s.setY(e.y())
+
+  def drawLineSegmentDimensions(self,name):
+    rect = self.scene.itemsBoundingRect()
+    if not name in self.linesegments:
+      return
+    p1 = []
+    for p2 in self.linesegments[name]:
+      if len(p1) == 0:
+        p1 = p2
+        dt = self.scene.addSimpleText(str(p2[0]+','+str[p2[1]))
+        dt.moveBy(p2[0],p2[1])
+        continue
+      
+      
+
+  def clearLineSegments(self,name):
+    if name in self.linesegments:
+      for l in self.linesegments[name]:
+        self.scene.removeItem(l)
+
+  def clearLastLineSegment(self,name):
+    if name in self.linesegments:
+      l = self.linesegments[name].pop()
+      self.scene.removeItem(l)
+
 
   def drawPolygon(self,points,name):
     print points
@@ -213,6 +243,7 @@ class shapeDimension(QtGui.QWidget):
     for m in self.measures:
       res.append(str(m.toPlainText()))
     return res
+
 
 
 
