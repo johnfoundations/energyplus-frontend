@@ -34,9 +34,10 @@ class shapeDimension(QtGui.QWidget):
     self.createDict()
     self.setLayout(self.layout)
     self.polygonlist = dict()
-    self.zoom = 1.0
+    self.zoom = 2.0
     self.createActions()
     self.linesegments = dict()
+    self.rescale()
     
   def createActions(self):
     self.zoomin = QtGui.QAction('Zoom In', self)
@@ -57,6 +58,7 @@ class shapeDimension(QtGui.QWidget):
     self.rescale()
 
   def rescale(self):
+    print 'rescale'
     print self.zoom
     oldMatrix = self.view.matrix();
     self.view.resetMatrix();
@@ -86,6 +88,7 @@ class shapeDimension(QtGui.QWidget):
       s.setY(e.y())
 
   def drawLineSegments(self,line,color,name):
+    print 'drawLineSegments'
     print line
     if not name in self.linesegments:
       self.linesegments[name] = []
@@ -103,6 +106,7 @@ class shapeDimension(QtGui.QWidget):
       s.setY(e.y())
 
   def drawLineSegmentDimensions(self,name):
+    return
     rect = self.scene.itemsBoundingRect()
     if not name in self.linesegments:
       return
@@ -110,8 +114,11 @@ class shapeDimension(QtGui.QWidget):
     for p2 in self.linesegments[name]:
       if len(p1) == 0:
         p1 = p2
-        dt = self.scene.addSimpleText(str(p2[0]+','+str[p2[1]))
-        dt.moveBy(p2[0],p2[1])
+        s = str(p2.line().x1()) + ',' + str(p2.line().y1())
+        print s
+        dt = self.scene.addSimpleText(s)
+        print dt
+        dt.moveBy(p2.line().x1(),p2.line().y1())
         continue
       
       
