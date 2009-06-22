@@ -21,9 +21,11 @@
 
 from PyQt4 import QtGui, QtCore
 import sys
-import dimensionscene
+from dimensionwidget import *
 import projectwidget
 from lineroutines import *
+import floorlisttab
+import zonelisttab
 
 
 
@@ -41,9 +43,10 @@ class zoneTab(projectwidget.projectWidget):
     layout = QtGui.QVBoxLayout()
     layout.addWidget(QtGui.QLabel('Zoning Details'))
     self.tabs = QtGui.QTabWidget()
-    
-    self.tabs.addTab(self.floortab(),'Floors')
-    self.tabs.addTab(self.zonetab(),'Zones')
+    self.floortab = floorlisttab.floorListTab(self.bdpscene)
+    self.zonetab = zonelisttab.zoneListTab(self.bdpscene)
+    self.tabs.addTab(self.floortab,'Floors')
+    self.tabs.addTab(self.zonetab,'Zones')
     layout.addWidget(self.tabs)
     self.floorarray = []
     self.zonearray = dict()
@@ -59,236 +62,17 @@ class zoneTab(projectwidget.projectWidget):
     self.proposed = []
   
 
-  def floortab(self):
-    widget = QtGui.QWidget()
-    flayout = QtGui.QVBoxLayout()
-    hhlayout = QtGui.QHBoxLayout()
-    self.floorname = QtGui.QLineEdit()
-    hhlayout.addWidget(QtGui.QLabel('Enter Floor Name:'))
-    hhlayout.addWidget(self.floorname)
-    self.floornamebutton = QtGui.QPushButton('Add F&loor')
-    hhlayout.addWidget(self.floornamebutton)
-    flayout.addLayout(hhlayout)
-    self.floorlist = QtGui.QComboBox()
-    flayout.addWidget(self.floorlist)
-    flayout.addWidget(self.dimensiontab())
-    flayout.addStretch()
-    widget.setLayout(flayout)
-    self.connect(self.floornamebutton, QtCore.SIGNAL('clicked ( bool)'),self.floornamebuttonclicked)
-    self.connect(self.floorlist,QtCore.SIGNAL('currentIndexChanged (int)'),self.floorlistchanged)
-    return widget
-
-  def zonetab(self):
-    widget = QtGui.QWidget()
-    zonegblayout = QtGui.QVBoxLayout()
-    hhlayout = QtGui.QHBoxLayout()
-    hhlayout.addWidget(QtGui.QLabel('Enter Zone Name:'))
-    self.zonename = QtGui.QLineEdit()
-    hhlayout.addWidget(self.zonename)
-    zonegblayout.addLayout(hhlayout)
-    self.zonenamebutton = QtGui.QPushButton('Add &Zone')
-    zonegblayout.addWidget(self.zonenamebutton)
-    self.zonelist = QtGui.QComboBox()
-    zonegblayout.addWidget(self.zonelist)
-    zonegblayout.addStretch()
-    widget.setLayout(zonegblayout)
-    self.connect(self.zonenamebutton, QtCore.SIGNAL('clicked ( bool)'),self.zonenamebuttonclicked)
-    self.connect(self.zonelist,QtCore.SIGNAL('currentIndexChanged (int)'),self.zonelistchanged)
-    self.zonenamebutton.setEnabled(False)
-    self.zonelist.setEnabled(False)
-    self.zonename.setEnabled(False)
-    return widget
 
 
 
 
-  def dimensiontab(self):
-    widget = QtGui.QWidget()
-    lseglayout = QtGui.QVBoxLayout()
-    self.dimensiontitle = QtGui.QLabel('Floor:Zone')
-    lseglayout.addWidget(self.dimensiontitle)
-    self.linesegments = QtGui.QLineEdit()
-    self.linesegments.setReadOnly(True)
-    lseglayout.addWidget(self.linesegments)
-    hhlayout = QtGui.QHBoxLayout()
-    self.backsegmentbutton = QtGui.QPushButton('<--')
-    self.backsegmentbutton.setEnabled(False)
-    self.indpoint = QtGui.QLineEdit()
-    rx = QtCore.QRegExp('-*[0-9]*\.[0-9]*,-*[0-9]*\.[0-9]*')
-    self.indpoint.setValidator(QtGui.QRegExpValidator(rx,self.indpoint))
-    hhlayout.addWidget(self.backsegmentbutton)
-    hhlayout.addWidget(self.indpoint)
-    hhlayout.addStretch()
-    lseglayout.addLayout(hhlayout)
-    self.upsegmentbutton = QtGui.QPushButton('^')
-    self.upsegmentbutton.setShortcut(QtGui.QKeySequence("Alt+Up"))
-    self.downsegmentbutton = QtGui.QPushButton('\/')
-    self.downsegmentbutton.setShortcut(QtGui.QKeySequence("Alt+Down"))
-    self.leftsegmentbutton = QtGui.QPushButton('<')
-    self.leftsegmentbutton.setShortcut(QtGui.QKeySequence("Alt+Left"))
-    self.rightsegmentbutton= QtGui.QPushButton('>')
-    self.rightsegmentbutton.setShortcut(QtGui.QKeySequence("Alt+Right"))
-    self.addsegmentbutton = QtGui.QPushButton('*')
-    self.addsegmentbutton.setShortcut(QtGui.QKeySequence("Alt+."))
-    self.addsegmentbutton.setEnabled(False)
-    self.leftsegmentbutton.setEnabled(False)
-    self.rightsegmentbutton.setEnabled(False)
-    self.upsegmentbutton.setEnabled(False)
-    self.downsegmentbutton.setEnabled(False)
-    self.indpoint.setEnabled(False)
-    hhlayout = QtGui.QHBoxLayout()
-    hhlayout.addStretch()
-    hhlayout.addWidget(self.upsegmentbutton)
-    hhlayout.addStretch()
-    lseglayout.addLayout(hhlayout)
-    hhlayout = QtGui.QHBoxLayout()
-    hhlayout.addStretch()
-    hhlayout.addWidget(self.leftsegmentbutton)
-    hhlayout.addWidget(self.addsegmentbutton)
-    hhlayout.addWidget(self.rightsegmentbutton)
-    hhlayout.addStretch()
-    lseglayout.addLayout(hhlayout)
-    hhlayout = QtGui.QHBoxLayout()
-    hhlayout.addStretch()
-    hhlayout.addWidget(self.downsegmentbutton)
-    hhlayout.addStretch()
-    lseglayout.addLayout(hhlayout)
-#    lseglayout.addStretch()
-    self.connect(self.backsegmentbutton, QtCore.SIGNAL('clicked ( bool)'),self.backsegmentbuttonclicked)
-    self.connect(self.addsegmentbutton, QtCore.SIGNAL('clicked(bool)'), self.addsegmentbuttonclicked)
-    self.connect(self.leftsegmentbutton, QtCore.SIGNAL('clicked(bool)'), self.leftsegmentbuttonclicked)
-    self.connect(self.rightsegmentbutton, QtCore.SIGNAL('clicked(bool)'), self.rightsegmentbuttonclicked)
-    self.connect(self.upsegmentbutton, QtCore.SIGNAL('clicked(bool)'), self.upsegmentbuttonclicked)
-    self.connect(self.downsegmentbutton, QtCore.SIGNAL('clicked(bool)'), self.downsegmentbuttonclicked)
-    
-    widget.setLayout(lseglayout)
-    return widget
 
   def windowtab(self):
    widget - QtGui.QVBoxLayout()
     
     
-  def floornamebuttonclicked(self):
-    print 'floornamebutton'
-    if not self.floorname.text() == '':
-      self.floorarray.append(self.floorname.text())
-      self.floorlist.addItem(self.floorname.text())
-      self.zonearray[str(self.floorname.text())] = []
-      if len(self.segmentarray) == 0:
-        self.segmentarray[str(self.floorname.text())] = self.currentsegmentlist
-      else:
-        self.segmentarray[str(self.floorname.text())] = []
-      self.floorname.setText('')
-      self.zonenamebutton.setEnabled(True)
-      self.zonelist.setEnabled(True)
-      self.zonename.setEnabled(True)
-      self.addsegmentbutton.setEnabled(True)
-      self.indpoint.setEnabled(True)
-      
+  
 
-  def zonenamebuttonclicked(self):
-    print 'zonenamebutton'
-    if not self.zonename.text() == '':
-      print self.zonearray
-      print self.currentfloor
-      self.zonearray[self.currentfloor].append(str(self.zonename.text()))
-      self.zonelist.addItem(self.zonename.text())
-      self.zonename.setText('')
-
-  def backsegmentbuttonclicked(self):
-    print 'backsegmentbuttonclicked'
-    self.currentsegmentlist.pop()
-    self.segmentarray[self.floorzone] = self.currentsegmentlist[:]
-    self.bdpscene.clearLastLineSegment(self.floorzone)
-    if len(self.currentsegmentlist) == 0:
-      self.leftsegmentbutton.setEnabled(False)
-    self.linesegments.setText(self.buildSegmentStr())
-
-  def addsegmentbuttonclicked(self):
-    print 'addsegmentbuttonclicked'
-    if len(self.proposed) > 0:
-      self.bdpscene.clearLastLineSegment(self.floorzone)
-      self.proposed = []
-    s = self.linesegments.text()
-    self.linesegments.setText(self.linesegments.text()+ ', ' + self.indpoint.text())
-    ps = self.indpointtopoint()
-    self.currentsegmentlist.append(ps)
-    self.segmentarray[self.floorzone] = self.currentsegmentlist[:]
-    self.indpoint.setText('')
-    if not s == '':
-      self.bdpscene.drawLineSegments(self.seglinetosceneline(self.currentsegmentlist),0,self.floorzone)
-    self.bdpscene.drawLineSegmentDimensions(self.floorzone)
-    if len(self.currentsegmentlist) > 0:
-      self.backsegmentbutton.setEnabled(True)
-      self.leftsegmentbutton.setEnabled(True)
-      self.rightsegmentbutton.setEnabled(True)
-      self.upsegmentbutton.setEnabled(True)
-      self.downsegmentbutton.setEnabled(True)
-      
-  def leftsegmentbuttonclicked(self):
-    print 'leftsegmentbuttonclicked'
-    if len(self.proposed) > 0:
-      self.bdpscene.clearLastLineSegment(self.floorzone)
-      self.proposed = []
-    p = self.currentsegmentlist[-1]
-    closest = self.lroutines.intersectLeft(p,self.currentsegmentlist)
-    if closest == None:
-      closest = [-10.0,0.0]
-    else:
-      closest = self.pointtosegoffset(self.currentsegmentlist,closest)
-    self.proposed =  closest
-    self.indpoint.setText(str(closest[0])+','+str(-closest[1]))
-    l = [p,closest]
-    self.bdpscene.drawLineSegments(l,0,self.floorzone)
-
-  def rightsegmentbuttonclicked(self):
-    print 'rightsegmentbuttonclicked'
-    if len(self.proposed) > 0:
-      self.bdpscene.clearLastLineSegment(self.floorzone)
-      self.proposed = []
-    p = self.currentsegmentlist[-1]
-    closest = self.lroutines.intersectRight(p,self.currentsegmentlist)
-    if closest == None:
-      closest = [10.0,0.0]
-    else:
-      closest = self.pointtosegoffset(self.currentsegmentlist,closest)
-    self.proposed =  closest
-    self.indpoint.setText(str(closest[0])+','+str(-closest[1]))
-    l = [p,closest]
-    self.bdpscene.drawLineSegments(l,0,self.floorzone)
-        
-  def upsegmentbuttonclicked(self):
-    print 'upsegmentbuttonclicked'
-    if len(self.proposed) > 0:
-      self.bdpscene.clearLastLineSegment(self.floorzone)
-      self.proposed = []
-    p = self.currentsegmentlist[-1]
-    closest = self.lroutines.intersectUp(p,self.currentsegmentlist)
-    if closest == None:
-      closest = [0.0,-10.0]
-    else:
-      closest = self.pointtosegoffset(self.currentsegmentlist,closest)
-    self.proposed =  closest
-    self.indpoint.setText(str(closest[0])+','+str(-closest[1]))
-    l = [p,closest]
-    self.bdpscene.drawLineSegments(l,0,self.floorzone)
-        
-
-  def downsegmentbuttonclicked(self):
-    print 'downsegmentbuttonclicked'
-    if len(self.proposed) > 0:
-      self.bdpscene.clearLastLineSegment(self.floorzone)
-      self.proposed = []
-    p = self.currentsegmentlist[-1]
-    closest = self.lroutines.intersectDown(p,self.currentsegmentlist)
-    if closest == None:
-      closest = [0.0,10.0]
-    else:
-      closest = self.pointtosegoffset(self.currentsegmentlist,closest)
-    self.proposed =  closest
-    self.indpoint.setText(str(closest[0])+','+str(-closest[1]))
-    l = [p,closest]
-    self.bdpscene.drawLineSegments(l,0,self.floorzone)
 
         
   def indpointtopoint(self):
@@ -316,18 +100,13 @@ class zoneTab(projectwidget.projectWidget):
     return ll
 
   def seglinetosceneline(self,l):
+    #l is relative array
     #takes last two items in l and returns point and offset
     print 'seglinetosceneline'
     print l
-    s = [0.0,0.0]
-    for item in l:
-      s[0] = s[0]+item[0]
-      s[1] = s[1]-item[1]
-    print s
-    s[0] = s[0] - l[-1][0]
-    s[1] = s[1] + l[-1][1]
-    print s
-    return [s,[l[-1][0],-l[-1][1]]]
+    s = relativetoabsolute(l)
+    return [s[-2],l[-1]]
+
       
   def pointtosegoffset(self,l,p):
     #returns point, last in l and offset to p
@@ -342,40 +121,39 @@ class zoneTab(projectwidget.projectWidget):
     return [s,p[0]-s[0],p[1]+s[1]]
 
   def relativetoabsolute(self,l):
+    #l[0] is absolute, all else relative to it
+    ll = []
+    lw = l[:]
+    p = lw.pop(0)
+    ll.append(p)
+    for pt in lw:
+      tp = [[p[0][0]+pt[0][0],p[0][1]+pt[0][1]],[p[1][0]+pt[1][0],p[1][1]+pt[1][1]]]
+      ll.append(tp)
+      p = tp
+
+    return ll
     
+  def absolutetorelative(self,l):
+    ll = []
+    lw = l[:]
+    p = lw.pot(0)
+    ll.append(p)
+    for pt in lw:
+      tp = [[p[0][0]-pt[0][0],p[0][1]-pt[0][1]],[p[1][0]-pt[1][0],p[1][1]-pt[1][1]]]
+      ll.append(tp)
+      p = pt
 
-  def floorlistchanged(self,i):
-    print 'floorlistchanged'
-    print i
-    s = self.floorlist.itemText(i)
-    self.dimensiontitle.setText(s + ' outline')
-    self.currentfloor = str(s)
-    self.zonelist.clear()
-    if self.currentfloor in self.zonearray:
-      self.zonelist.addItems(self.zonearray[self.currentfloor])
-    if len(self.zonearray) == 0:
-      self.floorzone = self.currentfloor
-      self.dimensiontitle.setText(self.floorzone)
+    return ll
+ 
 
-  def buildSegmentStr(self):
+
+  def buildSegmentStr(self,l):
     s = ""
-    for seg in self.currentsegmentlist:
+    for seg in l:#self.currentsegmentlist:
       s = s + str(seg) + ','
     return s
 
 
-  def zonelistchanged(self,i):
-    print 'zonelistchanged'
-    print self.segmentarray
-    #update segments
-    self.floorzone = self.currentfloor+':'+str(self.zonelist.itemText(i))
-    self.dimensiontitle.setText(self.floorzone)
-    print self.floorzone
-    if self.floorzone in self.segmentarray:
-      self.currentsegmentlist = self.segmentarray[self.floorzone]
-    else:
-      self.currentsegmentlist = []
-    self.linesegments.setText(self.buildSegmentStr())
 
   def updateProject(self):
     r = self.projectlink.getOutlineArray()
@@ -391,5 +169,15 @@ class zoneTab(projectwidget.projectWidget):
     self.colorindex = self.colorindex + 1
     return self.colorlist[i]
 
+def set_qtrace():
+  from PyQt4 import QtCore
+  QtCore.pyqtRemoveInputHook()
+  import pdb
+  pdb.set_trace()
 
+def out_qtrace():
+  from PyQt4 import QtCore
+  QtCore.pyqtRestoreInputHook()
     
+#if __name__ == "__main__":
+  
