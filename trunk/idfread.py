@@ -31,6 +31,7 @@ class idfRead :
     self.activetree = []
     self.comment = ''
     self.referencedict = dict()
+    self.filename = filename
     
     try:
       self.fh = open(filename, 'r')
