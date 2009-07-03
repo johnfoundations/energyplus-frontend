@@ -274,15 +274,6 @@ class TreeModel(QtCore.QAbstractItemModel):
         count = count + 1
         if count > 3:
           number = 1
-      
-                     
-                  
-              
-        
-
-      
-    
-
 
     def setupModelDataorig(self, lines, parent):
         parents = []
@@ -314,15 +305,14 @@ class TreeModel(QtCore.QAbstractItemModel):
             unconnected.appendChild(TreeItem(tlist,v,unconnected))
           parent.appendChild(unconnected)
 
-            
-            
-            
-          
-
 if __name__ == "__main__":
     app = QtGui.QApplication(sys.argv)
+    try:
+        fname = sys.argv[1]
+    except KeyError:
+        fname = 'Singlezonetemplate.idf'
 
-    f = idfread.idfRead('Singlezonetemplate.idf')
+    f = idfread.idfRead(fname)
 
     model = TreeModel(f.getActivelist())
 
