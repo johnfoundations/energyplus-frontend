@@ -22,7 +22,7 @@
 from PyQt4 import QtCore
 
 
-class idfTableModel(QtCore.QAbstractItemModel):
+class idfAbstractModel(QtCore.QAbstractItemModel):
     def __init__(source,parent = 0)
         QAbstractItemModel (self, parent)
         self.idfsource = source
@@ -31,12 +31,37 @@ class idfTableModel(QtCore.QAbstractItemModel):
       self.idfsource = source
 
 
-    def columnCount (self, parent):
-        return 1
+    def columnCount (self, modelindexparent=0):
+        if modleindexparent == 0:
+            return 2
+        else:
+            instance = self.data(modelindexparent,IdfClassRole)
+            return instance.fieldcount()
 
+        
     def flags(self,modelindex):
 
-    def data
+    def data(self,modelindex,role):
+        if modelindex.row() > self.idfsource.size():
+            return QtCore.QVariant()
+
+        #retrieve class from idfsource
+        idfclass = self.idfsource.recordAt(modelindex.row()
+        if idfclass == None:
+            return QtCore.QVariant()
+
+        if role == IdfClassRole:
+            return idfclass
+
+        if role == QtCore.ToolTipRole:
+            return QtCore.QString(idfclass.getMemo())
+
+        if role == QtCore.EditRole or role == QtCore.DisplayRole:
+            if modelindex.column() > idfclass.fieldCount():
+                return QtCore.QVariant()
+
+            return QtCore.QString(idfclass.getFieldData(modelindex.column())
+            
 
     def headerData
 

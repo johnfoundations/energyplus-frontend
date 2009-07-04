@@ -63,6 +63,9 @@ class ObjectAbstract :
     
     def InsertField(self,field):
         self.fieldlist.append(field)
+
+    def fieldCount(self):
+        return len(fieldlist)
     
     def setData(self,data):
         self.rawdatalist = data
@@ -70,6 +73,12 @@ class ObjectAbstract :
 
     def getData(self) :
         print self.getClassnameIDD() + ' getData not implemented'
+
+    def getFieldData(self,index):
+        try:
+            return self.fieldlist[index].getValue()
+        except:
+            return None
         
     def CreateEditWidget(self) :
         self.editwidget = QtGui.QWidget()

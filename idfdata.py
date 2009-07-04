@@ -56,9 +56,23 @@ class idfData(QObject):
         return len(self.idflist)
         #returns count
 
+    def seek(self,index):
+        if index > self.size() or index < 0:
+            return False
+        current = index
+        return True
+
     def record(self):
         return self.idflist[self.current]
 
+
+    def recordAt(self,index):
+        try:
+            return self.idflist[index]
+        except:
+            return None
+
+        
     def openIdf(self,filename):
         idf = idfread.idfRead(filename)
         if len(idflist) > 0:

@@ -28,6 +28,12 @@ objectlist = []
 objectdict = dict()
 referencedict = dict()
 
+#model role definitions
+
+IdfClassRole = 33  #data method returns the idf object instance for the requested row
+
+
+
 def getActiveObjectsList(otype) :
   ol = []
   if otype in referencedict:
