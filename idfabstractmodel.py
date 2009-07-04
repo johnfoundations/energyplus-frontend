@@ -35,8 +35,12 @@ class idfAbstractModel(QtCore.QAbstractItemModel):
         if modleindexparent == 0:
             return 2
         else:
-            instance = self.data(modelindexparent,IdfClassRole)
-            return instance.fieldcount()
+            #if parent is first column, no children
+            if modelindexparent.column() = 1:
+                instance = self.data(modelindexparent,IdfClassRole)
+                return instance.fieldcount()
+            else:
+                return 2
 
         
     def flags(self,modelindex):
