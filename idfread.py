@@ -40,7 +40,7 @@ class idfRead :
         self.parseFile()
         self.buildDependsTree()
 
-    def getActivelist(self):
+    def getActiveList(self):
         return self.active
 
     def getFilteredList(self,f):

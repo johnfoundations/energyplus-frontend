@@ -65,7 +65,7 @@ class ObjectAbstract :
         self.fieldlist.append(field)
 
     def fieldCount(self):
-        return len(fieldlist)
+        return len(self.fieldlist)
     
     def setData(self,data):
         self.rawdatalist = data
@@ -78,6 +78,7 @@ class ObjectAbstract :
         try:
             return self.fieldlist[index].getValue()
         except:
+            print "getFieldData error"
             return None
         
     def CreateEditWidget(self) :

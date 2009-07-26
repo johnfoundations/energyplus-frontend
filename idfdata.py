@@ -22,11 +22,45 @@
 from PyQt4 import QtGui, QtCore
 import idfread
 
-class idfData(QObject):
-    def __init__(parent = 0):
+
+class treeItem:
+    def __init__(self, parent,row,column):
+        self.parentItem = parent
+        self.childItems = []
+        self.row = row
+        self.column = column
+
+    def appendChild(self, child):
+        self.childItems.append(child)
+
+    def child(self, row):
+        return self.childItems[row]
+
+    def childCount(self):
+        return len(self.childItems)
+
+    def row(self):
+        if self.parentItem:
+            items = self.parentItem.childItems
+            for (row,item) in enumerate(items):
+                if item is self:
+                    return row
+
+        return 0
+
+    def parent(self):
+        return self.parentItem
+
+      
+        
+
+
+class idfData(QtCore.QObject):
+    def __init__(self,parent = 0):
         self.idfreadlist = []   #list of idfread classes, allowing multiple idf files to be loaded
         self.idflist = []       #list of classes from idf files
         self.current = 0        #pointer to current class, used in iterating through list
+        self.idftree = []
 
     def next(self):
         if current == len(self.idflist):
@@ -63,24 +97,39 @@ class idfData(QObject):
         return True
 
     def record(self):
-        return self.idflist[self.current]
+        return self.idftree[self.current]
 
 
-    def recordAt(self,index):
+    def recordAt(self,row,column):
+        idfrec = self.idftree[row]
+        if column == 0:
+            return idfrec
+        else:
+            return idfrec.child(column)
+       
+
+    def dataAt(self,row,column):
         try:
-            return self.idflist[index]
+            return self.idflist[row]
         except:
             return None
-
+        
         
     def openIdf(self,filename):
         idf = idfread.idfRead(filename)
-        if len(idflist) > 0:
-            idflist = idf.getActiveList()
+        if len(self.idflist) > 0:
+            self.idflist = idf.getActiveList()
         else:
-            idflist = idflist + idf.getActiveList()
+            self.idflist = self.idflist + idf.getActiveList()
 
         self.idfreadlist.append(idf)
+
+        self.idftree = []
+        for r,idf in enumerate(self.idflist):
+            t = treeItem(0,r,0)
+            for c,field in enumerate(idf.fieldlist):
+                t.appendChild(treeItem(t,r,c))
+            self.idftree.append(t)
         
 
     def writeIdf(self,filename):
