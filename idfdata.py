@@ -21,7 +21,7 @@
 
 from PyQt4 import QtGui, QtCore
 import idfread
-
+from idfglobals import *
 
 class treeItem:
     def __init__(self, parent,row,column):
@@ -105,7 +105,10 @@ class idfData(QtCore.QObject):
         if column == 0:
             return idfrec
         else:
-            return idfrec.child(column)
+            try:
+                return idfrec.child(column)
+            except:
+                return idfrec
        
 
     def dataAt(self,row,column):
@@ -114,6 +117,52 @@ class idfData(QtCore.QObject):
         except:
             return None
         
+    def query(self,flag,data):
+        #flags in idfglobals
+        querylist = []
+        if flag == IdfQueryClassname:
+            for idf in self.idflist:
+                if idf.getClassnameIDD() == data:
+                    querylist.append(idf)
+
+        if flag == IdfQueryName:
+            for idf in self.idflist:
+                if idf.getName() == data:
+                    querylist.append(idf)
+                    
+        if flag == IdfQueryGroup:
+            for idf in self.idflist:
+                if idf.getGroup() == data:
+                    querylist.append(idf)
+                    
+        if flag == IdfQueryDependancy:
+            for idf in self.idflist:
+                if data in idf.getDepends():
+                    querylist.append(idf)
+                    
+        if flag == IdfQueryReference:
+            for idf in self.idflist:
+                if data in idf.getReference():
+                    querylist.append(idf)
+                    
+        if flag == IdfQueryFieldname:
+            for idf in self.idflist:
+                for fld in idf.fieldlist:
+                    if fld.getFieldName() == data:
+                        querylist.append(idf)
+                        break
+                    
+        if flag == IdfQueryFieldValue:
+            for idf in self.idflist:
+                for fld in idf.fieldlist:
+                    if fld.getValue() == data:
+                        querylist.append(idf)
+                        break
+                
+        self.populateTree(querylist)
+
+
+
         
     def openIdf(self,filename):
         idf = idfread.idfRead(filename)
@@ -123,9 +172,12 @@ class idfData(QtCore.QObject):
             self.idflist = self.idflist + idf.getActiveList()
 
         self.idfreadlist.append(idf)
+        self.populateTree(self.idflist)
 
+
+    def populateTree(self,olist):
         self.idftree = []
-        for r,idf in enumerate(self.idflist):
+        for r,idf in enumerate(olist):
             t = treeItem(0,r,0)
             for c,field in enumerate(idf.fieldlist):
                 t.appendChild(treeItem(t,r,c))

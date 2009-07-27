@@ -33,15 +33,10 @@ class idfAbstractModel(QtCore.QAbstractItemModel):
 
 
     def columnCount (self, parent):
-#       print "columnCount "+str(parent.row())+" "+str(parent.column())
-#        if not parent.isValid():
         return 2
-#        if parent.isValid():
-#            return parent.internalPointer().childCount()
 
         
     def flags(self,index):
-#        print "flags"
         if not index.isValid():
             return QtCore.Qt.ItemIsEnabled
         else:
@@ -49,8 +44,6 @@ class idfAbstractModel(QtCore.QAbstractItemModel):
         
 
     def data(self,modelindex,role):
-        print "data" + str(role)+" "+str(modelindex.row())+" "+str(modelindex.column())
-        
         #retrieve class from idfsource
         idf = modelindex.internalPointer()
         idfclass = self.idfsource.dataAt(idf.row,idf.column)
@@ -59,28 +52,15 @@ class idfAbstractModel(QtCore.QAbstractItemModel):
             return QtCore.QVariant(idfclass.getMemo())
 
         if role == QtCore.Qt.EditRole or role == QtCore.Qt.DisplayRole:
-            if not idf.parent() == 0:
-                if modelindex.column() == 0:
-                    #get field name
-                    return QtCore.QVariant(idfclass.fieldlist[idf.column].fieldname)
+            if modelindex.column() == 0:
+                return QtCore.QVariant(idfclass.getClassnameIDD())
 
-                elif modelindex.column() == 1:
-                    return QtCore.QVariant(idfclass.fieldlist[idf.column].value)
-
-            else:
-                if modelindex.column() == 0:
-                    return QtCore.QVariant(idfclass.getClassnameIDD())
-
-                elif modelindex.column() == 1:
-                    return QtCore.QVariant(idfclass.getName())
+            elif modelindex.column() == 1:
+                return QtCore.QVariant(idfclass.getName())
 
         return QtCore.QVariant()
 
     def headerData(self,section,orientation,role = QtCore.Qt.DisplayRole):
-#        print "headerData"
-#        print section
-#        print orientation
-#        print role
         if orientation == QtCore.Qt.Horizontal and role == QtCore.Qt.DisplayRole:
              if section == 0:
                  return QtCore.QVariant("IDDClass")
@@ -90,45 +70,27 @@ class idfAbstractModel(QtCore.QAbstractItemModel):
         
 
     def rowCount (self,parent ):
-        print "rowCount"+ str(parent.row())+" "+str(parent.column())
         if parent.isValid():
+            return 0
             return parent.internalPointer().childCount()
         else:
             #not valid model.??
             return self.idfsource.size()
             
-
-    def parent(self,index):
-        dp = index.internalPointer().parent()
-        if dp == 0:
-            return QtCore.QModelIndex()
-        else:
-            return self.createIndex(dp.row,dp.column,dp)
-        
- 
-
-#    def setData
-
-#    def setHeaderData
-
-#    def insertRows
-
-#    def removeRows
-
-#    def insertColumns
-
-#    def removeColumns
-
     def index(self, row, column, parent):
-        print "index" + str(row) + " " + str(column) +" " + str(parent.row()) +" " + str(parent.column())
         if parent.isValid():
             dp = parent.internalPointer().child(row)
-                
         else:
             dp = self.idfsource.recordAt(row,column)
 
         return self.createIndex(row, column, dp)
- 
+
+
+
+    def query(self,searchflag,data):
+        self.idfsource.query(searchflag,data)
+        self.reset()
+        
         
 
 if __name__ == "__main__":
@@ -147,8 +109,18 @@ if __name__ == "__main__":
 
     model = idfAbstractModel(f)
 
+    querylist = QtGui.QComboBox()
+    querylist.addItems(['Classname','Name','Group','Dependancy','Reference','Fieldname','Fieldvalue'])
+
+    queryline = QtGui.QLineEdit()
+    querybutton = QtGui.QPushButton("Query")
+
+
+
     view = QtGui.QTreeView()
     view.setModel(model)
+
+
     view.setWindowTitle("Simple Tree Model")
     view.show()
     sys.exit(app.exec_())
