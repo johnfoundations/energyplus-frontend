@@ -32,7 +32,14 @@ referencedict = dict()
 
 IdfClassRole = 33  #data method returns the idf object instance for the requested row
 
-
+#idf query flags
+IdfQueryClassname = 0
+IdfQueryName = 1
+IdfQueryGroup = 2
+IdfQueryDependancy = 3
+IdfQueryReference = 4
+IdfQueryFieldname = 5
+IdfQueryFieldValue = 6
 
 def getActiveObjectsList(otype) :
   ol = []

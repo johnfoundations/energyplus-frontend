@@ -55,6 +55,8 @@ class ObjectAbstract :
         else:
             return self.name
 
+            
+
     def setClassnameIDD(self,name):
         self.classn = name
 
