@@ -123,7 +123,7 @@ class GComboBox(GFloatSpinboxWidget):
 
 
 
-class GAutoCalcRealWidget(GEditWidget):
+class GAutoCalcRealWidget(QtGui.QWidget):
   def __init__(self,label, parent=None):
     QtGui.QWidget.__init__(self,parent)
     vert = QtGui.QHBoxLayout(self)

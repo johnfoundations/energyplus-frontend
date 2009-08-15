@@ -38,7 +38,7 @@ class idfAbstractModel(QtCore.QAbstractItemModel):
         
     def flags(self,index):
         if not index.isValid():
-            return QtCore.Qt.ItemIsEnabled
+            return QtCore.Qt.ItemIsEnabled | QtCore.Qt.ItemIsSelectable
         else:
             return QtCore.Qt.ItemIsEnabled | QtCore.Qt.ItemIsSelectable
         
@@ -46,17 +46,16 @@ class idfAbstractModel(QtCore.QAbstractItemModel):
     def data(self,modelindex,role):
         #retrieve class from idfsource
         idf = modelindex.internalPointer()
-        idfclass = self.idfsource.dataAt(idf.row,idf.column)
 
         if role == QtCore.Qt.ToolTipRole:
-            return QtCore.QVariant(idfclass.getMemo())
+            return QtCore.QVariant(idf.data.getMemo())
 
         if role == QtCore.Qt.EditRole or role == QtCore.Qt.DisplayRole:
             if modelindex.column() == 0:
-                return QtCore.QVariant(idfclass.getClassnameIDD())
+                return QtCore.QVariant(idf.data.getClassnameIDD())
 
             elif modelindex.column() == 1:
-                return QtCore.QVariant(idfclass.getName())
+                return QtCore.QVariant(idf.data.getName())
 
         return QtCore.QVariant()
 
@@ -78,6 +77,12 @@ class idfAbstractModel(QtCore.QAbstractItemModel):
             return self.idfsource.size()
             
     def index(self, row, column, parent):
+#        print row
+#        print column
+#        print parent.isValid()
+
+
+        
         if parent.isValid():
             dp = parent.internalPointer().child(row)
         else:
@@ -91,7 +96,64 @@ class idfAbstractModel(QtCore.QAbstractItemModel):
         self.idfsource.query(searchflag,data)
         self.reset()
         
+
+
+class idfClassModel(QtCore.QAbstractItemModel):
+    def __init__(self,idfclass,parent = None):
+        QtCore.QAbstractItemModel.__init__(self, parent)
+        self.idfclass = idfclass
+
         
+    def columnCount (self, parent):
+        return 1
+
+
+    def flags(self,index):
+        if not index.isValid():
+            return QtCore.Qt.ItemIsEnabled | QtCore.Qt.ItemIsEditable | QtCore.Qt.ItemIsSelectable
+        else:
+            return QtCore.Qt.ItemIsEnabled | QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEditable 
+       
+
+    def data(self,modelindex,role):
+        #retrieve class from idfsource
+        idf = modelindex.internalPointer()
+        field = idf.fieldlist[modelindex.row()]
+
+        if role == QtCore.Qt.ToolTipRole:
+            return QtCore.QVariant(field.notes)
+
+        if role == QtCore.Qt.EditRole or role == QtCore.Qt.DisplayRole:
+            return QtCore.QVariant(field.value)
+
+        return QtCore.QVariant()
+
+    def headerData(self,section,orientation,role = QtCore.Qt.DisplayRole):
+        if orientation == QtCore.Qt.Horizontal and role == QtCore.Qt.DisplayRole:
+             return QtCore.QVariant("Value")
+
+        if orientation == QtCore.Qt.Vertical and role == QtCore.Qt.DisplayRole:
+            return QtCore.QVariant(self.idfclass.fieldlist[section].fieldname)
+            
+        return QtCore.QVariant()
+
+
+    def rowCount (self,parent ):
+        if parent.isValid():
+            return 0
+        else:
+            return len(self.idfclass.fieldlist)
+
+    def index(self, row, column, parent):
+        if parent.isValid():
+            dp = parent.internalPointer().child(row)
+        else:
+            dp = self.idfclass
+
+        return self.createIndex(row, column, dp)
+
+
+
 
 if __name__ == "__main__":
     import sys

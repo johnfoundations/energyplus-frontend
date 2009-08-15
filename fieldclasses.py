@@ -40,12 +40,12 @@ class FieldAbstract :
     def createEditor(self):
         pass
 
-    def getEditorValue(self) :
-        return self.fieldeditor.Value()
+    def getEditorValue(self,editor) :
+        return editor.Value()
 
-    def setEditorValue(self):
+    def setEditorValue(self,editor):
         print self.fieldname
-        self.fieldeditor.setValue(self.value)
+        editor.setValue(self.value)
     
 
     
@@ -97,7 +97,7 @@ class FieldReal(FieldAbstract) :
         self.maxltv = maxltv
         
     def CreateEditor(self)  :
-        self.fieldeditor = GFloatSpinboxWidget(self.fieldname)
+        self.fieldeditor = QtGui.QDoubleSpinbox()
         if self.minv:
             self.fieldeditor.setMinimum(self.minv)
         elif self.mingtv:
@@ -108,13 +108,13 @@ class FieldReal(FieldAbstract) :
             self.fieldeditor.setMaximum(self.maxltv)
         if not self.default:
             self.fieldeditor.setValue(self.default)
-        self.setToolTips(self.notes)
+#        self.setToolTips(self.notes)
         return self.fieldeditor
 
-    def getEditorValue(self) :
-        return self.fieldeditor.Value()
+    def getEditorValue(self,editor) :
+        return editor.Value()
 
-    def setEditorValue(self):
+    def setEditorValue(self,editor):
         try:
             v = float(self.value)
         except:
@@ -124,7 +124,7 @@ class FieldReal(FieldAbstract) :
             except:
                 print 'setEditorValue float conversion failed ' + self.fieldname + self.value
                 v = float(self.default)
-        self.fieldeditor.setValue(v)
+        editor.setValue(v)
     
 
     def Validate(self,val):
@@ -183,8 +183,8 @@ class FieldRealAutocalculate(FieldReal) :
         self.setToolTips(self.notes)
         return self.fieldeditor
 
-    def setEditorValue(self):
-        self.fieldeditor.setValue(self.value)
+    def setEditorValue(self,editor):
+        editor.setValue(self.value)
 
 
     
@@ -212,10 +212,10 @@ class FieldInt(FieldAbstract) :
             return self.fieldeditor
                                     
                                         
-        def getEditorValue(self) :
-            return self.fieldeditor.Value()
+        def getEditorValue(self,editor) :
+            return editor.Value()
 
-        def setEditorValue(self):
+        def setEditorValue(self,editor):
             try:
                 v = int(self.value)
             except:
@@ -224,7 +224,7 @@ class FieldInt(FieldAbstract) :
                     v = int(v)
                 except:
                     print 'value wront for int'
-            self.fieldeditor.setValue(v)
+            editor.setValue(v)
 
 
         def Validate(self,val):
@@ -273,11 +273,11 @@ class FieldText(FieldAbstract) :
         return self.fieldeditor
 
 
-    def getEditorValue(self) :
-        return self.fieldeditor.getValue()
+    def getEditorValue(self,editor) :
+        return editor.getValue()
 
-    def setEditorValue(self):
-        self.fieldeditor.setValue(self.value)
+    def setEditorValue(self,editor):
+        editor.setValue(self.value)
             
 class FieldTime(FieldText):
 
@@ -308,13 +308,13 @@ class FieldChoice(FieldAbstract)    :
         self.setToolTips(self.notes)
         return self.fieldeditor
 
-    def setEditorValue(self):
+    def setEditorValue(self,editor):
         print self.value
         if not self.value == '':
-            self.fieldeditor.setCurrentIndex(self.lchoices.index(self.value.lower()))
+            editor.setCurrentIndex(self.lchoices.index(self.value.lower()))
     
-    def getEditorValue(self):
-        return self.fieldeditor.currentText()
+    def getEditorValue(self,editor):
+        return editor.currentText()
 
 
 class FieldOnOff(FieldAbstract) :
@@ -330,31 +330,31 @@ class FieldOnOff(FieldAbstract) :
         self.setToolTips(self.notes)
         return self.fieldeditor
 
-    def setEditorValue(self) :
+    def setEditorValue(self,editor) :
         if self.value == 'On':
-            self.fieldeditor.setChecked(2)
+            editor.setChecked(2)
         else:
-            self.fieldeditor.setChecked(0)
+            editor.setChecked(0)
 
-    def getEditorValue(self):
-        if self.fieldeditor.isChecked() :
+    def getEditorValue(self,editor):
+        if editor.isChecked() :
             return 'On'
         else:
             return 'Off'
 
 class FieldYesNo(FieldOnOff):
 
-    def getEditorValue(self):
-        if self.fieldeditor.isChecked() :
+    def getEditorValue(self,editor):
+        if editor.isChecked() :
             return 'Yes'
         else:
             return 'No'
 
-    def setEditorValue(self) :
+    def setEditorValue(self,editor) :
         if self.value == 'Yes':
-            self.fieldeditor.setChecked(2)
+            editor.setChecked(2)
         else:
-            self.fieldeditor.setChecked(0)
+            editor.setChecked(0)
                         
 
 class FieldObjectlist(FieldAbstract):
@@ -370,14 +370,14 @@ class FieldObjectlist(FieldAbstract):
         self.setToolTips(self.notes)
         return self.fieldeditor
 
-    def setEditorValue(self):
+    def setEditorValue(self,editor):
         try:
-            self.fieldeditor.setCurrentIndex(self.choices.index(self.value) + 1)
+            editor.setCurrentIndex(self.choices.index(self.value) + 1)
         except:
-            self.fieldeditor.setCurrentIndex(0)
+            editor.setCurrentIndex(0)
     
-    def getEditorValue(self):
-        return self.fieldeditor.currentText()
+    def getEditorValue(self,editor):
+        return editor.currentText()
 
     def getFieldDepends(self):
         return self.objectlistname
@@ -392,11 +392,11 @@ class FieldVertice(FieldAbstract):
         self.setToolTips(self.notes)
         return self.fieldeditor
 
-    def setEditorValue(self):
+    def setEditorValue(self,editor):
         val = []
         val.append(self.value)
         val.append(self.restoflist)
-        self.fieldeditor.setValue(val)
+        editor.setValue(val)
 
 #  def setValue(self,value,restoflist):
 #        print value
@@ -416,11 +416,11 @@ class FieldCompactSchedule(FieldAbstract):
         return self.fieldeditor
 
 
-    def setEditorValue(self):
+    def setEditorValue(self,editor):
         #array of values
         v = []
         v.append(self.value)
         v = v + self.restoflist
         print v
-        self.fieldeditor.setValue(v)
+        editor.setValue(v)
 
