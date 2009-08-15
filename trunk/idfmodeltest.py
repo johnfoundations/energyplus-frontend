@@ -24,7 +24,7 @@ import idfglobals
 import sys
 import idfdata
 import idfabstractmodel
-
+import idfmodeldelegate
 
 class idfmodeltest(QtGui.QMainWindow):
     def __init__(self):
@@ -43,7 +43,8 @@ class idfmodeltest(QtGui.QMainWindow):
 
         widget = QtGui.QWidget()
 
-        vbox = QtGui.QVBoxLayout(widget)
+        mainhbox = QtGui.QHBoxLayout(widget)
+        vbox = QtGui.QVBoxLayout()
         hbox = QtGui.QHBoxLayout()
 
         hbox.addWidget(self.querylist)
@@ -52,10 +53,19 @@ class idfmodeltest(QtGui.QMainWindow):
         vbox.addLayout(hbox)
         vbox.addWidget(self.querybutton)
         vbox.addWidget(self.view)
+        mainhbox.addLayout(vbox)
+        self.classview = QtGui.QTableView()
+        self.delegate  = idfmodeldelegate.idfClassDelegate()
+        self.classview.setItemDelegate(self.delegate)
+        
+        mainhbox.addWidget(self.classview)
+        self.connect(self.view, QtCore.SIGNAL('activated (QModelIndex)'),self.classActivated)
+        
         self.connect(self.querybutton, QtCore.SIGNAL('clicked ( bool)'),self.querybuttonclicked)
         self.createActions()
         self.createMenus()
         self.setCentralWidget(widget)
+        self.idfmodel = None
 
 
         
@@ -95,6 +105,13 @@ class idfmodeltest(QtGui.QMainWindow):
         self.fileName = QtGui.QFileDialog.getOpenFileName(self,"Open IDF File", ".", "*.idf *.IDF");
         self.idf.openIdf(self.fileName)
         self.model.reset()
+
+
+    def classActivated(self,model):
+        print 'Selected '
+        idf = model.internalPointer().data
+        self.idfmodel = idfabstractmodel.idfClassModel(idf)
+        self.classview.setModel(self.idfmodel)
 
 if __name__ == "__main__":
     app = QtGui.QApplication(sys.argv)

@@ -24,11 +24,11 @@ import idfread
 from idfglobals import *
 
 class treeItem:
-    def __init__(self, parent,row,column):
+    def __init__(self, parent,data):
         self.parentItem = parent
         self.childItems = []
-        self.row = row
-        self.column = column
+        self.data = data
+
 
     def appendChild(self, child):
         self.childItems.append(child)
@@ -87,7 +87,7 @@ class idfData(QtCore.QObject):
         return True
 
     def size(self):
-        return len(self.idflist)
+        return len(self.idftree)
         #returns count
 
     def seek(self,index):
@@ -177,11 +177,12 @@ class idfData(QtCore.QObject):
 
     def populateTree(self,olist):
         self.idftree = []
-        for r,idf in enumerate(olist):
-            t = treeItem(0,r,0)
-            for c,field in enumerate(idf.fieldlist):
-                t.appendChild(treeItem(t,r,c))
+        for idf in olist:
+            t = treeItem(0,idf)
+            for field in idf.fieldlist:
+                t.appendChild(treeItem(t,idf))
             self.idftree.append(t)
+
         
 
     def writeIdf(self,filename):
