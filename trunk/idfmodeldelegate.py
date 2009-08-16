@@ -30,16 +30,18 @@ class idfClassDelegate(QtGui.QItemDelegate):
         QtGui.QItemDelegate.__init__(self,parent)
 
     def createEditor(self,parent,option,index):
-        return index.internalPointer().fieldlist[index.row()].createEditor()
+        print "delegate createEditor"
+        print index.row()
+        return index.internalPointer().fieldlist[index.row()].createEditor(parent)
 
     def setEditorData(self,editor,index):
-        index.internalPointer().fieldlist[index.row()].setEditorData()
+        index.internalPointer().fieldlist[index.row()].setEditorValue(editor)
      
     def setModelData(self,editor,model,index):
-        value = index.internalPointer().fieldlist[index.row()].getEditorData()
+        value = index.internalPointer().fieldlist[index.row()].getEditorValue(editor)
         model.setData(index, value, QtCore.Qt.EditRole)
          
 
     def updateEditorGeometry(self,editor,option,index):
-        return option.rect()
+        editor.setGeometry(option.rect)
 
