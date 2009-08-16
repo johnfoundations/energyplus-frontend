@@ -27,34 +27,18 @@ import math
 
 
 
-class GEditWidget(QtGui.QWidget):
-  def __init__(self,label, parent=None):
-    QtGui.QWidget.__init__(self,parent)
-    vert = QtGui.QHBoxLayout(self)
-    vert.addWidget(QtGui.QLabel(label))
-    self.edit = self.getEditWidget()
-    vert.addWidget(self.edit)
-    self.valuechanged = False
-    self.connectSignal()
+class GEditWidget(QtGui.QLineEdit):
+  def __init__(self,parent=None):
+    QtGui.QLineEdit.__init__(self,parent)
 
-  def getEditWidget(self):
-    return QtGui.QLineEdit()
 
-  def connectSignal(self):
-    self.connect(self.edit, QtCore.SIGNAL('textChanged (const QString&)'),self.changed)
-
-  def setToolTip(self,tt):
-    self.edit.setToolTip(tt)
-
-  def value(self) :
-    return self.edit.text()
+  def getValue(self) :
+    return self.text()
 
   def setValue(self,value) :
-    self.edit.setText(value)
+    self.setText(value)
 
-  def changed(self,string):
-    self.valuechanged = True
-  
+
 class GTimeWidget(GEditWidget):
 
   def getEditWidget(self):
@@ -66,16 +50,12 @@ class GTimeWidget(GEditWidget):
 
 
 class GFloatSpinboxWidget(GEditWidget):
-  def __init__(self,label,parent = None):
+  def __init__(self,parent = None):
     QtGui.QWidget.__init__(self,parent)
     vert = QtGui.QHBoxLayout(self)
-    vert.addWidget(QtGui.QLabel(label))
     self.edit = self.getEditWidget()
     vert.addWidget(self.edit)
     valuechanged = False
-
-  def connectSignal(self):
-    self.connect(self.edit,QtCore.SIGNAL('valueChanged(int)'),self.changed)
 
   def getEditWidget(self):
     return QtGui.QDoubleSpinBox()
@@ -87,7 +67,6 @@ class GFloatSpinboxWidget(GEditWidget):
     self.edit.setMaximum(val)
 
   def setValue(self,value):
-    print value
     self.edit.setValue(value)
 
   def value(self) :
@@ -124,10 +103,9 @@ class GComboBox(GFloatSpinboxWidget):
 
 
 class GAutoCalcRealWidget(QtGui.QWidget):
-  def __init__(self,label, parent=None):
+  def __init__(self,parent=None):
     QtGui.QWidget.__init__(self,parent)
     vert = QtGui.QHBoxLayout(self)
-    vert.addWidget(QtGui.QLabel(label))
     self.cb = QtGui.QCheckBox('Auto')
     self.cb.setChecked(True)
     vert.addWidget(self.cb)

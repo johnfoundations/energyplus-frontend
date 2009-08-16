@@ -37,7 +37,7 @@ class FieldAbstract :
         self.notes = notes
         
 
-    def createEditor(self):
+    def createEditor(self,parent):
         pass
 
     def getEditorValue(self,editor) :
@@ -96,8 +96,9 @@ class FieldReal(FieldAbstract) :
         self.mingtv = mingtv
         self.maxltv = maxltv
         
-    def CreateEditor(self)  :
-        self.fieldeditor = QtGui.QDoubleSpinbox()
+    def createEditor(self,parent)  :
+        print "createeditor QDoubleSpinBox"
+        self.fieldeditor = QtGui.QDoubleSpinBox(parent)
         if self.minv:
             self.fieldeditor.setMinimum(self.minv)
         elif self.mingtv:
@@ -112,7 +113,7 @@ class FieldReal(FieldAbstract) :
         return self.fieldeditor
 
     def getEditorValue(self,editor) :
-        return editor.Value()
+        return editor.value()
 
     def setEditorValue(self,editor):
         try:
@@ -168,8 +169,9 @@ class FieldRealAutocalculate(FieldReal) :
         else:
             return FieldReal.Validate(self,val)
 
-    def CreateEditor(self)  :
-        self.fieldeditor = GAutoCalcRealWidget(self.fieldname)
+    def createEditor(self,parent)  :
+        print "createeditor FieldReal"
+        self.fieldeditor = GAutoCalcRealWidget(parent)
         if self.minv:
             self.fieldeditor.setMinimum(self.minv)
         elif self.mingtv:
@@ -189,84 +191,86 @@ class FieldRealAutocalculate(FieldReal) :
 
     
 class FieldInt(FieldAbstract) :
-        def __init__(self,parent,fieldname,default,notes,minv,maxv,mingtv,maxltv) :
-            FieldAbstract.__init__(self,parent,fieldname,default,notes)
-            self.minv = minv
-            self.maxv = maxv
-            self.mingtv = mingtv
-            self.maxltv = maxltv
+    def __init__(self,parent,fieldname,default,notes,minv,maxv,mingtv,maxltv) :
+        FieldAbstract.__init__(self,parent,fieldname,default,notes)
+        self.minv = minv
+        self.maxv = maxv
+        self.mingtv = mingtv
+        self.maxltv = maxltv
 
-        def CreateEditor(self) : 
-            self.fieldeditor = GSpinboxWidget(self.fieldname)
-            if self.minv:
-                self.fieldeditor.setMinimum(self.minv)
-            elif self.mingtv:
-                self.fieldeditor.setMinimum(self.mingtv)
-            if self.maxv:
-                self.fieldeditor.setMaximum(self.maxv)
-            elif self.maxltv:
-                self.fieldeditor.setMaximum(self.maxltv)
-            self.setToolTips(self.notes)
-            if not self.default:
-                self.fieldeditor.setValue(self.default)
-            return self.fieldeditor
-                                    
-                                        
-        def getEditorValue(self,editor) :
-            return editor.Value()
+    def createEditor(self,parent) :
+        print "createeditor FieldInt"
+        self.fieldeditor = QtGui.QSpinBox(parent)
+        if self.minv:
+            self.fieldeditor.setMinimum(self.minv)
+        elif self.mingtv:
+            self.fieldeditor.setMinimum(self.mingtv)
+        if self.maxv:
+            self.fieldeditor.setMaximum(self.maxv)
+        elif self.maxltv:
+            self.fieldeditor.setMaximum(self.maxltv)
+        self.setToolTips(self.notes)
+        if not self.default:
+            self.fieldeditor.setValue(self.default)
+        return self.fieldeditor
 
-        def setEditorValue(self,editor):
+
+    def getEditorValue(self,editor) :
+        return editor.value()
+
+    def setEditorValue(self,editor):
+        try:
+            v = int(self.value)
+        except:
             try:
-                v = int(self.value)
+                v = float(self.value)
+                v = int(v)
             except:
-                try:
-                    v = float(self.value)
-                    v = int(v)
-                except:
-                    print 'value wront for int'
-            editor.setValue(v)
+                print 'value wront for int'
+        editor.setValue(v)
 
 
-        def Validate(self,val):
-            localmin = False
-            localmax = False
+    def Validate(self,val):
+        localmin = False
+        localmax = False
 
-            if not self.minv == '':
-                localmin = self.minv
-            if not self.mingtv == '':
-                localmin = self.mingtv
-            if not self.maxv == '':
-                localmax = self.maxv
-            if not self.maxltv == '':
-                localmax = self.maxltv
-            if not localmax or not localmin or val == '':
-                return True
-            try:
-                rval = int(val)
-            except:
-                try:
-                    rval = float(val)
-                except:
-                    print 'fieldint validate error. Cannot convert to int ' + val
-                    return False
-                
-            if localmax:
-                if rval > localmax:
-                    return False
-            if localmin:
-                if rval < localmin:
-                    return False
+        if not self.minv == '':
+            localmin = self.minv
+        if not self.mingtv == '':
+            localmin = self.mingtv
+        if not self.maxv == '':
+            localmax = self.maxv
+        if not self.maxltv == '':
+            localmax = self.maxltv
+        if not localmax or not localmin or val == '':
             return True
-                                                        
-                                                
+        try:
+            rval = int(val)
+        except:
+            try:
+                rval = float(val)
+            except:
+                print 'fieldint validate error. Cannot convert to int ' + val
+                return False
+
+        if localmax:
+            if rval > localmax:
+                return False
+        if localmin:
+            if rval < localmin:
+                return False
+        return True
+
+
         
 class FieldText(FieldAbstract) :
     def __init__(self,parent,fieldname,default,notes):
         FieldAbstract.__init__(self,parent,fieldname,default,notes)
         self.value = ''
 
-    def CreateEditor(self) :
-        self.fieldeditor = GEditWidget(self.fieldname)
+    def createEditor(self,parent) :
+        print "createeditor FieldText"
+        self.fieldeditor = GEditWidget(parent)
         if self.default:
             self.fieldeditor.setValue(self.default)
         self.setToolTips(self.notes)
@@ -281,8 +285,9 @@ class FieldText(FieldAbstract) :
             
 class FieldTime(FieldText):
 
-    def CreateEditor(self):
-        self.fieldeditor = GTimeWidget(self.fieldname)
+    def createEditor(self,parent):
+        print "createeditor FieldTime"
+        self.fieldeditor = GTimeWidget(parent)
         if self.default:
             self.fieldeditor.setValue(self.default)
         self.setToolTips(self.notes)
@@ -297,8 +302,9 @@ class FieldChoice(FieldAbstract)    :
         for lc in self.choices:
             self.lchoices.append(lc.lower())
 
-    def CreateEditor(self)  :
-        self.fieldeditor = GComboBox(self.fieldname)
+    def createEditor(self,parent)  :
+        print "createeditor FieldChoice"
+        self.fieldeditor = QtGui.QComboBox(parent)
         self.fieldeditor.addItems(self.choices)
         if self.default in self.choices:
             index = self.lchoices.index(self.default.lower())
@@ -317,44 +323,15 @@ class FieldChoice(FieldAbstract)    :
         return editor.currentText()
 
 
-class FieldOnOff(FieldAbstract) :
+class FieldOnOff(FieldChoice) :
     def __init__(self,parent,fieldname,default,notes,choices) :
-        FieldAbstract.__init__(self,parent,fieldname,default,notes)
+        FieldChoice.__init__(self,parent,fieldname,default,notes,choices)
 
-    def CreateEditor(self)  :
-        self.fieldeditor = QtGui.QCheckBox(self.fieldname)
-        if self.default :
-            self.fieldeditor.setCheckState(2)
-        else:
-            self.fieldeditor.setCheckState(QtGui.Qt.Unchecked)
-        self.setToolTips(self.notes)
-        return self.fieldeditor
 
-    def setEditorValue(self,editor) :
-        if self.value == 'On':
-            editor.setChecked(2)
-        else:
-            editor.setChecked(0)
+class FieldYesNo(FieldChoice):
+    def __init__(self,parent,fieldname,default,notes,choices) :
+        FieldChoice.__init__(self,parent,fieldname,default,notes,choices)
 
-    def getEditorValue(self,editor):
-        if editor.isChecked() :
-            return 'On'
-        else:
-            return 'Off'
-
-class FieldYesNo(FieldOnOff):
-
-    def getEditorValue(self,editor):
-        if editor.isChecked() :
-            return 'Yes'
-        else:
-            return 'No'
-
-    def setEditorValue(self,editor) :
-        if self.value == 'Yes':
-            editor.setChecked(2)
-        else:
-            editor.setChecked(0)
                         
 
 class FieldObjectlist(FieldAbstract):
@@ -362,8 +339,9 @@ class FieldObjectlist(FieldAbstract):
         FieldAbstract.__init__(self,parent,fieldname,default,notes)
         self.objectlistname = objectlistname
 
-    def CreateEditor(self) :    
-        self.fieldeditor = GComboBox(self.fieldname)
+    def createEditor(self,parent) :
+        print "createeditor FieldObjectList"
+        self.fieldeditor = GComboBox(parent)
         self.choices = idfglobals.getActiveObjectsList(self.objectlistname)
         self.fieldeditor.addItem("Null")
         self.fieldeditor.addItems(self.choices)
@@ -387,7 +365,8 @@ class FieldVertice(FieldAbstract):
     def __init__(self,parent,fieldname,default,notes) :
         FieldAbstract.__init__(self,parent,fieldname,default,notes)
 
-    def CreateEditor(self):
+    def createEditor(self,parent):
+        print "createeditor FieldVertice"
         self.fieldeditor = GVerticeWidget('')
         self.setToolTips(self.notes)
         return self.fieldeditor
@@ -410,7 +389,8 @@ class FieldCompactSchedule(FieldAbstract):
         FieldAbstract.__init__(self,parent,fieldname,default,notes)
         self.widgetlist = []
 
-    def CreateEditor(self):
+    def createEditor(self,parent):
+        print "createEditor FieldCompactSchedule"
         self.fieldeditor = GCompactScheduleWidget(self.fieldname)
         self.setToolTips(self.notes)
         return self.fieldeditor
