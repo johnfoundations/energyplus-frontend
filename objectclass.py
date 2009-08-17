@@ -142,20 +142,20 @@ class ObjectAbstract :
                 lines.append('    %s, ! %s' % (field, field.fieldname))
 #                if field.restoflist:
 #                    print 'restoflist', field.fieldname, len(field.restoflist)
-        if self.extensible and field.restoflist:
-            newlines = []
-            for i in range(0, len(field.restoflist), self.extensible):
-                line = ''
-                for idx in range(self.extensible):
-                    line += str(field.restoflist[i+idx]) + ','
-                newlines.append(line)
-            try:
-                newlines[-1] = newlines[-1][:-1] + ';'
-                lines.extend(newlines)
-            except IndexError:
-                pass
-        else:
-            lines[-1] = lines[-1].replace(',', ';',1)
+        #if self.extensible and field.restoflist:
+            #newlines = []
+            #for i in range(0, len(field.restoflist), self.extensible):
+                #line = ''
+                #for idx in range(self.extensible):
+                    #line += str(field.restoflist[i+idx]) + ','
+                #newlines.append(line)
+            #try:
+                #newlines[-1] = newlines[-1][:-1] + ';'
+                #lines.extend(newlines)
+            #except IndexError:
+                #pass
+        #else:
+        lines[-1] = lines[-1].replace(',', ';',1)
         return '\n'.join(lines) + '\n'
             
 #        for c, field in enumerate(self.fieldlist):

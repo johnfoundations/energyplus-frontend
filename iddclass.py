@@ -5223,7 +5223,7 @@ class Zone(ObjectVertice):
     self.setRequired(False)
     self.setMinfields(0)
     self.setGroup("Thermal Zones and Surfaces") 
-    self.setExtensible(4)
+    self.setExtensible(-1)
     self.setClassnameIDD("Zone")
 
 
@@ -5276,7 +5276,10 @@ class BuildingSurface_Detailed(ObjectVertice):
     self.InsertField(FieldChoice(self,"Sun Exposure","SunExposed","",["SunExposed","NoSun",]))
     self.InsertField(FieldChoice(self,"Wind Exposure","WindExposed","",["WindExposed","NoWind",]))
     self.InsertField(FieldRealAutocalculate(self,"View Factor to Ground","autocalculate",("From the exterior of the surface","Unused if one uses the *reflections* options in Solar Distribution in Building input","unless a DaylightingDevice:Shelf or DaylightingDevice:Tubular object has been specified.","autocalculate will automatically calculate this value from the tilt of the surface",),0.0,1.0,"",""))
-    self.InsertField(FieldVertice(self,"Number of Vertices","",""))
+    self.InsertField(FieldRealAutocalculate(self,"Number of Vertices","autocalculate",("shown with 120 vertex coordinates -- extensible object"," *extensible* -- duplicate last set of x,y,z coordinates, renumbering please","(and changing z terminator to a comma *,* for all but last one which needs a semi-colon *;*)","vertices are given in GlobalGeometryRules coordinates -- if relative, all surface coordinates","are *relative* to the Zone Origin.  If world, then building and zone origins are used","for some internal calculations, but all coordinates are given in an *absolute* system.",),3,"","",""))
+    self.InsertField(FieldReal(self,"Vertex 1 X-coordinate",0,"","","","",""))
+    self.InsertField(FieldReal(self,"Vertex 1 Y-coordinate",0,"","","","",""))
+    self.InsertField(FieldReal(self,"Vertex 1 Z-coordinate",0,"","","","",""))
 
 
     self.addReference("SurfaceNames")
@@ -5308,7 +5311,10 @@ class Wall_Detailed(ObjectVertice):
     self.InsertField(FieldChoice(self,"Sun Exposure","SunExposed","",["SunExposed","NoSun",]))
     self.InsertField(FieldChoice(self,"Wind Exposure","WindExposed","",["WindExposed","NoWind",]))
     self.InsertField(FieldRealAutocalculate(self,"View Factor to Ground","autocalculate",("From the exterior of the surface","Unused if one uses the *reflections* options in Solar Distribution in Building input","unless a DaylightingDevice:Shelf or DaylightingDevice:Tubular object has been specified.","autocalculate will automatically calculate this value from the tilt of the surface",),0.0,1.0,"",""))
-    self.InsertField(FieldVertice(self,"Number of Vertices","",""))
+    self.InsertField(FieldRealAutocalculate(self,"Number of Vertices","autocalculate",("shown with 120 vertex coordinates -- extensible object"," *extensible* -- duplicate last set of x,y,z coordinates, renumbering please","(and changing z terminator to a comma *,* for all but last one which needs a semi-colon *;*)","vertices are given in GlobalGeometryRules coordinates -- if relative, all surface coordinates","are *relative* to the Zone Origin.  If world, then building and zone origins are used","for some internal calculations, but all coordinates are given in an *absolute* system.",),3,"","",""))
+    self.InsertField(FieldReal(self,"Vertex 1 X-coordinate",0,"","","","",""))
+    self.InsertField(FieldReal(self,"Vertex 1 Y-coordinate",0,"","","","",""))
+    self.InsertField(FieldReal(self,"Vertex 1 Z-coordinate",0,"","","","",""))
 
 
     self.addReference("SurfaceNames")
@@ -5340,7 +5346,10 @@ class RoofCeiling_Detailed(ObjectVertice):
     self.InsertField(FieldChoice(self,"Sun Exposure","SunExposed","",["SunExposed","NoSun",]))
     self.InsertField(FieldChoice(self,"Wind Exposure","WindExposed","",["WindExposed","NoWind",]))
     self.InsertField(FieldRealAutocalculate(self,"View Factor to Ground","autocalculate",("From the exterior of the surface","Unused if one uses the *reflections* options in Solar Distribution in Building input","unless a DaylightingDevice:Shelf or DaylightingDevice:Tubular object has been specified.","autocalculate will automatically calculate this value from the tilt of the surface",),0.0,1.0,"",""))
-    self.InsertField(FieldVertice(self,"Number of Vertices","",""))
+    self.InsertField(FieldRealAutocalculate(self,"Number of Vertices","autocalculate",("shown with 120 vertex coordinates -- extensible object"," *extensible* -- duplicate last set of x,y,z coordinates, renumbering please","(and changing z terminator to a comma *,* for all but last one which needs a semi-colon *;*)","vertices are given in GlobalGeometryRules coordinates -- if relative, all surface coordinates","are *relative* to the Zone Origin.  If world, then building and zone origins are used","for some internal calculations, but all coordinates are given in an *absolute* system.",),3,"","",""))
+    self.InsertField(FieldReal(self,"Vertex 1 X-coordinate",0,"","","","",""))
+    self.InsertField(FieldReal(self,"Vertex 1 Y-coordinate",0,"","","","",""))
+    self.InsertField(FieldReal(self,"Vertex 1 Z-coordinate",0,"","","","",""))
 
 
     self.addReference("SurfaceNames")
@@ -5372,7 +5381,10 @@ class Floor_Detailed(ObjectVertice):
     self.InsertField(FieldChoice(self,"Sun Exposure","SunExposed","",["SunExposed","NoSun",]))
     self.InsertField(FieldChoice(self,"Wind Exposure","WindExposed","",["WindExposed","NoWind",]))
     self.InsertField(FieldRealAutocalculate(self,"View Factor to Ground","autocalculate",("From the exterior of the surface","Unused if one uses the *reflections* options in Solar Distribution in Building input","unless a DaylightingDevice:Shelf or DaylightingDevice:Tubular object has been specified.","autocalculate will automatically calculate this value from the tilt of the surface",),0.0,1.0,"",""))
-    self.InsertField(FieldVertice(self,"Number of Vertices","",""))
+    self.InsertField(FieldRealAutocalculate(self,"Number of Vertices","autocalculate",("shown with 120 vertex coordinates -- extensible object"," *extensible* -- duplicate last set of x,y,z coordinates, renumbering please","(and changing z terminator to a comma *,* for all but last one which needs a semi-colon *;*)","vertices are given in GlobalGeometryRules coordinates -- if relative, all surface coordinates","are *relative* to the Zone Origin.  If world, then building and zone origins are used","for some internal calculations, but all coordinates are given in an *absolute* system.",),3,"","",""))
+    self.InsertField(FieldReal(self,"Vertex 1 X-coordinate",0,"","","","",""))
+    self.InsertField(FieldReal(self,"Vertex 1 Y-coordinate",0,"","","","",""))
+    self.InsertField(FieldReal(self,"Vertex 1 Z-coordinate",0,"","","","",""))
 
 
     self.addReference("SurfaceNames")
@@ -5852,7 +5864,19 @@ class FenestrationSurface_Detailed(ObjectVertice):
     self.InsertField(FieldObjectlist(self,"Shading Control Name","",("enter the name of a WindowProperty:ShadingControl object","used for windows and glass doors only","If not specified, window or glass door has no shading (blind, roller shade, etc.)",),"WindowShadeControlNames"))
     self.InsertField(FieldObjectlist(self,"Frame and Divider Name","",("Enter the name of a WindowProperty:FrameAndDivider object","Used only for exterior windows (rectangular) and glass doors.","Unused for triangular windows.","If not specified (blank), window or glass door has no frame or divider","and no beam solar reflection from reveal surfaces.",),"WindowFrameAndDividerNames"))
     self.InsertField(FieldReal(self,"Multiplier","1.0",("Used only for Surface Type = WINDOW, GLASSDOOR or DOOR","Non-integer values will be truncated to integer",),1.0,"","",""))
-    self.InsertField(FieldVertice(self,"Number of Vertices","",""))
+    self.InsertField(FieldRealAutocalculate(self,"Number of Vertices","autocalculate",("vertices are given in GlobalGeometryRules coordinates -- if relative, all surface coordinates","are *relative* to the Zone Origin.  If world, then building and zone origins are used","for some internal calculations, but all coordinates are given in an *absolute* system.",),3,4,"",""))
+    self.InsertField(FieldReal(self,"Vertex 1 X-coordinate",0,"","","","",""))
+    self.InsertField(FieldReal(self,"Vertex 1 Y-coordinate",0,"","","","",""))
+    self.InsertField(FieldReal(self,"Vertex 1 Z-coordinate",0,"","","","",""))
+    self.InsertField(FieldReal(self,"Vertex 2 X-coordinate",0,"","","","",""))
+    self.InsertField(FieldReal(self,"Vertex 2 Y-coordinate",0,"","","","",""))
+    self.InsertField(FieldReal(self,"Vertex 2 Z-coordinate",0,"","","","",""))
+    self.InsertField(FieldReal(self,"Vertex 3 X-coordinate",0,"","","","",""))
+    self.InsertField(FieldReal(self,"Vertex 3 Y-coordinate",0,"","","","",""))
+    self.InsertField(FieldReal(self,"Vertex 3 Z-coordinate",0,"","","","",""))
+    self.InsertField(FieldReal(self,"Vertex 4 X-coordinate",0,("Not used for triangles",),"","","",""))
+    self.InsertField(FieldReal(self,"Vertex 4 Y-coordinate",0,("Not used for triangles",),"","","",""))
+    self.InsertField(FieldReal(self,"Vertex 4 Z-coordinate",0,("Not used for triangles",),"","","",""))
 
 
     self.insertMemo(("Used for windows, doors, glass doors, tubular daylighting devices",))
@@ -5866,7 +5890,7 @@ class FenestrationSurface_Detailed(ObjectVertice):
     self.setRequired(False)
     self.setMinfields(19)
     self.setGroup("Thermal Zones and Surfaces") 
-    self.setExtensible(4)
+    self.setExtensible(-1)
     self.setClassnameIDD("FenestrationSurface:Detailed")
 
 
@@ -6302,7 +6326,10 @@ class Shading_Site_Detailed(ObjectVertice):
   def CreateFields(self) :
     self.InsertField(FieldText(self,"Name","",""))
     self.InsertField(FieldObjectlist(self,"Transmittance Schedule Name","",("Transmittance schedule for the shading device, defaults to zero (always opaque)",),"ScheduleNames"))
-    self.InsertField(FieldVertice(self,"Number of Vertices","",""))
+    self.InsertField(FieldRealAutocalculate(self,"Number of Vertices","autocalculate",("shown with 6 vertex coordinates -- extensible object","Rules for vertices are given in GlobalGeometryRules coordinates --","For this object all surface coordinates are in world coordinates.",),3,"","",""))
+    self.InsertField(FieldReal(self,"Vertex 1 X-coordinate",0,"","","","",""))
+    self.InsertField(FieldReal(self,"Vertex 1 Y-coordinate",0,"","","","",""))
+    self.InsertField(FieldReal(self,"Vertex 1 Z-coordinate",0,"","","","",""))
 
 
     self.insertMemo(("used for shading elements such as trees","these items are fixed in space and would not move with relative geometry",))
@@ -6322,7 +6349,10 @@ class Shading_Building_Detailed(ObjectVertice):
   def CreateFields(self) :
     self.InsertField(FieldText(self,"Name","",""))
     self.InsertField(FieldObjectlist(self,"Transmittance Schedule Name","",("Transmittance schedule for the shading device, defaults to zero (always opaque)",),"ScheduleNames"))
-    self.InsertField(FieldVertice(self,"Number of Vertices","",""))
+    self.InsertField(FieldRealAutocalculate(self,"Number of Vertices","autocalculate",("shown with 6 vertex coordinates -- extensible object","Rules for vertices are given in GlobalGeometryRules coordinates --","For this object all surface coordinates are relative to the building origin (0,0,0)","and will rotate with the BUILDING north axis.",),3,"","",""))
+    self.InsertField(FieldReal(self,"Vertex 1 X-coordinate",0,"","","","",""))
+    self.InsertField(FieldReal(self,"Vertex 1 Y-coordinate",0,"","","","",""))
+    self.InsertField(FieldReal(self,"Vertex 1 Z-coordinate",0,"","","","",""))
 
 
     self.insertMemo(("used for shading elements such as trees, other buildings, parts of this building not being modeled","these items are relative to the current building and would move with relative geometry",))
@@ -6453,7 +6483,10 @@ class Shading_Zone_Detailed(ObjectVertice):
     self.InsertField(FieldText(self,"Name","",""))
     self.InsertField(FieldObjectlist(self,"Base Surface Name","","","SurfaceNames"))
     self.InsertField(FieldObjectlist(self,"Transmittance Schedule Name","",("Transmittance schedule for the shading device, defaults to zero (always opaque)",),"ScheduleNames"))
-    self.InsertField(FieldVertice(self,"Number of Vertices","",""))
+    self.InsertField(FieldRealAutocalculate(self,"Number of Vertices","autocalculate",("shown with 6 vertex coordinates -- extensible object","vertices are given in GlobalGeometryRules coordinates -- if relative, all surface coordinates","are *relative* to the Zone Origin.  if world, then building and zone origins are used","for some internal calculations, but all coordinates are given in an *absolute* system.",),3,"","",""))
+    self.InsertField(FieldReal(self,"Vertex 1 X-coordinate",0,"","","","",""))
+    self.InsertField(FieldReal(self,"Vertex 1 Y-coordinate",0,"","","","",""))
+    self.InsertField(FieldReal(self,"Vertex 1 Z-coordinate",0,"","","","",""))
 
 
     self.insertMemo(("used For fins, overhangs, elements that shade the building, are attached to the building","but are not part of the heat transfer calculations",))
@@ -12025,7 +12058,7 @@ class AirLoopHVAC_UnitaryHeatPump_AirToAir(ObjectAbstract):
     self.InsertField(FieldText(self,"Air Outlet Node Name","",""))
     self.InsertField(FieldRealAutocalculate(self,"Supply Air Flow Rate During Cooling Operation",0,("Must be less than or equal to the fan's maximum flow rate.",),"","",0.0,""))
     self.InsertField(FieldRealAutocalculate(self,"Supply Air Flow Rate During Heating Operation",0,("Must be less than or equal to the fan's maximum flow rate.",),"","",0.0,""))
-    self.InsertField(FieldRealAutocalculate(self,"Supply Air Flow Rate When No Cooling or Heating is Needed",0,("Must be less than or equal to the fan’s maximum flow rate.","Only used when fan operating mode is continuous (disregarded for cycling fan mode).","This air flow rate is used when no heating or cooling is required (i.e., the DX coil","compressor and supplemental heating coil are off). If this field is left blank or zero,","the supply air flow rate from the previous on cycle (either cooling or heating) is used.",),0.0,"","",""))
+    self.InsertField(FieldRealAutocalculate(self,"Supply Air Flow Rate When No Cooling or Heating is Needed",0,("Must be less than or equal to the fanï¿½s maximum flow rate.","Only used when fan operating mode is continuous (disregarded for cycling fan mode).","This air flow rate is used when no heating or cooling is required (i.e., the DX coil","compressor and supplemental heating coil are off). If this field is left blank or zero,","the supply air flow rate from the previous on cycle (either cooling or heating) is used.",),0.0,"","",""))
     self.InsertField(FieldObjectlist(self,"Controlling Zone or Thermostat Location","","","ZoneNames"))
     self.InsertField(FieldRealAutocalculate(self,"Fraction of Supply Air Flow That Goes Through the Controlling Zone",0,"","",1.0,0.0,""))
     self.InsertField(FieldChoice(self,"Supply Air Fan Object Type","",("Fan:ConstantVolume only works with continuous fan operating mode (i.e. fan","operating mode schedule values are greater than 0 or the fan operating mode","schedule name field is left blank).",),["Fan:OnOff","Fan:ConstantVolume",]))

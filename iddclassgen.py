@@ -286,14 +286,15 @@ class IddObject :
     return str
 
   def objectFixup(self) :
+      pass
     # fix up certain classes or objects
     #any vertice class make extensible
-    if 'format' in self.iddValues:
-      if self.iddValues['format'] == 'vertices':
-        if 'extensible' in self.iddValues:
-          pass
-        else:
-          self.iddValues['extensible'] = '4'
+#    if 'format' in self.iddValues:
+#      if self.iddValues['format'] == 'vertices':
+#        if 'extensible' in self.iddValues:
+#          pass
+#        else:
+#          self.iddValues['extensible'] = '4'
     
       
 
@@ -311,11 +312,11 @@ class IddObject :
     watch = 0
     numb = int(num)
     for n in self.fields :
-      if re.search("Number of Vertices",n.getFieldName()):
-        f = IddField(n.getFieldName())
-        f.insertAttr('type','vertice')
-        newlist.append(f)
-        break
+#      if re.search("Number of Vertices",n.getFieldName()):
+#        f = IddField(n.getFieldName())
+#        f.insertAttr('type','vertice')
+#        newlist.append(f)
+#        break
       if re.search(str(c),n.getFieldName()) :
         if watch <= numb :
           watch = watch + 1

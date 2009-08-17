@@ -98,7 +98,15 @@ class idfmodeltest(QtGui.QMainWindow):
 
 
     def writeFile(self):
-        pass
+        destfile = QtGui.QFileDialog.getSaveFileName(self,"Save To", ".", "*.idf");
+        try:
+            fh = open(destfile,'w')
+        except:
+            return
+        for rec in self.idf.idflist:
+            fh.write(rec.__str__()+"\n")
+        fh.close()
+        
 
 
     def openFile(self):
