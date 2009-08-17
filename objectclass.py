@@ -23,7 +23,7 @@
 
 import idfglobals
 
-import pdb
+import copy
 from PyQt4 import QtGui, QtCore
 from fieldclasses import *
 
@@ -45,6 +45,7 @@ class ObjectAbstract :
         self.scrollarea = None
         self.memo = []
         self.CreateFields()
+        self.createExtensibleList()
         
     def setName(self,name):
         self.name = name
@@ -199,6 +200,47 @@ class ObjectAbstract :
     def setExtensible(self,num) :
         self.extensible = num
 
+    def empty_copy(self,object):
+        class Empty: pass
+        newcopy = Empty()
+        newcopy.__class__ = object.__class__
+        return newcopy
+
+    def copyField(self,orig) :
+        fcopy = copy.copy(orig)
+        fcopy.fieldname = orig.fieldname
+        fcopy.parent = orig.parent
+        fcopy.default = orig.default
+        fcopy.notes = orig.notes
+        return fcopy
+
+    def createExtensibleList(self):
+        if self.extensible == -1:
+            return
+        print 'createExtensibleList ----------------'
+        self.extensiblefieldlist = []
+        a = self.extensible * -1
+        print str(a) + 'extensible*-1'
+        tlist = self.fieldlist[a:len(self.fieldlist)]
+        for i in tlist:
+            print i.fieldname
+            fieldcopy = self.copyField(i)
+            self.extensiblefieldlist.append(fieldcopy)
+
+        self.extensibletag = 1
+        print "createExtensibleList" + " " + str(len(self.extensiblefieldlist))
+            
+    def createExtensibleFields(self):
+        print 'createExtensibleFields'
+        self.extensibletag = self.extensibletag + 1
+        for i in self.extensiblefieldlist:
+            newfield = self.copyField(i)
+            newfield.fieldname = i.fieldname.replace('1',str(self.extensibletag))
+            self.fieldlist.append(newfield)
+            print newfield.fieldname
+
+
+
     def getDepends(self):
         dependslist = []
         for f in self.fieldlist :
@@ -214,27 +256,22 @@ class ObjectAbstract :
             
 
     def ParseRawData(self) :
-        remainder = []
-        remainder = self.rawdatalist[:]
-#        print remainder
-#        pdb.set_trace()
-        for i in range(len(self.rawdatalist)):
-            if i == 0:
-                del remainder[0]
+        print "len fieldlist"  + str(len(self.fieldlist)) + self.getClassnameIDD()
+        for i,fd in enumerate(self.rawdatalist) :
+            if i == 0:  #first item is classname
                 continue
 
-            if i <= len(self.fieldlist):
-                f = self.fieldlist[i-1]
-            else:
-                if not self.extensible:
-                    pdb.set_trace()
+            if i > len(self.fieldlist) :
+                if self.extensible == -1 :
+#                    pdb.set_trace()
                     print 'ran out of fieldlists ' + self.getClassnameIDD()
-                return
-                    
-            d = self.rawdatalist[i]
-            del remainder[0]
-            if not f.setValue(d,remainder):
-                print 'parserawdata setvalue false ' + d + ' ' + self.getClassnameIDD()
+                    return
+                else :
+                    self.createExtensibleFields()
+
+            print i
+            if not self.fieldlist[i-1].setValue(fd):
+                print 'parserawdata setvalue false ' + fd + ' ' + self.getClassnameIDD()
                 return
 
 
