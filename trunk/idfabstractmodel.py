@@ -128,6 +128,11 @@ class idfClassModel(QtCore.QAbstractItemModel):
 
         return QtCore.QVariant()
 
+    def setData(self,index,value,role) :
+        if role == QtCore.Qt.EditRole :
+            idf = index.internalPointer()
+            idf.fieldlist[index.row()].setValue(value)
+
     def headerData(self,section,orientation,role = QtCore.Qt.DisplayRole):
         if orientation == QtCore.Qt.Horizontal and role == QtCore.Qt.DisplayRole:
              return QtCore.QVariant("Value")

@@ -32,7 +32,6 @@ class FieldAbstract :
         self.fieldname = fieldname
         self.parent = parent
         self.value = ''
-        self.restoflist = []
         self.default = default
         self.notes = notes
         
@@ -56,11 +55,10 @@ class FieldAbstract :
         tts = tts.strip()
         self.fieldeditor.setToolTip(tts)
 
-    def setValue(self, value, restoflist) :
+    def setValue(self, value) :
         #pdb.set_trace()
         if self.Validate(value) :
             self.value = value
-            self.restoflist = restoflist
             if self.fieldname == 'Name':
                 self.parent.setName(self.value)
             return True
