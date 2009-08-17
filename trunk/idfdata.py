@@ -63,27 +63,28 @@ class idfData(QtCore.QObject):
         self.idftree = []
 
     def next(self):
-        if current == len(self.idflist):
+        if self.current == len(self.idflist):
+            print 'next false'
             return False
-        current = current + 1
+        self.current = self.current + 1
         return True
 
     def previous(self):
-        if current == 0:
+        if self.current == 0:
             return False
-        current = current - 1    
+        self.current = self.current - 1    
         return True
 
     def first(self):
         if len(self.idflist) == 0:
             return False
-        current = 0
+        self.current = 0
         return True
 
     def last(self):
         if len(self.idflist) == 0:
             return False
-        current = self.idflist(self.current) - 1
+        self.current = self.idflist(self.current) - 1
         return True
 
     def size(self):
@@ -93,11 +94,11 @@ class idfData(QtCore.QObject):
     def seek(self,index):
         if index > self.size() or index < 0:
             return False
-        current = index
+        self.current = index
         return True
 
     def record(self):
-        return self.idftree[self.current]
+        return self.idflist[self.current]
 
 
     def recordAt(self,row,column):
