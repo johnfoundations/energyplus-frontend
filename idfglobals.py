@@ -58,6 +58,13 @@ def getObjectType(otype) :
 def getObjectTree() :
   return objectdict
 
+def getDepends(name):
+    dlist = []
+    for o in referencedict[name]:
+        dlist.append(o.getName())
+    return dlist
+    
+
     
   
     

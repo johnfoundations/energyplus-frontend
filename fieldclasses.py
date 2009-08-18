@@ -26,6 +26,7 @@ from gwidgetclass import *
 from compactschedulewidget import *
 from verticewidget import *
 
+
 class FieldAbstract :
     def __init__(self,parent,fieldname,default,notes):
         self.fieldeditor = 0
@@ -339,8 +340,8 @@ class FieldObjectlist(FieldAbstract):
 
     def createEditor(self,parent) :
         print "createeditor FieldObjectList"
-        self.fieldeditor = GComboBox(parent)
-        self.choices = idfglobals.getActiveObjectsList(self.objectlistname)
+        self.fieldeditor = QtGui.QComboBox(parent)
+        self.choices = idfglobals.getDepends(self.objectlistname)
         self.fieldeditor.addItem("Null")
         self.fieldeditor.addItems(self.choices)
         self.setToolTips(self.notes)
