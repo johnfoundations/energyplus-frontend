@@ -61,6 +61,7 @@ class idfData(QtCore.QObject):
         self.idflist = []       #list of classes from idf files
         self.current = 0        #pointer to current class, used in iterating through list
         self.idftree = []
+        self.referencedict = dict()
 
     def next(self):
         if self.current == len(self.idflist):
@@ -162,6 +163,20 @@ class idfData(QtCore.QObject):
                 
         self.populateTree(querylist)
 
+    def buildDependsTree(self):
+        for i in self.idflist:
+            #first get a list of depend from object
+            rl = i.getReference()
+            #look through references and build dict
+            for ref in rl:
+                if not ref in self.referencedict:
+                    l = []
+                    l.append(i)
+                    self.referencedict[ref] = l
+                else:
+                    self.referencedict[ref].append(i)
+
+        idfglobals.referencedict = self.referencedict
 
 
         
@@ -174,6 +189,7 @@ class idfData(QtCore.QObject):
 
         self.idfreadlist.append(idf)
         self.populateTree(self.idflist)
+        self.updateReferenceDict()
 
 
     def populateTree(self,olist):
