@@ -217,27 +217,27 @@ class ObjectAbstract :
     def createExtensibleList(self):
         if self.extensible == -1:
             return
-        print 'createExtensibleList ----------------'
+#        print 'createExtensibleList ----------------'
         self.extensiblefieldlist = []
         a = self.extensible * -1
-        print str(a) + 'extensible*-1'
+#        print str(a) + 'extensible*-1'
         tlist = self.fieldlist[a:len(self.fieldlist)]
         for i in tlist:
-            print i.fieldname
+#            print i.fieldname
             fieldcopy = self.copyField(i)
             self.extensiblefieldlist.append(fieldcopy)
 
         self.extensibletag = 1
-        print "createExtensibleList" + " " + str(len(self.extensiblefieldlist))
+#        print "createExtensibleList" + " " + str(len(self.extensiblefieldlist))
             
     def createExtensibleFields(self):
-        print 'createExtensibleFields'
+#        print 'createExtensibleFields'
         self.extensibletag = self.extensibletag + 1
         for i in self.extensiblefieldlist:
             newfield = self.copyField(i)
             newfield.fieldname = i.fieldname.replace('1',str(self.extensibletag))
             self.fieldlist.append(newfield)
-            print newfield.fieldname
+#            print newfield.fieldname
 
 
 
@@ -256,7 +256,7 @@ class ObjectAbstract :
             
 
     def ParseRawData(self) :
-        print "len fieldlist"  + str(len(self.fieldlist)) + self.getClassnameIDD()
+#        print "len fieldlist"  + str(len(self.fieldlist)) + self.getClassnameIDD()
         for i,fd in enumerate(self.rawdatalist) :
             if i == 0:  #first item is classname
                 continue
@@ -269,7 +269,7 @@ class ObjectAbstract :
                 else :
                     self.createExtensibleFields()
 
-            print i
+#            print i
             if not self.fieldlist[i-1].setValue(fd):
                 print 'parserawdata setvalue false ' + fd + ' ' + self.getClassnameIDD()
                 return

@@ -21,16 +21,17 @@
 
 
 import iddclass
+import idfglobals
 import string
 import re
-import pdb
+#import pdb
 
 class idfRead :
     def __init__(self,filename) :
         self.active = []
         self.activetree = []
         self.comment = ''
-        self.referencedict = dict()
+
         self.filename = filename
         
         try:
@@ -38,7 +39,7 @@ class idfRead :
         except:
             return
         self.parseFile()
-        self.buildDependsTree()
+
 
     def getActiveList(self):
         return self.active
@@ -52,24 +53,6 @@ class idfRead :
         return flist
 
 
-    def getActiveReferences(self):
-        return self.referencedict
-
-    def buildDependsTree(self):
-        for i in self.active:
-            #first get a list of depend from object
-            dl = i.getDepends()
-            rl = i.getReference()
-            #look through references and build dict
-            for ref in rl:
-                if not ref in self.referencedict:
-                    l = []
-                    l.append(i)
-                    self.referencedict[ref] = l
-                else:
-                    self.referencedict[ref].append(i)
-                    
-    
     def parseFile(self) :
         #pdb.set_trace()
         start = 1
@@ -132,12 +115,18 @@ if __name__ == "__main__":
     import sys
     try:
         fname = sys.argv[1]
-    except KeyError:
+    except :
         fname = 'Singlezonetemplate.idf'
     c = idfRead(fname)
-    alist = c.getActivelist()
-    for o in alist:
-        print o
+#    alist = c.getActivelist()
+#    for o in alist:
+#        print o
+    dtree = c.getActiveReferences()
+    for l,v in dtree.iteritems():
+        print l
+        for o in v:
+            print o.getName() + o.getClassnameIDD()
+        print '\n'
 
 #    for o in alist:
 #        if o.getClassnameIDD() == 'Zone':
