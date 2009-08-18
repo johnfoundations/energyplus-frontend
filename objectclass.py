@@ -134,7 +134,7 @@ class ObjectAbstract :
         lines.append(self.getClassnameIDD() + ',')
         tmplines = []
         for c, field in enumerate(self.fieldlist):
-            if c > self.minfields and field.value == '':
+            if c >= self.minfields and field.value == '':
                 tmplines.append('    , !- %s' % field.fieldname)
             else:
                 lines.extend(tmplines)

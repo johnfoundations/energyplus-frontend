@@ -1,0 +1,14 @@
+Energy Plus frontend Issues:
+
+    Issues with writing of classes:
+        ComponentCost:LineItem  not writing out all the fields. Not causing error
+        NodeList error.  NodeList,
+                            ZN_1_FLR_1_SEC_2 Inlet Nodes, ! Name
+                            ZN_1_FLR_1_SEC_2 Direct Air Inlet Node Name, ! Node 1 Name
+                            ; ! Node 2 Name
+        Third line gives error, as it defines Node 2 Name as '' in all NodeList definitions
+
+
+        
+      
+        
