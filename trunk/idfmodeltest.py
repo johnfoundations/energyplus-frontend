@@ -33,7 +33,7 @@ class idfmodeltest(QtGui.QMainWindow):
         self.model = idfabstractmodel.idfAbstractModel(self.idf)
 
         self.querylist = QtGui.QComboBox()
-        self.querylist.addItems(['Classname','Name','Group','Dependancy','Reference','Fieldname','Fieldvalue'])
+        self.querylist.addItems(['All','Classname','Name','Group','Dependancy','Reference','Fieldname','Fieldvalue'])
 
         self.queryline = QtGui.QLineEdit()
         self.querybutton = QtGui.QPushButton("Query")
@@ -54,11 +54,15 @@ class idfmodeltest(QtGui.QMainWindow):
         vbox.addWidget(self.querybutton)
         vbox.addWidget(self.view)
         mainhbox.addLayout(vbox)
+        classvbox = QtGui.QVBoxLayout()
+        self.classviewname = QtGui.QLabel()
         self.classview = QtGui.QTableView()
         self.delegate  = idfmodeldelegate.idfClassDelegate()
         self.classview.setItemDelegate(self.delegate)
-        
-        mainhbox.addWidget(self.classview)
+        self.classview.setEditTriggers(QtGui.QAbstractItemView.AllEditTriggers)
+        classvbox.addWidget(self.classviewname)
+        classvbox.addWidget(self.classview)
+        mainhbox.addLayout(classvbox)
         self.connect(self.view, QtCore.SIGNAL('activated (QModelIndex)'),self.classActivated)
         
         self.connect(self.querybutton, QtCore.SIGNAL('clicked ( bool)'),self.querybuttonclicked)
@@ -116,8 +120,10 @@ class idfmodeltest(QtGui.QMainWindow):
 
 
     def classActivated(self,model):
-        print 'Selected '
+        
         idf = model.internalPointer().data
+        text = idf.getClassnameIDD() + ' : '+ idf.getName()
+        self.classviewname.setText(text)
         self.idfmodel = idfabstractmodel.idfClassModel(idf)
         self.classview.setModel(self.idfmodel)
 
