@@ -122,6 +122,11 @@ class idfData(QtCore.QObject):
     def query(self,flag,data):
         #flags in idfglobals
         querylist = []
+
+        if flag == IdfQueryAll:
+            querylist = self.idflist
+
+        
         if flag == IdfQueryClassname:
             for idf in self.idflist:
                 if idf.getClassnameIDD() == data:
@@ -176,7 +181,7 @@ class idfData(QtCore.QObject):
                 else:
                     self.referencedict[ref].append(i)
 
-        idfglobals.referencedict = self.referencedict
+        referencedict = self.referencedict
 
 
         
@@ -189,7 +194,7 @@ class idfData(QtCore.QObject):
 
         self.idfreadlist.append(idf)
         self.populateTree(self.idflist)
-        self.updateReferenceDict()
+        self.buildDependsTree()
 
 
     def populateTree(self,olist):

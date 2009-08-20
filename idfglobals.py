@@ -25,21 +25,22 @@ import re
 
 activeobjects = []
 objectlist = []
-objectdict = dict()
-referencedict = dict()
+objectdict = dict()  #populated by iddclass.py
+referencedict = dict()  #populated by idfdata.py
 
 #model role definitions
 
 IdfClassRole = 33  #data method returns the idf object instance for the requested row
 
 #idf query flags
-IdfQueryClassname = 0
-IdfQueryName = 1
-IdfQueryGroup = 2
-IdfQueryDependancy = 3
-IdfQueryReference = 4
-IdfQueryFieldname = 5
-IdfQueryFieldValue = 6
+IdfQueryAll = 0
+IdfQueryClassname = 1
+IdfQueryName = 2
+IdfQueryGroup = 3
+IdfQueryDependancy = 4
+IdfQueryReference = 5
+IdfQueryFieldname = 6
+IdfQueryFieldValue = 7
 
 def getActiveObjectsList(otype) :
   ol = []
