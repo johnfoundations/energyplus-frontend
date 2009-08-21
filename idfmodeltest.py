@@ -25,6 +25,7 @@ import sys
 import idfdata
 import idfabstractmodel
 import idfmodeldelegate
+import newclassdialog
 
 class idfmodeltest(QtGui.QMainWindow):
     def __init__(self):
@@ -79,14 +80,21 @@ class idfmodeltest(QtGui.QMainWindow):
         self.exit.setShortcut('Ctrl+Q')
         self.exit.setStatusTip('Exit application')
         self.connect(self.exit, QtCore.SIGNAL('triggered()'), QtCore.SLOT('close()'))
+        
         self.writefile = QtGui.QAction('Write File', self)
         self.writefile.setShortcut('Ctrl+W')
         self.writefile.setStatusTip('Write an IDF File')
         self.connect(self.writefile, QtCore.SIGNAL('triggered()'), self.writeFile)
+
         self.openfile = QtGui.QAction('Open File', self)
         self.openfile.setShortcut('Ctrl+O')
         self.openfile.setStatusTip('Open an IDF File')
         self.connect(self.openfile, QtCore.SIGNAL('triggered()'), self.openFile)
+
+        self.newobj = QtGui.QAction('New Object',self)
+        self.newobj.setShortcut('Ctrl+N')
+        self.newobj.setStatusTip('Create New Object')
+        self.connect(self.newobj, QtCore.SIGNAL('triggered()'), self.newobject)
 
     def createMenus(self):
         menubar = self.menuBar()
@@ -94,6 +102,8 @@ class idfmodeltest(QtGui.QMainWindow):
         filem.addAction(self.openfile)
         filem.addAction(self.writefile)
         filem.addAction(self.exit)
+        objm = menubar.addMenu('&Objects')
+        objm.addAction(self.newobj)
 
 
 
@@ -118,6 +128,10 @@ class idfmodeltest(QtGui.QMainWindow):
         self.idf.openIdf(self.fileName)
         self.model.reset()
 
+    def newobject(self):
+        newdialog = newclassdialog.newClassDialog()
+        result = newdialog.exec_()
+
 
     def classActivated(self,model):
         
@@ -126,6 +140,8 @@ class idfmodeltest(QtGui.QMainWindow):
         self.classviewname.setText(text)
         self.idfmodel = idfabstractmodel.idfClassModel(idf)
         self.classview.setModel(self.idfmodel)
+
+
 
 if __name__ == "__main__":
     app = QtGui.QApplication(sys.argv)
