@@ -21,7 +21,7 @@
 
 from PyQt4 import QtGui, QtCore
 import idfread
-from idfglobals import *
+import idfglobals 
 
 class treeItem:
     def __init__(self, parent,data):
@@ -123,43 +123,43 @@ class idfData(QtCore.QObject):
         #flags in idfglobals
         querylist = []
 
-        if flag == IdfQueryAll:
+        if flag == idfglobals.IdfQueryAll:
             querylist = self.idflist
 
         
-        if flag == IdfQueryClassname:
+        if flag == idfglobals.IdfQueryClassname:
             for idf in self.idflist:
                 if idf.getClassnameIDD() == data:
                     querylist.append(idf)
 
-        if flag == IdfQueryName:
+        if flag == idfglobals.IdfQueryName:
             for idf in self.idflist:
                 if idf.getName() == data:
                     querylist.append(idf)
                     
-        if flag == IdfQueryGroup:
+        if flag == idfglobals.IdfQueryGroup:
             for idf in self.idflist:
                 if idf.getGroup() == data:
                     querylist.append(idf)
                     
-        if flag == IdfQueryDependancy:
+        if flag == idfglobals.IdfQueryDependancy:
             for idf in self.idflist:
                 if data in idf.getDepends():
                     querylist.append(idf)
                     
-        if flag == IdfQueryReference:
+        if flag == idfglobals.IdfQueryReference:
             for idf in self.idflist:
                 if data in idf.getReference():
                     querylist.append(idf)
                     
-        if flag == IdfQueryFieldname:
+        if flag == idfglobals.IdfQueryFieldname:
             for idf in self.idflist:
                 for fld in idf.fieldlist:
                     if fld.getFieldName() == data:
                         querylist.append(idf)
                         break
                     
-        if flag == IdfQueryFieldValue:
+        if flag == idfglobals.IdfQueryFieldValue:
             for idf in self.idflist:
                 for fld in idf.fieldlist:
                     if fld.getValue() == data:
@@ -181,7 +181,7 @@ class idfData(QtCore.QObject):
                 else:
                     self.referencedict[ref].append(i)
 
-        referencedict = self.referencedict
+        idfglobals.referencedict = self.referencedict
 
 
         

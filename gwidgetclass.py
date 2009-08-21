@@ -106,6 +106,7 @@ class GAutoCalcRealWidget(QtGui.QWidget):
   def __init__(self,parent=None):
     QtGui.QWidget.__init__(self,parent)
     vert = QtGui.QHBoxLayout(self)
+    vert.setContentsMargins ( 0,0,0,0)
     self.cb = QtGui.QCheckBox('Auto')
     self.cb.setChecked(True)
     vert.addWidget(self.cb)
@@ -113,15 +114,16 @@ class GAutoCalcRealWidget(QtGui.QWidget):
     self.edit.setEnabled(False)
     vert.addWidget(self.edit)
     self.valuechanged = False
+    self.setAutoFillBackground(True)
     self.connect(self.cb, QtCore.SIGNAL('stateChanged (int)'),self.boxChanged)
-    self.connect(self.edit,QtCore.SIGNAL('valueChanged(int)'),self.changed)
+
     
   def boxChanged(self,i) :
     self.edit.setEnabled(not i)
     self.valuechanged = True
 
-  def getValue(self):
-    if self.cb.checked():
+  def value(self):
+    if self.cb.isChecked():
       return 'autocalculate'
     else:
       return self.edit.value()
