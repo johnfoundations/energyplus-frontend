@@ -5440,7 +5440,7 @@ class Wall_Exterior(ObjectAbstract):
 
 
 
-class Wall_Exterior(ObjectAbstract):
+class Wall_Adiabatic(ObjectAbstract):
   def CreateFields(self) :
     self.InsertField(FieldText(self,"Name","",""))
     self.InsertField(FieldObjectlist(self,"Construction Name","",("To be matched with a construction in this input file",),"ConstructionNames"))
@@ -5452,28 +5452,9 @@ class Wall_Exterior(ObjectAbstract):
     self.InsertField(FieldReal(self,"Starting Z Coordinate",0,"","","","",""))
     self.InsertField(FieldReal(self,"Length",0,"","","","",""))
     self.InsertField(FieldReal(self,"Height",0,"","","","",""))
-    self.InsertField(FieldText(self,"Name","",""))
-    self.InsertField(FieldObjectlist(self,"Construction Name","",("To be matched with a construction in this input file",),"ConstructionNames"))
-    self.InsertField(FieldObjectlist(self,"Zone Name","",("Zone the surface is a part of",),"ZoneNames"))
-    self.InsertField(FieldReal(self,"Azimuth Angle",0,("Facing direction of outside of wall (S=180,N=0,E=90,W=270)",),0,360,"",""))
-    self.InsertField(FieldReal(self,"Tilt Angle","90",("Walls are usually tilted 90 degrees",),0,180,"",""))
-    self.InsertField(FieldReal(self,"Starting X Coordinate",0,("Starting (x,y,z) coordinate is the Lower Left Corner of the Wall",),"","","",""))
-    self.InsertField(FieldReal(self,"Starting Y Coordinate",0,"","","","",""))
-    self.InsertField(FieldReal(self,"Starting Z Coordinate",0,"","","","",""))
-    self.InsertField(FieldReal(self,"Length",0,"","","","",""))
-    self.InsertField(FieldReal(self,"Height",0,"","","","",""))
 
 
-    self.insertMemo(("Used for exterior walls","View Factor to Ground is automatically calculated.",))
-    self.addReference("SurfaceNames")
-    self.addReference("SurfAndSubSurfNames")
-    self.addReference("AllHeatTranSurfNames")
-    self.addReference("HeatTranBaseSurfNames")
-    self.addReference("OutFaceEnvNames")
-    self.addReference("AllHeatTranAngFacNames")
-    self.addReference("RadGroupAndSurfNames")
-    self.addReference("SurfGroupAndHTSurfNames")
-    self.addReference("AllShadingAndHTSurfNames")
+    self.insertMemo(("used for interior walls",))
     self.addReference("SurfaceNames")
     self.addReference("SurfAndSubSurfNames")
     self.addReference("AllHeatTranSurfNames")
@@ -5486,13 +5467,13 @@ class Wall_Exterior(ObjectAbstract):
     self.setMinfields(0)
     self.setGroup("Thermal Zones and Surfaces") 
     self.setExtensible(-1)
-    self.setClassnameIDD("Wall:Exterior")
+    self.setClassnameIDD("Wall:Adiabatic")
 
 
 
 
 
-class Wall_Exterior(ObjectAbstract):
+class Wall_Underground(ObjectAbstract):
   def CreateFields(self) :
     self.InsertField(FieldText(self,"Name","",""))
     self.InsertField(FieldObjectlist(self,"Construction Name","",("To be matched with a construction in this input file",),"ConstructionNames"))
@@ -5504,46 +5485,9 @@ class Wall_Exterior(ObjectAbstract):
     self.InsertField(FieldReal(self,"Starting Z Coordinate",0,"","","","",""))
     self.InsertField(FieldReal(self,"Length",0,"","","","",""))
     self.InsertField(FieldReal(self,"Height",0,"","","","",""))
-    self.InsertField(FieldText(self,"Name","",""))
-    self.InsertField(FieldObjectlist(self,"Construction Name","",("To be matched with a construction in this input file",),"ConstructionNames"))
-    self.InsertField(FieldObjectlist(self,"Zone Name","",("Zone the surface is a part of",),"ZoneNames"))
-    self.InsertField(FieldReal(self,"Azimuth Angle",0,("Facing direction of outside of wall (S=180,N=0,E=90,W=270)",),0,360,"",""))
-    self.InsertField(FieldReal(self,"Tilt Angle","90",("Walls are usually tilted 90 degrees",),0,180,"",""))
-    self.InsertField(FieldReal(self,"Starting X Coordinate",0,("Starting (x,y,z) coordinate is the Lower Left Corner of the Wall",),"","","",""))
-    self.InsertField(FieldReal(self,"Starting Y Coordinate",0,"","","","",""))
-    self.InsertField(FieldReal(self,"Starting Z Coordinate",0,"","","","",""))
-    self.InsertField(FieldReal(self,"Length",0,"","","","",""))
-    self.InsertField(FieldReal(self,"Height",0,"","","","",""))
-    self.InsertField(FieldText(self,"Name","",""))
-    self.InsertField(FieldObjectlist(self,"Construction Name","",("To be matched with a construction in this input file",),"ConstructionNames"))
-    self.InsertField(FieldObjectlist(self,"Zone Name","",("Zone the surface is a part of",),"ZoneNames"))
-    self.InsertField(FieldReal(self,"Azimuth Angle",0,("Facing direction of outside of wall (S=180,N=0,E=90,W=270)",),0,360,"",""))
-    self.InsertField(FieldReal(self,"Tilt Angle","90",("Walls are usually tilted 90 degrees",),0,180,"",""))
-    self.InsertField(FieldReal(self,"Starting X Coordinate",0,("Starting (x,y,z) coordinate is the Lower Left Corner of the Wall",),"","","",""))
-    self.InsertField(FieldReal(self,"Starting Y Coordinate",0,"","","","",""))
-    self.InsertField(FieldReal(self,"Starting Z Coordinate",0,"","","","",""))
-    self.InsertField(FieldReal(self,"Length",0,"","","","",""))
-    self.InsertField(FieldReal(self,"Height",0,"","","","",""))
 
 
-    self.insertMemo(("Used for exterior walls","View Factor to Ground is automatically calculated.",))
-    self.addReference("SurfaceNames")
-    self.addReference("SurfAndSubSurfNames")
-    self.addReference("AllHeatTranSurfNames")
-    self.addReference("HeatTranBaseSurfNames")
-    self.addReference("OutFaceEnvNames")
-    self.addReference("AllHeatTranAngFacNames")
-    self.addReference("RadGroupAndSurfNames")
-    self.addReference("SurfGroupAndHTSurfNames")
-    self.addReference("AllShadingAndHTSurfNames")
-    self.addReference("SurfaceNames")
-    self.addReference("SurfAndSubSurfNames")
-    self.addReference("AllHeatTranSurfNames")
-    self.addReference("HeatTranBaseSurfNames")
-    self.addReference("AllHeatTranAngFacNames")
-    self.addReference("RadGroupAndSurfNames")
-    self.addReference("SurfGroupAndHTSurfNames")
-    self.addReference("AllShadingAndHTSurfNames")
+    self.insertMemo(("used for interior walls",))
     self.addReference("SurfaceNames")
     self.addReference("SurfAndSubSurfNames")
     self.addReference("AllHeatTranSurfNames")
@@ -5556,44 +5500,14 @@ class Wall_Exterior(ObjectAbstract):
     self.setMinfields(0)
     self.setGroup("Thermal Zones and Surfaces") 
     self.setExtensible(-1)
-    self.setClassnameIDD("Wall:Exterior")
+    self.setClassnameIDD("Wall:Underground")
 
 
 
 
 
-class Wall_Exterior(ObjectAbstract):
+class Wall_Interzone(ObjectAbstract):
   def CreateFields(self) :
-    self.InsertField(FieldText(self,"Name","",""))
-    self.InsertField(FieldObjectlist(self,"Construction Name","",("To be matched with a construction in this input file",),"ConstructionNames"))
-    self.InsertField(FieldObjectlist(self,"Zone Name","",("Zone the surface is a part of",),"ZoneNames"))
-    self.InsertField(FieldReal(self,"Azimuth Angle",0,("Facing direction of outside of wall (S=180,N=0,E=90,W=270)",),0,360,"",""))
-    self.InsertField(FieldReal(self,"Tilt Angle","90",("Walls are usually tilted 90 degrees",),0,180,"",""))
-    self.InsertField(FieldReal(self,"Starting X Coordinate",0,("Starting (x,y,z) coordinate is the Lower Left Corner of the Wall",),"","","",""))
-    self.InsertField(FieldReal(self,"Starting Y Coordinate",0,"","","","",""))
-    self.InsertField(FieldReal(self,"Starting Z Coordinate",0,"","","","",""))
-    self.InsertField(FieldReal(self,"Length",0,"","","","",""))
-    self.InsertField(FieldReal(self,"Height",0,"","","","",""))
-    self.InsertField(FieldText(self,"Name","",""))
-    self.InsertField(FieldObjectlist(self,"Construction Name","",("To be matched with a construction in this input file",),"ConstructionNames"))
-    self.InsertField(FieldObjectlist(self,"Zone Name","",("Zone the surface is a part of",),"ZoneNames"))
-    self.InsertField(FieldReal(self,"Azimuth Angle",0,("Facing direction of outside of wall (S=180,N=0,E=90,W=270)",),0,360,"",""))
-    self.InsertField(FieldReal(self,"Tilt Angle","90",("Walls are usually tilted 90 degrees",),0,180,"",""))
-    self.InsertField(FieldReal(self,"Starting X Coordinate",0,("Starting (x,y,z) coordinate is the Lower Left Corner of the Wall",),"","","",""))
-    self.InsertField(FieldReal(self,"Starting Y Coordinate",0,"","","","",""))
-    self.InsertField(FieldReal(self,"Starting Z Coordinate",0,"","","","",""))
-    self.InsertField(FieldReal(self,"Length",0,"","","","",""))
-    self.InsertField(FieldReal(self,"Height",0,"","","","",""))
-    self.InsertField(FieldText(self,"Name","",""))
-    self.InsertField(FieldObjectlist(self,"Construction Name","",("To be matched with a construction in this input file",),"ConstructionNames"))
-    self.InsertField(FieldObjectlist(self,"Zone Name","",("Zone the surface is a part of",),"ZoneNames"))
-    self.InsertField(FieldReal(self,"Azimuth Angle",0,("Facing direction of outside of wall (S=180,N=0,E=90,W=270)",),0,360,"",""))
-    self.InsertField(FieldReal(self,"Tilt Angle","90",("Walls are usually tilted 90 degrees",),0,180,"",""))
-    self.InsertField(FieldReal(self,"Starting X Coordinate",0,("Starting (x,y,z) coordinate is the Lower Left Corner of the Wall",),"","","",""))
-    self.InsertField(FieldReal(self,"Starting Y Coordinate",0,"","","","",""))
-    self.InsertField(FieldReal(self,"Starting Z Coordinate",0,"","","","",""))
-    self.InsertField(FieldReal(self,"Length",0,"","","","",""))
-    self.InsertField(FieldReal(self,"Height",0,"","","","",""))
     self.InsertField(FieldText(self,"Name","",""))
     self.InsertField(FieldObjectlist(self,"Construction Name","",("To be matched with a construction in this input file",),"ConstructionNames"))
     self.InsertField(FieldObjectlist(self,"Zone Name","",("Zone for the inside of the surface",),"ZoneNames"))
@@ -5607,32 +5521,7 @@ class Wall_Exterior(ObjectAbstract):
     self.InsertField(FieldReal(self,"Height",0,"","","","",""))
 
 
-    self.insertMemo(("Used for exterior walls","View Factor to Ground is automatically calculated.",))
-    self.addReference("SurfaceNames")
-    self.addReference("SurfAndSubSurfNames")
-    self.addReference("AllHeatTranSurfNames")
-    self.addReference("HeatTranBaseSurfNames")
-    self.addReference("OutFaceEnvNames")
-    self.addReference("AllHeatTranAngFacNames")
-    self.addReference("RadGroupAndSurfNames")
-    self.addReference("SurfGroupAndHTSurfNames")
-    self.addReference("AllShadingAndHTSurfNames")
-    self.addReference("SurfaceNames")
-    self.addReference("SurfAndSubSurfNames")
-    self.addReference("AllHeatTranSurfNames")
-    self.addReference("HeatTranBaseSurfNames")
-    self.addReference("AllHeatTranAngFacNames")
-    self.addReference("RadGroupAndSurfNames")
-    self.addReference("SurfGroupAndHTSurfNames")
-    self.addReference("AllShadingAndHTSurfNames")
-    self.addReference("SurfaceNames")
-    self.addReference("SurfAndSubSurfNames")
-    self.addReference("AllHeatTranSurfNames")
-    self.addReference("HeatTranBaseSurfNames")
-    self.addReference("AllHeatTranAngFacNames")
-    self.addReference("RadGroupAndSurfNames")
-    self.addReference("SurfGroupAndHTSurfNames")
-    self.addReference("AllShadingAndHTSurfNames")
+    self.insertMemo(("used for interzone walls (walls between zones)",))
     self.addReference("SurfaceNames")
     self.addReference("SurfAndSubSurfNames")
     self.addReference("AllHeatTranSurfNames")
@@ -5645,7 +5534,7 @@ class Wall_Exterior(ObjectAbstract):
     self.setMinfields(0)
     self.setGroup("Thermal Zones and Surfaces") 
     self.setExtensible(-1)
-    self.setClassnameIDD("Wall:Exterior")
+    self.setClassnameIDD("Wall:Interzone")
 
 
 
@@ -5929,18 +5818,8 @@ class Window(ObjectAbstract):
 
 
 
-class Window(ObjectAbstract):
+class Door(ObjectAbstract):
   def CreateFields(self) :
-    self.InsertField(FieldText(self,"Name","",""))
-    self.InsertField(FieldObjectlist(self,"Construction Name","",("To be matched with a construction in this input file",),"ConstructionNames"))
-    self.InsertField(FieldObjectlist(self,"Building Surface Name","",("Name of Surface (Wall, usually) the Window is on (i.e., Base Surface)","Window assumes the azimuth and tilt angles of the surface it is on.",),"SurfaceNames"))
-    self.InsertField(FieldObjectlist(self,"Shading Control Name","",("enter the name of a WindowProperty:ShadingControl object","used for windows and glass doors only","If not specified, window or glass door has no shading (blind, roller shade, etc.)",),"WindowShadeControlNames"))
-    self.InsertField(FieldObjectlist(self,"Frame and Divider Name","",("Enter the name of a WindowProperty:FrameAndDivider object","Used only for exterior windows (rectangular) and glass doors.","Unused for triangular windows.","If not specified (blank), window or glass door has no frame or divider","and no beam solar reflection from reveal surfaces.",),"WindowFrameAndDividerNames"))
-    self.InsertField(FieldReal(self,"Multiplier","1.0",("Used only for Surface Type = WINDOW, GLASSDOOR or DOOR","Non-integer values will be truncated to integer",),1.0,"","",""))
-    self.InsertField(FieldReal(self,"Starting X Coordinate",0,("Window starting coordinate is specified relative to the Base Surface origin.",),"","","",""))
-    self.InsertField(FieldReal(self,"Starting Z Coordinate",0,("How far up the wall the Window starts. (in 2-d, this would be a Y Coordinate)",),"","","",""))
-    self.InsertField(FieldReal(self,"Length",0,"","","","",""))
-    self.InsertField(FieldReal(self,"Height",0,"","","","",""))
     self.InsertField(FieldText(self,"Name","",""))
     self.InsertField(FieldObjectlist(self,"Construction Name","",("To be matched with a construction in this input file",),"ConstructionNames"))
     self.InsertField(FieldObjectlist(self,"Building Surface Name","",("Name of Surface (Wall, usually) the Door is on (i.e., Base Surface)","Door assumes the azimuth and tilt angles of the surface it is on.",),"SurfaceNames"))
@@ -5951,14 +5830,7 @@ class Window(ObjectAbstract):
     self.InsertField(FieldReal(self,"Height",0,"","","","",""))
 
 
-    self.addReference("SubSurfNames")
-    self.addReference("SurfAndSubSurfNames")
-    self.addReference("AllHeatTranSurfNames")
-    self.addReference("HeatTranBaseSurfNames")
-    self.addReference("AllHeatTranAngFacNames")
-    self.addReference("RadGroupAndSurfNames")
-    self.addReference("SurfGroupAndHTSurfNames")
-    self.addReference("AllShadingAndHTSurfNames")
+    self.insertMemo(("used to specify opaque doors",))
     self.addReference("SubSurfNames")
     self.addReference("SurfAndSubSurfNames")
     self.addReference("AllHeatTranSurfNames")
@@ -5971,34 +5843,16 @@ class Window(ObjectAbstract):
     self.setMinfields(0)
     self.setGroup("Thermal Zones and Surfaces") 
     self.setExtensible(-1)
-    self.setClassnameIDD("Window")
+    self.setClassnameIDD("Door")
 
 
 
 
 
-class Window(ObjectAbstract):
+class GlazedDoor(ObjectAbstract):
   def CreateFields(self) :
     self.InsertField(FieldText(self,"Name","",""))
     self.InsertField(FieldObjectlist(self,"Construction Name","",("To be matched with a construction in this input file",),"ConstructionNames"))
-    self.InsertField(FieldObjectlist(self,"Building Surface Name","",("Name of Surface (Wall, usually) the Window is on (i.e., Base Surface)","Window assumes the azimuth and tilt angles of the surface it is on.",),"SurfaceNames"))
-    self.InsertField(FieldObjectlist(self,"Shading Control Name","",("enter the name of a WindowProperty:ShadingControl object","used for windows and glass doors only","If not specified, window or glass door has no shading (blind, roller shade, etc.)",),"WindowShadeControlNames"))
-    self.InsertField(FieldObjectlist(self,"Frame and Divider Name","",("Enter the name of a WindowProperty:FrameAndDivider object","Used only for exterior windows (rectangular) and glass doors.","Unused for triangular windows.","If not specified (blank), window or glass door has no frame or divider","and no beam solar reflection from reveal surfaces.",),"WindowFrameAndDividerNames"))
-    self.InsertField(FieldReal(self,"Multiplier","1.0",("Used only for Surface Type = WINDOW, GLASSDOOR or DOOR","Non-integer values will be truncated to integer",),1.0,"","",""))
-    self.InsertField(FieldReal(self,"Starting X Coordinate",0,("Window starting coordinate is specified relative to the Base Surface origin.",),"","","",""))
-    self.InsertField(FieldReal(self,"Starting Z Coordinate",0,("How far up the wall the Window starts. (in 2-d, this would be a Y Coordinate)",),"","","",""))
-    self.InsertField(FieldReal(self,"Length",0,"","","","",""))
-    self.InsertField(FieldReal(self,"Height",0,"","","","",""))
-    self.InsertField(FieldText(self,"Name","",""))
-    self.InsertField(FieldObjectlist(self,"Construction Name","",("To be matched with a construction in this input file",),"ConstructionNames"))
-    self.InsertField(FieldObjectlist(self,"Building Surface Name","",("Name of Surface (Wall, usually) the Door is on (i.e., Base Surface)","Door assumes the azimuth and tilt angles of the surface it is on.",),"SurfaceNames"))
-    self.InsertField(FieldReal(self,"Multiplier","1.0",("Used only for Surface Type = WINDOW, GLASSDOOR or DOOR","Non-integer values will be truncated to integer",),1.0,"","",""))
-    self.InsertField(FieldReal(self,"Starting X Coordinate",0,("Door starting coordinate is specified relative to the Base Surface origin.",),"","","",""))
-    self.InsertField(FieldReal(self,"Starting Z Coordinate",0,("How far up the wall the Door starts. (in 2-d, this would be a Y Coordinate)",),"","","",""))
-    self.InsertField(FieldReal(self,"Length",0,"","","","",""))
-    self.InsertField(FieldReal(self,"Height",0,"","","","",""))
-    self.InsertField(FieldText(self,"Name","",""))
-    self.InsertField(FieldObjectlist(self,"Construction Name","",("To be matched with a construction in this input file",),"ConstructionNames"))
     self.InsertField(FieldObjectlist(self,"Building Surface Name","",("Name of Surface (Wall, usually) the Door is on (i.e., Base Surface)","Door assumes the azimuth and tilt angles of the surface it is on.",),"SurfaceNames"))
     self.InsertField(FieldObjectlist(self,"Shading Control Name","",("enter the name of a WindowProperty:ShadingControl object","used for windows and glass doors only","If not specified, window or glass door has no shading (blind, roller shade, etc.)",),"WindowShadeControlNames"))
     self.InsertField(FieldObjectlist(self,"Frame and Divider Name","",("Enter the name of a WindowProperty:FrameAndDivider object","Used only for exterior windows (rectangular) and glass doors.","Unused for triangular windows.","If not specified (blank), window or glass door has no frame or divider","and no beam solar reflection from reveal surfaces.",),"WindowFrameAndDividerNames"))
@@ -6009,22 +5863,7 @@ class Window(ObjectAbstract):
     self.InsertField(FieldReal(self,"Height",0,"","","","",""))
 
 
-    self.addReference("SubSurfNames")
-    self.addReference("SurfAndSubSurfNames")
-    self.addReference("AllHeatTranSurfNames")
-    self.addReference("HeatTranBaseSurfNames")
-    self.addReference("AllHeatTranAngFacNames")
-    self.addReference("RadGroupAndSurfNames")
-    self.addReference("SurfGroupAndHTSurfNames")
-    self.addReference("AllShadingAndHTSurfNames")
-    self.addReference("SubSurfNames")
-    self.addReference("SurfAndSubSurfNames")
-    self.addReference("AllHeatTranSurfNames")
-    self.addReference("HeatTranBaseSurfNames")
-    self.addReference("AllHeatTranAngFacNames")
-    self.addReference("RadGroupAndSurfNames")
-    self.addReference("SurfGroupAndHTSurfNames")
-    self.addReference("AllShadingAndHTSurfNames")
+    self.insertMemo(("used to specify glass doors",))
     self.addReference("SubSurfNames")
     self.addReference("SurfAndSubSurfNames")
     self.addReference("AllHeatTranSurfNames")
@@ -6037,7 +5876,7 @@ class Window(ObjectAbstract):
     self.setMinfields(0)
     self.setGroup("Thermal Zones and Surfaces") 
     self.setExtensible(-1)
-    self.setClassnameIDD("Window")
+    self.setClassnameIDD("GlazedDoor")
 
 
 
@@ -17291,7 +17130,7 @@ class Generator_FuelCell_Inverter(ObjectAbstract):
 
 
 
-class Generator_FuelCell_StackCooler(ObjectAbstract):
+class  Generator_FuelCell_StackCooler(ObjectAbstract):
   def CreateFields(self) :
     self.InsertField(FieldText(self,"Name","",""))
     self.InsertField(FieldText(self,"Heat Recovery Water Inlet Node Name","",""))
@@ -17321,7 +17160,7 @@ class Generator_FuelCell_StackCooler(ObjectAbstract):
     self.setMinfields(0)
     self.setGroup("Electric Load Center-Generator Specifications") 
     self.setExtensible(-1)
-    self.setClassnameIDD("Generator:FuelCell:StackCooler")
+    self.setClassnameIDD(" Generator:FuelCell:StackCooler")
 
 
 
@@ -20221,7 +20060,7 @@ olist.append("Generator:FuelCell:AuxiliaryHeater")
 olist.append("Generator:FuelCell:ExhaustGasToWaterHeatExchanger")
 olist.append("Generator:FuelCell:ElectricalStorage")
 olist.append("Generator:FuelCell:Inverter")
-olist.append("Generator:FuelCell:StackCooler")
+olist.append(" Generator:FuelCell:StackCooler")
 olist.append("Generator:MicroCHP")
 olist.append("Generator:MicroCHP:NonNormalizedParameters")
 olist.append("Generator:FuelSupply")
@@ -20322,9 +20161,9 @@ olist.append("Wall:Detailed")
 olist.append("RoofCeiling:Detailed")
 olist.append("Floor:Detailed")
 olist.append("Wall:Exterior")
-olist.append("Wall:Exterior")
-olist.append("Wall:Exterior")
-olist.append("Wall:Exterior")
+olist.append("Wall:Adiabatic")
+olist.append("Wall:Underground")
+olist.append("Wall:Interzone")
 olist.append("Roof")
 olist.append("Ceiling:Adiabatic")
 olist.append("Ceiling:Interzone")
@@ -20333,8 +20172,8 @@ olist.append("Floor:Adiabatic")
 olist.append("Floor:Interzone")
 olist.append("FenestrationSurface:Detailed")
 olist.append("Window")
-olist.append("Window")
-olist.append("Window")
+olist.append("Door")
+olist.append("GlazedDoor")
 olist.append("Window:Interzone")
 olist.append("Door:Interzone")
 olist.append("GlazedDoor:Interzone")
