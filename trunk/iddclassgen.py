@@ -358,12 +358,12 @@ class IddObject :
         else:
             fh.write("class " + self.getClassnamePy() + "(ObjectAbstract):\n")
         self.objectFixup()
-        fh.write("  def CreateFields(self) :\n")
+        fh.write("    def CreateFields(self) :\n")
         if 'extensible' in self.iddValues:
             self.adjustFieldList(self.iddValues['extensible'])
         for f in self.fields:
             f.createWidgetInitLine()
-            fh.write('    self.InsertField(' + f.PrintFieldInit() + ")\n")
+            fh.write('        self.InsertField(' + f.PrintFieldInit() + ")\n")
 
         fh.write("\n\n")
         if 'memo' in self.iddValues :
@@ -372,30 +372,30 @@ class IddObject :
             for m in memolist:
                 m = re.sub(r'"','*',m)
                 memostr = memostr + '"' + m + '",'
-            fh.write('    self.insertMemo((' + memostr + '))\n')
+            fh.write('        self.insertMemo((' + memostr + '))\n')
 
         if 'reference' in self.iddValues:
             reflist = self.iddValues['reference']
             for r in reflist:
-                fh.write('    self.addReference("' + r + '")\n')
+                fh.write('        self.addReference("' + r + '")\n')
 
         if 'required-field' in self.iddValues :
-            fh.write('    self.setRequired(True)\n')
+            fh.write('        self.setRequired(True)\n')
         else:
-            fh.write('    self.setRequired(False)\n')
+            fh.write('        self.setRequired(False)\n')
         if 'min-fields' in self.iddValues :
-            fh.write('    self.setMinfields(' + self.iddValues['min-fields'] + ')\n')
+            fh.write('        self.setMinfields(' + self.iddValues['min-fields'] + ')\n')
         else:
-            fh.write('    self.setMinfields(0)\n')
+            fh.write('        self.setMinfields(0)\n')
         if 'group' in self.iddValues :
-            fh.write('    self.setGroup("' + self.iddValues['group'] + '") \n')
+            fh.write('        self.setGroup("' + self.iddValues['group'] + '") \n')
         else:
-            fh.write('    self.setGroup("")\n')
+            fh.write('        self.setGroup("")\n')
         if 'extensible' in self.iddValues:
-            fh.write('    self.setExtensible(' + self.iddValues['extensible'] + ')\n')
+            fh.write('        self.setExtensible(' + self.iddValues['extensible'] + ')\n')
         else:
-            fh.write('    self.setExtensible(-1)\n')
-        fh.write('    self.setClassnameIDD("' + self.getClassname() + '")\n')
+            fh.write('        self.setExtensible(-1)\n')
+        fh.write('        self.setClassnameIDD("' + self.getClassname() + '")\n')
 
         fh.write("\n\n\n")
 
@@ -448,10 +448,10 @@ class IddClassGen :
             ofh.write('idfglobals.objectdict["' + gnl + '"] = olist\n')
         ofh.write('\n\n')
         ofh.write('if __name__ == "__main__":\n')
-        ofh.write('  n = idfglobals.objectdict.keys() \n')
-        ofh.write('  for p in n:\n')
-        ofh.write('    for am in idfglobals.objectdict[p] :\n')
-        ofh.write('      print am\n\n')
+        ofh.write('    n = idfglobals.objectdict.keys() \n')
+        ofh.write('    for p in n:\n')
+        ofh.write('        for am in idfglobals.objectdict[p] :\n')
+        ofh.write('            print am\n\n')
 
         ofh.close()
 
