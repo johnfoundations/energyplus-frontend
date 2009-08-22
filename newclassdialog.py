@@ -28,9 +28,24 @@ class newClassDialog(QtGui.QDialog):
         hl = QtGui.QHBoxLayout()
         vl = QtGui.QVBoxLayout(self)
         self.classlist = QtGui.QTreeWidget()
+        self.classlist.setSelectionMode(QtGui.QAbstractItemView.ExtendedSelection)
+        self.memo = QtGui.QLabel('Class Description')
+        rv = QtGui.QVBoxLayout()
+        rv.addWidget(self.memo)
+        rv.addStretch()
+
+        buttonBox = QtGui.QDialogButtonBox(QtGui.QDialogButtonBox.Ok | QtGui.QDialogButtonBox.Cancel);
+
+        self.connect(buttonBox, QtCore.SIGNAL('accepted()'), self.accept);
+        self.connect(buttonBox, QtCore.SIGNAL('rejected()'), self.reject);
+
+        rv.addWidget(buttonBox)
         hl.addWidget(self.classlist)
+        hl.addLayout(rv)
         vl.addLayout(hl)
+        
         self.populateClassList()
+        self.selected = []
 
     def populateClassList(self):
         self.classlist.setColumnCount(1)
@@ -47,4 +62,19 @@ class newClassDialog(QtGui.QDialog):
                 j = QtGui.QTreeWidgetItem(i,[ei])
                 self.classlist.addTopLevelItem(j)
 
-    
+    def accept(self):
+        s = self.classlist.selectedItems()
+        self.selected = []
+        for i in s :
+            self.selected.append(i.text(0))
+
+        self.done(1)
+
+    def reject(self):
+        self.selected = []
+        self.done(0)
+
+
+            
+        
+

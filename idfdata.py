@@ -112,6 +112,10 @@ class idfData(QtCore.QObject):
             except:
                 return idfrec
        
+    def insertRecord(self,instance) :
+        self.idflist.append(instance)
+        self.populateTree(self.idflist)
+
 
     def dataAt(self,row,column):
         try:
