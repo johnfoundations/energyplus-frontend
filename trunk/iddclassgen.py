@@ -31,6 +31,8 @@ import pdb
 activeobjects = []
 objectlist = []
 
+IDD_Version = ''
+
 
 
 class IddField :
@@ -414,8 +416,10 @@ class IddClassGen :
         self.default = ''
         self.reqfield = 0
         self.iddclasslist = []
+        self.IDD_Version = ''
         self.parseFile()
         self.writeClassDef()
+        
 
     def writeClassDef(self) :
         ofh = open('iddclass.py','w')
@@ -672,6 +676,8 @@ class IddClassGen :
 
   
         # end of stuff
+        if self.classname ==  'Version':
+            self.default = self.IDD_Version
         self.assignVars()
         if len(self.memos) > 0:
             self.idobj.insertValue('memo',self.memos)
@@ -679,6 +685,7 @@ class IddClassGen :
             self.idobj.insertValue('reference',self.references)
         self.idobj.insertValue('group',gn)
         #self.idobj.Print()
+
         self.iddclasslist.append(self.idobj)
     
 
@@ -715,7 +722,13 @@ class IddClassGen :
             if sline == '' :
                 continue
 
+
             if re.match(r"^!",line):
+                v = re.match(r"^!IDD_Version\s([0-9]+\.[0-9]+\.[0-9]+)\.*",line)
+                if v:
+                    self.IDD_Version = v.group(1)
+                    print self.IDD_Version
+                    
                 continue
             
             gf = re.match(r"^\\[Gg]roup\s(.*)",line)
@@ -774,6 +787,7 @@ class IddClassGen :
 
 if __name__ == "__main__":
     c = IddClassGen()
+
  
       
       

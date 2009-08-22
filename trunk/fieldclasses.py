@@ -32,7 +32,7 @@ class FieldAbstract :
         self.fieldeditor = 0
         self.fieldname = fieldname
         self.parent = parent
-        self.value = ''
+        self.value = default
         self.default = default
         self.notes = notes
         
@@ -265,7 +265,7 @@ class FieldInt(FieldAbstract) :
 class FieldText(FieldAbstract) :
     def __init__(self,parent,fieldname,default,notes):
         FieldAbstract.__init__(self,parent,fieldname,default,notes)
-        self.value = ''
+        self.value = default
 
     def createEditor(self,parent) :
         print "createeditor FieldText"

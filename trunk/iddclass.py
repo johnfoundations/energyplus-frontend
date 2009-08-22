@@ -8,7 +8,7 @@ import idfglobals
 
 class Version(ObjectSingleLine):
     def CreateFields(self) :
-        self.InsertField(FieldText(self,"Version Identifier","",""))
+        self.InsertField(FieldText(self,"Version Identifier","3.1.0",""))
 
 
         self.setRequired(False)
