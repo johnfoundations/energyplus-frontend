@@ -43,12 +43,15 @@ class idfmodeltest(QtGui.QMainWindow):
 
         self.view = QtGui.QTreeView()
         self.view.setModel(self.model)
+        self.view.sizePolicy().setHorizontalPolicy(QtGui.QSizePolicy.Fixed)
         
-
+        splitter = QtGui.QSplitter()
         widget = QtGui.QWidget()
 
         mainhbox = QtGui.QHBoxLayout(widget)
+        self.viewwidget = QtGui.QWidget()
         vbox = QtGui.QVBoxLayout()
+        vbox.setSizeConstraint(QtGui.QLayout.SetMinAndMaxSize)
         hbox = QtGui.QHBoxLayout()
 
         hbox.addWidget(self.querylist)
@@ -57,7 +60,9 @@ class idfmodeltest(QtGui.QMainWindow):
         vbox.addLayout(hbox)
         vbox.addWidget(self.querybutton)
         vbox.addWidget(self.view)
-        mainhbox.addLayout(vbox)
+        self.viewwidget.setLayout(vbox)
+        splitter.addWidget(self.viewwidget)
+#        mainhbox.addWidget(viewwidget)
         classvbox = QtGui.QVBoxLayout()
         self.classviewname = QtGui.QLabel()
         self.classview = QtGui.QTableView()
@@ -69,12 +74,13 @@ class idfmodeltest(QtGui.QMainWindow):
         classvbox.addWidget(self.classviewname)
         classvbox.addWidget(self.classview)
         mainhbox.addLayout(classvbox)
+        splitter.addWidget(widget)
         self.connect(self.view, QtCore.SIGNAL('activated (QModelIndex)'),self.classActivated)
         
         self.connect(self.querybutton, QtCore.SIGNAL('clicked ( bool)'),self.querybuttonclicked)
         self.createActions()
         self.createMenus()
-        self.setCentralWidget(widget)
+        self.setCentralWidget(splitter)
         self.idfmodel = None
 
 
@@ -111,6 +117,11 @@ class idfmodeltest(QtGui.QMainWindow):
         objm.addAction(self.newobj)
 
 
+    def sizeTree(self):
+        width = self.view.sizeHintForColumn(0) + self.view.sizeHintForColumn(1)
+        print width
+        self.viewwidget.setMaximumWidth(width)
+
 
     def querybuttonclicked(self):
         self.model.query(self.querylist.currentIndex(),self.queryline.text())
@@ -132,6 +143,7 @@ class idfmodeltest(QtGui.QMainWindow):
         self.fileName = QtGui.QFileDialog.getOpenFileName(self,"Open IDF File", ".", "*.idf *.IDF");
         self.idf.openIdf(self.fileName)
         self.model.reset()
+        self.sizeTree()
 
     def newobject(self):
         newdialog = newclassdialog.newClassDialog()
@@ -144,6 +156,7 @@ class idfmodeltest(QtGui.QMainWindow):
                 self.idf.insertRecord(classinstance)
 
             self.model.reset()
+            self.sizeTree()
                 
 
 

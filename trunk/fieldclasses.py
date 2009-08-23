@@ -309,7 +309,9 @@ class FieldChoice(FieldAbstract)    :
             index = self.lchoices.index(self.default.lower())
             self.fieldeditor.setCurrentIndex(index)
         else:
-            print 'no default in choices'
+            if not self.default == '':
+                print self.default + 'no default in choices'
+                
         self.setToolTips(self.notes)
         return self.fieldeditor
 
