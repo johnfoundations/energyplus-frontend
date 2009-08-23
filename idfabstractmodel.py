@@ -35,6 +35,9 @@ class idfAbstractModel(QtCore.QAbstractItemModel):
     def columnCount (self, parent):
         return 2
 
+    def parent(self,index) :
+        return QtCore.QModelIndex()
+
         
     def flags(self,index):
         if not index.isValid():
