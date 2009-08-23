@@ -43,6 +43,7 @@ class idfmodeltest(QtGui.QMainWindow):
 
         self.view = QtGui.QTreeView()
         self.view.setModel(self.model)
+        
 
         widget = QtGui.QWidget()
 
@@ -63,6 +64,8 @@ class idfmodeltest(QtGui.QMainWindow):
         self.delegate  = idfmodeldelegate.idfClassDelegate()
         self.classview.setItemDelegate(self.delegate)
         self.classview.setEditTriggers(QtGui.QAbstractItemView.AllEditTriggers)
+        self.classview.horizontalHeader().setStretchLastSection(True)
+        
         classvbox.addWidget(self.classviewname)
         classvbox.addWidget(self.classview)
         mainhbox.addLayout(classvbox)

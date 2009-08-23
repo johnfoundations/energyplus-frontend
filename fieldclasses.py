@@ -319,7 +319,7 @@ class FieldChoice(FieldAbstract)    :
             editor.setCurrentIndex(self.lchoices.index(self.value.lower()))
     
     def getEditorValue(self,editor):
-        return editor.currentText()
+        return str(editor.currentText())
 
 
 class FieldOnOff(FieldChoice) :
@@ -341,7 +341,10 @@ class FieldObjectlist(FieldAbstract):
     def createEditor(self,parent) :
         print "createeditor FieldObjectList"
         self.fieldeditor = QtGui.QComboBox(parent)
-        self.choices = idfglobals.getDepends(self.objectlistname)
+        try:
+            self.choices = idfglobals.getDepends(self.objectlistname)
+        except:
+            self.choices = []
         self.fieldeditor.addItem("Null")
         self.fieldeditor.addItems(self.choices)
         self.setToolTips(self.notes)
