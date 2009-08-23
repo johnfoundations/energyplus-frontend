@@ -98,7 +98,7 @@ class idfAbstractModel(QtCore.QAbstractItemModel):
         
 
 
-class idfClassModel(QtCore.QAbstractItemModel):
+class idfClassModel(QtCore.QAbstractTableModel):
     def __init__(self,idfclass,parent = None):
         QtCore.QAbstractItemModel.__init__(self, parent)
         self.idfclass = idfclass
@@ -120,6 +120,9 @@ class idfClassModel(QtCore.QAbstractItemModel):
         idf = modelindex.internalPointer()
         field = idf.fieldlist[modelindex.row()]
 
+        if role == QtCore.Qt.EditRole and modelindex.row() == len(self.idfclass.fieldlist) -1:
+            self.insertRows(self.rowCount(0),self.idfclass.extensible,QtCore.QModelIndex())
+
         if role == QtCore.Qt.ToolTipRole:
             return QtCore.QVariant(field.notes)
 
@@ -133,6 +136,22 @@ class idfClassModel(QtCore.QAbstractItemModel):
             idf = index.internalPointer()
             idf.fieldlist[index.row()].setValue(value)
 
+        #check if last item
+#        if index.row() == len(self.idfclass.fieldlist)-1:
+#            print 'last row'
+#            if self.idfclass.extensible > 0 :
+#                self.insertRows(self.rowCount(),self.idfclass.extensible,None)
+                
+
+
+    def insertRows(self,row,count,parent) :
+        if row == self.rowCount(0) and count > -1:
+            self.beginInsertRows(parent,row,row+count-1)
+            self.idfclass.createExtensibleFields()
+            self.endInsertRows()
+            return True
+        return False
+
     def headerData(self,section,orientation,role = QtCore.Qt.DisplayRole):
         if orientation == QtCore.Qt.Horizontal and role == QtCore.Qt.DisplayRole:
              return QtCore.QVariant("Value")
@@ -144,10 +163,7 @@ class idfClassModel(QtCore.QAbstractItemModel):
 
 
     def rowCount (self,parent ):
-        if parent.isValid():
-            return 0
-        else:
-            return len(self.idfclass.fieldlist)
+        return len(self.idfclass.fieldlist)
 
     def index(self, row, column, parent):
         if parent.isValid():
@@ -156,8 +172,7 @@ class idfClassModel(QtCore.QAbstractItemModel):
             dp = self.idfclass
 
         return self.createIndex(row, column, dp)
-
-
+        
 
 
 if __name__ == "__main__":
