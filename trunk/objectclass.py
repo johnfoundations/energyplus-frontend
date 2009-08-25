@@ -26,6 +26,7 @@ import idfglobals
 import copy
 from PyQt4 import QtGui, QtCore
 from fieldclasses import *
+import compactschedulewidget
 
 
 #base class for all the defined objects.
@@ -72,7 +73,7 @@ class ObjectAbstract :
     
     def setData(self,data):
         self.rawdatalist = data
-        self.ParseRawData()
+        self.parseRawData()
 
     def getData(self) :
         print self.getClassnameIDD() + ' getData not implemented'
@@ -255,7 +256,7 @@ class ObjectAbstract :
                     return f.getValue()
             
 
-    def ParseRawData(self) :
+    def parseRawData(self) :
 #        print "len fieldlist"  + str(len(self.fieldlist)) + self.getClassnameIDD()
         for i,fd in enumerate(self.rawdatalist) :
             if i == 0:  #first item is classname
@@ -298,10 +299,47 @@ class ObjectSingleLine(ObjectAbstract) :
 class ObjectCompactSchedule(ObjectAbstract) :
     def __init__(self):
         ObjectAbstract.__init__(self)
-        f = self.fieldlist.pop()
-        del f
-        self.InsertField(FieldCompactSchedule(self,"Schedule","",""))
-        
+        self.fieldlist.pop()
+
+    def parseRawData(self) :
+        print 'ObjectCompactSchedule parseRawData'
+        print self.rawdatalist
+        for i,fd in enumerate(self.rawdatalist) :
+            if i == 0:  #first item is classname
+                continue
+
+            if i == 1:
+                self.fieldlist[0].setValue(fd)
+
+            if i == 2:
+                self.fieldlist[1].setValue(fd)
+                scheduletypelimits = fd
+
+            if i == 3:
+                self.schedulehandler = compactschedulewidget.compactScheduleHandler(self,self.fieldlist)
+                self.schedulehandler.setValue(self.rawdatalist[3:])
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 class ObjectSpectral(ObjectAbstract) :
     pass

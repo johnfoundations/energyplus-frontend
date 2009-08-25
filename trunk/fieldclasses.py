@@ -23,7 +23,6 @@ from PyQt4 import QtGui
 import idfglobals
 import pdb
 from gwidgetclass import *
-from compactschedulewidget import *
 from verticewidget import *
 
 
@@ -286,9 +285,11 @@ class FieldTime(FieldText):
 
     def createEditor(self,parent):
         print "createeditor FieldTime"
-        self.fieldeditor = GTimeWidget(parent)
+        self.fieldeditor = QtGui.QLineEdit()
+        rx = QtCore.QRegExp('[0-9]{2}:[0-6]{2}')
+        self.fieldeditor.setValidator(QtGui.QRegExpValidator(rx,self.fieldeditor))
         if self.default:
-            self.fieldeditor.setValue(self.default)
+            self.fieldeditor.setText(self.default)
         self.setToolTips(self.notes)
         return self.fieldeditor
             
@@ -408,3 +409,18 @@ class FieldCompactSchedule(FieldAbstract):
         print v
         editor.setValue(v)
 
+class FieldThrough(FieldAbstract):
+    def __init__(self,parent,fieldname,default,notes):
+        FieldAbstract.__init__(self,parent,fieldname,default,notes)
+
+    def createEditor(self,parent):
+        self.fieldeditor = QtGui.QLineEdit()
+        return self.fieldeditor
+
+    def setValue(self,value):
+        s = value.split(':')
+        if len(s) == 2:
+            self.value = s[1]
+    
+
+        
