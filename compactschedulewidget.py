@@ -22,7 +22,7 @@
 
 from  PyQt4 import QtGui,QtCore
 import re
-import pdb
+#import pdb
 import sys
 from fieldclasses import *
 
@@ -48,16 +48,17 @@ class compactScheduleHandler():
         self.flist = fieldlist
         self.parent = parent
         self.throughlist.append(throughSection(parent,self.flist))
+        
 
     
     def setValue(self,value):
+        
         #print value
         throughdata = []
         for v in value:
             v = v.strip()
             res = re.match(r"^Through:(.*)",v)
             if res:
-                t = res.group(1)
                 if len(throughdata) == 0:
                     throughdata.append(v)
                     continue
@@ -65,7 +66,7 @@ class compactScheduleHandler():
                 else:
                     self.throughlist[-1].setValue(throughdata)
                     throughdata = []
-                    throughdata.append(t)
+                    throughdata.append(v)
                     self.throughlist.append(throughSection(self.parent,self.flist))
                     continue
 
@@ -81,17 +82,19 @@ class throughSection():
         self.flist = fieldlist
         self.forlist = []
         self.parent = parent
-        self.forlist.append(ForSection(parent,self.flist))
         self.throughfield = FieldThrough('','Through:','','')
+        self.flist.append(self.throughfield)
+        self.forlist.append(ForSection(parent,self.flist))
+        print self.flist
 
 
     def setValue(self,value):
+       
         #value is an array of for, until and data lines
-        print value
+        #print value
         index = 0
         ds = []
         self.throughfield.setValue(value[0])
-        self.flist.append(self.throughfield)
         for i in value:
             if index == 0:
                 index = 1
@@ -116,6 +119,7 @@ class throughSection():
                     ds = []
                     ds.append('For:')
                     ds = ds + ta
+                    continue
                     #print ds
 
             ds.append(i)
@@ -132,14 +136,16 @@ class ForSection():
         self.fordatalist = [' ','AllDays','Weekdays','Weekends','Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Holiday',\
                             'SummerDesignDay','WinterDesignDay','AllOtherDays']
         self.lfordatalist =[]
+        self.lastuntilfield = len(self.flist)
         for fd in self.fordatalist:
             self.lfordatalist.append(fd.lower())
 
         self.fdlist = self.fordatalist[:]
         self.forfieldlist = []
         self.forfieldlist.append(FieldChoice('','For:','','',self.fordatalist))
+        self.lastforfield = len(self.flist)
         self.populateForCombo()
-        l = QtGui.QLabel('Interpolate')
+        
         self.interpolatefield = FieldYesNo('','Interpolate:','','',['No','Yes'])
         self.flist.append(self.interpolatefield)
         self.lastuntilfield = len(self.flist)
@@ -148,11 +154,13 @@ class ForSection():
     
 
     def populateForCombo(self):
-        for c,i in enumerate(self.forfieldlist):
+        for i in self.forfieldlist:
             self.insertFor(i)
       
     def insertFor(self,field) :
-        self.flist.append(field)
+        self.flist.insert(self.lastforfield,field)
+        self.lastforfield = self.lastforfield + 1
+        self.lastuntilfield = self.lastuntilfield + 1
 
     def insertUntil(self,vals):
         #print vals
@@ -160,13 +168,13 @@ class ForSection():
             vals = ['','']
 
         f = FieldTime(self,'Until:','','')
-        t = vals[0].split(':')
-        if len(t) == 2:
-            f.setValue(t[1])
+        t = vals[0].lstrip('Until:')
+        f.setValue(t)
         self.flist.insert(self.lastuntilfield,f)
         self.lastuntilfield = self.lastuntilfield + 1
-
-        self.flist.insert(self.lastuntilfield,FieldText(self,'Data:','',''))
+        d = FieldText(self,'Data:','','')
+        d.setValue(vals[1])
+        self.flist.insert(self.lastuntilfield,d)
         self.lastuntilfield = self.lastuntilfield + 1
 
     def untilEdit(self):
@@ -188,7 +196,8 @@ class ForSection():
             self.insertFor(w,i+1)
         
     def setValue(self,v):
-        print v
+        #pdb.set_trace()
+        #print v
         self.lock = True
         fori = False
         untilar = []
@@ -219,6 +228,7 @@ class ForSection():
                 w = FieldChoice('','For:','','',self.fordatalist)
                 self.forfieldlist.append(w)
                 self.insertFor(w)
+                fori = False
 
             else:
                 untilar.append(l)

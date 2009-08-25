@@ -24,7 +24,7 @@ import iddclass
 import idfglobals
 import string
 import re
-#import pdb
+import pdb
 
 class idfRead :
     def __init__(self,filename) :
@@ -100,7 +100,7 @@ class idfRead :
                 continue
 
             itemlist.append(items[0])
-        #pdb.set_trace()
+#        pdb.set_trace()
         evalstr =       'iddclass.'+ re.sub(r'[:-]','_',classname) +'()'
 #        print evalstr
         classinstance = eval (evalstr)
@@ -116,7 +116,7 @@ if __name__ == "__main__":
     try:
         fname = sys.argv[1]
     except :
-        fname = 'Singlezonetemplate.idf'
+        fname = 'schedulecompact.idf'
     c = idfRead(fname)
 #    alist = c.getActivelist()
 #    for o in alist:

@@ -298,6 +298,7 @@ class ObjectSingleLine(ObjectAbstract) :
 
 class ObjectCompactSchedule(ObjectAbstract) :
     def __init__(self):
+        self.extensible = -1
         ObjectAbstract.__init__(self)
         self.fieldlist.pop()
 
@@ -318,6 +319,8 @@ class ObjectCompactSchedule(ObjectAbstract) :
             if i == 3:
                 self.schedulehandler = compactschedulewidget.compactScheduleHandler(self,self.fieldlist)
                 self.schedulehandler.setValue(self.rawdatalist[3:])
+
+        print self.fieldlist
 
 
 
