@@ -268,7 +268,7 @@ class FieldText(FieldAbstract) :
 
     def createEditor(self,parent) :
         print "createeditor FieldText"
-        self.fieldeditor = GEditWidget(parent)
+        self.fieldeditor = QtGui.QLineEdit(parent)
         if self.default:
             self.fieldeditor.setValue(self.default)
         self.setToolTips(self.notes)
@@ -276,16 +276,16 @@ class FieldText(FieldAbstract) :
 
 
     def getEditorValue(self,editor) :
-        return editor.getValue()
+        return editor.text()
 
     def setEditorValue(self,editor):
-        editor.setValue(self.value)
+        editor.setText(self.value)
             
 class FieldTime(FieldText):
 
     def createEditor(self,parent):
         print "createeditor FieldTime"
-        self.fieldeditor = QtGui.QLineEdit()
+        self.fieldeditor = QtGui.QLineEdit(parent)
         rx = QtCore.QRegExp('[0-9]{2}:[0-6]{2}')
         self.fieldeditor.setValidator(QtGui.QRegExpValidator(rx,self.fieldeditor))
         if self.default:
@@ -414,13 +414,18 @@ class FieldThrough(FieldAbstract):
         FieldAbstract.__init__(self,parent,fieldname,default,notes)
 
     def createEditor(self,parent):
-        self.fieldeditor = QtGui.QLineEdit()
+        self.fieldeditor = QtGui.QLineEdit(parent)
         return self.fieldeditor
 
     def setValue(self,value):
         s = value.split(':')
         if len(s) == 2:
             self.value = s[1]
-    
+
+    def setEditorValue(self,editor):
+        editor.setText(self.value)
+
+    def getEditorValue(self,editor):
+        return editor.text()
 
         
