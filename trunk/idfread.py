@@ -122,5 +122,7 @@ if __name__ == "__main__":
     for f in cl.fieldlist:
         print f.fieldname
         print f.value
+
+    print cl        
     
     

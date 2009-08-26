@@ -160,7 +160,7 @@ class ForSection():
         self.parent = parent
         self.model = model
         self.flist = fieldlist
-        self.fordatalist = ['','AllDays','Weekdays','Weekends','Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Holiday',\
+        self.fordatalist = ['','AllDays','Weekdays','Weekends','Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Holidays',\
                             'SummerDesignDay','WinterDesignDay','AllOtherDays']
         self.lfordatalist =[]
         for fd in self.fordatalist:
@@ -235,24 +235,25 @@ class ForSection():
 
         
     def setValue(self,v):
-        #pdb.set_trace()
+        #print v
         self.lock = True
         fori = False
         untilar = []
         for l in v:
-            #print l
+            print l
             if not l.find('For:') == -1 :
                 #pdb.set_trace()
                 fori = True
+                first = True
                 continue
 
             if not l.find('Until:') == -1:
+                fori = False
                 if len(untilar) > 0:
                     self.insertUntil(untilar)
                     untilar= []
                     ll = l.split(':')
                     untilar.append(ll[1]+':'+ll[2])
-                    fori = False
                     continue
 
             if fori:
@@ -261,9 +262,12 @@ class ForSection():
                 except:
                     index = 0
 
+                if not first:
+                    self.insertFor(FieldChoice(self,'For:','','',self.fordatalist))
+                else:
+                    first = False
                 self.forfieldlist[-1].setValue(self.fordatalist[index])
-                #print self.forcombolist
-                fori = False
+                continue
 
             else:
                 untilar.append(l)
