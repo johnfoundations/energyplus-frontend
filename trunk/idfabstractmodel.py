@@ -80,11 +80,6 @@ class idfAbstractModel(QtCore.QAbstractItemModel):
             return self.idfsource.size()
             
     def index(self, row, column, parent):
-#        print row
-#        print column
-#        print parent.isValid()
-
-
         
         if parent.isValid():
             dp = parent.internalPointer().child(row)
@@ -123,12 +118,8 @@ class idfClassModel(QtCore.QAbstractTableModel):
         idf = modelindex.internalPointer()
         field = idf.fieldlist[modelindex.row()]
 
-        if role == QtCore.Qt.EditRole:
-            self.idfclass.editSignal(self,modelindex.row())
-
-
         if role == QtCore.Qt.ToolTipRole:
-            return QtCore.QVariant(field.notes)
+            return QtCore.QVariant(field.getNotes())
 
         if role == QtCore.Qt.EditRole or role == QtCore.Qt.DisplayRole:
             return QtCore.QVariant(field.value)
@@ -139,13 +130,8 @@ class idfClassModel(QtCore.QAbstractTableModel):
         if role == QtCore.Qt.EditRole :
             idf = index.internalPointer()
             idf.fieldlist[index.row()].setValue(value)
-
-        #check if last item
-#        if index.row() == len(self.idfclass.fieldlist)-1:
-#            print 'last row'
-#            if self.idfclass.extensible > 0 :
-#                self.insertRows(self.rowCount(),self.idfclass.extensible,None)
-                
+            self.idfclass.editSignal(self,index.row())
+               
 
 
     def insertRows(self,row,count,parent) :

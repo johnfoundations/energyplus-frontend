@@ -42,7 +42,5 @@ class idfClassDelegate(QtGui.QItemDelegate):
          
 
     def updateEditorGeometry(self,editor,option,index):
-        print 
-
         editor.setGeometry(option.rect)
 

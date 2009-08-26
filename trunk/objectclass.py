@@ -184,7 +184,7 @@ class ObjectAbstract :
         self.memo = memo
 
     def getMemo(self) :
-        return self.memo
+        return '\n'.join(self.memo)
 
     def addReference(self,ref):
         self.referencelist.append(ref)
@@ -304,7 +304,8 @@ class ObjectCompactSchedule(ObjectAbstract) :
         self.extensible = -1
         ObjectAbstract.__init__(self)
         self.fieldlist.pop()
-
+        self.schedulehandler = compactschedulewidget.compactScheduleHandler(self,self.fieldlist)
+        
     def parseRawData(self) :
         for i,fd in enumerate(self.rawdatalist) :
             if i == 0:  #first item is classname
@@ -318,7 +319,6 @@ class ObjectCompactSchedule(ObjectAbstract) :
                 scheduletypelimits = fd
 
             if i == 3:
-                self.schedulehandler = compactschedulewidget.compactScheduleHandler(self,self.fieldlist)
                 self.schedulehandler.setValue(self.rawdatalist[3:])
 
 
@@ -326,14 +326,14 @@ class ObjectCompactSchedule(ObjectAbstract) :
     def editSignal(self,model,row):
         field = self.fieldlist[row]
         self.schedulehandler.setModel(model)
-        if field.fieldname == 'Until:':
-            fieldlist[row].parent.throughEdit(row)
+        if field.fieldname == 'Through:':
+            self.fieldlist[row].parent.throughEdit(row)
 
         elif field.fieldname == 'For:':
-            fieldlist[row].parent.forEdit(row)
+            self.fieldlist[row].parent.forEdit(row)
 
         elif field.fieldname == 'Data:':
-            fieldlist[row].parent.untilEdit(row)
+            self.fieldlist[row].parent.untilEdit(row)
 
 
 
