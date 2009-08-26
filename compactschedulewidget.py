@@ -89,18 +89,18 @@ class throughSection():
         self.forlist = []
         self.parent = parent
         self.model = None
-        self.throughfield = FieldThrough('','Through:','','')
+        self.throughfield = FieldThrough(self,'Through:','','')
         self.insertField([self.throughfield],len(self.flist))
   #      
 
 
     def insertField(self,fields,index):
         if self.model:
-            model.beginInsertRows(None,index,index+len(fields))
+            self.model.beginInsertRows(QtCore.QModelIndex(),index,index+len(fields))
         for c,f in enumerate(fields):
             self.flist.insert(index+c,f)
         if self.model:
-            model.endInsertRows()
+            self.model.endInsertRows()
 
 
     def setValue(self,value):
@@ -129,7 +129,7 @@ class throughSection():
                     continue
 
                 else:
-                    fsec = ForSection(self,self.flist)
+                    fsec = ForSection(self,self.flist,self.model)
                     fsec.setValue(ds)
                     self.forlist.append(fsec)
                     ds = []
@@ -140,7 +140,7 @@ class throughSection():
 
             ds.append(i)
 
-        fsec = ForSection(self,self.flist)
+        fsec = ForSection(self,self.flist,self.model)
         fsec.setValue(ds)
         self.forlist.append(fsec)
 
@@ -151,15 +151,16 @@ class throughSection():
 
     def throughEdit(self,row):
         if len(self.forlist) == 0:
-            self.forlist.append(ForSection(parent,self.flist))
+            self.forlist.append(ForSection(self,self.flist,self.model))
+            self.forlist[-1].insertUntil(['',''])
 
 
 class ForSection():
-    def __init__(self,parent,fieldlist) :
+    def __init__(self,parent,fieldlist,model) :
         self.parent = parent
-        self.model = None
+        self.model = model
         self.flist = fieldlist
-        self.fordatalist = [' ','AllDays','Weekdays','Weekends','Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Holiday',\
+        self.fordatalist = ['','AllDays','Weekdays','Weekends','Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Holiday',\
                             'SummerDesignDay','WinterDesignDay','AllOtherDays']
         self.lfordatalist =[]
         for fd in self.fordatalist:
@@ -169,17 +170,23 @@ class ForSection():
         self.forfieldlist = []
         self.insertFor(FieldChoice(self,'For:','','',self.fordatalist))
         self.lastuntilfieldinstance = None
+        if self.model:
+            self.model.beginInsertRows(QtCore.QModelIndex(),self.lastForField()+1,self.lastForField()+1)
         self.interpolatefield = FieldYesNo(self,'Interpolate:','','',['No','Yes'])
         self.flist.append(self.interpolatefield)
+        if self.model:
+            self.model.endInsertRows()
+        
+
 
     
     def forEdit(self,row):
-        if row == self.lastForField():
-            insertFor(self,'For:','','',self.fordatalist)
+        if row == self.lastForField() -1 and not self.flist[self.lastForField()-1].value == '':
+            self.insertFor(FieldChoice(self,'For:','','',self.fordatalist))
 
     def untilEdit(self,row):
-        if row == self.lastUntilField():
-            self.insertUntils(['',''])
+        if row == self.lastUntilField() -1 and not self.flist[self.lastUntilField()-1].value == '':
+            self.insertUntil(['',''])
 
     def lastForField(self):
         if len(self.forfieldlist) > 0:
@@ -201,17 +208,19 @@ class ForSection():
 
     def insertFor(self,field) :
         if self.model:
-            model.beginInsertRows(None,self.lastForField(),self.lastForField() + 1)
+            self.model.beginInsertRows(QtCore.QModelIndex(),self.lastForField(),self.lastForField())
 
         self.flist.insert(self.lastForField(),field)
         self.forfieldlist.append(field)
         if self.model:
-            model.endInsertRows()
+            self.model.endInsertRows()
 
     def insertUntil(self,vals):
         #print vals
         if len(vals) < 2:
             vals = ['','']
+        if self.model:
+            self.model.beginInsertRows(QtCore.QModelIndex(),self.lastUntilField(),self.lastUntilField()+1)
 
         f = FieldTime(self,'Until:','','')
         t = vals[0].lstrip('Until:')
@@ -221,10 +230,11 @@ class ForSection():
         d.setValue(vals[1])
         self.flist.insert(self.lastUntilField() + 1,d)
         self.lastuntilfieldinstance = d
+        if self.model:
+            self.model.endInsertRows()
 
         
     def setValue(self,v):
-        print v
         #pdb.set_trace()
         self.lock = True
         fori = False

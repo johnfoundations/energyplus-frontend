@@ -43,17 +43,10 @@ class FieldAbstract :
         return editor.Value()
 
     def setEditorValue(self,editor):
-        print self.fieldname
         editor.setValue(self.value)
     
-
-    
-    def setToolTips(self,notes) :
-        tts = ''
-        for n in notes:
-            tts = tts + n + '\n'
-        tts = tts.strip()
-        self.fieldeditor.setToolTip(tts)
+    def getNotes(self) :
+        return '\n'.join(self.notes)
 
     def setValue(self, value) :
         #pdb.set_trace()
@@ -72,10 +65,6 @@ class FieldAbstract :
     def __str__(self):
         return str(self.value)
 
-    def printIDF(self,sep) :
-        #pdb.set_trace()
-        v = self.value
-        print(self.value + sep + '! ' + self.fieldname)
 
     def getFieldDepends(self):
         return ''
@@ -95,7 +84,6 @@ class FieldReal(FieldAbstract) :
         self.maxltv = maxltv
         
     def createEditor(self,parent)  :
-        print "createeditor QDoubleSpinBox"
         self.fieldeditor = QtGui.QDoubleSpinBox(parent)
         if self.minv:
             self.fieldeditor.setMinimum(self.minv)
@@ -107,7 +95,6 @@ class FieldReal(FieldAbstract) :
             self.fieldeditor.setMaximum(self.maxltv)
         if not self.default:
             self.fieldeditor.setValue(self.default)
-#        self.setToolTips(self.notes)
         return self.fieldeditor
 
     def getEditorValue(self,editor) :
@@ -168,7 +155,6 @@ class FieldRealAutocalculate(FieldReal) :
             return FieldReal.Validate(self,val)
 
     def createEditor(self,parent)  :
-        print "createeditor FieldReal"
         self.fieldeditor = GAutoCalcRealWidget(parent)
         if self.minv:
             self.fieldeditor.setMinimum(self.minv)
@@ -180,7 +166,6 @@ class FieldRealAutocalculate(FieldReal) :
             self.fieldeditor.setMaximum(self.maxltv)
         if not self.default:
             self.fieldeditor.setValue(self.default)
-        self.setToolTips(self.notes)
         return self.fieldeditor
 
     def setEditorValue(self,editor):
@@ -197,7 +182,6 @@ class FieldInt(FieldAbstract) :
         self.maxltv = maxltv
 
     def createEditor(self,parent) :
-        print "createeditor FieldInt"
         self.fieldeditor = QtGui.QSpinBox(parent)
         if self.minv:
             self.fieldeditor.setMinimum(self.minv)
@@ -207,7 +191,6 @@ class FieldInt(FieldAbstract) :
             self.fieldeditor.setMaximum(self.maxv)
         elif self.maxltv:
             self.fieldeditor.setMaximum(self.maxltv)
-        self.setToolTips(self.notes)
         if not self.default:
             self.fieldeditor.setValue(self.default)
         return self.fieldeditor
@@ -267,11 +250,9 @@ class FieldText(FieldAbstract) :
         self.value = default
 
     def createEditor(self,parent) :
-        print "createeditor FieldText"
         self.fieldeditor = QtGui.QLineEdit(parent)
         if self.default:
-            self.fieldeditor.setValue(self.default)
-        self.setToolTips(self.notes)
+            self.fieldeditor.setText(self.default)
         return self.fieldeditor
 
 
@@ -284,13 +265,11 @@ class FieldText(FieldAbstract) :
 class FieldTime(FieldText):
 
     def createEditor(self,parent):
-        print "createeditor FieldTime"
         self.fieldeditor = QtGui.QLineEdit(parent)
         rx = QtCore.QRegExp('[0-9]{2}:[0-6]{2}')
         self.fieldeditor.setValidator(QtGui.QRegExpValidator(rx,self.fieldeditor))
         if self.default:
             self.fieldeditor.setText(self.default)
-        self.setToolTips(self.notes)
         return self.fieldeditor
             
 
@@ -303,7 +282,6 @@ class FieldChoice(FieldAbstract)    :
             self.lchoices.append(lc.lower())
 
     def createEditor(self,parent)  :
-        print "createeditor FieldChoice"
         self.fieldeditor = QtGui.QComboBox(parent)
         self.fieldeditor.addItems(self.choices)
         if self.default in self.choices:
@@ -313,11 +291,9 @@ class FieldChoice(FieldAbstract)    :
             if not self.default == '':
                 print self.default + 'no default in choices'
                 
-        self.setToolTips(self.notes)
         return self.fieldeditor
 
     def setEditorValue(self,editor):
-        print self.value
         if not self.value == '':
             editor.setCurrentIndex(self.lchoices.index(self.value.lower()))
     
@@ -342,7 +318,6 @@ class FieldObjectlist(FieldAbstract):
         self.objectlistname = objectlistname
 
     def createEditor(self,parent) :
-        print "createeditor FieldObjectList"
         self.fieldeditor = QtGui.QComboBox(parent)
         try:
             self.choices = idfglobals.getDepends(self.objectlistname)
@@ -350,7 +325,6 @@ class FieldObjectlist(FieldAbstract):
             self.choices = []
         self.fieldeditor.addItem("Null")
         self.fieldeditor.addItems(self.choices)
-        self.setToolTips(self.notes)
         return self.fieldeditor
 
     def setEditorValue(self,editor):
@@ -366,48 +340,43 @@ class FieldObjectlist(FieldAbstract):
         return self.objectlistname
         
         
-class FieldVertice(FieldAbstract):
-    def __init__(self,parent,fieldname,default,notes) :
-        FieldAbstract.__init__(self,parent,fieldname,default,notes)
+#class FieldVertice(FieldAbstract):
+    #def __init__(self,parent,fieldname,default,notes) :
+        #FieldAbstract.__init__(self,parent,fieldname,default,notes)
 
-    def createEditor(self,parent):
-        print "createeditor FieldVertice"
-        self.fieldeditor = GVerticeWidget('')
-        self.setToolTips(self.notes)
-        return self.fieldeditor
+    #def createEditor(self,parent):
+        #self.fieldeditor = GVerticeWidget('')
+        #return self.fieldeditor
 
-    def setEditorValue(self,editor):
-        val = []
-        val.append(self.value)
-        val.append(self.restoflist)
-        editor.setValue(val)
+    #def setEditorValue(self,editor):
+        #val = []
+        #val.append(self.value)
+        #val.append(self.restoflist)
+        #editor.setValue(val)
 
-#  def setValue(self,value,restoflist):
-#        print value
-#        print restoflist
-#        self.value = value
-#        self.restoflist = restoflist
-#        return True
+##  def setValue(self,value,restoflist):
+##        print value
+##        print restoflist
+##        self.value = value
+##        self.restoflist = restoflist
+##        return True
 
-class FieldCompactSchedule(FieldAbstract):
-    def __init__(self,parent,fieldname,default,notes):
-        FieldAbstract.__init__(self,parent,fieldname,default,notes)
-        self.widgetlist = []
+#class FieldCompactSchedule(FieldAbstract):
+    #def __init__(self,parent,fieldname,default,notes):
+        #FieldAbstract.__init__(self,parent,fieldname,default,notes)
+        #self.widgetlist = []
 
-    def createEditor(self,parent):
-        print "createEditor FieldCompactSchedule"
-        self.fieldeditor = GCompactScheduleWidget(self.fieldname)
-        self.setToolTips(self.notes)
-        return self.fieldeditor
+    #def createEditor(self,parent):
+        #self.fieldeditor = GCompactScheduleWidget(self.fieldname)
+        #return self.fieldeditor
 
 
-    def setEditorValue(self,editor):
-        #array of values
-        v = []
-        v.append(self.value)
-        v = v + self.restoflist
-        print v
-        editor.setValue(v)
+    #def setEditorValue(self,editor):
+        ##array of values
+        #v = []
+        #v.append(self.value)
+        #v = v + self.restoflist
+        #editor.setValue(v)
 
 class FieldThrough(FieldAbstract):
     def __init__(self,parent,fieldname,default,notes):
@@ -421,6 +390,8 @@ class FieldThrough(FieldAbstract):
         s = value.split(':')
         if len(s) == 2:
             self.value = s[1]
+        else:
+            self.value = value
 
     def setEditorValue(self,editor):
         editor.setText(self.value)
