@@ -240,6 +240,9 @@ class ObjectAbstract :
             self.fieldlist.append(newfield)
 #            print newfield.fieldname
 
+    def editSignal(self,model,row):
+        if row == len(self.fieldlist)-1 and self.extensible > -1:
+            model.insertRows(model.rowCount(0),self.extensible,QtCore.QModelIndex())
 
 
     def getDepends(self):
@@ -303,8 +306,6 @@ class ObjectCompactSchedule(ObjectAbstract) :
         self.fieldlist.pop()
 
     def parseRawData(self) :
-        print 'ObjectCompactSchedule parseRawData'
-        print self.rawdatalist
         for i,fd in enumerate(self.rawdatalist) :
             if i == 0:  #first item is classname
                 continue
@@ -320,9 +321,19 @@ class ObjectCompactSchedule(ObjectAbstract) :
                 self.schedulehandler = compactschedulewidget.compactScheduleHandler(self,self.fieldlist)
                 self.schedulehandler.setValue(self.rawdatalist[3:])
 
-        print self.fieldlist
 
 
+    def editSignal(self,model,row):
+        field = self.fieldlist[row]
+        self.schedulehandler.setModel(model)
+        if field.fieldname == 'Until:':
+            fieldlist[row].parent.throughEdit(row)
+
+        elif field.fieldname == 'For:':
+            fieldlist[row].parent.forEdit(row)
+
+        elif field.fieldname == 'Data:':
+            fieldlist[row].parent.untilEdit(row)
 
 
 

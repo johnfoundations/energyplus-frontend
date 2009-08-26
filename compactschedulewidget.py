@@ -47,6 +47,7 @@ class compactScheduleHandler():
         self.throughlist = []
         self.flist = fieldlist
         self.parent = parent
+        self.model = None
         self.throughlist.append(throughSection(parent,self.flist))
         
 
@@ -75,6 +76,11 @@ class compactScheduleHandler():
         self.throughlist[-1].setValue(throughdata)
         self.throughlist.append(throughSection(self.parent,self.flist))
 
+    def setModel(self,model):
+        if not self.model == model:
+            self.model = model
+            for t in self.throughlist:
+                t.setModel(model)
 
 
 class throughSection():
@@ -82,10 +88,19 @@ class throughSection():
         self.flist = fieldlist
         self.forlist = []
         self.parent = parent
+        self.model = None
         self.throughfield = FieldThrough('','Through:','','')
-        self.flist.append(self.throughfield)
-        self.forlist.append(ForSection(parent,self.flist))
-        print self.flist
+        self.insertField([self.throughfield],len(self.flist))
+  #      
+
+
+    def insertField(self,fields,index):
+        if self.model:
+            model.beginInsertRows(None,index,index+len(fields))
+        for c,f in enumerate(fields):
+            self.flist.insert(index+c,f)
+        if self.model:
+            model.endInsertRows()
 
 
     def setValue(self,value):
@@ -114,8 +129,9 @@ class throughSection():
                     continue
 
                 else:
-                    self.forlist[-1].setValue(ds)
-                    self.forlist.append(ForSection(self.parent,self.flist))
+                    fsec = ForSection(self,self.flist)
+                    fsec.setValue(ds)
+                    self.forlist.append(fsec)
                     ds = []
                     ds.append('For:')
                     ds = ds + ta
@@ -124,43 +140,73 @@ class throughSection():
 
             ds.append(i)
 
-        self.forlist[-1].setValue(ds)
+        fsec = ForSection(self,self.flist)
+        fsec.setValue(ds)
+        self.forlist.append(fsec)
 
+    def setModel(self,model):
+        self.model = model
+        for f in self.forlist:
+            f.setModel(model)
 
+    def throughEdit(self,row):
+        if len(self.forlist) == 0:
+            self.forlist.append(ForSection(parent,self.flist))
 
 
 class ForSection():
     def __init__(self,parent,fieldlist) :
         self.parent = parent
+        self.model = None
         self.flist = fieldlist
         self.fordatalist = [' ','AllDays','Weekdays','Weekends','Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Holiday',\
                             'SummerDesignDay','WinterDesignDay','AllOtherDays']
         self.lfordatalist =[]
-        self.lastuntilfield = len(self.flist)
         for fd in self.fordatalist:
             self.lfordatalist.append(fd.lower())
 
         self.fdlist = self.fordatalist[:]
         self.forfieldlist = []
-        self.forfieldlist.append(FieldChoice('','For:','','',self.fordatalist))
-        self.lastforfield = len(self.flist)
-        self.populateForCombo()
-        
-        self.interpolatefield = FieldYesNo('','Interpolate:','','',['No','Yes'])
+        self.insertFor(FieldChoice(self,'For:','','',self.fordatalist))
+        self.lastuntilfieldinstance = None
+        self.interpolatefield = FieldYesNo(self,'Interpolate:','','',['No','Yes'])
         self.flist.append(self.interpolatefield)
-        self.lastuntilfield = len(self.flist)
-        self.lock = False
-    
-    
 
-    def populateForCombo(self):
-        for i in self.forfieldlist:
-            self.insertFor(i)
-      
+    
+    def forEdit(self,row):
+        if row == self.lastForField():
+            insertFor(self,'For:','','',self.fordatalist)
+
+    def untilEdit(self,row):
+        if row == self.lastUntilField():
+            self.insertUntils(['',''])
+
+    def lastForField(self):
+        if len(self.forfieldlist) > 0:
+            return self.flist.index(self.forfieldlist[-1]) + 1
+        else:
+            if len(self.parent.forlist) > 0:
+                return self.parent.forlist[-1].lastUntilField() + 1
+            else:
+                return self.flist.index(self.parent.throughfield) + 1
+
+            
+
+    def lastUntilField(self):
+        if self.lastuntilfieldinstance == None:
+            return self.flist.index(self.interpolatefield) + 1
+        else:
+            return self.flist.index(self.lastuntilfieldinstance) + 1
+
+
     def insertFor(self,field) :
-        self.flist.insert(self.lastforfield,field)
-        self.lastforfield = self.lastforfield + 1
-        self.lastuntilfield = self.lastuntilfield + 1
+        if self.model:
+            model.beginInsertRows(None,self.lastForField(),self.lastForField() + 1)
+
+        self.flist.insert(self.lastForField(),field)
+        self.forfieldlist.append(field)
+        if self.model:
+            model.endInsertRows()
 
     def insertUntil(self,vals):
         #print vals
@@ -170,34 +216,16 @@ class ForSection():
         f = FieldTime(self,'Until:','','')
         t = vals[0].lstrip('Until:')
         f.setValue(t)
-        self.flist.insert(self.lastuntilfield,f)
-        self.lastuntilfield = self.lastuntilfield + 1
+        self.flist.insert(self.lastUntilField(),f)
         d = FieldText(self,'Data:','','')
         d.setValue(vals[1])
-        self.flist.insert(self.lastuntilfield,d)
-        self.lastuntilfield = self.lastuntilfield + 1
+        self.flist.insert(self.lastUntilField() + 1,d)
+        self.lastuntilfieldinstance = d
 
-    def untilEdit(self):
-        s = self.lastuntilwidget.text()
-        if not s == '':
-            self.insertUntil(['',''])
-  
-
-    def forChanged(self,i):
-        if self.lock:
-            return
-
-        s = self.forcombolist[i].currentText()
-        #print s
-        if i == len(self.forcombolist)-1:
-            #last
-            w = QtGui.QComboBox()
-            self.forcombolist.append(w)
-            self.insertFor(w,i+1)
         
     def setValue(self,v):
+        print v
         #pdb.set_trace()
-        #print v
         self.lock = True
         fori = False
         untilar = []
@@ -225,18 +253,16 @@ class ForSection():
 
                 self.forfieldlist[-1].setValue(self.fordatalist[index])
                 #print self.forcombolist
-                w = FieldChoice('','For:','','',self.fordatalist)
-                self.forfieldlist.append(w)
-                self.insertFor(w)
                 fori = False
 
             else:
                 untilar.append(l)
 
         self.insertUntil(untilar)
-        self.lock = False
 
-      
+    def setModel(self,model):
+        self.model = model
+        
       
        
   
