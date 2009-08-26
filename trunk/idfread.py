@@ -118,17 +118,9 @@ if __name__ == "__main__":
     except :
         fname = 'schedulecompact.idf'
     c = idfRead(fname)
-#    alist = c.getActivelist()
-#    for o in alist:
-#        print o
-    dtree = c.getActiveReferences()
-    for l,v in dtree.iteritems():
-        print l
-        for o in v:
-            print o.getName() + o.getClassnameIDD()
-        print '\n'
-
-#    for o in alist:
-#        if o.getClassnameIDD() == 'Zone':
-#            print o.getClassnameIDD()
-#            print o.getName()
+    cl = c.active[0]
+    for f in cl.fieldlist:
+        print f.fieldname
+        print f.value
+    
+    

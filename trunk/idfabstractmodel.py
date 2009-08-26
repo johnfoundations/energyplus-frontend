@@ -123,8 +123,9 @@ class idfClassModel(QtCore.QAbstractTableModel):
         idf = modelindex.internalPointer()
         field = idf.fieldlist[modelindex.row()]
 
-        if role == QtCore.Qt.EditRole and modelindex.row() == len(self.idfclass.fieldlist) -1:
-            self.insertRows(self.rowCount(0),self.idfclass.extensible,QtCore.QModelIndex())
+        if role == QtCore.Qt.EditRole:
+            self.idfclass.editSignal(self,modelindex.row())
+
 
         if role == QtCore.Qt.ToolTipRole:
             return QtCore.QVariant(field.notes)
