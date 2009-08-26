@@ -335,7 +335,56 @@ class ObjectCompactSchedule(ObjectAbstract) :
         elif field.fieldname == 'Data:':
             self.fieldlist[row].parent.untilEdit(row)
 
+    def __str__(self):
+        lines = []
+        lines.append(self.getClassnameIDD() + ',')
+        tmplines = []
+        i = 0
+        fieldindex = 1
+        while i < len(self.fieldlist):
+            if self.fieldlist[i].fieldname == 'For:':
+                forstr = 'For: '
+                while self.fieldlist[i].fieldname == 'For:':
+                    forstr = forstr + ' ' + self.fieldlist[i].value
+                    i = i+1
+                lines.append('    %s, ! %s' % (forstr,'Field '+str(fieldindex) ))
+                fieldindex = fieldindex + 1
+                continue
 
+            if self.fieldlist[i].fieldname == 'Until:':
+                lines.append('    %s, ! %s' % ('Until: '+self.fieldlist[i].value, 'Field '+ str(fieldindex)))
+                i = i+1
+                fieldindex = fieldindex + 1
+                continue
+            
+            if self.fieldlist[i].fieldname == 'Data:':
+                lines.append('    %s, ! %s' % (self.fieldlist[i].value, 'Field '+ str(fieldindex)))
+                i = i+1
+                fieldindex = fieldindex + 1
+                continue
+            
+            if self.fieldlist[i].fieldname == 'Through:':
+                if not self.fieldlist[i].value == '':
+                    lines.append('    %s, ! %s' % ('Through: '+self.fieldlist[i].value, 'Field '+ str(fieldindex)))
+                    fieldindex = fieldindex + 1
+                i = i+1
+                continue
+
+            if self.fieldlist[i].fieldname == 'Interpolate:':
+                if not self.fieldlist[i].value == '':
+                    lines.append('    %s, ! %s' % ('Interpolate: '+self.fieldlist[i].value, 'Field '+ str(fieldindex)))
+                    fieldindex = fieldindex + 1
+                i=i+1
+                continue
+
+                
+            lines.append('    %s, ! %s' % (self.fieldlist[i].value, self.fieldlist[i].fieldname))
+            i = i+1
+
+
+        return '\n'.join(lines) + '\n'
+            
+     
 
 
 
