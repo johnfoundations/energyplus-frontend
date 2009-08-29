@@ -78,8 +78,14 @@ class FieldAbstract :
 class FieldReal(FieldAbstract) :
     def __init__(self,parent,fieldname,default,notes,minv,maxv,mingtv,maxltv) :
         FieldAbstract.__init__(self,parent,fieldname,default,notes)
-        self.minv = minv
-        self.maxv = maxv
+        if minv == '':
+            self.minv = -2000
+        else:
+            self.minv = minv
+        if maxv == '':
+            self.maxv = 2000
+        else:
+            self.maxv = maxv
         self.mingtv = mingtv
         self.maxltv = maxltv
         
@@ -176,8 +182,14 @@ class FieldRealAutocalculate(FieldReal) :
 class FieldInt(FieldAbstract) :
     def __init__(self,parent,fieldname,default,notes,minv,maxv,mingtv,maxltv) :
         FieldAbstract.__init__(self,parent,fieldname,default,notes)
-        self.minv = minv
-        self.maxv = maxv
+        if minv == '':
+            self.minv = -2000
+        else:
+            self.minv = minv
+        if maxv == '':
+            self.maxv = 2000
+        else:
+            self.maxv = maxv
         self.mingtv = mingtv
         self.maxltv = maxltv
 
