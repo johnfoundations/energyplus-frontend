@@ -119,6 +119,8 @@ class idfmodeltest(QtGui.QMainWindow):
 
     def sizeTree(self):
         width = self.view.sizeHintForColumn(0) + self.view.sizeHintForColumn(1)
+        if width < 200:
+            width = 200
         print width
         self.viewwidget.setMaximumWidth(width)
 

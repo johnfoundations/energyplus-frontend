@@ -30,8 +30,16 @@ class newClassDialog(QtGui.QDialog):
         self.classlist = QtGui.QTreeWidget()
         self.classlist.setSelectionMode(QtGui.QAbstractItemView.ExtendedSelection)
         self.memo = QtGui.QLabel('Class Description')
+        ccl = QtGui.QHBoxLayout()
+        self.copycount = QtGui.QSpinBox()
+        self.copycount.setMinimum(1)
+        ccl.addWidget(QtGui.QLabel('Number or Copies to Create:'))
+        ccl.addWidget(self.copycount)
+        ccl.addStretch()
         rv = QtGui.QVBoxLayout()
         rv.addWidget(self.memo)
+        #lrv.addSpacing()
+        rv.addLayout(ccl)
         rv.addStretch()
 
         buttonBox = QtGui.QDialogButtonBox(QtGui.QDialogButtonBox.Ok | QtGui.QDialogButtonBox.Cancel);
@@ -66,7 +74,8 @@ class newClassDialog(QtGui.QDialog):
         s = self.classlist.selectedItems()
         self.selected = []
         for i in s :
-            self.selected.append(i.text(0))
+            for x in range(self.copycount.value()):
+                self.selected.append(i.text(0))
 
         self.done(1)
 
