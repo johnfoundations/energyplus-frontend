@@ -116,6 +116,15 @@ class idfData(QtCore.QObject):
         self.idflist.append(instance)
         self.populateTree(self.idflist)
 
+    def deleteRecord(self,instance) :
+        try:
+            index = self.idflist.index(instance)
+        except:
+            return False
+
+        self.idflist.pop(index)
+        self.populateTree(self.idflist)
+
 
     def dataAt(self,row,column):
         try:
@@ -209,6 +218,21 @@ class idfData(QtCore.QObject):
                 t.appendChild(treeItem(t,idf))
             self.idftree.append(t)
 
+
+    def getDependancies(self, idfclass):
+        l = []
+        cl = []
+        for f in idfclass.fieldlist:
+            if f.__class__.__name__ == 'FieldObjectlist':
+                l.append(f.value)
+
+        for i in self.idflist:
+            if i.getName() in l:
+                cl.append(i)
+
+        return cl
+                
+                
         
 
     def writeIdf(self,filename):

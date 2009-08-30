@@ -28,6 +28,7 @@ import idfdata
 import idfabstractmodel
 import idfmodeldelegate
 import newclassdialog
+import loadclassdialog
 
 class idfmodeltest(QtGui.QMainWindow):
     def __init__(self):
@@ -107,6 +108,12 @@ class idfmodeltest(QtGui.QMainWindow):
         self.newobj.setStatusTip('Create New Object')
         self.connect(self.newobj, QtCore.SIGNAL('triggered()'), self.newobject)
 
+        self.loadobj = QtGui.QAction('Load Objects',self)
+        self.loadobj.setShortcut('Ctrl+L')
+        self.loadobj.setStatusTip('Load Object from IDF File')
+        self.connect(self.loadobj, QtCore.SIGNAL('triggered()'), self.loadobject)
+
+
     def createMenus(self):
         menubar = self.menuBar()
         filem = menubar.addMenu('&File')
@@ -115,6 +122,7 @@ class idfmodeltest(QtGui.QMainWindow):
         filem.addAction(self.exit)
         objm = menubar.addMenu('&Objects')
         objm.addAction(self.newobj)
+        objm.addAction(self.loadobj)
 
 
     def sizeTree(self):
@@ -160,6 +168,15 @@ class idfmodeltest(QtGui.QMainWindow):
             self.model.reset()
             self.sizeTree()
                 
+
+    def loadobject(self):
+        loaddialog = loadclassdialog.loadClassDialog()
+        result = loaddialog.exec_()
+        if result:
+            for c in loaddialog.destidf.idflist:
+                self.idf.insertRecord(c)
+            self.model.reset()
+            self.sizeTree()
 
 
 
