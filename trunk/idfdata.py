@@ -224,7 +224,24 @@ class idfData(QtCore.QObject):
         cl = []
         for f in idfclass.fieldlist:
             if f.__class__.__name__ == 'FieldObjectlist':
-                l.append(f.value)
+                if not f.value in l:
+                    l.append(f.value)
+
+        count = len(l)
+
+        while True:
+            for i in self.idflist:
+                if i.getName() in l:
+                    for f in i.fieldlist:
+                        if f.__class__.__name__ == 'FieldObjectlist':
+                            if not f.value in l:
+                                l.append(f.value)
+
+            if len(l) > count:
+                count = len(l)
+            else:
+                break
+                            
 
         for i in self.idflist:
             if i.getName() in l:
