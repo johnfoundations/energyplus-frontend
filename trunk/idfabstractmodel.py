@@ -93,7 +93,11 @@ class idfAbstractModel(QtCore.QAbstractItemModel):
     def query(self,searchflag,data):
         self.idfsource.query(searchflag,data)
         self.reset()
-        
+
+
+    def sort(self,column,order):
+        self.idfsource.sortTree(column,order)
+        self.reset()
 
 
 class idfClassModel(QtCore.QAbstractTableModel):

@@ -35,6 +35,7 @@ class loadClassDialog(QtGui.QDialog):
         self.sourceclasslist = QtGui.QTreeView()
         self.sourceclasslist.setModel(self.sourcemodel)
         self.sourceclasslist.setSelectionMode(QtGui.QAbstractItemView.ExtendedSelection)
+        self.sourceclasslist.header().setClickable(True)
         self.destclasslist = QtGui.QTreeView()
         self.destclasslist.setModel(self.destmodel)
         self.classdata = QtGui.QTextEdit()
@@ -74,12 +75,15 @@ class loadClassDialog(QtGui.QDialog):
         self.connect(self.tosource, QtCore.SIGNAL('pressed()'), self.moveToSource);
         self.connect(self.loadfilebutton, QtCore.SIGNAL('pressed()'), self.loadFile);
         self.connect(self.sourceclasslist, QtCore.SIGNAL('activated(QModelIndex)'), self.sourceListActivated);
+        self.connect(self.sourceclasslist.header(),QtCore.SIGNAL('sectionClicked ( int )'),self.classlistsort)
         
         hl.addLayout(vl)
         hl.addLayout(vc)
         hl.addLayout(rv)
         self.selected = []
         self.loadFile()
+        self.sortorderlist = [-1,-1]
+
 
 
     def accept(self):
@@ -124,7 +128,14 @@ class loadClassDialog(QtGui.QDialog):
         self.classdata.setPlainText(idf.__str__())
         
 
-        
+    def classlistsort(self,column):
+        if self.sortorderlist[column] != 0:
+            self.sortorderlist[column] = 0
+        else:
+            self.sortorderlist[column] = 1
+
+        self.sourcemodel.sort(column,self.sortorderlist[column])
+    
             
         
 
