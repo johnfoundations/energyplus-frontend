@@ -36,7 +36,7 @@ class FieldAbstract :
         self.notes = notes
         
 
-    def createEditor(self,parent):
+    def createEditor(self,parent,index):
         pass
 
     def getEditorValue(self,editor) :
@@ -79,17 +79,17 @@ class FieldReal(FieldAbstract) :
     def __init__(self,parent,fieldname,default,notes,minv,maxv,mingtv,maxltv) :
         FieldAbstract.__init__(self,parent,fieldname,default,notes)
         if minv == '':
-            self.minv = -2000
+            self.minv = -20000
         else:
             self.minv = minv
         if maxv == '':
-            self.maxv = 2000
+            self.maxv = 20000
         else:
             self.maxv = maxv
         self.mingtv = mingtv
         self.maxltv = maxltv
         
-    def createEditor(self,parent)  :
+    def createEditor(self,parent,index)  :
         self.fieldeditor = QtGui.QDoubleSpinBox(parent)
         if self.minv:
             self.fieldeditor.setMinimum(self.minv)
@@ -160,7 +160,7 @@ class FieldRealAutocalculate(FieldReal) :
         else:
             return FieldReal.Validate(self,val)
 
-    def createEditor(self,parent)  :
+    def createEditor(self,parent,index)  :
         self.fieldeditor = GAutoCalcRealWidget(parent)
         if self.minv:
             self.fieldeditor.setMinimum(self.minv)
@@ -183,17 +183,17 @@ class FieldInt(FieldAbstract) :
     def __init__(self,parent,fieldname,default,notes,minv,maxv,mingtv,maxltv) :
         FieldAbstract.__init__(self,parent,fieldname,default,notes)
         if minv == '':
-            self.minv = -2000
+            self.minv = -20000
         else:
             self.minv = minv
         if maxv == '':
-            self.maxv = 2000
+            self.maxv = 20000
         else:
             self.maxv = maxv
         self.mingtv = mingtv
         self.maxltv = maxltv
 
-    def createEditor(self,parent) :
+    def createEditor(self,parent,index) :
         self.fieldeditor = QtGui.QSpinBox(parent)
         if self.minv:
             self.fieldeditor.setMinimum(self.minv)
@@ -261,7 +261,7 @@ class FieldText(FieldAbstract) :
         FieldAbstract.__init__(self,parent,fieldname,default,notes)
         self.value = default
 
-    def createEditor(self,parent) :
+    def createEditor(self,parent,index) :
         self.fieldeditor = QtGui.QLineEdit(parent)
         if self.default:
             self.fieldeditor.setText(self.default)
@@ -276,7 +276,7 @@ class FieldText(FieldAbstract) :
             
 class FieldTime(FieldText):
 
-    def createEditor(self,parent):
+    def createEditor(self,parent,index):
         self.fieldeditor = QtGui.QLineEdit(parent)
         rx = QtCore.QRegExp('[0-9]{2}:[0-6]{2}')
         self.fieldeditor.setValidator(QtGui.QRegExpValidator(rx,self.fieldeditor))
@@ -293,7 +293,7 @@ class FieldChoice(FieldAbstract)    :
         for lc in self.choices:
             self.lchoices.append(lc.lower())
 
-    def createEditor(self,parent)  :
+    def createEditor(self,parent,index)  :
         self.fieldeditor = QtGui.QComboBox(parent)
         self.fieldeditor.addItems(self.choices)
         if self.default in self.choices:
@@ -329,13 +329,13 @@ class FieldObjectlist(FieldAbstract):
         FieldAbstract.__init__(self,parent,fieldname,default,notes)
         self.objectlistname = objectlistname
 
-    def createEditor(self,parent) :
+    def createEditor(self,parent,index) :
         self.fieldeditor = QtGui.QComboBox(parent)
         try:
-            self.choices = idfglobals.getDepends(self.objectlistname)
+            self.choices = index.model().parentmodel.idfsource.getDepends(self.objectlistname)
         except:
             self.choices = []
-        self.fieldeditor.addItem("Null")
+        self.fieldeditor.addItem("None")
         self.fieldeditor.addItems(self.choices)
         return self.fieldeditor
 
@@ -394,7 +394,7 @@ class FieldThrough(FieldAbstract):
     def __init__(self,parent,fieldname,default,notes):
         FieldAbstract.__init__(self,parent,fieldname,default,notes)
 
-    def createEditor(self,parent):
+    def createEditor(self,parent,index):
         self.fieldeditor = QtGui.QLineEdit(parent)
         return self.fieldeditor
 

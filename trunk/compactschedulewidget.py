@@ -240,7 +240,6 @@ class ForSection():
         fori = False
         untilar = []
         for l in v:
-            print l
             if not l.find('For:') == -1 :
                 #pdb.set_trace()
                 fori = True

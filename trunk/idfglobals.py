@@ -26,7 +26,7 @@ import re
 activeobjects = []
 objectlist = []
 objectdict = dict()  #populated by iddclass.py
-referencedict = dict()  #populated by idfdata.py
+#referencedict = dict()  #populated by idfdata.py
 
 #model role definitions
 
