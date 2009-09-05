@@ -91,7 +91,6 @@ class loadClassDialog(QtGui.QDialog):
 
     def moveToSource(self):
         indexlist = self.destclasslist.selectedIndexes()
-        print len(indexlist)
         for i in indexlist:
             if i.column() == 0:
                 self.sourceidf.insertRecord(i.internalPointer().data)

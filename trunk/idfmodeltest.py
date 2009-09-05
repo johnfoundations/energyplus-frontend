@@ -113,6 +113,11 @@ class idfmodeltest(QtGui.QMainWindow):
         self.loadobj.setStatusTip('Load Object from IDF File')
         self.connect(self.loadobj, QtCore.SIGNAL('triggered()'), self.loadobject)
 
+        self.delobj = QtGui.QAction('Delete Selected Object',self)
+        self.delobj.setShortcut('Ctrl+D')
+        self.delobj.setStatusTip('Delete Selected Object')
+        self.connect(self.delobj, QtCore.SIGNAL('triggered()'), self.delobject)
+
 
     def createMenus(self):
         menubar = self.menuBar()
@@ -123,6 +128,7 @@ class idfmodeltest(QtGui.QMainWindow):
         objm = menubar.addMenu('&Objects')
         objm.addAction(self.newobj)
         objm.addAction(self.loadobj)
+        objm.addAction(self.delobj)
 
 
     def sizeTree(self):
@@ -188,6 +194,19 @@ class idfmodeltest(QtGui.QMainWindow):
         self.idfmodel = idfabstractmodel.idfClassModel(idf)
         self.classview.setModel(self.idfmodel)
 
+    def delobject(self):
+        indexlist = self.view.selectedIndexes()
+        if len(indexlist) == 0:
+            return
+        msgBox = QtGui.QMessageBox()
+        msgBox.setText("Do you want to delete the selected objects?")
+        msgBox.setStandardButtons(QtGui.QMessageBox.Yes | QtGui.QMessageBox.Cancel)
+        msgBox.setDefaultButton(QtGui.QMessageBox.Cancel)
+        if msgBox.exec_():
+            for i in indexlist:
+                if i.column() == 0:
+                    self.idf.deleteRecord(i.internalPointer().data)
+            self.model.reset()
 
 
 if __name__ == "__main__":
