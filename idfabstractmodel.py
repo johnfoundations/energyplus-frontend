@@ -100,6 +100,7 @@ class idfClassModel(QtCore.QAbstractTableModel):
     def __init__(self,idfclass,parent = None):
         QtCore.QAbstractItemModel.__init__(self, parent)
         self.idfclass = idfclass
+        self.parentmodel = parent
 
         
     def columnCount (self, parent):

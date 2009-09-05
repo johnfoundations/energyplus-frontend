@@ -186,13 +186,14 @@ class idfmodeltest(QtGui.QMainWindow):
 
 
 
-    def classActivated(self,model):
+    def classActivated(self,index):
         
-        idf = model.internalPointer().data
+        idf = index.internalPointer().data
         text = idf.getClassnameIDD() + ' : '+ idf.getName()
         self.classviewname.setText(text)
-        self.idfmodel = idfabstractmodel.idfClassModel(idf)
+        self.idfmodel = idfabstractmodel.idfClassModel(idf,index.model())
         self.classview.setModel(self.idfmodel)
+
 
     def delobject(self):
         indexlist = self.view.selectedIndexes()

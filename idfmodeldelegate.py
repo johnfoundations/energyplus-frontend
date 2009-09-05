@@ -30,7 +30,7 @@ class idfClassDelegate(QtGui.QItemDelegate):
         QtGui.QItemDelegate.__init__(self,parent)
 
     def createEditor(self,parent,option,index):
-        return index.internalPointer().fieldlist[index.row()].createEditor(parent)
+        return index.internalPointer().fieldlist[index.row()].createEditor(parent,index)
 
     def setEditorData(self,editor,index):
         data = index.data(QtCore.Qt.EditRole)

@@ -63,6 +63,13 @@ class idfData(QtCore.QObject):
         self.idftree = []
         self.referencedict = dict()
 
+    def getDepends(self,name):
+        dlist = []
+        for o in self.referencedict[name]:
+            dlist.append(o.getName())
+        return dlist
+
+
     def next(self):
         if self.current == len(self.idflist):
             print 'next false'
@@ -192,9 +199,7 @@ class idfData(QtCore.QObject):
                     l.append(i)
                     self.referencedict[ref] = l
                 else:
-                    self.referencedict[ref].append(i)
-
-        idfglobals.referencedict = self.referencedict
+                    self.referencedict[ref].append(i)    
 
 
         
