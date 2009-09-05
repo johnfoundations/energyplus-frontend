@@ -83,7 +83,7 @@ class FieldReal(FieldAbstract) :
         else:
             self.minv = minv
         if maxv == '':
-            self.maxv = 20000
+            self.maxv = 1000000000000
         else:
             self.maxv = maxv
         self.mingtv = mingtv
@@ -144,9 +144,11 @@ class FieldReal(FieldAbstract) :
             
         if localmax:
             if rval > localmax:
+                print rval,localmax
                 return False
         if localmin:
             if rval < localmin:
+                print rval,localmin
                 return False
         return True
             
@@ -187,7 +189,7 @@ class FieldInt(FieldAbstract) :
         else:
             self.minv = minv
         if maxv == '':
-            self.maxv = 20000
+            self.maxv = 100000000
         else:
             self.maxv = maxv
         self.mingtv = mingtv

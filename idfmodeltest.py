@@ -45,6 +45,7 @@ class idfmodeltest(QtGui.QMainWindow):
         self.view = QtGui.QTreeView()
         self.view.setModel(self.model)
         self.view.sizePolicy().setHorizontalPolicy(QtGui.QSizePolicy.Fixed)
+        self.view.header().setClickable(True)
         
         splitter = QtGui.QSplitter()
         widget = QtGui.QWidget()
@@ -79,11 +80,12 @@ class idfmodeltest(QtGui.QMainWindow):
         self.connect(self.view, QtCore.SIGNAL('activated (QModelIndex)'),self.classActivated)
         
         self.connect(self.querybutton, QtCore.SIGNAL('clicked ( bool)'),self.querybuttonclicked)
+        self.connect(self.view.header(),QtCore.SIGNAL('sectionClicked ( int )'),self.viewlistsort)
         self.createActions()
         self.createMenus()
         self.setCentralWidget(splitter)
         self.idfmodel = None
-
+        self.sortorderlist = [-1,-1]
 
         
 
@@ -208,6 +210,15 @@ class idfmodeltest(QtGui.QMainWindow):
                 if i.column() == 0:
                     self.idf.deleteRecord(i.internalPointer().data)
             self.model.reset()
+
+    def viewlistsort(self,column):
+        if self.sortorderlist[column] != 0:
+            self.sortorderlist[column] = 0
+        else:
+            self.sortorderlist[column] = 1
+
+        self.model.sort(column,self.sortorderlist[column])
+    
 
 
 if __name__ == "__main__":

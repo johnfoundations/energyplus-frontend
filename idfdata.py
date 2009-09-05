@@ -30,6 +30,12 @@ class treeItem:
         self.data = data
 
 
+    def __cmp__(self,other):
+        if self.parentItem.cmpcolumn:
+            return cmp(self.data.getName(),other.data.getName())
+        else:
+            return cmp(self.data.getClassnameIDD(),other.data.getClassnameIDD())
+
     def appendChild(self, child):
         self.childItems.append(child)
 
@@ -62,6 +68,7 @@ class idfData(QtCore.QObject):
         self.current = 0        #pointer to current class, used in iterating through list
         self.idftree = []
         self.referencedict = dict()
+        self.cmpcolumn = 0
 
     def getDepends(self,name):
         dlist = []
@@ -218,7 +225,7 @@ class idfData(QtCore.QObject):
     def populateTree(self,olist):
         self.idftree = []
         for idf in olist:
-            t = treeItem(0,idf)
+            t = treeItem(self,idf)
             for field in idf.fieldlist:
                 t.appendChild(treeItem(t,idf))
             self.idftree.append(t)
@@ -254,7 +261,14 @@ class idfData(QtCore.QObject):
 
         return cl
                 
-                
+
+    def sortTree(self,column,direction):
+        self.cmpcolumn = column
+      
+        if direction == QtCore.Qt.AscendingOrder:
+            self.idftree.sort()
+        else:
+            self.idftree.reverse()
         
 
     def writeIdf(self,filename):
