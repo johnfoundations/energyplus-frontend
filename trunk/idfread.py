@@ -34,7 +34,7 @@ class idfRead :
         self.errormsg = ''
 
         self.filename = filename
-        self.rawclasses = dict()
+        self.rawclasses = []
         
         try:
             self.fh = open(filename, 'r')
@@ -110,31 +110,27 @@ class idfRead :
             itemlist.append(items[0])
 #        pdb.set_trace()
         #evalstr =       'iddclass.'+ re.sub(r'[:-]','_',classname) +'()'
-        self.rawclasses[classname] = itemlist[:]
+        self.rawclasses.append(itemlist)
 
     def createInstances(self):
         res = True
-        if 'Version' in self.rawclasses:
-            l = self.rawclasses['Version']
-            if l[1] != '3.1.0':
+        for params in self.rawclasses:
+            if params[0] == 'Version' and params[1] != '3.1.0':
                 print 'wrong version number'
                 self.errormsg = 'Version ' + l[1] + ' Looking for 3.1.0'
                 return False
-            else:
-                print l[0], l[1]
-
-        for classname,params in self.rawclasses.iteritems():
-            evalstr = 'iddclass.'+ re.sub(r'[:-]','_',classname) +'()'
+            
+            evalstr = 'iddclass.'+ re.sub(r'[:-]','_',params[0]) +'()'
             try:
                 classinstance = eval (evalstr)
             except:
                 print 'Error creating class. Possible version mismatch'
-                print classname
-                self.errormsg = self.errormsg + classname
+                print params[0]
+                self.errormsg = self.errormsg + params[0]
                 res = False
                 continue
 
-            classinstance.setData(itemlist)
+            classinstance.setData(params)
             self.active.append(classinstance)
 
         return res

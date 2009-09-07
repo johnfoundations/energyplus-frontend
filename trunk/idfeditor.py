@@ -86,6 +86,7 @@ class idfmodeltest(QtGui.QMainWindow):
         self.setCentralWidget(splitter)
         self.idfmodel = None
         self.sortorderlist = [-1,-1]
+        self.filename = ''
 
         
 
@@ -95,10 +96,15 @@ class idfmodeltest(QtGui.QMainWindow):
         self.exit.setStatusTip('Exit application')
         self.connect(self.exit, QtCore.SIGNAL('triggered()'), QtCore.SLOT('close()'))
         
-        self.writefile = QtGui.QAction('Write File', self)
-        self.writefile.setShortcut('Ctrl+W')
-        self.writefile.setStatusTip('Write an IDF File')
-        self.connect(self.writefile, QtCore.SIGNAL('triggered()'), self.writeFile)
+        self.savefile = QtGui.QAction('Save', self)
+        self.savefile.setShortcut('Ctrl+S')
+        self.savefile.setStatusTip('Write IDF File to Disk')
+        self.connect(self.savefile, QtCore.SIGNAL('triggered()'), self.saveFile)
+
+        self.saveasfile = QtGui.QAction('Save As', self)
+        self.saveasfile.setShortcut('Ctrl+A')
+        self.saveasfile.setStatusTip('Prompt to Write IDF File to Disk')
+        self.connect(self.saveasfile, QtCore.SIGNAL('triggered()'), self.saveAsFile)
 
         self.openfile = QtGui.QAction('Open File', self)
         self.openfile.setShortcut('Ctrl+O')
@@ -125,7 +131,8 @@ class idfmodeltest(QtGui.QMainWindow):
         menubar = self.menuBar()
         filem = menubar.addMenu('&File')
         filem.addAction(self.openfile)
-        filem.addAction(self.writefile)
+        filem.addAction(self.savefile)
+        filem.addAction(self.saveasfile)
         filem.addAction(self.exit)
         objm = menubar.addMenu('&Objects')
         objm.addAction(self.newobj)
@@ -145,8 +152,21 @@ class idfmodeltest(QtGui.QMainWindow):
         self.model.query(self.querylist.currentIndex(),self.queryline.text())
 
 
-    def writeFile(self):
-        destfile = QtGui.QFileDialog.getSaveFileName(self,"Save To", ".", "*.idf");
+    def saveFile(self):
+        if self.filename == '':
+            self.filename = QtGui.QFileDialog.getSaveFileName(self,"Save To", ".", "*.idf");
+
+        if self.filename != '':
+            self.writeFile(self.filename)
+            
+
+    def saveAsFile(self):
+        self.filename = QtGui.QFileDialog.getSaveFileName(self,"Save To", ".", "*.idf");
+        if self.filename != '':
+            self.writeFile(self.filename)
+        
+
+    def writeFile(self,destfile):
         try:
             fh = open(destfile,'w')
         except:
