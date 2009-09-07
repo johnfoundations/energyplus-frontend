@@ -91,6 +91,7 @@ class FieldReal(FieldAbstract) :
         
     def createEditor(self,parent,index)  :
         self.fieldeditor = QtGui.QDoubleSpinBox(parent)
+        self.fieldeditor.setDecimals(4)
         if self.minv:
             self.fieldeditor.setMinimum(self.minv)
         elif self.mingtv:
