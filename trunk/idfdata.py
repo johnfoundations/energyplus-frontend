@@ -196,6 +196,7 @@ class idfData(QtCore.QObject):
         self.populateTree(querylist)
 
     def buildDependsTree(self):
+        self.referencedict = dict()
         for i in self.idflist:
             #first get a list of depend from object
             rl = i.getReference()
@@ -206,7 +207,8 @@ class idfData(QtCore.QObject):
                     l.append(i)
                     self.referencedict[ref] = l
                 else:
-                    self.referencedict[ref].append(i)    
+                    if i not in self.referencedict[ref]:
+                        self.referencedict[ref].append(i)
 
 
         

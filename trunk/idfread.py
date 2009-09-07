@@ -115,10 +115,11 @@ class idfRead :
     def createInstances(self):
         res = True
         for params in self.rawclasses:
-            if params[0] == 'Version' and params[1] != '3.1.0':
-                print 'wrong version number'
-                self.errormsg = 'Version ' + l[1] + ' Looking for 3.1.0'
-                return False
+            if params[0] == 'Version':
+                if params[1].find('3.1') == -1:
+                    print 'wrong version number'
+                    self.errormsg = 'Version ' + params[1] + ' Looking for 3.1.0'
+                    return False
             
             evalstr = 'iddclass.'+ re.sub(r'[:-]','_',params[0]) +'()'
             try:

@@ -91,37 +91,37 @@ class idfmodeltest(QtGui.QMainWindow):
         
 
     def createActions(self):
-        self.exit = QtGui.QAction('Exit', self)
+        self.exit = QtGui.QAction('E&xit', self)
         self.exit.setShortcut('Ctrl+Q')
         self.exit.setStatusTip('Exit application')
         self.connect(self.exit, QtCore.SIGNAL('triggered()'), QtCore.SLOT('close()'))
         
-        self.savefile = QtGui.QAction('Save', self)
+        self.savefile = QtGui.QAction('&Save', self)
         self.savefile.setShortcut('Ctrl+S')
         self.savefile.setStatusTip('Write IDF File to Disk')
         self.connect(self.savefile, QtCore.SIGNAL('triggered()'), self.saveFile)
 
-        self.saveasfile = QtGui.QAction('Save As', self)
+        self.saveasfile = QtGui.QAction('Save &As', self)
         self.saveasfile.setShortcut('Ctrl+A')
         self.saveasfile.setStatusTip('Prompt to Write IDF File to Disk')
         self.connect(self.saveasfile, QtCore.SIGNAL('triggered()'), self.saveAsFile)
 
-        self.openfile = QtGui.QAction('Open File', self)
+        self.openfile = QtGui.QAction('&Open File', self)
         self.openfile.setShortcut('Ctrl+O')
         self.openfile.setStatusTip('Open an IDF File')
         self.connect(self.openfile, QtCore.SIGNAL('triggered()'), self.openFile)
 
-        self.newobj = QtGui.QAction('New Object',self)
+        self.newobj = QtGui.QAction('&New Object',self)
         self.newobj.setShortcut('Ctrl+N')
         self.newobj.setStatusTip('Create New Object')
         self.connect(self.newobj, QtCore.SIGNAL('triggered()'), self.newobject)
 
-        self.loadobj = QtGui.QAction('Load Objects',self)
+        self.loadobj = QtGui.QAction('&Load Objects',self)
         self.loadobj.setShortcut('Ctrl+L')
         self.loadobj.setStatusTip('Load Object from IDF File')
         self.connect(self.loadobj, QtCore.SIGNAL('triggered()'), self.loadobject)
 
-        self.delobj = QtGui.QAction('Delete Selected Object',self)
+        self.delobj = QtGui.QAction('&Delete Selected Object',self)
         self.delobj.setShortcut('Ctrl+D')
         self.delobj.setStatusTip('Delete Selected Object')
         self.connect(self.delobj, QtCore.SIGNAL('triggered()'), self.delobject)
@@ -193,6 +193,7 @@ class idfmodeltest(QtGui.QMainWindow):
                 classinstance = eval (evalstr)
                 self.idf.insertRecord(classinstance)
 
+            self.idf.buildDependsTree()
             self.model.reset()
             self.sizeTree()
                 
@@ -203,6 +204,8 @@ class idfmodeltest(QtGui.QMainWindow):
         if result:
             for c in loaddialog.destidf.idflist:
                 self.idf.insertRecord(c)
+
+            self.idf.buildDependsTree()
             self.model.reset()
             self.sizeTree()
 
