@@ -212,6 +212,14 @@ class idfData(QtCore.QObject):
         
     def openIdf(self,filename):
         idf = idfread.idfRead(filename)
+        if idf.success == False:
+            msgBox = QtGui.QMessageBox()
+            msgBox.setText("An Error Occurred when Loading the IDF file. Ok to continue with created objects")
+            msgBox.setInformativeText(idf.errormsg)
+            msgBox.setStandardButtons(QtGui.QMessageBox.Ok | QtGui.QMessageBox.Cancel)
+            msgBox.setDefaultButton(QtGui.QMessageBox.Cancel)
+            if msgBox.exec_() == 1:
+                return
         if len(self.idflist) > 0:
             self.idflist = idf.getActiveList()
         else:
