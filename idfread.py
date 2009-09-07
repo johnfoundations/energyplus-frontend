@@ -29,16 +29,22 @@ import pdb
 class idfRead :
     def __init__(self,filename) :
         self.active = []
-        self.activetree = []
         self.comment = ''
+        self.success = False
+        self.errormsg = ''
 
         self.filename = filename
+        self.rawclasses = dict()
         
         try:
             self.fh = open(filename, 'r')
         except:
             return
         self.parseFile()
+        if self.createInstances():
+            self.success = True
+        else:
+            self.success = False
 
 
     def getActiveList(self):
@@ -82,6 +88,8 @@ class idfRead :
                 self.parseBlock(classblock)
                 classblock = ''
 
+        self.success = True
+
     def parseBlock(self,textblock) :
         
         blocklines = textblock.split(',')
@@ -101,22 +109,42 @@ class idfRead :
 
             itemlist.append(items[0])
 #        pdb.set_trace()
-        evalstr =       'iddclass.'+ re.sub(r'[:-]','_',classname) +'()'
-#        print evalstr
-        classinstance = eval (evalstr)
-#        if classname == 'BuildingSurface:Detailed':
-#            print itemlist
-#            print textblock
-#            print blocklines
-        classinstance.setData(itemlist)
-        self.active.append(classinstance)
+        #evalstr =       'iddclass.'+ re.sub(r'[:-]','_',classname) +'()'
+        self.rawclasses[classname] = itemlist[:]
+
+    def createInstances(self):
+        res = True
+        if 'Version' in self.rawclasses:
+            l = self.rawclasses['Version']
+            if l[1] != '3.1.0':
+                print 'wrong version number'
+                self.errormsg = 'Version ' + l[1] + ' Looking for 3.1.0'
+                return False
+            else:
+                print l[0], l[1]
+
+        for classname,params in self.rawclasses.iteritems():
+            evalstr = 'iddclass.'+ re.sub(r'[:-]','_',classname) +'()'
+            try:
+                classinstance = eval (evalstr)
+            except:
+                print 'Error creating class. Possible version mismatch'
+                print classname
+                self.errormsg = self.errormsg + classname
+                res = False
+                continue
+
+            classinstance.setData(itemlist)
+            self.active.append(classinstance)
+
+        return res
         
 if __name__ == "__main__":
     import sys
     try:
         fname = sys.argv[1]
     except :
-        fname = 'schedulecompact.idf'
+        fname = 'Singlezonetemplate.idf'
     c = idfRead(fname)
     cl = c.active[0]
     for f in cl.fieldlist:
