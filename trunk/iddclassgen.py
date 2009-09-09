@@ -52,6 +52,11 @@ class IddField :
 
     def createWidgetInitLine(self):
         self.fieldeditor = ''
+        if 'units' in self.Fieldattr:
+            unitstr = 'Units: ' + self.Fieldattr['units']
+        else:
+            unitstr = ''
+            
         if self.Fieldattr['type'] == 'alpha':
             #(self,parent,fieldname,default,notes):
             if 'units' in self.Fieldattr:
@@ -72,6 +77,7 @@ class IddField :
                 for n in self.Fieldattr['notes'] :
                     n = re.sub(r'"','*',n)
                     note = note + '"' + n + '",'
+                note = note + '"' + unitstr + '",'
                 self.fieldeditor = self.fieldeditor + note + '))'
             else:
                 self.fieldeditor = self.fieldeditor + '"")'
@@ -103,6 +109,7 @@ class IddField :
                 for n in self.Fieldattr['notes'] :
                     n = re.sub(r'"','*',n)
                     note = note + '"' + n + '",'
+                note = note + '"' + unitstr + '",'
                 self.fieldeditor = self.fieldeditor + note + '),'
             else:
                 self.fieldeditor = self.fieldeditor + '"",'
@@ -141,6 +148,7 @@ class IddField :
                 for n in self.Fieldattr['notes'] :
                     n = re.sub(r'"','*',n)
                     note = note + '"' + n + '",'
+                note = note + '"' + unitstr + '",'
                 self.fieldeditor = self.fieldeditor + note + '),'
             else:
                 self.fieldeditor = self.fieldeditor + '"",'
@@ -187,6 +195,7 @@ class IddField :
                 for n in self.Fieldattr['notes'] :
                     n = re.sub(r'"','*',n)
                     note = note + '"' + n + '",'
+                note = note + '"' + unitstr + '",'
                 self.fieldeditor = self.fieldeditor + note + '),'
             else:
                 self.fieldeditor = self.fieldeditor + '"",'
@@ -215,6 +224,7 @@ class IddField :
                 for n in self.Fieldattr['notes'] :
                     n = re.sub(r'"','*',n)
                     note = note + '"' + n + '",'
+                note = note + '"' + unitstr + '",'
                 self.fieldeditor = self.fieldeditor + note + '),'
             else:
                 self.fieldeditor = self.fieldeditor + '"",'
@@ -239,6 +249,7 @@ class IddField :
                 for n in self.Fieldattr['notes'] :
                     n = re.sub(r'"','*',n)
                     note = note + '"' + n + '",'
+                note = note + '"' + unitstr + '",'
                 self.fieldeditor = self.fieldeditor + note + '))'
             else:
                 self.fieldeditor = self.fieldeditor + '"")'
