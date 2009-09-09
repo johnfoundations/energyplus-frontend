@@ -21,7 +21,9 @@
 
 from PyQt4 import QtGui, QtCore
 import idfread
-import idfglobals 
+import idfglobals
+import re
+import iddclass
 
 class treeItem:
     def __init__(self, parent,data):
@@ -129,6 +131,11 @@ class idfData(QtCore.QObject):
     def insertRecord(self,instance) :
         self.idflist.append(instance)
         self.populateTree(self.idflist)
+
+    def insertRecordByClassname(self,classname):
+        evalstr = 'iddclass.'+ re.sub(r'[:-]','_',str(classname)) +'()'
+        classinstance = eval (evalstr)
+        self.insertRecord(classinstance)
 
     def deleteRecord(self,instance) :
         try:
