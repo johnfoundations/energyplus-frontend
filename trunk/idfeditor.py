@@ -21,9 +21,7 @@
 
 from PyQt4 import QtCore, QtGui
 import idfglobals
-import iddclass
 import sys
-import re
 import idfdata
 import idfabstractmodel
 import idfmodeldelegate
@@ -189,9 +187,7 @@ class idfmodeltest(QtGui.QMainWindow):
         if result:
             newclasses = newdialog.selected
             for n  in newclasses:
-                evalstr = 'iddclass.'+ re.sub(r'[:-]','_',str(n)) +'()'
-                classinstance = eval (evalstr)
-                self.idf.insertRecord(classinstance)
+                self.idf.insertRecordByClassname(n)
 
             self.idf.buildDependsTree()
             self.model.reset()
