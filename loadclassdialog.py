@@ -120,6 +120,8 @@ class loadClassDialog(QtGui.QDialog):
 
     def loadFile(self):
         self.fileName = QtGui.QFileDialog.getOpenFileName(self,"Open IDF File", ".", "*.idf *.IDF");
+        if self.fileName == '':
+            return
         self.sourceidf.openIdf(self.fileName)
         self.sourcemodel.reset()
 

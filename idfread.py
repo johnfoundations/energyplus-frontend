@@ -127,7 +127,7 @@ class idfRead :
             except:
                 print 'Error creating class. Possible version mismatch'
                 print params[0]
-                self.errormsg = self.errormsg + params[0]
+                self.errormsg = self.errormsg + params[0] + '\n'
                 res = False
                 continue
 
