@@ -74,17 +74,17 @@ class idfAbstractModel(QtCore.QAbstractItemModel):
     def rowCount (self,parent ):
         if parent.isValid():
             return 0
-            return parent.internalPointer().childCount()
+#            return parent.internalPointer().childCount()
         else:
             #not valid model.??
             return self.idfsource.size()
             
     def index(self, row, column, parent):
         
-        if parent.isValid():
-            dp = parent.internalPointer().child(row)
-        else:
-            dp = self.idfsource.recordAt(row,column)
+   #     if parent.isValid():
+   #         dp = parent.internalPointer().child(row)
+   #     else:
+        dp = self.idfsource.recordAt(row,0)
 
         return self.createIndex(row, column, dp)
 

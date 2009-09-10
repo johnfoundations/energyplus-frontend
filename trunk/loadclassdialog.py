@@ -104,17 +104,20 @@ class loadClassDialog(QtGui.QDialog):
 
     def moveToDest(self):
         indexlist = self.sourceclasslist.selectedIndexes()
-        print len(indexlist)
+        deletelist = []
         for i in indexlist:
             if i.column() == 0:
                 instance = i.internalPointer().data
                 self.destidf.insertRecord(instance)
-                self.sourceidf.deleteRecord(instance)
+                deletelist.append(instance)
                 cl = self.sourceidf.getDependancies(instance)
                 for c in cl:
                     self.destidf.insertRecord(c)
                     self.sourceidf.deleteRecord(c)
-                    
+
+        for c in deletelist:
+            self.sourceidf.deleteRecord(c)
+            
         self.destmodel.reset()
         self.sourcemodel.reset()
 
