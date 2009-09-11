@@ -71,6 +71,7 @@ class idfData(QtCore.QObject):
         self.idftree = []
         self.referencedict = dict()
         self.cmpcolumn = 0
+        self.comments = ''
 
     def getDepends(self,name):
         dlist = []
@@ -234,6 +235,7 @@ class idfData(QtCore.QObject):
         else:
             self.idflist = self.idflist + idf.getActiveList()
 
+        self.comments = self.comments + '\n' + idf.comment
         self.idfreadlist.append(idf)
         self.populateTree(self.idflist)
         self.buildDependsTree()
@@ -288,5 +290,19 @@ class idfData(QtCore.QObject):
             self.idftree.reverse()
         
 
-    def writeIdf(self,filename):
-        pass
+    def writeIdf(self,destfile):
+        try:
+            fh = open(destfile,'w')
+        except:
+            return
+
+        commentlines = self.comments.splitlines()
+        for l in commentlines:
+            fh.write('! ' + l + '\n')
+
+        fh.write('\n\n')
+#        print self.idflist
+        for rec in self.idflist:
+            fh.write(rec.__str__()+"\n")
+        fh.close()
+        

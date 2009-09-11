@@ -72,7 +72,7 @@ class idfRead :
             
             res = re.match(r"^!\s(.*)",sline)
             if res and start:
-                self.comment = self.comment + res.group(1)
+                self.comment = self.comment + res.group(1) + '\n'
                 continue
             #pdb.set_trace()
             dat = line.split('!')
@@ -143,11 +143,14 @@ if __name__ == "__main__":
     except :
         fname = 'Singlezonetemplate.idf'
     c = idfRead(fname)
-    cl = c.active[0]
-    for f in cl.fieldlist:
-        print f.fieldname
-        print f.value
+    print c.comment
 
-    print cl        
+    
+#    cl = c.active[0]
+#    for f in cl.fieldlist:
+#        print f.fieldname
+#        print f.value#
+
+#    print cl        
     
     

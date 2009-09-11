@@ -112,8 +112,9 @@ class loadClassDialog(QtGui.QDialog):
                 deletelist.append(instance)
                 cl = self.sourceidf.getDependancies(instance)
                 for c in cl:
-                    self.destidf.insertRecord(c)
-                    self.sourceidf.deleteRecord(c)
+                    if not self.destidf.contains(c):
+                        self.destidf.insertRecord(c)
+                        deletelist.append(c)
 
         for c in deletelist:
             self.sourceidf.deleteRecord(c)
