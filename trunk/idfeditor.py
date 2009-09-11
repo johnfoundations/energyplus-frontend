@@ -31,6 +31,21 @@ import loadclassdialog
 class idfmodeltest(QtGui.QMainWindow):
     def __init__(self):
         QtGui.QMainWindow.__init__(self)
+        self.tabs = QtGui.QTabWidget()
+        self.idfmodel = None
+        self.sortorderlist = [-1,-1]
+        self.filename = ''
+        
+        self.createActions()
+        self.createMenus()
+        
+        self.tabs.addTab(self.headerPage(),'IDF File Description')
+        self.tabs.addTab(self.classPage(), 'IDF Data')
+        self.setCentralWidget(self.tabs)
+
+
+
+    def classPage(self):
         self.idf = idfdata.idfData()
         self.model = idfabstractmodel.idfAbstractModel(self.idf)
 
@@ -79,13 +94,16 @@ class idfmodeltest(QtGui.QMainWindow):
         
         self.connect(self.querybutton, QtCore.SIGNAL('clicked ( bool)'),self.querybuttonclicked)
         self.connect(self.view.header(),QtCore.SIGNAL('sectionClicked ( int )'),self.viewlistsort)
-        self.createActions()
-        self.createMenus()
-        self.setCentralWidget(splitter)
-        self.idfmodel = None
-        self.sortorderlist = [-1,-1]
-        self.filename = ''
 
+        return splitter
+        
+
+    def headerPage(self):
+        widget = QtGui.QWidget()
+        vl = QtGui.QVBoxLayout(widget)
+        self.commentedit = QtGui.QTextEdit()
+        vl.addWidget(self.commentedit)
+        return widget
         
 
     def createActions(self):
@@ -165,19 +183,14 @@ class idfmodeltest(QtGui.QMainWindow):
         
 
     def writeFile(self,destfile):
-        try:
-            fh = open(destfile,'w')
-        except:
-            return
-        for rec in self.idf.idflist:
-            fh.write(rec.__str__()+"\n")
-        fh.close()
-        
+        self.idf.comments = str(self.commentedit.toPlainText())
+        self.idf.writeIdf(destfile)
 
 
     def openFile(self):
         self.fileName = QtGui.QFileDialog.getOpenFileName(self,"Open IDF File", ".", "*.idf *.IDF");
         self.idf.openIdf(self.fileName)
+        self.commentedit.setText(self.idf.comments)
         self.model.reset()
         self.sizeTree()
 

@@ -381,7 +381,7 @@ class ObjectCompactSchedule(ObjectAbstract) :
             lines.append('    %s, ! %s' % (self.fieldlist[i].value, self.fieldlist[i].fieldname))
             i = i+1
 
-
+        lines[-1] = lines[-1].replace(',', ';',1)
         return '\n'.join(lines) + '\n'
             
      
