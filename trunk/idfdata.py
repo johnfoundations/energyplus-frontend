@@ -153,55 +153,60 @@ class idfData(QtCore.QObject):
             return self.idflist[row]
         except:
             return None
+
+    def query(self,flag,data) :
+        qlist = self.queryList(flag,data,self.idflist)
+        self.populateTree(qlist)
         
-    def query(self,flag,data):
+    def queryList(self,flag,data,ilist):
         #flags in idfglobals
         querylist = []
 
         if flag == idfglobals.IdfQueryAll:
-            querylist = self.idflist
+            querylist = ilist
 
         
         if flag == idfglobals.IdfQueryClassname:
-            for idf in self.idflist:
+            for idf in ilist:
                 if idf.getClassnameIDD() == data:
                     querylist.append(idf)
 
         if flag == idfglobals.IdfQueryName:
-            for idf in self.idflist:
+            for idf in ilist:
                 if idf.getName() == data:
                     querylist.append(idf)
                     
         if flag == idfglobals.IdfQueryGroup:
-            for idf in self.idflist:
+            for idf in ilist:
                 if idf.getGroup() == data:
                     querylist.append(idf)
                     
         if flag == idfglobals.IdfQueryDependancy:
-            for idf in self.idflist:
+            for idf in ilist:
                 if data in idf.getDepends():
                     querylist.append(idf)
                     
         if flag == idfglobals.IdfQueryReference:
-            for idf in self.idflist:
+            for idf in ilist:
                 if data in idf.getReference():
                     querylist.append(idf)
                     
         if flag == idfglobals.IdfQueryFieldname:
-            for idf in self.idflist:
+            for idf in ilist:
                 for fld in idf.fieldlist:
                     if fld.getFieldName() == data:
                         querylist.append(idf)
                         break
                     
         if flag == idfglobals.IdfQueryFieldValue:
-            for idf in self.idflist:
+            for idf in ilist:
                 for fld in idf.fieldlist:
                     if fld.getValue() == data:
                         querylist.append(idf)
                         break
-                
-        self.populateTree(querylist)
+
+        return querylist
+        
 
     def buildDependsTree(self):
         self.referencedict = dict()
@@ -288,6 +293,49 @@ class idfData(QtCore.QObject):
             self.idftree.sort()
         else:
             self.idftree.reverse()
+
+    def createZoneTree(self,zoneclass,group):
+        zlist = self.queryList(idfglobals.IdfQueryDependancy,'ZoneNames',self.idflist)
+        zalllist = []
+        for z in zlist:
+            for f in z.fieldlist:
+                if f.getValue() == zoneclass.getName():
+                    zalllist.append(z)
+
+        #zclist contains all classes that have a object-list field with reference 'zonenames' that contains zoneclass.getName
+        #extract group
+        zgrouplist = self.queryList(idfglobals.IdfQueryGroup,group,zalllist)
+
+        zonetree = treeItem(None,zoneclass)
+        
+        sublist = []
+        for g in zgrouplist:
+            sublist = self.queryList(idfglobals.IdfQueryFieldValue,g.getName(),self.idflist)
+            citem = treeItem(zonetree,g)
+            for c in sublist:
+                citem.appendChild(treeItem(citem,c))
+            zonetree.appendChild(citem)
+
+        return zonetree
+
+
+
+            
+        
+        #BuildingSurface:Detailed
+        #Wall:Detailed
+        #RoofCeiling:Detailed
+        #Floor:Detailed
+        #Wall:Exterior
+        #Wall:Adiabatic
+        #Wall:Underground
+        #Wall:Interzone
+        #Roof
+        #Ceiling:Adiabatic
+        #Ceiling:Interzone
+        #Floor:GroundContact
+        #Floor:Adiabatic
+        #Floor:Interzone
         
 
     def writeIdf(self,destfile):

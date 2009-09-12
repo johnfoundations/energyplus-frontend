@@ -354,7 +354,7 @@ class FieldObjectlist(FieldAbstract):
     def getFieldDepends(self):
         return self.objectlistname
         
-        
+         
 #class FieldVertice(FieldAbstract):
     #def __init__(self,parent,fieldname,default,notes) :
         #FieldAbstract.__init__(self,parent,fieldname,default,notes)
