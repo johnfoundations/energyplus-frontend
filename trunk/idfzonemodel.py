@@ -35,15 +35,15 @@ class idfZoneModel(QtCore.QAbstractItemModel):
     def setZoneClass(self,zoneclass):
         self.zone = zoneclass
         if zoneclass == None:
-            self.zoneroot = treeItem(None,None)
+            self.zoneroot = idfdata.treeItem(None,None)
         else:
             self.zoneroot = self.idf.createZoneTree(zoneclass,zoneclass.getGroup())
         
     def columnCount (self, parent):
         if parent.isValid():
-            return parent.internalPointer().childCount()
+            return parent.internalPointer().data.fieldCount()
         else:
-            return self.zoneroot.childCount()
+            return 1
 
     def flags(self, index):
         if not index.isValid():
@@ -86,11 +86,11 @@ class idfZoneModel(QtCore.QAbstractItemModel):
             return 0
 
         if not parent.isValid():
-            parentItem = self.zoneroot
+            return self.zoneroot.childCount()
         else:
-            parentItem = parent.internalPointer()
+            return parent.internalPointer().data.fieldCount()
 
-        return parentItem.childCount()
+
 
 
 
@@ -101,10 +101,10 @@ class idfZoneModel(QtCore.QAbstractItemModel):
         idf = modelindex.internalPointer()
 
         if role == QtCore.Qt.ToolTipRole:
-            return QtCore.QVariant(idf.data.getNotes())
+            return QtCore.QVariant(idf.data.getMemo())
 
         if role == QtCore.Qt.DisplayRole:
-            return QtCore.QVariant(idf.data.getName())
+            return QtCore.QVariant(idf.data.fieldlist[modelindex.column()].getValue())
 
         return QtCore.QVariant()
 
@@ -130,7 +130,7 @@ class idfZoneModel(QtCore.QAbstractItemModel):
 class zonemodeltest(QtGui.QMainWindow):
     def __init__(self):
         QtGui.QMainWindow.__init__(self)
-        fname = 'Singlezonetemplate.idf'
+        fname = 'kiteresidencebak.idf'
 
         f = idfdata.idfData()
         f.openIdf(fname)

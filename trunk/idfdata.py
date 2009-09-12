@@ -32,11 +32,11 @@ class treeItem:
         self.data = data
 
 
-    def __cmp__(self,other):
-        if self.parentItem.cmpcolumn:
-            return cmp(self.data.getName(),other.data.getName())
-        else:
-            return cmp(self.data.getClassnameIDD(),other.data.getClassnameIDD())
+    #def __cmp__(self,other):
+        #if self.parentItem.cmpcolumn:
+            #return cmp(self.data.getName(),other.data.getName())
+        #else:
+            #return cmp(self.data.getClassnameIDD(),other.data.getClassnameIDD())
 
     def appendChild(self, child):
         self.childItems.append(child)
@@ -287,12 +287,16 @@ class idfData(QtCore.QObject):
                 
 
     def sortTree(self,column,direction):
-        self.cmpcolumn = column
-      
         if direction == QtCore.Qt.AscendingOrder:
-            self.idftree.sort()
+            if column == 1:
+                self.idftree.sort(cmp=lambda x,y:cmp(x.data.getName(),y.data.getName()))
+            else:
+                self.idftree.sort(cmp=lambda x,y:cmp(x.data.getClassnameIDD(),y.data.getClassnameIDD()))
         else:
-            self.idftree.reverse()
+            if column == 1:
+                self.idftree.reverse(cmp=lambda x,y:cmp(x.data.getName(),y.data.getName()))
+            else:
+                self.idftree.reverse(cmp=lambda x,y:cmp(x.data.getClassnameIDD(),y.data.getClassnameIDD()))
 
     def createZoneTree(self,zoneclass,group):
         zlist = self.queryList(idfglobals.IdfQueryDependancy,'ZoneNames',self.idflist)
@@ -301,19 +305,23 @@ class idfData(QtCore.QObject):
             for f in z.fieldlist:
                 if f.getValue() == zoneclass.getName():
                     zalllist.append(z)
-
         #zclist contains all classes that have a object-list field with reference 'zonenames' that contains zoneclass.getName
         #extract group
         zgrouplist = self.queryList(idfglobals.IdfQueryGroup,group,zalllist)
+        print
+        print zgrouplist
 
         zonetree = treeItem(None,zoneclass)
         
         sublist = []
         for g in zgrouplist:
             sublist = self.queryList(idfglobals.IdfQueryFieldValue,g.getName(),self.idflist)
+            print
+            print sublist
             citem = treeItem(zonetree,g)
             for c in sublist:
-                citem.appendChild(treeItem(citem,c))
+                if c not in zgrouplist:
+                    citem.appendChild(treeItem(citem,c))
             zonetree.appendChild(citem)
 
         return zonetree
