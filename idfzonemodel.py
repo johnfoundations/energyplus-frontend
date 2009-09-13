@@ -40,10 +40,11 @@ class idfZoneModel(QtCore.QAbstractItemModel):
             self.zoneroot = self.idf.createZoneTree(zoneclass,zoneclass.getGroup())
         
     def columnCount (self, parent):
+        return 1
         if parent.isValid():
-            return parent.internalPointer().data.fieldCount()
+            return parent.internalPointer().childCount()
         else:
-            return 1
+            return self.zoneroot.childCount()
 
     def flags(self, index):
         if not index.isValid():
@@ -86,11 +87,11 @@ class idfZoneModel(QtCore.QAbstractItemModel):
             return 0
 
         if not parent.isValid():
-            return self.zoneroot.childCount()
+            parentItem = self.zoneroot
         else:
-            return parent.internalPointer().data.fieldCount()
+            parentItem = parent.internalPointer()
 
-
+        return parentItem.childCount()
 
 
 
@@ -104,7 +105,7 @@ class idfZoneModel(QtCore.QAbstractItemModel):
             return QtCore.QVariant(idf.data.getMemo())
 
         if role == QtCore.Qt.DisplayRole:
-            return QtCore.QVariant(idf.data.fieldlist[modelindex.column()].getValue())
+            return QtCore.QVariant(idf.data.getName())
 
         return QtCore.QVariant()
 

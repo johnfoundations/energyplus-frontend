@@ -294,9 +294,9 @@ class idfData(QtCore.QObject):
                 self.idftree.sort(cmp=lambda x,y:cmp(x.data.getClassnameIDD(),y.data.getClassnameIDD()))
         else:
             if column == 1:
-                self.idftree.reverse(cmp=lambda x,y:cmp(x.data.getName(),y.data.getName()))
+                self.idftree.sort(cmp=lambda x,y:cmp(y.data.getName(),x.data.getName()))
             else:
-                self.idftree.reverse(cmp=lambda x,y:cmp(x.data.getClassnameIDD(),y.data.getClassnameIDD()))
+                self.idftree.sort(cmp=lambda x,y:cmp(y.data.getClassnameIDD(),x.data.getClassnameIDD()))
 
     def createZoneTree(self,zoneclass,group):
         zlist = self.queryList(idfglobals.IdfQueryDependancy,'ZoneNames',self.idflist)
