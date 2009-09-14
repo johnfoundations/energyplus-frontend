@@ -105,7 +105,10 @@ class FieldReal(FieldAbstract) :
         return self.fieldeditor
 
     def getEditorValue(self,editor) :
-        return editor.value()
+        if editor.cleanText() == '':
+            return None
+        else:
+            return editor.value()
 
     def setEditorValue(self,editor):
         try:
@@ -115,13 +118,20 @@ class FieldReal(FieldAbstract) :
                 v = int(self.value)
                 v = float(v)
             except:
-                print 'setEditorValue float conversion failed ' + self.fieldname + self.value
+                if self.value == None:
+                    vtxt = 'None'
+                else:
+                    vtxt = self.value
+                print 'setEditorValue float conversion failed ' + self.fieldname + ' ' +vtxt
                 v = float(self.default)
         editor.setValue(v)
     
 
     def Validate(self,val):
         #pdb.set_trace()
+        if val == None:
+            return True
+            
         localmin = False
         localmax = False
 
@@ -157,6 +167,8 @@ class FieldReal(FieldAbstract) :
 class FieldRealAutocalculate(FieldReal) :
 
     def Validate(self,val):
+        if val == None:
+            return True
         v = val.lower()
         if v == 'autocalculate' or v == 'autosize' :
             return True
@@ -227,6 +239,8 @@ class FieldInt(FieldAbstract) :
 
 
     def Validate(self,val):
+        if val == None:
+            return True
         localmin = False
         localmax = False
 

@@ -34,6 +34,7 @@ import compactschedulewidget
 #and it's init will create the fields and append them to the field list
 class ObjectAbstract :
     def __init__(self):
+        self.minfields = 0
         self.classn = ''
         self.name = ''
         self.fieldlist = []
@@ -47,6 +48,8 @@ class ObjectAbstract :
         self.memo = []
         self.CreateFields()
         self.createExtensibleList()
+        self.parseRawData()
+
         
     def setName(self,name):
         self.name = name
@@ -85,38 +88,6 @@ class ObjectAbstract :
             print "getFieldData error"
             return None
         
-    def CreateEditWidget(self) :
-        self.editwidget = QtGui.QWidget()
-        vlayout = QtGui.QVBoxLayout(self.editwidget)
-#        hlayout = QtGui.QVBoxLayout()
-        label = QtGui.QLabel(self.getClassnameIDD())
-        ms = ''
-        for m in self.memo:
-            ms = ms + m + '\n'
-        ms = ms.strip()
-        label.setToolTip(ms)
-        vlayout.addWidget(label)
-        count = 0
-        for f in self.fieldlist:
-            count = count + 1
-            vlayout.addWidget(f.CreateEditor())
-            f.setEditorValue()
-            if count > 2:
-                count = 0
-#            vlayout.addStretch()
-#            hlayout.addLayout(vlayout)
-#            vlayout = QtGui.QVBoxLayout()
-#            vlayout.addStretch()
-#            hlayout.addLayout(vlayout)
-        vlayout.addStretch()
-        self.scrollarea = QtGui.QScrollArea()
-        self.scrollarea.setWidget(self.editwidget)
-        self.scrollarea.setWidgetResizable(True)
-        return self.scrollarea
-
-    def closeWidget(self):
-        if self.scrollarea :
-            self.scrollarea.close()
 
     def CreateFields(self) :
         print 'to be subclassed'
@@ -135,38 +106,16 @@ class ObjectAbstract :
         lines.append(self.getClassnameIDD() + ',')
         tmplines = []
         for c, field in enumerate(self.fieldlist):
-            if c >= self.minfields and field.value == '':
+            if c >= self.minfields and field.value == None or '':
                 tmplines.append('    , !- %s' % field.fieldname)
             else:
                 lines.extend(tmplines)
                 tmplines = []
                 lines.append('    %s, ! %s' % (field, field.fieldname))
-#                if field.restoflist:
-#                    print 'restoflist', field.fieldname, len(field.restoflist)
-        #if self.extensible and field.restoflist:
-            #newlines = []
-            #for i in range(0, len(field.restoflist), self.extensible):
-                #line = ''
-                #for idx in range(self.extensible):
-                    #line += str(field.restoflist[i+idx]) + ','
-                #newlines.append(line)
-            #try:
-                #newlines[-1] = newlines[-1][:-1] + ';'
-                #lines.extend(newlines)
-            #except IndexError:
-                #pass
-        #else:
+
         lines[-1] = lines[-1].replace(',', ';',1)
         return '\n'.join(lines) + '\n'
             
-#        for c, field in enumerate(self.fieldlist):
-#            if c < len(self.fieldlist)-1 :
-#                sep = ','
-#            else:
-#                sep= ';'
-#            s += '    %s%s ! %s\n' % (str(field), sep, field.fieldname)
-        return s
-
 
     def setRequired(self,req) :
         self.required = req
@@ -260,23 +209,34 @@ class ObjectAbstract :
             
 
     def parseRawData(self) :
-#        print "len fieldlist"  + str(len(self.fieldlist)) + self.getClassnameIDD()
-        for i,fd in enumerate(self.rawdatalist) :
-            if i == 0:  #first item is classname
-                continue
+ #       print "len fieldlist" , len(self.fieldlist) , self.getClassnameIDD()
+        if len(self.rawdatalist) != 0:
+            for i,fd in enumerate(self.rawdatalist) :
+                if i == 0:  #first item is classname
+                    continue
 
-            if i > len(self.fieldlist) :
-                if self.extensible == -1 :
-#                    pdb.set_trace()
-                    print 'ran out of fieldlists ' + self.getClassnameIDD()
+                if i > len(self.fieldlist) :
+                    if self.extensible == -1 :
+    #                    pdb.set_trace()
+                        print 'ran out of fieldlists ' + self.getClassnameIDD()
+                        return
+                    else :
+                        self.createExtensibleFields()
+
+                if not self.fieldlist[i-1].setValue(fd):
+                    print 'parserawdata setvalue false ' + fd + ' ' + self.getClassnameIDD()
                     return
-                else :
-                    self.createExtensibleFields()
 
-#            print i
-            if not self.fieldlist[i-1].setValue(fd):
-                print 'parserawdata setvalue false ' + fd + ' ' + self.getClassnameIDD()
-                return
+#        print 'after enumerate' , len(self.rawdatalist) , self.minfields
+        if self.minfields > 0:
+            if len(self.rawdatalist) > self.minfields:
+                start = len(self.rawdatalist)-1
+            else:
+                start = self.minfields
+
+#            print self.getClassnameIDD() , self.minfields , len(self.rawdatalist) , len(self.fieldlist) , start
+            for c in range(start,len(self.fieldlist)):
+                self.fieldlist[c].setValue(None)
 
 
 class ObjectVertice(ObjectAbstract):
