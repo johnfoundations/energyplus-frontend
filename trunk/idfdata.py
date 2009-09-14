@@ -240,7 +240,7 @@ class idfData(QtCore.QObject):
         else:
             self.idflist = self.idflist + idf.getActiveList()
 
-        self.comments = self.comments + '\n' + idf.comment
+        self.comments = self.comments  + idf.comment + '\n'
         self.idfreadlist.append(idf)
         self.populateTree(self.idflist)
         self.buildDependsTree()
