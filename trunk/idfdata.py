@@ -330,20 +330,6 @@ class idfData(QtCore.QObject):
 
             
         
-        #BuildingSurface:Detailed
-        #Wall:Detailed
-        #RoofCeiling:Detailed
-        #Floor:Detailed
-        #Wall:Exterior
-        #Wall:Adiabatic
-        #Wall:Underground
-        #Wall:Interzone
-        #Roof
-        #Ceiling:Adiabatic
-        #Ceiling:Interzone
-        #Floor:GroundContact
-        #Floor:Adiabatic
-        #Floor:Interzone
         
 
     def writeIdf(self,destfile):
