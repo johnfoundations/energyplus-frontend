@@ -29,19 +29,6 @@ surfaceViewEast = 4
 
 #the assumptions on vertices is that all is xyz, and north is adjusted
 
-verticeclasses = "BuildingSurface:Detailed","Wall:Detailed","RoofCeiling:Detailed","Floor:Detailed","FenestrationSurface:Detailed",\
-                 "Shading:Zone:Detailed","Shading:Site:Detailed","Shading:Building:Detailed"
-        #all have vertices
-
-zoneclasses = ("Zone",)
-
-surfaceelementclasses = "GlazedDoor:Interzone","GlazedDoor","Door","Door:Interzone","Window:Interzone","Window"
-        #multiplier,xy,length,height
-
-azimuthtiltclasses = "Ceiling:Adiabatic","Ceiling:Interzone","Floor:GroundContact","Floor:Adiabatic","Floor:Interzone",\
-                     "Roof","Wall:Exterior","Wall:Adiabatic","Wall:Underground","Wall:Interzone","Shading:Site",\
-                     "Shading:Building"
-        #azimuth,tilt,xyz,length,width
 
 
 class surfacePolygonItem(QtGui.QGraphicsPolygon):
@@ -51,19 +38,6 @@ class surfacePolygonItem(QtGui.QGraphicsPolygon):
         self.polygonlist = []
         self.buildPolygons()
 
-    def buildPolygons(self):
-        #builds an array of polygons representing the view of the surface from the 5 views
-        if self.treeitem.data.getClassnameIDD() in verticeclasses:
-            self.buildVerticePolygons()
-
-        if self.treeitem.data.getClassnameIDD() in surfaceelementclasses:
-            self.buildSurfaceElementPolygons()
-
-        if self.treeitem.data.getClassnameIDD() in azimuthtiltclasses:
-            self.buildAzimuthTiltPolygons()
-
-        if self.treeitem.data.getClassnameIDD() in zoneclasses:
-            self.buildZonePolygons()
 
 
     def setActivePolygon(self, surfaceview = 0):

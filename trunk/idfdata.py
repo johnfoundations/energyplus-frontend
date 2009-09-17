@@ -327,11 +327,6 @@ class idfData(QtCore.QObject):
         return zonetree
 
 
-
-            
-        
-        
-
     def writeIdf(self,destfile):
         try:
             fh = open(destfile,'w')
