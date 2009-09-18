@@ -98,7 +98,13 @@ class ObjectAbstract :
         except:
             print "getFieldData error"
             return None
-        
+
+    def getFieldDataByName(self,name):
+        for f in self.fieldlist:
+            if f.getFieldName() == name:
+                return f.getValue()
+
+        return None
 
     def CreateFields(self) :
         print 'to be subclassed'

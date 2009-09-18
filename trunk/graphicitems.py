@@ -31,26 +31,13 @@ surfaceViewEast = 4
 
 
 
-class surfacePolygonItem(QtGui.QGraphicsPolygon):
-    def __init__(self,parent):
-        QtGui.GraphicsPolygonItem.__init__ (self,parent=0)
+class surfacePolygonItem(QtGui.QGraphicsPolygonItem):
+    def __init__(self,parent=None):
+        QtGui.QGraphicsPolygonItem.__init__ (self,parent)
         self.polygonlist = []
-        self.buildPolygons()
 
 
 
-    def setActivePolygon(self, surfaceview = 0):
-        self.setPolygon(self.polygonlist[surfaceView])
-
-
-    def buildVerticePolygons(self):
-
-    def buildSurfaceElementPolygons(self):
-
-    def buildZonePolygons(self):
-
-    def buildAzimuthTiltPolygons(self):
-        
 
 
 

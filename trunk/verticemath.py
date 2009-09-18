@@ -40,7 +40,7 @@ azimuthtiltclasses = "Ceiling:Adiabatic","Ceiling:Interzone","Floor:GroundContac
 class shape():
     def __init__(self,idfclass):
         self.idfclass = idfclass
-        self.ggrules = globalgeometryrules
+#        self.ggrules = globalgeometryrules
         if self.idfclass.getClassnameIDD() in verticeclasses:
             self.buildVerticePolygons()
 
@@ -63,19 +63,25 @@ class shape():
         pass
 
     def buildSimplePolygons(self):
+#        print self.idfclass.getName(), self.idfclass.getClassnameIDD()
         vertices = [[0,0,0],[0,0,0],[0,0,0],[0,0,0]]
-        print 'azimuth', self.idfclass.fieldlist[3].getValue()
-        azimuth = self.azimuthtoccw(self.idfclass.fieldlist[3].getValue())
+#        print 'azimuth', self.idfclass.getFieldDataByName('Azimuth Angle')
+        azimuth = self.azimuthtoccw(self.idfclass.getFieldDataByName('Azimuth Angle'))
         if azimuth > 360:
             azimuth = azimuth - 360
-        print azimuth
+#        print azimuth
         azimuth = math.radians(azimuth)
-        print azimuth, 'radians'
-        tilt = math.radians(self.idfclass.fieldlist[4].getValue())
-        print tilt, 'radians'
-        vertices[0] = [self.idfclass.fieldlist[5].getValue(),self.idfclass.fieldlist[6].getValue(),self.idfclass.fieldlist[7].getValue()]
-        length = self.idfclass.fieldlist[8].getValue()
-        height = self.idfclass.fieldlist[9].getValue()
+#        print azimuth, 'radians'
+        tilt = math.radians(float(self.idfclass.getFieldDataByName('Tilt Angle')))
+#        print tilt, 'radians'
+        vertices[0] = [float(self.idfclass.getFieldDataByName('Starting X Coordinate')), \
+                       float(self.idfclass.getFieldDataByName('Starting Y Coordinate')), \
+                       float(self.idfclass.getFieldDataByName('Starting Z Coordinate'))]
+        length = float(self.idfclass.getFieldDataByName('Length'))
+        height = self.idfclass.getFieldDataByName('Width')
+        if height == None:
+            height = self.idfclass.getFieldDataByName('Height')
+        height = float(height)
         #origin lower left. clockwise
         #calculate lower right
         vertices[3][0] = (math.cos(azimuth)*length)
@@ -90,10 +96,10 @@ class shape():
         vertices[2][1] = vertices[3][1]
         vertices[2][2] = vertices[1][2]
 
-        print '%f,%f,%f' % (vertices[0][0],vertices[0][1],vertices[0][2])
-        print '%f,%f,%f' % (vertices[1][0],vertices[1][1],vertices[1][2])
-        print '%f,%f,%f' % (vertices[2][0],vertices[2][1],vertices[2][2])
-        print '%f,%f,%f' % (vertices[3][0],vertices[3][1],vertices[3][2])
+#        print '%f,%f,%f' % (vertices[0][0],vertices[0][1],vertices[0][2])
+#        print '%f,%f,%f' % (vertices[1][0],vertices[1][1],vertices[1][2])
+#        print '%f,%f,%f' % (vertices[2][0],vertices[2][1],vertices[2][2])
+#        print '%f,%f,%f' % (vertices[3][0],vertices[3][1],vertices[3][2])
 
         
         
@@ -102,7 +108,7 @@ class shape():
 
 
     def azimuthtoccw(self,azimuth):
-        a = 180 - azimuth
+        a = 180 - float(azimuth)
         if a < 0:
             return a + 360
         else:

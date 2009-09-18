@@ -298,6 +298,33 @@ class idfData(QtCore.QObject):
             else:
                 self.idftree.sort(cmp=lambda x,y:cmp(y.data.getClassnameIDD(),x.data.getClassnameIDD()))
 
+    def createZoneTree(self,zoneclass,group):
+        zlist = self.queryList(idfglobals.IdfQueryDependancy,'ZoneNames',self.idflist)
+        zalllist = []
+        for z in zlist:
+            for f in z.fieldlist:
+                if f.getValue() == zoneclass.getName():
+                    zalllist.append(z)
+        #zclist contains all classes that have a object-list field with reference 'zonenames' that contains zoneclass.getName
+        #extract group
+        zgrouplist = self.queryList(idfglobals.IdfQueryGroup,group,zalllist)
+        print
+        print zgrouplist
+
+        zonetree = treeItem(None,zoneclass)
+        
+        sublist = []
+        for g in zgrouplist:
+            sublist = self.queryList(idfglobals.IdfQueryFieldValue,g.getName(),self.idflist)
+            print
+            print sublist
+            citem = treeItem(zonetree,g)
+            for c in sublist:
+                if c not in zgrouplist:
+                    citem.appendChild(treeItem(citem,c))
+            zonetree.appendChild(citem)
+
+        return zonetree
 
 
     def writeIdf(self,destfile):
