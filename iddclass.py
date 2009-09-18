@@ -11,6 +11,7 @@ class Version(ObjectSingleLine):
         self.InsertField(FieldText(self,"Version Identifier","3.1.0",""))
 
 
+        self.setRequiredFields([0])
         self.setRequired(False)
         self.setMinfields(0)
         self.setGroup("Simulation Parameters") 
@@ -51,7 +52,8 @@ class Building(ObjectAbstract):
         self.InsertField(FieldInt(self,"Maximum Number of Warmup Days","25",("EnergyPlus will only use as many warmup days as needed to reach convergence tolerance.","This field's value should NOT be set less than 25.","",),"","",0,""))
 
 
-        self.setRequired(False)
+        self.setRequiredFields([0])
+        self.setRequired(True)
         self.setMinfields(7)
         self.setGroup("Simulation Parameters") 
         self.setExtensible(-1)
@@ -67,6 +69,7 @@ class ShadowCalculation(ObjectAbstract):
         self.InsertField(FieldInt(self,"Maximum Figures in Shadow Overlap Calculations","15000",("Number of allowable figures in shadow overlap calculations","",),200,"","",""))
 
 
+        self.setRequiredFields([0])
         self.setRequired(False)
         self.setMinfields(0)
         self.setGroup("Simulation Parameters") 
@@ -82,6 +85,7 @@ class SurfaceConvectionAlgorithm_Inside(ObjectSingleLine):
         self.InsertField(FieldChoice(self,"Algorithm","Detailed",("Simple = constant natural convection (ASHRAE)","Detailed = variable natural convection based on temperature difference (ASHRAE)","CeilingDiffuser = ACH based forced and mixed convection correlations"," for ceiling diffuser configuration with simple natural convection limit","",),["Simple","Detailed","CeilingDiffuser",]))
 
 
+        self.setRequiredFields([0])
         self.insertMemo(("Default indoor surface heat transfer convection algorithm to be used for all zones",))
         self.setRequired(False)
         self.setMinfields(0)
@@ -98,6 +102,7 @@ class SurfaceConvectionAlgorithm_Outside(ObjectSingleLine):
         self.InsertField(FieldChoice(self,"Algorithm","DOE-2",("Simple = ASHRAE Simple","Detailed = ASHRAE Detailed","BLAST is identical to Detailed as of version 1.2.1","TARP is identical to Detailed as of version 1.3.0","",),["Simple","Detailed","BLAST","TARP","DOE-2","MoWiTT",]))
 
 
+        self.setRequiredFields([0])
         self.insertMemo(("Default outside convection algorithm to be used for all zones",))
         self.setRequired(False)
         self.setMinfields(0)
@@ -115,6 +120,7 @@ class HeatBalanceAlgorithm(ObjectSingleLine):
         self.InsertField(FieldReal(self,"Surface Temperature Upper Limit","200","",200,"","",""))
 
 
+        self.setRequiredFields([0])
         self.insertMemo(("Determines which Heat Balance Algorithm will be used ie. CTF (Conduction Transfer Functions),","EMPD (Effective Moisture Penetration Depth with Conduction Transfer Functions).","Advanced/Research Usage: CondFD (Conduction Finite Difference)","Advanced/Research Usage: HAMT (Combined Heat And Moisture Finite Element)",))
         self.setRequired(False)
         self.setMinfields(0)
@@ -146,6 +152,7 @@ class Timestep(ObjectSingleLine):
         self.InsertField(FieldInt(self,"Number of Timesteps per Hour","6",("Number in hour: normal validity 4 to 60: 6 suggested","Must be evenly divisible into 60","Allowable values include 1, 2, 3, 4, 5, 6, 10, 12, 15, 20, 30, and 60","Normal 6 is mimimum as lower values may cause inaccuracies","A minimum value of 20 is suggested for both ConductionFiniteDifference","and CombinedHeatAndMoistureFiniteElement surface heat balance alogorithms","",),1,60,"",""))
 
 
+        self.setRequiredFields([0])
         self.setRequired(False)
         self.setMinfields(0)
         self.setGroup("Simulation Parameters") 
@@ -197,6 +204,7 @@ class Site_Location(ObjectAbstract):
         self.InsertField(FieldReal(self,"Elevation","0.0","",-300.0,"","",6096.0))
 
 
+        self.setRequiredFields([0])
         self.setRequired(False)
         self.setMinfields(5)
         self.setGroup("Location and Climate") 
@@ -232,6 +240,7 @@ class SizingPeriod_DesignDay(ObjectAbstract):
         self.InsertField(FieldObjectlist(self,"Diffuse Solar Day Schedule Name","",("if Solar Model Indicator = Schedule, then diffuse schedule name (for day)","",),"DayScheduleNames"))
 
 
+        self.setRequiredFields([0, 1, 4, 5, 6, 7, 10, 11, 12])
         self.addReference("DesignDays")
         self.setRequired(False)
         self.setMinfields(15)
@@ -255,6 +264,7 @@ class SizingPeriod_WeatherFileDays(ObjectAbstract):
         self.InsertField(FieldYesNo(self,"Use Weather File Rain and Snow Indicators","Yes","",["Yes","No",]))
 
 
+        self.setRequiredFields([1, 2, 3, 4])
         self.insertMemo(("Use a weather file period for design sizing calculations.",))
         self.addReference("DesignDays")
         self.setRequired(False)
@@ -303,6 +313,7 @@ class RunPeriod(ObjectAbstract):
         self.InsertField(FieldInt(self,"Number of Times Runperiod to be Repeated","1","",1,"","",""))
 
 
+        self.setRequiredFields([0, 1, 2, 3])
         self.setRequired(False)
         self.setMinfields(10)
         self.setGroup("Location and Climate") 
@@ -321,6 +332,7 @@ class RunPeriodControl_SpecialDays(ObjectAbstract):
         self.InsertField(FieldChoice(self,"Special Day Type","Holiday",("Special Day Type selects the schedules appropriate for each day so labeled","",),["Holiday","SummerDesignDay","WinterDesignDay","CustomDay1","CustomDay2",]))
 
 
+        self.setRequiredFields([0, 1, 3])
         self.insertMemo(("This object sets up holidays/special days to be used during weather file","run periods.  (These are not used with SizingPeriod:* objects.)","Depending on the value in the run period, days on the weather file may also","be used.  However, the weather file specification will take precedence over","any specification shown here.  (No error message on duplicate days or overlapping","days).",))
         self.setRequired(False)
         self.setMinfields(4)
@@ -338,6 +350,7 @@ class RunPeriodControl_DaylightSavingTime(ObjectAbstract):
         self.InsertField(FieldText(self,"End Date","",(" Dates can be several formats:"," <number>/<number>  (month/day)"," <number> <Month>"," <Month> <number>","<Nth> <Weekday> in <Month)","Last <WeekDay> in <Month>","<Month> can be January, February, March, April, May, June, July, August, September, October, November, December","Months can be the first 3 letters of the month","<Weekday> can be Sunday, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday","<Nth> can be 1 or 1st, 2 or 2nd, etc. up to 5(?)","",)))
 
 
+        self.setRequiredFields([0, 1])
         self.insertMemo(("This object sets up the daylight saving time period for any RunPeriod.","Ignores any daylight saving time period on the weather file and uses this definition.","These are not used with SizingPeriod:DesignDay objects.","Use with SizingPeriod:WeatherFileDays object can be controlled in that object.",))
         self.setRequired(False)
         self.setMinfields(2)
@@ -402,6 +415,7 @@ class Site_GroundTemperature_BuildingSurface(ObjectSingleLine):
         self.InsertField(FieldReal(self,"December Ground Temperature","18","","","","",""))
 
 
+        self.setRequiredFields([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11])
         self.insertMemo(("These temperatures are specifically for those surfaces that have the outside environment","of *Ground*.  Documentation about what values these should be is located in the","Auxiliary programs document (Ground Heat Transfer) as well as the InputOutput Reference.","CAUTION - Do not use the *undisturbed* ground temperatures from the weather data.","These values are too extreme for the soil under a conditioned building.","For best results, use the Slab or Basement program to calculate custom monthly","average ground temperatures (see Auxiliary Programs).  For typical commercial","buildings in the USA, a reasonable default value is 2C less than the average indoor space temperature.",))
         self.setRequired(False)
         self.setMinfields(12)
@@ -429,6 +443,7 @@ class Site_GroundTemperature_Shallow(ObjectSingleLine):
         self.InsertField(FieldReal(self,"December Surface Ground Temperature","13","","","","",""))
 
 
+        self.setRequiredFields([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11])
         self.insertMemo(("These temperatures are specifically for the Surface Ground Heat Exchanger and","should probably be close to the average outdoor air temperature for the location.",))
         self.setRequired(False)
         self.setMinfields(12)
@@ -456,6 +471,7 @@ class Site_GroundTemperature_Deep(ObjectSingleLine):
         self.InsertField(FieldReal(self,"December Deep Ground Temperature","16","","","","",""))
 
 
+        self.setRequiredFields([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11])
         self.insertMemo(("These temperatures are specifically for the ground heat exchangers that would use","*deep* (3-4 m depth) ground temperatures for their heat source.",))
         self.setRequired(False)
         self.setMinfields(12)
@@ -517,6 +533,7 @@ class Site_WaterMainsTemperature(ObjectAbstract):
         self.InsertField(FieldReal(self,"Maximum Difference In Monthly Average Outdoor Air Temperatures",0,"",0,"","",""))
 
 
+        self.setRequiredFields([0])
         self.setRequired(False)
         self.setMinfields(0)
         self.setGroup("Location and Climate") 
@@ -552,6 +569,7 @@ class ScheduleTypeLimits(ObjectAbstract):
         self.InsertField(FieldChoice(self,"Numeric Type","",("Numeric type is either Continuous (all numbers within the min and","max are valid or Discrete (only integer numbers between min and","max are valid.  (Could also allow REAL and INTEGER to mean the","same things)","",),["Continuous","Discrete",]))
 
 
+        self.setRequiredFields([0])
         self.insertMemo(("ScheduleTypeLimits specifies the data types and limits for the values contained in schedules",))
         self.addReference("ScheduleTypeLimitsNames")
         self.setRequired(False)
@@ -594,6 +612,7 @@ class Schedule_Day_Hourly(ObjectAbstract):
         self.InsertField(FieldReal(self,"Hour 24","0","","","","",""))
 
 
+        self.setRequiredFields([0])
         self.insertMemo(("A Schedule:Day:Hourly contains 24 values for each hour of the day.",))
         self.addReference("DayScheduleNames")
         self.setRequired(False)
@@ -615,6 +634,7 @@ class Schedule_Day_Interval(ObjectAbstract):
         self.InsertField(FieldReal(self,"Value Until Time 1",0,"","","","",""))
 
 
+        self.setRequiredFields([0])
         self.insertMemo(("A Schedule:Day:Interval contains a full day of values with specified end times for each value","Currently, is set up to allow for 10 minute intervals for an entire day.",))
         self.addReference("DayScheduleNames")
         self.setRequired(False)
@@ -2074,6 +2094,7 @@ class Schedule_Day_List(ObjectAbstract):
         self.InsertField(FieldReal(self,"N1440",0,"","","","",""))
 
 
+        self.setRequiredFields([0])
         self.insertMemo(("Schedule:Day:List will allow the user to list 24 hours worth of values, which can be sub-hourly in nature.",))
         self.addReference("DayScheduleNames")
         self.setRequired(False)
@@ -2103,6 +2124,7 @@ class Schedule_Week_Daily(ObjectAbstract):
         self.InsertField(FieldObjectlist(self,"CustomDay2 Schedule:Day Name","","","DayScheduleNames"))
 
 
+        self.setRequiredFields([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12])
         self.insertMemo((" A Schedule:Week:Daily contains 12 Schedule:Day:Hourly objects, one for each day type.",))
         self.addReference("WeekScheduleNames")
         self.setRequired(False)
@@ -2122,6 +2144,7 @@ class Schedule_Week_Compact(ObjectAbstract):
         self.InsertField(FieldObjectlist(self,"Schedule:Day Name 1","","","DayScheduleNames"))
 
 
+        self.setRequiredFields([0, 1, 2])
         self.insertMemo(("Compact definition for Schedule:Day:List",))
         self.addReference("WeekScheduleNames")
         self.setRequired(False)
@@ -2405,6 +2428,7 @@ class Schedule_Year(ObjectAbstract):
         self.InsertField(FieldReal(self,"N212",0,"","","","",""))
 
 
+        self.setRequiredFields([0, 2, 3, 4, 5, 6])
         self.insertMemo(("A Schedule:Year contains from 1 to 52 week schedules",))
         self.addReference("ScheduleNames")
         self.setRequired(False)
@@ -2424,6 +2448,7 @@ class Schedule_Compact(ObjectCompactSchedule):
         self.InsertField(FieldText(self,"Field 1","",""))
 
 
+        self.setRequiredFields([0])
         self.insertMemo(("Irregular object.  Does not follow the usual definition for fields.  Fields A3... are:","Through: Date","For: Applicable days (ref: Schedule:Week:Compact)","Interpolate: Yes/No (ref: Schedule:Day:Interval) -- optional, if not used will be *No*","Until: <Time> (ref: Schedule:Day:Interval)","<numeric value>","words *Through*,*For*,*Interpolate*,*Until* must be included.",))
         self.addReference("ScheduleNames")
         self.setRequired(False)
@@ -2446,6 +2471,7 @@ class Schedule_File(ObjectAbstract):
         self.InsertField(FieldReal(self,"Number of Hours of Data","8760",("8760 hours does not account for leap years, 8784 does.","should be either 8760 or 8784","",),8760,8784,"",""))
 
 
+        self.setRequiredFields([0, 2, 3, 4])
         self.insertMemo(("A Schedule:File points to a text computer file that has 8760-8784 hours of data.",))
         self.addReference("ScheduleNames")
         self.setRequired(False)
@@ -2465,6 +2491,7 @@ class Schedule_Constant(ObjectCompactSchedule):
         self.InsertField(FieldReal(self,"Hourly Value","0","","","","",""))
 
 
+        self.setRequiredFields([0])
         self.insertMemo(("Constant hourly value for entire year.",))
         self.addReference("ScheduleNames")
         self.setRequired(False)
@@ -2490,6 +2517,7 @@ class Material(ObjectAbstract):
         self.InsertField(FieldReal(self,"Visible Absorptance",".7","",0,1,"",""))
 
 
+        self.setRequiredFields([0, 1, 2, 3, 4, 5])
         self.insertMemo(("Regular materials described with full set of thermal properties",))
         self.addReference("MaterialName")
         self.setRequired(False)
@@ -2512,6 +2540,7 @@ class Material_NoMass(ObjectAbstract):
         self.InsertField(FieldReal(self,"Visible Absorptance",".7","",0,1,"",""))
 
 
+        self.setRequiredFields([0, 1, 2])
         self.insertMemo(("Regular materials properties described whose principal description is R (Thermal Resistance)",))
         self.addReference("MaterialName")
         self.setRequired(False)
@@ -2529,6 +2558,7 @@ class Material_InfraredTransparent(ObjectAbstract):
         self.InsertField(FieldText(self,"Name","",""))
 
 
+        self.setRequiredFields([0])
         self.insertMemo(("Special infrared transparent material.  Similar to a Material:Nomass with low thermal resistance."," High absorptance in both wavelengths."," Area will be doubled internally to make internal radiant exchange accurate."," Should be only material in single layer surface construction."," All thermal properties are set internally. User needs only to supply name.",))
         self.addReference("MaterialName")
         self.setRequired(False)
@@ -2547,6 +2577,7 @@ class Material_AirGap(ObjectAbstract):
         self.InsertField(FieldReal(self,"Thermal Resistance",0,"","","",0,""))
 
 
+        self.setRequiredFields([0])
         self.insertMemo(("Air Space in Opaque Construction",))
         self.addReference("MaterialName")
         self.setRequired(False)
@@ -2581,6 +2612,7 @@ class Material_RoofVegetation(ObjectAbstract):
         self.InsertField(FieldReal(self,"Initial Volumetric Moisture Content of the Soil Layer","0.15","","", 1.0,0.1,""))
 
 
+        self.setRequiredFields([0, 2, 3, 4, 7, 8, 9, 10, 11])
         self.insertMemo(("EcoRoof model, plant layer plus soil layer","Implemented by Portland State University","(Sailor et al., January, 2007)","only one material must be used per simulation though the same EcoRoof material could be","used in multiple constructoins.",))
         self.addReference("MaterialName")
         self.setRequired(False)
@@ -2629,6 +2661,7 @@ class WindowMaterial_Glazing(ObjectAbstract):
         self.InsertField(FieldYesNo(self,"Solar Diffusing","No","",["No","Yes",]))
 
 
+        self.setRequiredFields([0, 1, 3])
         self.insertMemo(("Glass material properties for Windows or Glass Doors","Transmittance/Reflectance input method.",))
         self.addReference("MaterialName")
         self.addReference("GlazingMaterialName")
@@ -2649,6 +2682,7 @@ class WindowMaterial_GlazingGroup_Thermochromic(ObjectAbstract):
         self.InsertField(FieldObjectlist(self,"Window Material Glazing Name 1","","","GlazingMaterialName"))
 
 
+        self.setRequiredFields([0, 1, 2])
         self.insertMemo(("thermochromic glass at different temperatures",))
         self.setRequired(False)
         self.setMinfields(3)
@@ -2675,6 +2709,7 @@ class WindowMaterial_Glazing_RefractionExtinctionMethod(ObjectAbstract):
         self.InsertField(FieldYesNo(self,"Solar Diffusing","No","",["No","Yes",]))
 
 
+        self.setRequiredFields([0, 1, 2, 3, 4, 5])
         self.insertMemo(("Glass material properties for Windows or Glass Doors","Index of Refraction/Extinction Coefficient input method","Not to be used for coated glass",))
         self.addReference("MaterialName")
         self.addReference("GlazingMaterialName")
@@ -2702,6 +2737,7 @@ class WindowMaterial_Gas(ObjectAbstract):
         self.InsertField(FieldReal(self,"Molecular Weight",0,("Used only if Gas Type = Custom","",),20.0,200.0,"",""))
 
 
+        self.setRequiredFields([0, 1, 2])
         self.insertMemo(("Gas material properties that are used in Windows or Glass Doors",))
         self.addReference("MaterialName")
         self.setRequired(False)
@@ -2729,6 +2765,7 @@ class WindowMaterial_GasMixture(ObjectAbstract):
         self.InsertField(FieldReal(self,"Gas 4 Fraction",0,"","",1.0,0.0,""))
 
 
+        self.setRequiredFields([0, 1, 2, 3, 4, 5, 6])
         self.insertMemo(("Gas mixtures that are used in Windows or Glass Doors",))
         self.addReference("MaterialName")
         self.setRequired(False)
@@ -2760,6 +2797,7 @@ class WindowMaterial_Shade(ObjectAbstract):
         self.InsertField(FieldReal(self,"Airflow Permeability","0.0","",0.0,0.8,"",""))
 
 
+        self.setRequiredFields([0, 1, 2, 3, 4, 5, 6, 7, 8])
         self.insertMemo(("Window shade thermal properties",))
         self.addReference("MaterialName")
         self.addReference("WindowShadesScreensAndBlinds")
@@ -2806,6 +2844,7 @@ class WindowMaterial_Blind(ObjectAbstract):
         self.InsertField(FieldReal(self,"Maximum Slat Angle","180",("Used only if WindowProperty:ShadingControl for the window that incorporates","this blind varies the slat angle (i.e., WindowProperty:ShadingControl with","Type of Slat Angle Control for Blinds = ScheduledSlatAngle","or BlockBeamSolar)","Units: deg",),0,180,"",""))
 
 
+        self.setRequiredFields([0, 2, 3, 8, 9, 11, 12, 13])
         self.insertMemo(("Window blind thermal properties",))
         self.addReference("MaterialName")
         self.addReference("WindowShadesScreensAndBlinds")
@@ -2837,6 +2876,7 @@ class WindowMaterial_Screen(ObjectAbstract):
         self.InsertField(FieldChoice(self,"Angle of Resolution for Screen Transmittance Output Map","0",("Select the resolution of azimuth and altitude angles for the screen transmittance map.","A value of 0 means no transmittance map will be generated.","Valid values for this field are 0, 1, 2, 3 and 5.","Units: deg",),["0","1","2","3","5",]))
 
 
+        self.setRequiredFields([0, 2, 3, 6, 7])
         self.insertMemo(("Window screen physical properties. Can only be located on the exterior side of a window construction.",))
         self.addReference("MaterialName")
         self.addReference("WindowShadesScreensAndBlinds")
@@ -2860,6 +2900,7 @@ class MaterialProperty_MoisturePenetrationDepth_Settings(ObjectAbstract):
         self.InsertField(FieldReal(self,"Moisture Equation Coefficient d",0,"","","","",""))
 
 
+        self.setRequiredFields([0, 1, 2, 3, 4, 5])
         self.insertMemo(("Additional properties for moisture using EMPD procedure","HeatBalanceAlgorithm choice=MoisturePenetrationDepthConductionTransferFunction",))
         self.setRequired(False)
         self.setMinfields(0)
@@ -2909,6 +2950,7 @@ class MaterialProperty_PhaseChange(ObjectAbstract):
         self.InsertField(FieldReal(self,"Enthalpy 16","0.0",("for Temperature-enthalpy function corresponding to temperature 16","Units: J/kg",),"","","",""))
 
 
+        self.setRequiredFields([0])
         self.insertMemo(("Additional properties for temperature dependent thermal conductivity","and enthalpy for Phase Change Materials (PCM)",))
         self.setRequired(False)
         self.setMinfields(0)
@@ -2927,6 +2969,7 @@ class MaterialProperty_HeatAndMoistureTransfer_Settings(ObjectAbstract):
         self.InsertField(FieldReal(self,"Initial Water Content Ratio","0.2","",0.0,"","",""))
 
 
+        self.setRequiredFields([0, 1, 2])
         self.insertMemo(("Additional material properties for CombinedHeatAndMoistureFiniteElement algorithm for surfaces.","units are the water/material density ratio at the begining of each run period.",))
         self.setRequired(False)
         self.setMinfields(0)
@@ -2994,6 +3037,7 @@ class MaterialProperty_HeatAndMoistureTransfer_SorptionIsotherm(ObjectAbstract):
         self.InsertField(FieldReal(self,"Moisture Content 25",0,"","","","",""))
 
 
+        self.setRequiredFields([0, 1])
         self.insertMemo(("Additional properties for CombinedHeatAndMoistureFiniteElement algorithm for surfaces.",))
         self.setRequired(False)
         self.setMinfields(0)
@@ -3061,6 +3105,7 @@ class MaterialProperty_HeatAndMoistureTransfer_Suction(ObjectAbstract):
         self.InsertField(FieldReal(self,"Liquid Transport Coefficient 25",0,"","","","",""))
 
 
+        self.setRequiredFields([0, 1])
         self.insertMemo(("Additional properties for CombinedHeatAndMoistureFiniteElement algorithm for surfaces.","Relationship between liquid suction transport coefficient and moisture content",))
         self.setRequired(False)
         self.setMinfields(0)
@@ -3128,6 +3173,7 @@ class MaterialProperty_HeatAndMoistureTransfer_Redistribution(ObjectAbstract):
         self.InsertField(FieldReal(self,"Liquid Transport Coefficient 25",0,"","","","",""))
 
 
+        self.setRequiredFields([0, 1])
         self.insertMemo(("Additional properties for CombinedHeatAndMoistureFiniteElement algorithm for surfaces.","Relationship between liquid transport coefficient and moisture content",))
         self.setRequired(False)
         self.setMinfields(0)
@@ -3195,6 +3241,7 @@ class MaterialProperty_HeatAndMoistureTransfer_Diffusion(ObjectAbstract):
         self.InsertField(FieldReal(self,"Water Vapor Diffusion Resistance Factor 25",0,"","","","",""))
 
 
+        self.setRequiredFields([0, 1])
         self.insertMemo(("Additional properties for CombinedHeatAndMoistureFiniteElement algorithm for surfaces.","Relationship between water vapor diffusion and relative humidity",))
         self.setRequired(False)
         self.setMinfields(0)
@@ -3262,6 +3309,7 @@ class MaterialProperty_HeatAndMoistureTransfer_ThermalConductivity(ObjectAbstrac
         self.InsertField(FieldReal(self,"Thermal Conductivity 25",0,"","","","",""))
 
 
+        self.setRequiredFields([0, 1])
         self.insertMemo(("Additional properties for CombinedHeatAndMoistureFiniteElement algorithm for surfaces.","Relationship between thermal conductivity and moisture content",))
         self.setRequired(False)
         self.setMinfields(0)
@@ -5078,6 +5126,7 @@ class MaterialProperty_GlazingSpectralData(ObjectSpectral):
         self.InsertField(FieldReal(self,"N1800",0,"","","","",""))
 
 
+        self.setRequiredFields([0])
         self.insertMemo(("Name is followed by up to 450 sets of normal-incidence measured values of","[wavelength, transmittance, front reflectance, back reflectance] for wavelengths","covering the solar spectrum (from about 0.25 to 2.5 microns)",))
         self.setRequired(False)
         self.setMinfields(0)
@@ -5104,6 +5153,7 @@ class Construction(ObjectAbstract):
         self.InsertField(FieldObjectlist(self,"Layer 10","","","MaterialName"))
 
 
+        self.setRequiredFields([0, 1])
         self.insertMemo(("Start with outside layer and work your way to the inside layer","Up to 10 layers total, 8 for windows","Enter the material name for each layer",))
         self.addReference("ConstructionNames")
         self.setRequired(False)
@@ -5135,6 +5185,7 @@ class Construction_InternalSource(ObjectAbstract):
         self.InsertField(FieldObjectlist(self,"Layer 10","","","MaterialName"))
 
 
+        self.setRequiredFields([0, 1, 2, 3, 4, 5])
         self.insertMemo(("Start with outside layer and work your way to the inside Layer","Up to 10 layers total, 8 for windows","Enter the material name for each layer",))
         self.addReference("ConstructionNames")
         self.setRequired(False)
@@ -5153,6 +5204,7 @@ class Construction_WindowDataFile(ObjectAbstract):
         self.InsertField(FieldText(self,"File Name","",("default file name is *Window5DataFile.dat*","limit on this field is 100 characters.","",)))
 
 
+        self.setRequiredFields([0])
         self.insertMemo(("Initiates search of the Window5 data file for a window called Name.",))
         self.addReference("ConstructionNames")
         self.setRequired(False)
@@ -5174,7 +5226,8 @@ class GlobalGeometryRules(ObjectAbstract):
         self.InsertField(FieldChoice(self,"Rectangular Surface Coordinate System","Relative",("Relative -- Starting corner is entered relative to zone origin","World -- Starting corner is entered in *absolute*","absolute -- same as world","",),["Relative","World","Absolute",]))
 
 
-        self.setRequired(False)
+        self.setRequiredFields([0, 1, 2])
+        self.setRequired(True)
         self.setMinfields(0)
         self.setGroup("Thermal Zones and Surfaces") 
         self.setExtensible(-1)
@@ -5191,6 +5244,7 @@ class GeometryTransform(ObjectAbstract):
         self.InsertField(FieldReal(self,"New Aspect Ratio",0,("Aspect ratio to transform to during run","",),"","",0,""))
 
 
+        self.setRequiredFields([0, 1, 2])
         self.setRequired(False)
         self.setMinfields(0)
         self.setGroup("Thermal Zones and Surfaces") 
@@ -5217,6 +5271,7 @@ class Zone(ObjectVertice):
         self.InsertField(FieldYesNo(self,"Part of Total Floor Area","Yes","",["Yes","No",]))
 
 
+        self.setRequiredFields([0])
         self.addReference("ZoneNames")
         self.addReference("OutFaceEnvNames")
         self.addReference("ZoneAndZoneListNames")
@@ -5236,6 +5291,7 @@ class ZoneList(ObjectAbstract):
         self.InsertField(FieldObjectlist(self,"Zone 1 Name","","","ZoneNames"))
 
 
+        self.setRequiredFields([0, 1])
         self.addReference("ZoneListNames")
         self.addReference("ZoneAndZoneListNames")
         self.setRequired(False)
@@ -5255,6 +5311,7 @@ class ZoneGroup(ObjectAbstract):
         self.InsertField(FieldInt(self,"Zone List Multiplier","1","",1,"","",""))
 
 
+        self.setRequiredFields([0, 1])
         self.setRequired(False)
         self.setMinfields(2)
         self.setGroup("Thermal Zones and Surfaces") 
@@ -5282,6 +5339,7 @@ class BuildingSurface_Detailed(ObjectVertice):
         self.InsertField(FieldReal(self,"Vertex 1 Z-coordinate",0,"","","","",""))
 
 
+        self.setRequiredFields([0, 1, 2, 3, 4, 6, 7])
         self.addReference("SurfaceNames")
         self.addReference("SurfAndSubSurfNames")
         self.addReference("AllHeatTranSurfNames")
@@ -5317,6 +5375,7 @@ class Wall_Detailed(ObjectVertice):
         self.InsertField(FieldReal(self,"Vertex 1 Z-coordinate",0,"","","","",""))
 
 
+        self.setRequiredFields([0, 1, 2, 3, 5, 6])
         self.addReference("SurfaceNames")
         self.addReference("SurfAndSubSurfNames")
         self.addReference("AllHeatTranSurfNames")
@@ -5352,6 +5411,7 @@ class RoofCeiling_Detailed(ObjectVertice):
         self.InsertField(FieldReal(self,"Vertex 1 Z-coordinate",0,"","","","",""))
 
 
+        self.setRequiredFields([0, 1, 2, 3, 5, 6])
         self.addReference("SurfaceNames")
         self.addReference("SurfAndSubSurfNames")
         self.addReference("AllHeatTranSurfNames")
@@ -5387,6 +5447,7 @@ class Floor_Detailed(ObjectVertice):
         self.InsertField(FieldReal(self,"Vertex 1 Z-coordinate",0,"","","","",""))
 
 
+        self.setRequiredFields([0, 1, 2, 3, 5, 6])
         self.addReference("SurfaceNames")
         self.addReference("SurfAndSubSurfNames")
         self.addReference("AllHeatTranSurfNames")
@@ -5420,6 +5481,7 @@ class Wall_Exterior(ObjectAbstract):
         self.InsertField(FieldReal(self,"Height",0,"","","","",""))
 
 
+        self.setRequiredFields([0, 1, 2])
         self.insertMemo(("Used for exterior walls","View Factor to Ground is automatically calculated.",))
         self.addReference("SurfaceNames")
         self.addReference("SurfAndSubSurfNames")
@@ -5454,6 +5516,7 @@ class Wall_Adiabatic(ObjectAbstract):
         self.InsertField(FieldReal(self,"Height",0,"","","","",""))
 
 
+        self.setRequiredFields([0, 1, 2])
         self.insertMemo(("used for interior walls",))
         self.addReference("SurfaceNames")
         self.addReference("SurfAndSubSurfNames")
@@ -5487,6 +5550,7 @@ class Wall_Underground(ObjectAbstract):
         self.InsertField(FieldReal(self,"Height",0,"","","","",""))
 
 
+        self.setRequiredFields([0, 1, 2])
         self.insertMemo(("used for interior walls",))
         self.addReference("SurfaceNames")
         self.addReference("SurfAndSubSurfNames")
@@ -5521,6 +5585,7 @@ class Wall_Interzone(ObjectAbstract):
         self.InsertField(FieldReal(self,"Height",0,"","","","",""))
 
 
+        self.setRequiredFields([0, 1, 2, 3])
         self.insertMemo(("used for interzone walls (walls between zones)",))
         self.addReference("SurfaceNames")
         self.addReference("SurfAndSubSurfNames")
@@ -5554,6 +5619,7 @@ class Roof(ObjectAbstract):
         self.InsertField(FieldReal(self,"Width",0,("Along Y Axis","Units: m",),"","","",""))
 
 
+        self.setRequiredFields([0, 1, 2])
         self.insertMemo(("Used for exterior roofs","View Factor to Ground is automatically calculated.",))
         self.addReference("SurfaceNames")
         self.addReference("SurfAndSubSurfNames")
@@ -5588,6 +5654,7 @@ class Ceiling_Adiabatic(ObjectAbstract):
         self.InsertField(FieldReal(self,"Width",0,("Along Y Axis","Units: m",),"","","",""))
 
 
+        self.setRequiredFields([0, 1, 2])
         self.insertMemo(("used for interior ceilings",))
         self.addReference("SurfaceNames")
         self.addReference("SurfAndSubSurfNames")
@@ -5622,6 +5689,7 @@ class Ceiling_Interzone(ObjectAbstract):
         self.InsertField(FieldReal(self,"Width",0,("Along Y Axis","Units: m",),"","","",""))
 
 
+        self.setRequiredFields([0, 1, 2, 3])
         self.insertMemo(("used for ceilings using adjacent zone (interzone) heat transfer","adjacent surface should be a floor",))
         self.addReference("SurfaceNames")
         self.addReference("SurfAndSubSurfNames")
@@ -5655,6 +5723,7 @@ class Floor_GroundContact(ObjectAbstract):
         self.InsertField(FieldReal(self,"Width",0,("Along Y Axis","Units: m",),"","","",""))
 
 
+        self.setRequiredFields([0, 1, 2])
         self.insertMemo(("Used for exterior floors with ground contact","View Factors to Ground is automatically calculated.",))
         self.addReference("SurfaceNames")
         self.addReference("SurfAndSubSurfNames")
@@ -5689,6 +5758,7 @@ class Floor_Adiabatic(ObjectAbstract):
         self.InsertField(FieldReal(self,"Width",0,("Along Y Axis","Units: m",),"","","",""))
 
 
+        self.setRequiredFields([0, 1, 2])
         self.insertMemo(("Used for exterior floors ignoring ground contact or interior floors","View Factor to Ground is automatically calculated.",))
         self.addReference("SurfaceNames")
         self.addReference("SurfAndSubSurfNames")
@@ -5723,6 +5793,7 @@ class Floor_Interzone(ObjectAbstract):
         self.InsertField(FieldReal(self,"Width",0,("Along Y Axis","Units: m",),"","","",""))
 
 
+        self.setRequiredFields([0, 1, 2, 3])
         self.insertMemo(("used for floors using adjacent zone (interzone) heat transfer","adjacent surface should be a ceiling",))
         self.addReference("SurfaceNames")
         self.addReference("SurfAndSubSurfNames")
@@ -5768,6 +5839,7 @@ class FenestrationSurface_Detailed(ObjectVertice):
         self.InsertField(FieldReal(self,"Vertex 4 Z-coordinate",0,("Not used for triangles","Units: m",),"","","",""))
 
 
+        self.setRequiredFields([1, 2, 3])
         self.insertMemo(("Used for windows, doors, glass doors, tubular daylighting devices",))
         self.addReference("SubSurfNames")
         self.addReference("SurfAndSubSurfNames")
@@ -5800,6 +5872,7 @@ class Window(ObjectAbstract):
         self.InsertField(FieldReal(self,"Height",0,"","","","",""))
 
 
+        self.setRequiredFields([0, 1, 2])
         self.addReference("SubSurfNames")
         self.addReference("SurfAndSubSurfNames")
         self.addReference("AllHeatTranSurfNames")
@@ -5830,6 +5903,7 @@ class Door(ObjectAbstract):
         self.InsertField(FieldReal(self,"Height",0,"","","","",""))
 
 
+        self.setRequiredFields([0, 1, 2])
         self.insertMemo(("used to specify opaque doors",))
         self.addReference("SubSurfNames")
         self.addReference("SurfAndSubSurfNames")
@@ -5863,6 +5937,7 @@ class GlazedDoor(ObjectAbstract):
         self.InsertField(FieldReal(self,"Height",0,"","","","",""))
 
 
+        self.setRequiredFields([0, 1, 2])
         self.insertMemo(("used to specify glass doors",))
         self.addReference("SubSurfNames")
         self.addReference("SurfAndSubSurfNames")
@@ -5895,6 +5970,7 @@ class Window_Interzone(ObjectAbstract):
         self.InsertField(FieldReal(self,"Height",0,"","","","",""))
 
 
+        self.setRequiredFields([0, 1, 2])
         self.insertMemo(("used to specify interior windows adjacent to other zones",))
         self.addReference("SubSurfNames")
         self.addReference("SurfAndSubSurfNames")
@@ -5927,6 +6003,7 @@ class Door_Interzone(ObjectAbstract):
         self.InsertField(FieldReal(self,"Height",0,"","","","",""))
 
 
+        self.setRequiredFields([0, 1, 2])
         self.insertMemo(("used to specify opaque interior doors adjacent to other zones",))
         self.addReference("SubSurfNames")
         self.addReference("SurfAndSubSurfNames")
@@ -5959,6 +6036,7 @@ class GlazedDoor_Interzone(ObjectAbstract):
         self.InsertField(FieldReal(self,"Height",0,"","","","",""))
 
 
+        self.setRequiredFields([0, 1, 2])
         self.insertMemo(("used to specify glass interior doors adjacent to other zones",))
         self.addReference("SubSurfNames")
         self.addReference("SurfAndSubSurfNames")
@@ -5994,6 +6072,7 @@ class WindowProperty_ShadingControl(ObjectAbstract):
         self.InsertField(FieldReal(self,"Setpoint 2",0,("W/m2 for solar-based controls, deg C for temperature-based controls.","Used only as the second setpoint for the following two-setpoint control types:","OnIfHighOutdoorAirTempAndHighSolarOnWindow, OnIfHighOutdoorAirTempAndHighHorizontalSolar,","OnIfHighZoneAirTempAndHighSolarOnWindow, and OnIfHighZoneAirTempAndHighHorizontalSolar","Units: W/m2 or deg C",),"","","",""))
 
 
+        self.setRequiredFields([0, 1, 3])
         self.addReference("WindowShadeControlNames")
         self.setRequired(False)
         self.setMinfields(11)
@@ -6034,6 +6113,7 @@ class WindowProperty_FrameAndDivider(ObjectAbstract):
         self.InsertField(FieldReal(self,"Inside Reveal Solar Absorptance","0.0","",0.0,1.0,"",""))
 
 
+        self.setRequiredFields([0, 9])
         self.addReference("WindowFrameAndDividerNames")
         self.setRequired(False)
         self.setMinfields(20)
@@ -6056,6 +6136,7 @@ class WindowProperty_AirflowControl(ObjectAbstract):
         self.InsertField(FieldObjectlist(self,"Airflow Multiplier Schedule Name","",("Required if Airflow Is Scheduled = Yes.","Schedule values are 0.0 or 1.0 and multiply Maximum Air Flow.","",),"ScheduleNames"))
 
 
+        self.setRequiredFields([0])
         self.insertMemo(("Used to control forced airflow through a gap between glass layers",))
         self.setRequired(False)
         self.setMinfields(7)
@@ -6078,6 +6159,7 @@ class WindowProperty_StormWindow(ObjectAbstract):
         self.InsertField(FieldInt(self,"Day of Month that Storm Glass Layer is Taken Off",0,"",1,31,"",""))
 
 
+        self.setRequiredFields([0, 1, 3, 4, 5, 6])
         self.insertMemo(("This is a movable exterior glass layer that is usually applied in the winter","and removed in the summer.",))
         self.setRequired(False)
         self.setMinfields(7)
@@ -6097,6 +6179,7 @@ class InternalMass(ObjectAbstract):
         self.InsertField(FieldReal(self,"Surface Area",0,"","","",0,""))
 
 
+        self.setRequiredFields([0, 1, 2, 3])
         self.insertMemo(("Used to describe internal zone surface area that does not need to be part of geometric","representation. This should be the total surface area exposed to the zone air.",))
         self.addReference("AllHeatTranSurfNames")
         self.addReference("AllHeatTranAngFacNames")
@@ -6123,6 +6206,7 @@ class Shading_Site(ObjectAbstract):
         self.InsertField(FieldReal(self,"Height",0,"","","","",""))
 
 
+        self.setRequiredFields([0])
         self.insertMemo(("used for shading elements such as trees","these items are fixed in space and would not move with relative geometry",))
         self.addReference("AllShadingAndHTSurfNames")
         self.addReference("AllShadingSurfNames")
@@ -6148,6 +6232,7 @@ class Shading_Building(ObjectAbstract):
         self.InsertField(FieldReal(self,"Height",0,"","","","",""))
 
 
+        self.setRequiredFields([0])
         self.insertMemo(("used for shading elements such as trees, other buildings, parts of this building not being modeled","these items are relative to the current building and would move with relative geometry",))
         self.addReference("AllShadingAndHTSurfNames")
         self.addReference("AllShadingSurfNames")
@@ -6171,6 +6256,7 @@ class Shading_Site_Detailed(ObjectVertice):
         self.InsertField(FieldReal(self,"Vertex 1 Z-coordinate",0,"","","","",""))
 
 
+        self.setRequiredFields([0, 2])
         self.insertMemo(("used for shading elements such as trees","these items are fixed in space and would not move with relative geometry",))
         self.addReference("AllShadingAndHTSurfNames")
         self.addReference("AllShadingSurfNames")
@@ -6194,6 +6280,7 @@ class Shading_Building_Detailed(ObjectVertice):
         self.InsertField(FieldReal(self,"Vertex 1 Z-coordinate",0,"","","","",""))
 
 
+        self.setRequiredFields([0, 2])
         self.insertMemo(("used for shading elements such as trees, other buildings, parts of this building not being modeled","these items are relative to the current building and would move with relative geometry",))
         self.addReference("AllShadingAndHTSurfNames")
         self.addReference("AllShadingSurfNames")
@@ -6218,6 +6305,7 @@ class Shading_Overhang(ObjectAbstract):
         self.InsertField(FieldReal(self,"Depth",0,"","","","",""))
 
 
+        self.setRequiredFields([0, 1])
         self.insertMemo(("Overhangs are usually flat shading surfaces that reference a window or door.",))
         self.addReference("AttachedShadingSurfNames")
         self.addReference("AllShadingAndHTSurfNames")
@@ -6243,6 +6331,7 @@ class Shading_Overhang_Projection(ObjectAbstract):
         self.InsertField(FieldReal(self,"Depth as Fraction of Window/Door Height",0,"","","","",""))
 
 
+        self.setRequiredFields([0, 1])
         self.insertMemo(("Overhangs are typically flat shading surfaces that reference a window or door.",))
         self.addReference("AttachedShadingSurfNames")
         self.addReference("AllShadingAndHTSurfNames")
@@ -6273,6 +6362,7 @@ class Shading_Fin(ObjectAbstract):
         self.InsertField(FieldReal(self,"Right Depth",0,"","","","",""))
 
 
+        self.setRequiredFields([0, 1])
         self.insertMemo(("Fins are usually shading surfaces that are perpendicular to a window or door.",))
         self.addReference("AttachedShadingSurfNames")
         self.addReference("AllShadingAndHTSurfNames")
@@ -6303,6 +6393,7 @@ class Shading_Fin_Projection(ObjectAbstract):
         self.InsertField(FieldReal(self,"Right Depth as Fraction of Window/Door Width",0,"","","","",""))
 
 
+        self.setRequiredFields([0, 1])
         self.insertMemo(("Fins are usually shading surfaces that are perpendicular to a window or door.",))
         self.addReference("AttachedShadingSurfNames")
         self.addReference("AllShadingAndHTSurfNames")
@@ -6328,6 +6419,7 @@ class Shading_Zone_Detailed(ObjectVertice):
         self.InsertField(FieldReal(self,"Vertex 1 Z-coordinate",0,"","","","",""))
 
 
+        self.setRequiredFields([0, 1, 3])
         self.insertMemo(("used For fins, overhangs, elements that shade the building, are attached to the building","but are not part of the heat transfer calculations",))
         self.addReference("AttachedShadingSurfNames")
         self.addReference("AllShadingAndHTSurfNames")
@@ -6351,6 +6443,7 @@ class ShadingProperty_Reflectance(ObjectAbstract):
         self.InsertField(FieldText(self,"Glazing Construction Name","",("Required if Fraction of Shading Surface That Is Glazed > 0.0","",)))
 
 
+        self.setRequiredFields([0])
         self.insertMemo(("If this object is not defined for a shading surface the default values","listed in following fields will be used in the solar reflection calculation.",))
         self.setRequired(False)
         self.setMinfields(3)
@@ -6370,6 +6463,7 @@ class SurfaceControl_MovableInsulation(ObjectAbstract):
         self.InsertField(FieldObjectlist(self,"Schedule Name","","","ScheduleNames"))
 
 
+        self.setRequiredFields([0, 1, 2, 3])
         self.insertMemo(("Exterior or Interior Insulation on surfaces",))
         self.setRequired(False)
         self.setMinfields(0)
@@ -6396,6 +6490,7 @@ class SurfaceProperty_OtherSideCoefficients(ObjectAbstract):
         self.InsertField(FieldReal(self,"Period of Sinusoidal Variation","24",("Use with sinusoidal variation to define the time period","Units: hr",),"","",0,""))
 
 
+        self.setRequiredFields([0, 1])
         self.insertMemo(("This object sets the other side conditions for a surface in a variety of ways.",))
         self.addReference("OSCNames")
         self.addReference("OutFaceEnvNames")
@@ -6415,6 +6510,7 @@ class SurfaceProperty_OtherSideConditionsModel(ObjectAbstract):
         self.InsertField(FieldChoice(self,"Type of Modeling","GapConvectionRadiation",("GapConvectionRadiation provides boundary conditions for convection","and linearized thermal radiation across a gap or cavity","on the other side of the surface that are modeled sperately.","",),["GapConvectionRadiation",]))
 
 
+        self.setRequiredFields([0])
         self.insertMemo(("This object sets up modifying the other side conditions for a surface from other model results.",))
         self.addReference("OSCMNames")
         self.addReference("OutFaceEnvNames")
@@ -6441,6 +6537,7 @@ class SurfaceProperty_ConvectionCoefficients(ObjectAbstract):
         self.InsertField(FieldObjectlist(self,"Convection Coefficient 2 Schedule Name","",("used if Convection Type=Schedule","",),"ScheduleNames"))
 
 
+        self.setRequiredFields([0, 1, 2])
         self.insertMemo(("Allow user settable interior and/or exterior convection coefficients.","Note that some other factors may limit the lower bounds for these values, such as","for windows, the interior convection coefficient must be >.28,","for trombe wall algorithm selection (zone), the interior convection coefficient must be >.1","for detailed interior convection, the lower limit is also .1",))
         self.setRequired(False)
         self.setMinfields(0)
@@ -6465,6 +6562,7 @@ class SurfaceProperty_ConvectionCoefficients_MultipleSurface(ObjectAbstract):
         self.InsertField(FieldObjectlist(self,"Convection Coefficient 2 Schedule Name","",("used if Convection Coefficient Type=Schedule","",),"ScheduleNames"))
 
 
+        self.setRequiredFields([0, 1, 2])
         self.insertMemo(("Allow user settable interior and/or exterior convection coefficients.","Note that some other factors may limit the lower bounds for these values, such as","for windows, the interior convection coefficient must be >.28,","for trombe wall algorithm selection (zone), the interior convection coefficient must be >.1","for detailed interior convection, the lower limit is also .1",))
         self.setRequired(False)
         self.setMinfields(0)
@@ -6485,6 +6583,7 @@ class SurfaceProperties_VaporCoefficients(ObjectAbstract):
         self.InsertField(FieldReal(self,"Internal Vapor Coefficient Value","0",("Units are kg/Pa.s.m2","",),"","","",""))
 
 
+        self.setRequiredFields([0, 1, 3])
         self.insertMemo(("The interior and external vapor transfer coefficients.","Normally these value are calculated using the heat convection coefficient values.","Use this object to used fixed constant values.","Units are kg/Pa.s.m2","This will only work with the CombinedHeatAndMoistureFiniteElement algorithm for surfaces.","Other algorithms will ignore these coefficients",))
         self.setRequired(False)
         self.setMinfields(0)
@@ -6512,6 +6611,7 @@ class SurfaceProperty_ExteriorNaturalVentedCavity(ObjectAbstract):
         self.InsertField(FieldObjectlist(self,"Surface 1 Name","","","AllShadingAndHTSurfNames"))
 
 
+        self.setRequiredFields([0, 8, 11])
         self.addReference("VentedCavityNames")
         self.setRequired(False)
         self.setMinfields(0)
@@ -6550,6 +6650,7 @@ class RoomAirModelType(ObjectAbstract):
         self.InsertField(FieldChoice(self,"Air Temperature Coupling Strategy","Direct","",["Direct","Indirect",]))
 
 
+        self.setRequiredFields([0, 1, 2])
         self.setRequired(False)
         self.setMinfields(0)
         self.setGroup("Room Air Models") 
@@ -6568,6 +6669,7 @@ class RoomAir_TemperaturePattern_UserDefined(ObjectAbstract):
         self.InsertField(FieldObjectlist(self,"Pattern Control Schedule Name","",("The schedule should contain integer values that","correspond to unique Control Integer fields in","one of the RoomAir:TemperaturePattern:* objects.","",),"ScheduleNames"))
 
 
+        self.setRequiredFields([0, 1])
         self.setRequired(False)
         self.setMinfields(0)
         self.setGroup("Room Air Models") 
@@ -6588,6 +6690,7 @@ class RoomAir_TemperaturePattern_ConstantGradient(ObjectAbstract):
         self.InsertField(FieldReal(self,"Temperature Gradient",0,("Slope of temperature change in vertical direction","Units: K/m",),"","","",""))
 
 
+        self.setRequiredFields([0, 1])
         self.setRequired(False)
         self.setMinfields(0)
         self.setGroup("Room Air Models") 
@@ -6614,6 +6717,7 @@ class RoomAir_TemperaturePattern_TwoGradient(ObjectAbstract):
         self.InsertField(FieldReal(self,"Lower Heat Rate Bound",0,"","","","",""))
 
 
+        self.setRequiredFields([0, 1])
         self.setRequired(False)
         self.setMinfields(0)
         self.setGroup("Room Air Models") 
@@ -6635,6 +6739,7 @@ class RoomAir_TemperaturePattern_NondimensionalHeight(ObjectAbstract):
         self.InsertField(FieldReal(self,"Pair 1 Delta Adjacent Air Temperature",0,"",-10.0,20.0,"",""))
 
 
+        self.setRequiredFields([0, 1, 5, 6])
         self.setRequired(False)
         self.setMinfields(0)
         self.setGroup("Room Air Models") 
@@ -6656,6 +6761,7 @@ class RoomAir_TemperaturePattern_SurfaceMapping(ObjectAbstract):
         self.InsertField(FieldReal(self,"Delta Adjacent Air Temperature Pair 1",0,"","","","",""))
 
 
+        self.setRequiredFields([0, 1, 5, 6])
         self.setRequired(False)
         self.setMinfields(0)
         self.setGroup("Room Air Models") 
@@ -6695,6 +6801,7 @@ class RoomAir_Node(ObjectAbstract):
         self.InsertField(FieldObjectlist(self,"Surface 21 Name","","","AllHeatTranSurfNames"))
 
 
+        self.setRequiredFields([1, 2, 3])
         self.insertMemo(("define an air node for some types of nodal air models",))
         self.setRequired(False)
         self.setMinfields(0)
@@ -6713,6 +6820,7 @@ class RoomAirSettings_OneNodeDisplacementVentilation(ObjectAbstract):
         self.InsertField(FieldReal(self,"Fraction of Infiltration Internal Loads Added to Floor Air",0,"",0.0,1.0,"",""))
 
 
+        self.setRequiredFields([0])
         self.insertMemo(("The Mundt model for displacement ventilation",))
         self.setRequired(False)
         self.setMinfields(0)
@@ -6734,6 +6842,7 @@ class RoomAirSettings_ThreeNodeDisplacementVentilation(ObjectAbstract):
         self.InsertField(FieldReal(self,"Temperature Difference Threshold for Reporting","0.4",("Minimum temperature difference between predicted upper and lower layer","temperatures above which DV auxilliary outputs are calculated.","These outputs are 'DV Transition Height', 'DV Fraction Min Recommended Flow Rate'","'DV Average Temp Gradient' and 'DV Maximum Temp Gradient'.  They","are set to negative values when the temperature difference is less than the","threshold and the output 'DV Zone Is Mixed' is set to 1","",),0.0,"","",""))
 
 
+        self.setRequiredFields([0, 1, 2, 5])
         self.insertMemo(("The UCSD model for Displacement Ventilation",))
         self.setRequired(False)
         self.setMinfields(0)
@@ -6752,6 +6861,7 @@ class RoomAirSettings_CrossVentilation(ObjectAbstract):
         self.InsertField(FieldChoice(self,"Airflow Region Used for Thermal Comfort Evaluation","",("Required field whenever thermal comfort is predicted","defines Air temperature and Airflow velocity that will be used in the Fanger model","conditions must refer to one of the two regions: jet or recirculation","",),["Jet","Recirculation",]))
 
 
+        self.setRequiredFields([0, 1])
         self.setRequired(False)
         self.setMinfields(0)
         self.setGroup("Room Air Models") 
@@ -6781,6 +6891,7 @@ class RoomAirSettings_UnderFloorAirDistributionInterior(ObjectAbstract):
         self.InsertField(FieldRealAutocalculate(self,"Coefficient E","Autocalculate",("Coefficient E in Formula Kc = A*Gamma**B + C + D*Gamma + E*Gamma**2","Kc is the fraction of the total zone load attributable to the lower subzone","",),"","","",""))
 
 
+        self.setRequiredFields([0, 7, 8])
         self.setRequired(False)
         self.setMinfields(15)
         self.setGroup("Room Air Models") 
@@ -6810,6 +6921,7 @@ class RoomAirSettings_UnderFloorAirDistributionExterior(ObjectAbstract):
         self.InsertField(FieldRealAutocalculate(self,"Coefficient E in formula Kc = A*Gamma**B + C + D*Gamma + E*Gamma**2","Autocalculate",("Kc is the fraction of the total zone load attributable to the lower subzone","",),"","","",""))
 
 
+        self.setRequiredFields([0, 7, 8])
         self.setRequired(False)
         self.setMinfields(15)
         self.setGroup("Internal Gains") 
@@ -6843,6 +6955,7 @@ class People(ObjectAbstract):
         self.InsertField(FieldChoice(self,"Thermal Comfort Model 3 Type","",("optional (third thermal comfort model and report type)","",),["Fanger","Pierce","KSU",]))
 
 
+        self.setRequiredFields([0, 1, 2, 3, 7, 9])
         self.insertMemo(("Sets internal gains for occupants in the zone.",))
         self.addReference("PeopleNames")
         self.setRequired(False)
@@ -6931,6 +7044,7 @@ class Lights(ObjectAbstract):
         self.InsertField(FieldReal(self,"Return Air Fraction Function of Plenum Temperature Coefficient 2","0.0",("Used only if Return Air Fraction Is Calculated from Plenum Temperature = Yes","Equation is Return Air Fraction = Coefficient#1 - Coefficient#2 X PlenumTemp(degC)","Units: 1/K",),0.0,"","",""))
 
 
+        self.setRequiredFields([0, 1, 2, 3, 7, 8, 9, 10])
         self.insertMemo(("Sets internal gains for lights in the zone.",))
         self.addReference("LightsNames")
         self.setRequired(False)
@@ -6958,6 +7072,7 @@ class ElectricEquipment(ObjectAbstract):
         self.InsertField(FieldText(self,"End-Use Subcategory","General",""))
 
 
+        self.setRequiredFields([0, 1, 2, 3, 7, 8, 9])
         self.insertMemo(("Sets internal gains for electric equipment in the zone.",))
         self.addReference("ElectricEquipmentNames")
         self.setRequired(False)
@@ -6985,6 +7100,7 @@ class GasEquipment(ObjectAbstract):
         self.InsertField(FieldText(self,"End-Use Subcategory","General",""))
 
 
+        self.setRequiredFields([0, 1, 2, 3, 7, 8, 9])
         self.insertMemo(("Sets internal gains for gas equipment in the zone.",))
         self.addReference("GasEquipmentNames")
         self.setRequired(False)
@@ -7012,6 +7128,7 @@ class HotWaterEquipment(ObjectAbstract):
         self.InsertField(FieldText(self,"End-Use Subcategory","General",""))
 
 
+        self.setRequiredFields([0, 1, 2, 3, 7, 8, 9])
         self.insertMemo(("Sets internal gains for hot water equipment in the zone.",))
         self.addReference("HotWaterEquipmentNames")
         self.setRequired(False)
@@ -7039,6 +7156,7 @@ class SteamEquipment(ObjectAbstract):
         self.InsertField(FieldText(self,"End-Use Subcategory","General",""))
 
 
+        self.setRequiredFields([0, 1, 2, 3, 7, 8, 9])
         self.insertMemo(("Sets internal gains for steam equipment in the zone.",))
         self.addReference("SteamEquipmentNames")
         self.setRequired(False)
@@ -7065,6 +7183,7 @@ class OtherEquipment(ObjectAbstract):
         self.InsertField(FieldReal(self,"Fraction Lost","0","",0.0,1.0,"",""))
 
 
+        self.setRequiredFields([0, 1, 2, 3, 7, 8, 9])
         self.insertMemo(("Sets internal gains or losses for *other* equipment in the zone.",))
         self.addReference("OtherEquipmentNames")
         self.setRequired(False)
@@ -7090,6 +7209,7 @@ class ZoneBaseboard_OutdoorTemperatureControlled(ObjectAbstract):
         self.InsertField(FieldText(self,"End-Use Subcategory","General",""))
 
 
+        self.setRequiredFields([0, 1, 2, 3, 4, 5, 6, 7])
         self.addReference("BaseboardHeatNames")
         self.setRequired(False)
         self.setMinfields(0)
@@ -7124,6 +7244,7 @@ class Daylighting_Controls(ObjectAbstract):
         self.InsertField(FieldReal(self,"Probability Lighting will be Reset When Needed in Manual Stepped Control","1.0","",0.0,1.0,"",""))
 
 
+        self.setRequiredFields([0, 3, 13])
         self.insertMemo(("Dimming of overhead electric lighting is determined from","interior daylight illuminance calculated at one or two reference points.","reference points are given in coordinates specified in the GlobalGeometryRules object","Daylighting Reference Point CoordinateSystem field","Glare from daylighting is also calculated.",))
         self.setRequired(False)
         self.setMinfields(19)
@@ -7147,6 +7268,7 @@ class Daylighting_DELight_Controls(ObjectAbstract):
         self.InsertField(FieldReal(self,"Gridding Resolution",0,("Maximum surface area for nodes in gridding all surfaces in the DElight zone.","All reflective and transmitting surfaces will be subdivided","into approximately square nodes that do not exceed this maximum.","Higher resolution subdivisions require greater calculation times,","but generally produce more accurate results.","Units: m2",),"","",0.0,""))
 
 
+        self.setRequiredFields([0, 1])
         self.insertMemo(("Dimming of overhead electric lighting is determined from","DElight calculated interior daylight illuminance at one or more reference points.",))
         self.addReference("DElightZoneNames")
         self.setRequired(False)
@@ -7170,6 +7292,7 @@ class Daylighting_DELight_ReferencePoint(ObjectAbstract):
         self.InsertField(FieldReal(self,"Illuminance Setpoint at Reference Point","500","",0.0,"","",""))
 
 
+        self.setRequiredFields([1, 2, 3, 4, 5, 6])
         self.insertMemo(("DElight reference point for illuminance calculation and electric lighting dimming.","reference points are given in coordinates specified in the GlobalGeometryRules object","Daylighting Reference Point CoordinateSystem field","There is a maximum number of 100 reference points per DElight daylighting zone.",))
         self.setRequired(False)
         self.setMinfields(7)
@@ -7190,6 +7313,7 @@ class Daylighting_DELight_ComplexFenestration(ObjectAbstract):
         self.InsertField(FieldReal(self,"Fenestration Rotation","0.0",("In-plane counter-clockwise rotation angle of the Complex Fenestration","optical reference direction and the base edge of the Complex Fenestration.","The Rotation will typically be zero when the host and CFS surfaces","are rectangular and height and width edges are aligned.","Units: deg",),"","","",""))
 
 
+        self.setRequiredFields([0, 1, 2, 3])
         self.insertMemo(("Used for DElight Complex Fenestration of all types",))
         self.setRequired(False)
         self.setMinfields(5)
@@ -7214,6 +7338,7 @@ class DaylightingDevice_Tubular(ObjectAbstract):
         self.InsertField(FieldReal(self,"Transition Zone 1 Length",0,"",0.0,"","",""))
 
 
+        self.setRequiredFields([0, 1, 2, 3, 4, 5, 6])
         self.setRequired(False)
         self.setMinfields(0)
         self.setGroup("Daylighting") 
@@ -7234,6 +7359,7 @@ class DaylightingDevice_Shelf(ObjectAbstract):
         self.InsertField(FieldReal(self,"View Factor to Outside Shelf",0,"",0.0,1.0,"",""))
 
 
+        self.setRequiredFields([0, 1])
         self.setRequired(False)
         self.setMinfields(0)
         self.setGroup("Daylighting") 
@@ -7253,6 +7379,7 @@ class DaylightingDevice_LightWell(ObjectAbstract):
         self.InsertField(FieldReal(self,"Visible Reflectance of Well Walls",0,"",0.0,1.0,"",""))
 
 
+        self.setRequiredFields([0, 1, 2, 3, 4])
         self.insertMemo(("Applies only to exterior windows in daylighting-controlled zones or","in zones that share an interior window with a daylighting-controlled  zone.","Generally used with skylights.",))
         self.setRequired(False)
         self.setMinfields(5)
@@ -7277,6 +7404,7 @@ class Output_IlluminanceMap(ObjectAbstract):
         self.InsertField(FieldInt(self,"Number of Y Grid Points","2","","",10,0,""))
 
 
+        self.setRequiredFields([0, 1])
         self.insertMemo(("reference points are given in coordinates specified in the GlobalGeometryRules object","Daylighting Reference Point CoordinateSystem field",))
         self.setRequired(False)
         self.setMinfields(9)
@@ -7320,6 +7448,7 @@ class ZoneInfiltration_DesignFlowRate(ObjectAbstract):
         self.InsertField(FieldReal(self,"Velocity Squared Term Coefficient","0",(" *D* in Equation","",),0,"","",""))
 
 
+        self.setRequiredFields([0, 1, 2, 3, 8, 9, 10, 11])
         self.insertMemo((" Infiltration is specified as a design level which is modified by a Schedule fraction, temperature difference and wind speed:"," Infiltration=Idesign * FSchedule * (A + B*|(Tzone-Todb)| + C*WindSpd + D * WindSpd**2)",))
         self.setRequired(False)
         self.setMinfields(12)
@@ -7341,6 +7470,7 @@ class ZoneInfiltration_EffectiveLeakageArea(ObjectAbstract):
         self.InsertField(FieldReal(self,"Wind Coefficient",0,("*Cw* in Equation","",),"","",0,""))
 
 
+        self.setRequiredFields([0, 1, 2, 3, 4, 5])
         self.insertMemo((" Infiltration is specified as effective leakage area at 4 Pa, schedule fraction, stack and wind coefficients, and"," is a function of temperature difference and wind speed:"," Infiltration=FSchedule * (AL /1000) SQRT(Cs*|(Tzone-Todb)| +  Cw*WindSpd**2 )",))
         self.setRequired(False)
         self.setMinfields(6)
@@ -7364,6 +7494,7 @@ class ZoneInfiltration_FlowCoefficient(ObjectAbstract):
         self.InsertField(FieldReal(self,"Shelter Factor",0,("*s* in Equation","",),"","",0,""))
 
 
+        self.setRequiredFields([0, 1, 2, 3, 4, 5, 6, 7])
         self.insertMemo((" Infiltration is specified as flow coefficient, schedule fraction, stack and wind coefficients, and"," is a function of temperature difference and wind speed:"," Infiltration=FSchedule * SQRT( (c * Cs*|(Tzone-Todb)|**n)**2 + (c* Cw*(s * WindSpd)**2n)**2 )",))
         self.setRequired(False)
         self.setMinfields(8)
@@ -7405,6 +7536,7 @@ class ZoneVentilation(ObjectAbstract):
         self.InsertField(FieldReal(self,"Maximum Wind Speed","40",("this is the outdoor wind speed above which ventilation is shutoff","Units: m/s",),0,40,"",""))
 
 
+        self.setRequiredFields([0, 1, 2, 3, 8, 9, 10, 11, 12, 13, 14])
         self.insertMemo((" Ventilation is specified as a design level which is modified by a schedule fraction, temperature difference and wind speed:"," Ventilation=Vdesign * Fschedule * (A + B*|(Tzone-Todb)| + C*WindSpd + D * WindSpd**2)",))
         self.addReference("VentilationNames")
         self.setRequired(False)
@@ -7438,6 +7570,7 @@ class ZoneMixing(ObjectAbstract):
         self.InsertField(FieldObjectlist(self,"Maximum Outdoor Temperature Schedule Name","",("This schedule contains the outdoor temperature versus time above which","mixing is shutoff.","",),"ScheduleNames"))
 
 
+        self.setRequiredFields([0, 1, 2, 3, 8])
         self.setRequired(False)
         self.setMinfields(9)
         self.setGroup("Zone Airflow") 
@@ -7469,6 +7602,7 @@ class ZoneCrossMixing(ObjectAbstract):
         self.InsertField(FieldObjectlist(self,"Maximum Outdoor Temperature Schedule Name","",("This schedule contains the outdoor temperature versus time above which","cross mixing is shutoff.","",),"ScheduleNames"))
 
 
+        self.setRequiredFields([0, 1, 2, 3, 8])
         self.setRequired(False)
         self.setMinfields(9)
         self.setGroup("Zone Airflow") 
@@ -7505,6 +7639,7 @@ class ZoneEarthtube(ObjectAbstract):
         self.InsertField(FieldReal(self,"Velocity Squared Term Flow Coefficient","0",(" *D* in Equation","",),"","","",""))
 
 
+        self.setRequiredFields([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21])
         self.insertMemo((" Earth Tube is specified as a design level which is modified by a Schedule fraction, temperature difference and wind speed:"," Earthtube=Edesign * Fschedule * (A + B*|(Tzone-Todb)| + C*WindSpd + D * WindSpd**2)",))
         self.setRequired(False)
         self.setMinfields(22)
@@ -7534,6 +7669,7 @@ class ZoneCoolTower_Shower(ObjectAbstract):
         self.InsertField(FieldReal(self,"Rated Power Consumption",0,"","","","",""))
 
 
+        self.setRequiredFields([0, 1, 2, 6, 7, 8, 9, 10, 13])
         self.setRequired(False)
         self.setMinfields(0)
         self.setGroup("Zone Airflow") 
@@ -7634,6 +7770,7 @@ class ZoneThermalChimney(ObjectAbstract):
         self.InsertField(FieldReal(self,"Cross Sectional Areas of Air Channel Inlet 20",0,"",0,"","",""))
 
 
+        self.setRequiredFields([0, 1, 2, 3, 4, 5, 6, 7, 8, 9])
         self.setRequired(False)
         self.setMinfields(10)
         self.setGroup("Natural Ventilation and Duct Leakage") 
@@ -7661,6 +7798,7 @@ class AirflowNetwork_SimulationControl(ObjectAbstract):
         self.InsertField(FieldReal(self,"Ratio of Building Width Along Short Axis to Width Along Long Axis","1.0",("Used only if Wind Pressure Coefficient Type = SurfaceAverageCalculation.","",),"",1.0,0.0,""))
 
 
+        self.setRequiredFields([0])
         self.insertMemo(("This object defines the global parameters used in an Airflow Network simulation.",))
         self.setRequired(False)
         self.setMinfields(13)
@@ -7685,6 +7823,7 @@ class AirflowNetwork_MultiZone_Zone(ObjectAbstract):
         self.InsertField(FieldObjectlist(self,"Venting Availability Schedule Name","",("Non-zero Schedule value means venting is allowed if other venting control conditions are","satisfied. A zero (or negative) Schedule value means venting is not allowed under any","The Schedule values should be greater than or equal to 0 and less than or equal to 1.","circumstances. If this Schedule is not specified then venting is allowed if","other venting control conditions are satisfied.","Not used if Ventilation Control Mode = NoVent.","",),"ScheduleNames"))
 
 
+        self.setRequiredFields([0])
         self.insertMemo(("This object is used to simultaneously control a thermal zone's window and door openings,","both exterior and interior.",))
         self.setRequired(False)
         self.setMinfields(8)
@@ -7712,6 +7851,7 @@ class AirflowNetwork_MultiZone_Surface(ObjectAbstract):
         self.InsertField(FieldObjectlist(self,"Venting Availability Schedule Name","",("Non-zero schedule value means venting is allowed if other venting control conditions are","satisfied. A zero (or negative) schedule value means venting is not allowed under any","circumstances. The schedule values should be greater than or equal to 0 and less than or","equal to 1. If this schedule is not specified then venting is allowed if","other venting control conditions are satisfied.","Not used if Ventilation Control Mode = NoVent or ZoneLevel.","",),"ScheduleNames"))
 
 
+        self.setRequiredFields([0, 1, 3])
         self.insertMemo(("This object specifies the properties of a surface linkage through which air flows.","Airflow Report: Node 1 as an inside face zone;","Node 2 as an outside face zone or external node.",))
         self.setRequired(False)
         self.setMinfields(4)
@@ -7731,6 +7871,7 @@ class AirflowNetwork_MultiZone_ReferenceCrackConditions(ObjectAbstract):
         self.InsertField(FieldReal(self,"Reference Humidity Ratio","0",("Enter the reference humidity ratio under which the surface crack data were obtained.","Units: kg/kg",),"","","",""))
 
 
+        self.setRequiredFields([0])
         self.insertMemo(("This object specifies the conditions under which the air mass flow coefficient was measured.",))
         self.addReference("ReferenceCrackConditions")
         self.setRequired(False)
@@ -7751,6 +7892,7 @@ class AirflowNetwork_MultiZone_Surface_Crack(ObjectAbstract):
         self.InsertField(FieldObjectlist(self,"Reference Crack Conditions","",("Select a AirflowNetwork:MultiZone:ReferenceCrackConditions name associated with","the air mass flow coefficient entered above.","",),"ReferenceCrackConditions"))
 
 
+        self.setRequiredFields([0, 1])
         self.insertMemo(("This object specifies the properties of airflow through a crack.",))
         self.addReference("SurfaceAirflowLeakageNames")
         self.setRequired(False)
@@ -7772,6 +7914,7 @@ class AirflowNetwork_MultiZone_Surface_EffectiveLeakageArea(ObjectAbstract):
         self.InsertField(FieldReal(self,"Air Mass Flow Exponent",".65",("Enter the exponent used in the air mass flow equation.","Units: dimensionless",),0.5,1.0,"",""))
 
 
+        self.setRequiredFields([0, 1])
         self.insertMemo(("This object is used to define surface air leakage.",))
         self.addReference("SurfaceAirflowLeakageNames")
         self.setRequired(False)
@@ -7814,6 +7957,7 @@ class AirflowNetwork_MultiZone_Component_DetailedOpening(ObjectAbstract):
         self.InsertField(FieldReal(self,"Start Height Factor for Opening Factor 4","0",("The Start Height Factor is the Start Height divided by the window or door height.","Start Height is the distance between the bottom of the window or door and the","bottom of the window or door opening. The sum of the Height Factor and the Start Height","Factor must be less than 1.0 in order to have the opening within the window or door","dimensions.","Units: dimensionless",),0,1,"",""))
 
 
+        self.setRequiredFields([0, 1, 5, 11])
         self.insertMemo(("This object specifies the properties of airflow through windows and doors (window, door and","glass door heat transfer subsurfaces) when they are closed or open.",))
         self.addReference("SurfaceAirflowLeakageNames")
         self.setRequired(False)
@@ -7835,6 +7979,7 @@ class AirflowNetwork_MultiZone_Component_SimpleOpening(ObjectAbstract):
         self.InsertField(FieldReal(self,"Discharge Coefficient",0,("The Discharge Coefficient indicates the fractional effectiveness","for air flow through a window or door at that Opening Factor.","Units: dimensionless",),"","",0,""))
 
 
+        self.setRequiredFields([0, 1, 3, 4])
         self.insertMemo(("This object specifies the properties of air flow through windows and doors (window, door and","glass door heat transfer subsurfaces) when they are closed or open.",))
         self.addReference("SurfaceAirflowLeakageNames")
         self.setRequired(False)
@@ -7855,6 +8000,7 @@ class AirflowNetwork_MultiZone_Component_ZoneExhaustFan(ObjectAbstract):
         self.InsertField(FieldObjectlist(self,"Reference Crack Conditions","",("Select a AirflowNetwork:MultiZone:ReferenceCrackConditions name associated with","the air mass flow coefficient entered above.","",),"ReferenceCrackConditions"))
 
 
+        self.setRequiredFields([0, 1])
         self.insertMemo(("This object specifies the additional properties for a zone exhaust fan","to perform multizone airflow calculations.",))
         self.addReference("ZoneEquipmentLists")
         self.setRequired(False)
@@ -7874,6 +8020,7 @@ class AirflowNetwork_MultiZone_ExternalNode(ObjectAbstract):
         self.InsertField(FieldObjectlist(self,"Wind Pressure Coefficient Values Object Name","",("Enter the name of the AirflowNetwork:MultiZone:WindPressureCoefficientValues object.","",),"WPCValueNames"))
 
 
+        self.setRequiredFields([0, 1, 2])
         self.insertMemo(("This object defines outdoor environmental conditions outside of the building.",))
         self.addReference("ExternalNodeNames")
         self.setRequired(False)
@@ -7927,6 +8074,7 @@ class AirflowNetwork_MultiZone_WindPressureCoefficientArray(ObjectAbstract):
         self.InsertField(FieldReal(self,"Wind Direction 36",0,("Enter the wind direction corresponding to the 36th WPC Array value.","Units: deg",),0.0,360.0,"",""))
 
 
+        self.setRequiredFields([0, 1, 2])
         self.insertMemo(("Used only if Wind Pressure Coefficient (WPC) Type = Input in the AirflowNetwork:SimulationControl","object. Number of WPC Values in the corresponding AirflowNetwork:MultiZone:WindPressureCoefficientValues","object must be the same as the number of wind directions specified for","this AirflowNetwork:MultiZone:WindPressureCoefficientArray object.",))
         self.addReference("WPCSetNames")
         self.setRequired(False)
@@ -7981,6 +8129,7 @@ class AirflowNetwork_MultiZone_WindPressureCoefficientValues(ObjectAbstract):
         self.InsertField(FieldReal(self,"Wind Pressure Coefficient Value 36",0,("Enter the WPC Value corresponding to the 36th wind direction.","Units: dimensionless",),"","","",""))
 
 
+        self.setRequiredFields([0, 1, 2, 3])
         self.insertMemo(("Used only if Wind Pressure Coefficient (WPC) Type = INPUT in the AirflowNetwork:SimulationControl","object. The number of WPC numeric inputs must correspond to the number of wind direction","inputs in the AirflowNetwork:Multizone:WindPressureCoefficientArray object.",))
         self.addReference("WPCValueNames")
         self.setRequired(False)
@@ -8001,6 +8150,7 @@ class AirflowNetwork_Distribution_Node(ObjectAbstract):
         self.InsertField(FieldReal(self,"Node Height","0.0",("Enter the reference height used to calculate the relative pressure.","Units: m",),"","","",""))
 
 
+        self.setRequiredFields([0])
         self.insertMemo(("This object represents an air distribution node in the AirflowNetwork model.",))
         self.addReference("AirflowNetwork NodeNames")
         self.setRequired(False)
@@ -8020,6 +8170,7 @@ class AirflowNetwork_Distribution_Component_Leak(ObjectAbstract):
         self.InsertField(FieldReal(self,"Air Mass Flow Exponent","0.65",("Enter the exponent used in the following equation:","Mass Flow Rate = Air Mass Flow Coefficient * (dP)^Air Mass Flow Exponent","Units: dimensionless",),0.5,1.0,"",""))
 
 
+        self.setRequiredFields([0, 1])
         self.insertMemo(("This object defines the characteristics of a supply or return air leak.",))
         self.addReference("AirflowNetworkComponentNames")
         self.setRequired(False)
@@ -8041,6 +8192,7 @@ class AirflowNetwork_Distribution_Component_LeakageRatio(ObjectAbstract):
         self.InsertField(FieldReal(self,"Air Mass Flow Exponent","0.65",("Enter the exponent used in the air mass flow equation.","Units: dimensionless",),0.5,1.0,"",""))
 
 
+        self.setRequiredFields([0, 2, 3])
         self.insertMemo(("This object is used to define supply and return air leaks with respect to the fan's maximum","air flow rate.",))
         self.addReference("AirflowNetworkComponentNames")
         self.setRequired(False)
@@ -8065,6 +8217,7 @@ class AirflowNetwork_Distribution_Component_Duct(ObjectAbstract):
         self.InsertField(FieldReal(self,"Overall Moisture Transmittance Coefficient from Air to Air","0.001",("Enter the overall moisture transmittance coefficient","including moisture film coefficients at both surfaces.","Units: kg/m2",),"","",0.0,""))
 
 
+        self.setRequiredFields([0, 1, 2, 3])
         self.insertMemo(("This object defines the relationship between pressure and air flow through the duct.",))
         self.addReference("AirflowNetworkComponentNames")
         self.setRequired(False)
@@ -8083,6 +8236,7 @@ class AirflowNetwork_Distribution_Component_ConstantVolumeFan(ObjectAbstract):
         self.InsertField(FieldChoice(self,"Supply Fan Object Type","Fan:ConstantVolume","",["Fan:OnOff","Fan:ConstantVolume",]))
 
 
+        self.setRequiredFields([0])
         self.insertMemo(("This object defines the name of the constant volume supply Air Fan used in an Air loop.",))
         self.addReference("AirflowNetworkComponentNames")
         self.setRequired(False)
@@ -8103,6 +8257,7 @@ class AirflowNetwork_Distribution_Component_Coil(ObjectAbstract):
         self.InsertField(FieldReal(self,"Air Path Hydraulic Diameter",0,("Enter the hydraulic diameter of this coil. The hydraulic diameter is","defined as 4 multiplied by the cross section area divided by perimeter.","Units: m",),"","",0,""))
 
 
+        self.setRequiredFields([0, 1, 2, 3])
         self.insertMemo(("This object defines the name of a coil used in an air loop.",))
         self.addReference("AirflowNetworkComponentNames")
         self.setRequired(False)
@@ -8123,6 +8278,7 @@ class AirflowNetwork_Distribution_Component_HeatExchanger(ObjectAbstract):
         self.InsertField(FieldReal(self,"Air Path Hydraulic Diameter",0,("Enter the hydraulic diameter of this heat exchanger. The hydraulic diameter is","defined as 4 multiplied by the cross section area divided by perimeter.","Units: m",),"","",0,""))
 
 
+        self.setRequiredFields([0, 1, 2, 3])
         self.insertMemo(("This object defines the name of an air-to-air heat exchanger used in an air loop.",))
         self.addReference("AirflowNetworkComponentNames")
         self.setRequired(False)
@@ -8143,6 +8299,7 @@ class AirflowNetwork_Distribution_Component_TerminalUnit(ObjectAbstract):
         self.InsertField(FieldReal(self,"Air Path Hydraulic Diameter",0,("Enter the hydraulic diameter of this terminal unit. The hydraulic diameter is","defined as 4 multiplied by the cross section area divided by perimeter.","Units: m",),"","",0,""))
 
 
+        self.setRequiredFields([0, 1, 2, 3])
         self.insertMemo(("This object defines the name of a terminal unit in an air loop.",))
         self.addReference("AirflowNetworkComponentNames")
         self.setRequired(False)
@@ -8161,6 +8318,7 @@ class AirflowNetwork_Distribution_Component_ConstantPressureDrop(ObjectAbstract)
         self.InsertField(FieldReal(self,"Pressure Difference Across the Component",0,("Enter the pressure drop across this component.","Units: Pa",),"","",0.0,""))
 
 
+        self.setRequiredFields([0, 1])
         self.insertMemo(("This object defines the characteristics of a constant pressure drop component (e.g. filter).","Each node connected to this object can not be a node of mixer, splitter, a node of air primary","loop, or zone equipment loop. It is recommended to connect to a duct component at both ends.",))
         self.addReference("AirflowNetworkComponentNames")
         self.setRequired(False)
@@ -8182,6 +8340,7 @@ class AirflowNetwork_Distribution_Linkage(ObjectAbstract):
         self.InsertField(FieldObjectlist(self,"Thermal Zone Name","",("Only used if component = AirflowNetwork:Distribution:Component:Duct","The zone name is where AirflowNetwork:Distribution:Component:Duct is exposed. Leave this field blank if the duct","conduction loss is ignored.","",),"ZoneNames"))
 
 
+        self.setRequiredFields([0, 1, 2, 3])
         self.insertMemo(("This object defines the connection between two nodes and a component.",))
         self.addReference("AirflowNetwork LinkageNames")
         self.setRequired(False)
@@ -8203,6 +8362,7 @@ class Exterior_Lights(ObjectAbstract):
         self.InsertField(FieldText(self,"End-Use Subcategory","General",""))
 
 
+        self.setRequiredFields([0, 1, 2])
         self.insertMemo(("only used for Meter type reporting, does not affect building loads",))
         self.addReference("ExteriorLightsNames")
         self.setRequired(False)
@@ -8224,6 +8384,7 @@ class Exterior_FuelEquipment(ObjectAbstract):
         self.InsertField(FieldText(self,"End-Use Subcategory","General",""))
 
 
+        self.setRequiredFields([0, 1, 2, 3])
         self.insertMemo(("only used for Meter type reporting, does not affect building loads",))
         self.addReference("ExteriorFuelEquipmentNames")
         self.setRequired(False)
@@ -8245,6 +8406,7 @@ class Exterior_WaterEquipment(ObjectAbstract):
         self.InsertField(FieldText(self,"End-Use Subcategory","General",""))
 
 
+        self.setRequiredFields([0, 2, 3])
         self.insertMemo(("only used for Meter type reporting, does not affect building loads",))
         self.addReference("ExteriorWaterEquipmentNames")
         self.setRequired(False)
@@ -8958,6 +9120,7 @@ class Sizing_Zone(ObjectAbstract):
         self.InsertField(FieldReal(self,"Heating Maximum Air Flow Fraction","0.3",("fraction of the Heating Design Air Flow Rate","This input is not currently used for autosizing any of the components.","",),0,"","",""))
 
 
+        self.setRequiredFields([0, 1, 2, 3, 4])
         self.setRequired(False)
         self.setMinfields(20)
         self.setGroup("HVAC Design Objects") 
@@ -8991,6 +9154,7 @@ class Sizing_System(ObjectAbstract):
         self.InsertField(FieldReal(self,"Heating Design Air Flow Rate","0","",0,"","",""))
 
 
+        self.setRequiredFields([0, 1, 3, 4, 5, 6, 7, 8, 9, 13, 14])
         self.setRequired(False)
         self.setMinfields(19)
         self.setGroup("HVAC Design Objects") 
@@ -9009,6 +9173,7 @@ class Sizing_Plant(ObjectAbstract):
         self.InsertField(FieldReal(self,"Loop Design Temperature Difference",0,"","","",0.0,""))
 
 
+        self.setRequiredFields([0, 1, 2, 3])
         self.setRequired(False)
         self.setMinfields(4)
         self.setGroup("HVAC Design Objects") 
@@ -9024,6 +9189,7 @@ class OutputControl_Sizing_Style(ObjectAbstract):
         self.InsertField(FieldChoice(self,"Column Separator","","",["Comma","Tab","Fixed",]))
 
 
+        self.setRequiredFields([0])
         self.insertMemo(("default style for the Sizing output files is comma -- this works well for","importing into spreadsheet programs such as Excel(tm) but not so well for word","processing progams -- there tab may be a better choice.  fixed puts spaces between","the *columns*",))
         self.setRequired(False)
         self.setMinfields(0)
@@ -9043,6 +9209,7 @@ class ZoneControl_Humidistat(ObjectAbstract):
         self.InsertField(FieldObjectlist(self,"Dehumidifying Relative Humidity Setpoint Schedule Name","",("hourly schedule values should be in Relative Humidity (percent)","",),"ScheduleNames"))
 
 
+        self.setRequiredFields([0, 1, 2])
         self.setRequired(False)
         self.setMinfields(3)
         self.setGroup("Zone HVAC Controls and Thermostats") 
@@ -9068,6 +9235,7 @@ class ZoneControl_Thermostat(ObjectAbstract):
         self.InsertField(FieldObjectlist(self,"Control 4 Name","",("Control names are names of individual control objects (e.g. ThermostatSetpoint:SingleHeating)","Schedule values in these objects list actual setpoint temperatures for the control types","",),"ControlTypeNames"))
 
 
+        self.setRequiredFields([0, 1, 2, 3, 4])
         self.addReference("ZoneControlThermostaticNames")
         self.setRequired(False)
         self.setMinfields(0)
@@ -9087,6 +9255,7 @@ class ZoneControl_Thermostat_OperativeTemperature(ObjectAbstract):
         self.InsertField(FieldObjectlist(self,"Radiative Fraction Schedule Name","",("Schedule values of 0.0 indicate no operative temperature control","",),"ScheduleNames"))
 
 
+        self.setRequiredFields([0, 1])
         self.setRequired(False)
         self.setMinfields(0)
         self.setGroup("Zone HVAC Controls and Thermostats") 
@@ -9116,6 +9285,7 @@ class ZoneControl_Thermostat_ThermalComfort(ObjectAbstract):
         self.InsertField(FieldObjectlist(self,"Thermal Comfort Control 4 Name","",("Control type names are names for individual control type objects.","Schedule values in these objects list actual setpoint temperatures for the control types","",),"ThermalComfortControlTypeNames"))
 
 
+        self.setRequiredFields([0, 1, 4, 5, 6, 7, 8])
         self.addReference("ZoneControlThermalComfortNames")
         self.setRequired(False)
         self.setMinfields(9)
@@ -9133,6 +9303,7 @@ class ThermostatSetpoint_SingleHeating(ObjectAbstract):
         self.InsertField(FieldObjectlist(self,"Setpoint Temperature Schedule Name","","","ScheduleNames"))
 
 
+        self.setRequiredFields([0])
         self.addReference("ControlTypeNames")
         self.setRequired(False)
         self.setMinfields(0)
@@ -9150,6 +9321,7 @@ class ThermostatSetpoint_SingleCooling(ObjectAbstract):
         self.InsertField(FieldObjectlist(self,"Setpoint Temperature Schedule Name","","","ScheduleNames"))
 
 
+        self.setRequiredFields([0])
         self.addReference("ControlTypeNames")
         self.setRequired(False)
         self.setMinfields(0)
@@ -9167,6 +9339,7 @@ class ThermostatSetpoint_SingleHeatingOrCooling(ObjectAbstract):
         self.InsertField(FieldObjectlist(self,"Setpoint Temperature Schedule Name","","","ScheduleNames"))
 
 
+        self.setRequiredFields([0])
         self.addReference("ControlTypeNames")
         self.setRequired(False)
         self.setMinfields(0)
@@ -9185,6 +9358,7 @@ class ThermostatSetpoint_DualSetpoint(ObjectAbstract):
         self.InsertField(FieldObjectlist(self,"Cooling Setpoint Temperature Schedule Name","","","ScheduleNames"))
 
 
+        self.setRequiredFields([0])
         self.addReference("ControlTypeNames")
         self.setRequired(False)
         self.setMinfields(0)
@@ -9202,6 +9376,7 @@ class ThermostatSetpoint_ThermalComfort_Fanger_SingleHeating(ObjectAbstract):
         self.InsertField(FieldObjectlist(self,"Fanger Thermal Comfort Schedule Name","",("Schedule values should be Predicted Mean Vote (PMV)","",),"ScheduleNames"))
 
 
+        self.setRequiredFields([0, 1])
         self.addReference("ThermalComfortControlTypeNames")
         self.setRequired(False)
         self.setMinfields(2)
@@ -9219,6 +9394,7 @@ class ThermostatSetpoint_ThermalComfort_Fanger_SingleCooling(ObjectAbstract):
         self.InsertField(FieldObjectlist(self,"Fanger Thermal Comfort Schedule Name","",("Schedule values should be Predicted Mean Vote (PMV)","",),"ScheduleNames"))
 
 
+        self.setRequiredFields([0, 1])
         self.addReference("ThermalComfortControlTypeNames")
         self.setRequired(False)
         self.setMinfields(2)
@@ -9236,6 +9412,7 @@ class ThermostatSetpoint_ThermalComfort_Fanger_SingleHeatingOrCooling(ObjectAbst
         self.InsertField(FieldObjectlist(self,"Fanger Thermal Comfort Schedule Name","",("Schedule values should be Predicted Mean Vote (PMV)","",),"ScheduleNames"))
 
 
+        self.setRequiredFields([0, 1])
         self.addReference("ThermalComfortControlTypeNames")
         self.setRequired(False)
         self.setMinfields(2)
@@ -9254,6 +9431,7 @@ class ThermostatSetpoint_ThermalComfort_Fanger_DualSetpoint(ObjectAbstract):
         self.InsertField(FieldObjectlist(self,"Fanger Thermal Comfort Cooling Schedule Name","",("Schedule values should be Predicted Mean Vote (PMV)","",),"ScheduleNames"))
 
 
+        self.setRequiredFields([0, 1, 2])
         self.addReference("ThermalComfortControlTypeNames")
         self.setRequired(False)
         self.setMinfields(3)
@@ -9283,6 +9461,7 @@ class ZoneHVAC_IdealLoadsAirSystem(ObjectAbstract):
         self.InsertField(FieldObjectlist(self,"Cooling Availability Schedule Name","","","ScheduleNames"))
 
 
+        self.setRequiredFields([0, 1, 2, 3, 4, 5])
         self.setRequired(False)
         self.setMinfields(12)
         self.setGroup("Zone HVAC Forced Air Units") 
@@ -9318,6 +9497,7 @@ class ZoneHVAC_FourPipeFanCoil(ObjectAbstract):
         self.InsertField(FieldChoice(self,"Cooling Coil Object Type","","",["Coil:Cooling:Water","Coil:Cooling:Water:DetailedGeometry","CoilSystem:Cooling:Water:HeatExchangerAssisted",]))
 
 
+        self.setRequiredFields([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 16, 17, 20])
         self.setRequired(False)
         self.setMinfields(21)
         self.setGroup("Zone HVAC Forced Air Units") 
@@ -9347,6 +9527,7 @@ class ZoneHVAC_WindowAirConditioner(ObjectAbstract):
         self.InsertField(FieldChoice(self,"Cooling Coil Object Type","","",["Coil:Cooling:DX:SingleSpeed","CoilSystem:Cooling:DX:HeatExchangerAssisted",]))
 
 
+        self.setRequiredFields([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 14])
         self.setRequired(False)
         self.setMinfields(15)
         self.setGroup("Zone HVAC Forced Air Units") 
@@ -9380,6 +9561,7 @@ class ZoneHVAC_PackagedTerminalAirConditioner(ObjectAbstract):
         self.InsertField(FieldObjectlist(self,"Supply Air Fan Operating Mode Schedule Name","",("Enter the name of a schedule that controls fan operation. Schedule Name values of 0 denote","cycling fan operation (fan cycles with cooling or heating coil). Schedule Name values greater","than 0 denote constant fan operation (fan runs continually regardless of coil operation).","",),"ScheduleNames"))
 
 
+        self.setRequiredFields([0, 1, 2, 3, 4, 5, 6, 8, 9, 11, 12, 13, 14, 15, 16])
         self.setRequired(False)
         self.setMinfields(17)
         self.setGroup("Zone HVAC Forced Air Units") 
@@ -9420,6 +9602,7 @@ class ZoneHVAC_PackagedTerminalHeatPump(ObjectAbstract):
         self.InsertField(FieldObjectlist(self,"Supply Air Fan Operating Mode Schedule Name","",("Enter the name of a schedule that controls fan operation. Schedule values of 0 denote","cycling fan operation (fan cycles with cooling or heating coil). Schedule Name values greater","than 0 denote constant fan operation (fan runs continually regardless of coil operation).","The fan operating mode defaults to cycling fan operation if this field is left blank.","",),"ScheduleNames"))
 
 
+        self.setRequiredFields([0, 1, 2, 3, 4, 5, 6, 8, 9, 11, 12, 13, 14, 17, 18, 20, 21, 22])
         self.setRequired(False)
         self.setMinfields(26)
         self.setGroup("Zone HVAC Forced Air Units") 
@@ -9444,6 +9627,7 @@ class ZoneHVAC_EnergyRecoveryVentilator(ObjectAbstract):
         self.InsertField(FieldReal(self,"Ventilation Rate per Occupant",0,("0.00236 m3/s-person corresponds to 5 ft3/min-person","Used only when supply and exhaust air flow rates are autosized.","Units: m3/s-person",),0.0,"","",""))
 
 
+        self.setRequiredFields([0, 1, 2, 3, 4, 5, 6])
         self.insertMemo(("This compound component models a stand-alone energy recovery ventilator (ERV)","that conditions outdoor ventilation air and supplies that air directly to a zone.","The ERV unit is modeled as a collection of components: air-to-air heat exchanger,","supply air fan, exhaust air fan and an optional controller to avoid overheating","of the supply air (economizer or free cooling operation).",))
         self.setRequired(False)
         self.setMinfields(7)
@@ -9472,6 +9656,7 @@ class ZoneHVAC_EnergyRecoveryVentilator_Controller(ObjectAbstract):
         self.InsertField(FieldYesNo(self,"Control High Indoor Humidity Based on Outdoor Humidity Ratio","Yes",("If NO is selected, the air flow rate is modified any time indoor relative","humidity is above humidistat setpoint. If YES is selected, outdoor air flow","rate is modified any time indoor relative humidity is above the humidistat","setpoint AND the outdoor humidity ratio is less than the indoor humidity ratio.","",),["Yes","No",]))
 
 
+        self.setRequiredFields([0])
         self.insertMemo(("This controller is used exclusively by the ZoneHVAC:EnergyRecoveryVentilator object","to allow economizer (free cooling) operation when possible.",))
         self.addReference("ControllerStandAloneEnergyRecoveryVentilator")
         self.setRequired(False)
@@ -9512,6 +9697,7 @@ class ZoneHVAC_UnitVentilator(ObjectAbstract):
         self.InsertField(FieldReal(self,"Cooling Convergence Tolerance","0.001","","","",0.0,""))
 
 
+        self.setRequiredFields([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15])
         self.setRequired(False)
         self.setMinfields(16)
         self.setGroup("Zone HVAC Forced Air Units") 
@@ -9540,6 +9726,7 @@ class ZoneHVAC_UnitHeater(ObjectAbstract):
         self.InsertField(FieldReal(self,"Heating Convergence Tolerance","0.001","","","",0.0,""))
 
 
+        self.setRequiredFields([0, 1, 5, 6, 8, 9])
         self.setRequired(False)
         self.setMinfields(0)
         self.setGroup("Zone HVAC Radiative/Convective Units") 
@@ -9605,6 +9792,7 @@ class ZoneHVAC_Baseboard_RadiantConvective_Water(ObjectAbstract):
         self.InsertField(FieldReal(self,"Fraction of Radiant Energy to Surface 20",0,"",0,1,"",""))
 
 
+        self.setRequiredFields([0, 1, 2, 3, 4, 6, 7, 9])
         self.setRequired(False)
         self.setMinfields(0)
         self.setGroup("Zone HVAC Radiative/Convective Units") 
@@ -9626,6 +9814,7 @@ class ZoneHVAC_Baseboard_Convective_Water(ObjectAbstract):
         self.InsertField(FieldReal(self,"Convergence Tolerance","0.001","","","",0.0,""))
 
 
+        self.setRequiredFields([0, 1, 2, 3, 4, 5])
         self.setRequired(False)
         self.setMinfields(0)
         self.setGroup("Zone HVAC Radiative/Convective Units") 
@@ -9644,6 +9833,7 @@ class ZoneHVAC_Baseboard_Convective_Electric(ObjectAbstract):
         self.InsertField(FieldReal(self,"Efficiency","1.0","","",1.0,0.0,""))
 
 
+        self.setRequiredFields([0, 1, 2, 3])
         self.setRequired(False)
         self.setMinfields(0)
         self.setGroup("Zone HVAC Radiative/Convective Units") 
@@ -9677,6 +9867,7 @@ class ZoneHVAC_LowTemperatureRadiant_VariableFlow(ObjectAbstract):
         self.InsertField(FieldReal(self,"Condensation Control Dewpoint Offset","1.0","","","","",""))
 
 
+        self.setRequiredFields([0])
         self.setRequired(False)
         self.setMinfields(0)
         self.setGroup("Zone HVAC Radiative/Convective Units") 
@@ -9718,6 +9909,7 @@ class ZoneHVAC_LowTemperatureRadiant_ConstantFlow(ObjectAbstract):
         self.InsertField(FieldReal(self,"Condensation Control Dewpoint Offset","1.0","","","","",""))
 
 
+        self.setRequiredFields([0])
         self.setRequired(False)
         self.setMinfields(0)
         self.setGroup("Zone HVAC Radiative/Convective Units") 
@@ -9740,6 +9932,7 @@ class ZoneHVAC_LowTemperatureRadiant_Electric(ObjectAbstract):
         self.InsertField(FieldObjectlist(self,"Heating Setpoint Temperature Schedule Name","","","ScheduleNames"))
 
 
+        self.setRequiredFields([0])
         self.insertMemo(("Electric resistance low temperature radiant system",))
         self.setRequired(False)
         self.setMinfields(0)
@@ -9758,6 +9951,7 @@ class ZoneHVAC_LowTemperatureRadiant_SurfaceGroup(ObjectAbstract):
         self.InsertField(FieldReal(self,"Flow Fraction for Surface 1",0,"",0.0,"","",""))
 
 
+        self.setRequiredFields([0, 1, 2])
         self.insertMemo(("This is used to allow the coordinate control of several radiant system surfaces.","Note that the following flow fractions must sum up to 1.0","The number of surfaces can be expanded beyond 10, if necessary, by adding more","groups to the end of the list",))
         self.addReference("RadGroupAndSurfNames")
         self.setRequired(False)
@@ -9827,6 +10021,7 @@ class ZoneHVAC_HighTemperatureRadiant(ObjectAbstract):
         self.InsertField(FieldReal(self,"Fraction of Radiant Energy to Surface 20",0,"",0,1,"",""))
 
 
+        self.setRequiredFields([0, 1, 2, 3, 4, 5, 6, 7, 8, 10])
         self.setRequired(False)
         self.setMinfields(0)
         self.setGroup("Zone HVAC Radiative/Convective Units") 
@@ -9879,6 +10074,7 @@ class ZoneHVAC_VentilatedSlab(ObjectAbstract):
         self.InsertField(FieldText(self,"Cold Water Inlet Node Name","",""))
 
 
+        self.setRequiredFields([0, 1, 2, 4, 5, 6, 7, 8, 9, 10, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 26, 27, 28, 29, 30, 31])
         self.setRequired(False)
         self.setMinfields(0)
         self.setGroup("Zone HVAC Radiative/Convective Units") 
@@ -9964,6 +10160,7 @@ class ZoneHVAC_VentilatedSlab_SlabGroup(ObjectAbstract):
         self.InsertField(FieldText(self,"Slab Outlet Node Name for Surface 10","",""))
 
 
+        self.setRequiredFields([0, 1, 2, 3, 4, 5, 6, 7])
         self.insertMemo(("This is used to allow the coordinate control of several radiant system surfaces.","Note that the following flow fractions must sum up to 1.0","The number of surfaces can be expanded beyond 10, if necessary, by adding more","groups to the end of the list",))
         self.addReference("RadGroupAndSurfNames")
         self.setRequired(False)
@@ -9984,6 +10181,7 @@ class AirTerminal_SingleDuct_Uncontrolled(ObjectAbstract):
         self.InsertField(FieldRealAutocalculate(self,"Maximum Air Flow Rate",0,"",0.0,"","",""))
 
 
+        self.setRequiredFields([0, 1, 2, 3])
         self.setRequired(False)
         self.setMinfields(4)
         self.setGroup("Zone HVAC Air Loop Terminal Units") 
@@ -10009,6 +10207,7 @@ class AirTerminal_SingleDuct_ConstantVolume_Reheat(ObjectAbstract):
         self.InsertField(FieldReal(self,"Convergence Tolerance","0.001","","","",0.0,""))
 
 
+        self.setRequiredFields([0, 1, 2, 3])
         self.setRequired(False)
         self.setMinfields(0)
         self.setGroup("Zone HVAC Air Loop Terminal Units") 
@@ -10029,6 +10228,7 @@ class AirTerminal_SingleDuct_VAV_NoReheat(ObjectAbstract):
         self.InsertField(FieldReal(self,"Zone Minimum Air Flow Fraction",0,("fraction of maximum air flow","",),"","","",""))
 
 
+        self.setRequiredFields([0, 1, 2, 3, 5])
         self.setRequired(False)
         self.setMinfields(0)
         self.setGroup("Zone HVAC Air Loop Terminal Units") 
@@ -10059,6 +10259,7 @@ class AirTerminal_SingleDuct_VAV_Reheat(ObjectAbstract):
         self.InsertField(FieldChoice(self,"Damper Heating Action","Normal","",["Normal","Reverse",]))
 
 
+        self.setRequiredFields([0, 1, 2, 3])
         self.setRequired(False)
         self.setMinfields(0)
         self.setGroup("Zone HVAC Air Loop Terminal Units") 
@@ -10089,6 +10290,7 @@ class AirTerminal_SingleDuct_VAV_Reheat_VariableSpeedFan(ObjectAbstract):
         self.InsertField(FieldReal(self,"Heating Convergence Tolerance","0.001","","","",0.0,""))
 
 
+        self.setRequiredFields([0, 1, 2, 3, 4, 5, 6, 7, 9, 10])
         self.setRequired(False)
         self.setMinfields(0)
         self.setGroup("Zone HVAC Air Loop Terminal Units") 
@@ -10109,6 +10311,7 @@ class AirTerminal_SingleDuct_VAV_HeatAndCool_NoReheat(ObjectAbstract):
         self.InsertField(FieldReal(self,"Zone Minimum Air Flow Fraction",0,("fraction of maximum air flow","",),0.0,1.0,"",""))
 
 
+        self.setRequiredFields([0, 1, 2, 3, 5])
         self.setRequired(False)
         self.setMinfields(6)
         self.setGroup("Zone HVAC Air Loop Terminal Units") 
@@ -10136,6 +10339,7 @@ class AirTerminal_SingleDuct_VAV_HeatAndCool_Reheat(ObjectAbstract):
         self.InsertField(FieldReal(self,"Convergence Tolerance","0.001","","","",0.0,""))
 
 
+        self.setRequiredFields([0, 1, 2, 3, 5])
         self.setRequired(False)
         self.setMinfields(12)
         self.setGroup("Zone HVAC Air Loop Terminal Units") 
@@ -10167,6 +10371,7 @@ class AirTerminal_SingleDuct_SeriesPIU_Reheat(ObjectAbstract):
         self.InsertField(FieldReal(self,"Convergence Tolerance","0.001","","","",0.0,""))
 
 
+        self.setRequiredFields([0, 1, 2, 3, 4])
         self.setRequired(False)
         self.setMinfields(0)
         self.setGroup("Zone HVAC Air Loop Terminal Units") 
@@ -10199,6 +10404,7 @@ class AirTerminal_SingleDuct_ParallelPIU_Reheat(ObjectAbstract):
         self.InsertField(FieldReal(self,"Convergence Tolerance","0.001","","","",0.0,""))
 
 
+        self.setRequiredFields([0, 1, 2, 3, 4, 5])
         self.setRequired(False)
         self.setMinfields(0)
         self.setGroup("Zone HVAC Air Loop Terminal Units") 
@@ -10233,6 +10439,7 @@ class AirTerminal_SingleDuct_ConstantVolume_FourPipeInduction(ObjectAbstract):
         self.InsertField(FieldObjectlist(self,"Zone Mixer Name","","","ZoneMixers"))
 
 
+        self.setRequiredFields([0, 1, 2, 3, 4, 5, 6])
         self.setRequired(False)
         self.setMinfields(0)
         self.setGroup("Zone HVAC Air Loop Terminal Units") 
@@ -10270,6 +10477,7 @@ class AirTerminal_SingleDuct_ConstantVolume_CooledBeam(ObjectAbstract):
         self.InsertField(FieldReal(self,"Leaving Pipe Inside Diameter","0.0145","","","",0.0,""))
 
 
+        self.setRequiredFields([0, 1, 2, 3, 4, 5, 6])
         self.setRequired(False)
         self.setMinfields(23)
         self.setGroup("Zone HVAC Air Loop Terminal Units") 
@@ -10290,6 +10498,7 @@ class AirTerminal_DualDuct_ConstantVolume(ObjectAbstract):
         self.InsertField(FieldRealAutocalculate(self,"Maximum Air Flow Rate",0,"",0.0,"","",""))
 
 
+        self.setRequiredFields([0, 1, 2, 3, 4, 5])
         self.setRequired(False)
         self.setMinfields(0)
         self.setGroup("Zone HVAC Air Loop Terminal Units") 
@@ -10311,6 +10520,7 @@ class AirTerminal_DualDuct_VAV(ObjectAbstract):
         self.InsertField(FieldReal(self,"Zone Minimum Air Flow Fraction","0.2",("fraction of maximum air flow","",),0.0,1.0,"",""))
 
 
+        self.setRequiredFields([0, 1, 2, 3, 4, 5, 6])
         self.setRequired(False)
         self.setMinfields(0)
         self.setGroup("Zone HVAC Air Loop Terminal Units") 
@@ -10331,6 +10541,7 @@ class ZoneHVAC_AirDistributionUnit(ObjectAbstract):
         self.InsertField(FieldReal(self,"Constant Downstream Leakage Fraction","0","",0,0.3,"",""))
 
 
+        self.setRequiredFields([0, 1, 2, 3])
         self.insertMemo(("A typical set of components for an air distribution unit will","consist of a single component Air Distribution Unit (ADU)",))
         self.addReference("AirDistributionUnits")
         self.setRequired(False)
@@ -10352,6 +10563,7 @@ class ZoneHVAC_EquipmentList(ObjectAbstract):
         self.InsertField(FieldInt(self,"Zone Equipment 1 Heating Priority",0,("1=highest, 2=next, etc","",),1,"","",""))
 
 
+        self.setRequiredFields([0, 1, 2, 3, 4])
         self.insertMemo(("List equipment in simulation order.  Note that an ZoneHVAC:AirDistributionUnit or","AirTerminal:SingleDuct:Uncontrolled object must be listed in this statement if there is a forced","air system serving the zone from the air loop.",))
         self.addReference("ZoneEquipmentLists")
         self.setRequired(False)
@@ -10374,6 +10586,7 @@ class ZoneHVAC_EquipmentConnections(ObjectAbstract):
         self.InsertField(FieldText(self,"Zone Return Air Node Name","",""))
 
 
+        self.setRequiredFields([0, 1, 4, 5])
         self.setRequired(False)
         self.setMinfields(0)
         self.setGroup("Fans") 
@@ -10398,6 +10611,7 @@ class Fan_ConstantVolume(ObjectAbstract):
         self.InsertField(FieldText(self,"End-Use Subcategory","General",""))
 
 
+        self.setRequiredFields([0])
         self.addReference("Fans")
         self.addReference("FansCV")
         self.addReference("FansCVandOnOff")
@@ -10432,6 +10646,7 @@ class Fan_VariableVolume(ObjectAbstract):
         self.InsertField(FieldText(self,"End-Use Subcategory","General",""))
 
 
+        self.setRequiredFields([0])
         self.addReference("Fans")
         self.addReference("FansVAV")
         self.addReference("FansCVandVAV")
@@ -10461,6 +10676,7 @@ class Fan_OnOff(ObjectAbstract):
         self.InsertField(FieldText(self,"End-Use Subcategory","General",""))
 
 
+        self.setRequiredFields([0])
         self.addReference("Fans")
         self.addReference("FansCVandOnOff")
         self.addReference("FansOnOff")
@@ -10486,6 +10702,7 @@ class Fan_ZoneExhaust(ObjectAbstract):
         self.InsertField(FieldText(self,"End-Use Subcategory","General",""))
 
 
+        self.setRequiredFields([0])
         self.setRequired(False)
         self.setMinfields(0)
         self.setGroup("Fans") 
@@ -10506,6 +10723,7 @@ class FanPerformance_NightVentilation(ObjectAbstract):
         self.InsertField(FieldReal(self,"Motor in Airstream Fraction",0,("0.0 means fan motor outside of airstream","1.0 means fan motor inside of airstream","",),0.0,1.0,"",""))
 
 
+        self.setRequiredFields([0])
         self.setRequired(False)
         self.setMinfields(0)
         self.setGroup("Coils") 
@@ -10536,6 +10754,7 @@ class Coil_Cooling_Water(ObjectAbstract):
         self.InsertField(FieldObjectlist(self,"Condensate Collection Water Storage Tank Name","","","WaterStorageTankNames"))
 
 
+        self.setRequiredFields([0, 9, 10, 11, 12])
         self.addReference("CoolingCoilName")
         self.addReference("CoolingCoilsWater")
         self.addReference("CoolingCoilsWaterNoHX")
@@ -10576,6 +10795,7 @@ class Coil_Cooling_Water_DetailedGeometry(ObjectAbstract):
         self.InsertField(FieldObjectlist(self,"Condensate Collection Water Storage Tank Name","","","WaterStorageTankNames"))
 
 
+        self.setRequiredFields([0, 18, 19, 20, 21])
         self.addReference("CoolingCoilName")
         self.addReference("CoolingCoilsWater")
         self.addReference("CoolingCoilsWaterNoHX")
@@ -10620,6 +10840,7 @@ class Coil_Cooling_DX_SingleSpeed(ObjectAbstract):
         self.InsertField(FieldObjectlist(self,"Condensate Collection Water Storage Tank Name","","","WaterStorageTankNames"))
 
 
+        self.setRequiredFields([0, 1, 2, 3, 5, 6, 7, 8, 9, 10, 11, 12, 13])
         self.addReference("CoolingCoilsDX")
         self.addReference("CoolingCoilsDXSingleSpeed")
         self.addReference("CoolingCoilsDXBypassFactorEmpirical")
@@ -10668,6 +10889,7 @@ class Coil_Cooling_DX_TwoSpeed(ObjectAbstract):
         self.InsertField(FieldObjectlist(self,"Condensate Collection Water Storage Tank Name","","","WaterStorageTankName"))
 
 
+        self.setRequiredFields([0, 1, 2, 3, 5, 6, 7, 8, 9, 10, 11, 12, 14, 15, 17, 18, 19])
         self.addReference("CoolingCoilsDX")
         self.addReference("CoolingCoilsDXMultiSpeed")
         self.addReference("DesuperHeatingCoilSources")
@@ -10772,6 +10994,7 @@ class Coil_Cooling_DX_MultiSpeed(ObjectAbstract):
         self.InsertField(FieldRealAutocalculate(self,"Speed 4 Rated Evaporative Condenser Pump Power Consumption",0,("Rated power consumed by the evaporative condenser's water pump at Speed 4","Units: W",),0.0,"","",""))
 
 
+        self.setRequiredFields([0, 1, 2, 3, 4, 14, 15, 16, 18, 19, 20, 21, 22, 23, 28, 33, 34, 36, 37, 38, 39, 40, 41, 46])
         self.addReference("CoolingCoilsDX")
         self.setRequired(False)
         self.setMinfields(51)
@@ -10805,6 +11028,7 @@ class Coil_Cooling_DX_TwoStageWithHumidityControlMode(ObjectAbstract):
         self.InsertField(FieldObjectlist(self,"Condensate Collection Water Storage Tank Name","","","WaterStorageTankNames"))
 
 
+        self.setRequiredFields([0, 1, 2, 3, 8, 9])
         self.insertMemo(("This coil object models a DX coil which has multiple modes of operation.","For example, a coil with optional sub-cool or hot gas reheat which","is switched on or off depending on dehumidification requirements.","The meaning of each mode is defined by the controlling object.",))
         self.addReference("CoolingCoilsDX")
         self.addReference("CoolingCoilsDXMultiMode")
@@ -10844,6 +11068,7 @@ class CoilPerformance_DX_Cooling(ObjectAbstract):
         self.InsertField(FieldRealAutocalculate(self,"Evaporative Condenser Pump Rated Power Consumption","0.0",("Rated power consumed by the evaporative condenser's water pump","Units: W",),0.0,"","",""))
 
 
+        self.setRequiredFields([0, 1, 2, 4, 6, 7, 8, 9, 10, 11])
         self.addReference("CoilPerformanceDX")
         self.setRequired(False)
         self.setMinfields(12)
@@ -10873,6 +11098,7 @@ class Coil_Heating_Water(ObjectAbstract):
         self.InsertField(FieldReal(self,"Rated Outlet Air Temperature","32.2","","","","",""))
 
 
+        self.setRequiredFields([0, 4, 5, 6, 7])
         self.addReference("HeatingCoilName")
         self.addReference("HeatingCoilsWater")
         self.setRequired(False)
@@ -10900,6 +11126,7 @@ class Coil_Heating_Steam(ObjectAbstract):
         self.InsertField(FieldText(self,"Temperature Setpoint Node Name","",("only if coil is TemperatureSetpointControl","",)))
 
 
+        self.setRequiredFields([0, 5, 6, 7, 8])
         self.addReference("HeatingCoilName")
         self.setRequired(False)
         self.setMinfields(0)
@@ -10922,6 +11149,7 @@ class Coil_Heating_Electric(ObjectAbstract):
         self.InsertField(FieldText(self,"Temperature Setpoint Node Name","",(" needed if coil is temperature controlled and not load-base controlled","",)))
 
 
+        self.setRequiredFields([4, 5])
         self.addReference("HeatingCoilName")
         self.addReference("HeatingCoilsGasElec")
         self.addReference("HeatingCoilsGasElecDesup")
@@ -10949,6 +11177,7 @@ class Coil_Heating_Gas(ObjectAbstract):
         self.InsertField(FieldReal(self,"Parasitic Gas Load",0,("parasitic gas load associated with the gas coil operation (i.e., standing pilot)","Units: W",),"","","",""))
 
 
+        self.setRequiredFields([0, 1, 4, 5])
         self.addReference("HeatingCoilName")
         self.addReference("HeatingCoilsGasElec")
         self.addReference("HeatingCoilsGasElecDesup")
@@ -10975,6 +11204,7 @@ class Coil_Heating_Desuperheater(ObjectAbstract):
         self.InsertField(FieldReal(self,"Parasitic Electric Load",0,("parasitic electric load associated with the desuperheater coil operation","such as solenoid valves, etc.","Units: W",),0,"","",""))
 
 
+        self.setRequiredFields([0, 1, 3, 4, 5, 6])
         self.addReference("HeatingCoilsGasElecDesup")
         self.addReference("HeatingCoilsDesuperheater")
         self.setRequired(False)
@@ -11013,6 +11243,7 @@ class Coil_Heating_DX_SingleSpeed(ObjectAbstract):
         self.InsertField(FieldRealAutocalculate(self,"Resistive Defrost Heater Capacity","0.0",("only applicable if resistive defrost strategy is specified","Units: W",),0.0,"","",""))
 
 
+        self.setRequiredFields([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 13])
         self.addReference("HeatingCoilsDX")
         self.addReference("HeatingCoilsDXSingleSpeed")
         self.setRequired(False)
@@ -11086,6 +11317,7 @@ class Coil_Heating_DX_MultiSpeed(ObjectAbstract):
         self.InsertField(FieldText(self,"Speed 4 Waste Heat Function of Temperature Curve Name","",("curve = a + b*odb + c*odb**2 + d*db + e*db**2 + f*odb*db","odb = Outdoor air dry-bulb temperature (C)","db = entering coil dry-bulb temperature (C)","",)))
 
 
+        self.setRequiredFields([0, 1, 2, 3, 4, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36])
         self.addReference("HeatingCoilsDX")
         self.setRequired(False)
         self.setMinfields(37)
@@ -11125,6 +11357,7 @@ class Coil_Cooling_WaterToAirHeatPump_ParameterEstimation(ObjectAbstract):
         self.InsertField(FieldReal(self,"Parameter 10",0,("for source side fluid=pure water, N/A","for source side fluid=water + antifreeze, Source Side Heat Transfer Resistance2, units W/K","",),0.0,"","",""))
 
 
+        self.setRequiredFields([0, 1, 2, 3, 4, 5, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20])
         self.addReference("CoolingCoilsWaterToAirHP")
         self.setRequired(False)
         self.setMinfields(0)
@@ -11161,6 +11394,7 @@ class Coil_Heating_WaterToAirHeatPump_ParameterEstimation(ObjectAbstract):
         self.InsertField(FieldReal(self,"Parameter 9",0,("for source side fluid=pure water, Not Required, Enter 0","for source side fluid=water + antifreeze, Source Side Heat Transfer Resistance2, units W/K","",),0.0,"","",""))
 
 
+        self.setRequiredFields([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17])
         self.addReference("HeatingCoilsWaterToAirHP")
         self.setRequired(False)
         self.setMinfields(0)
@@ -11204,6 +11438,7 @@ class Coil_Cooling_WaterToAirHeatPump_EquationFit(ObjectAbstract):
         self.InsertField(FieldReal(self,"Ratio of Initial Moisture Evaporation Rate and Steady State Latent Capacity","0.0",("Ratio of the initial moisture evaporation rate from the cooling coil (when","the compressor first turns off) and the coil's steady-state latent capacity","at rated air flow rate and temperature conditions. Suggested value is 1.5; zero value","means latent degradation model is disabled.","Units: dimensionless",),0.0,5.0,"",""))
 
 
+        self.setRequiredFields([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25])
         self.setRequired(False)
         self.setMinfields(0)
         self.setGroup("Coils") 
@@ -11237,6 +11472,7 @@ class Coil_Heating_WaterToAirHeatPump_EquationFit(ObjectAbstract):
         self.InsertField(FieldReal(self,"Heating Power Consumption Coefficient 5",0,"","","","",""))
 
 
+        self.setRequiredFields([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18])
         self.setRequired(False)
         self.setMinfields(0)
         self.setGroup("Coils") 
@@ -11279,6 +11515,7 @@ class Coil_WaterHeating_AirToWaterHeatPump(ObjectAbstract):
         self.InsertField(FieldObjectlist(self,"Part Load Fraction Correlation Curve Name","",("Part Load Fraction Correlation (function of part load ratio) should be quadratic or cubic.","Quadratic curve = a + b(PLR) + c(PLR)^2.","Cubic curve = a + b(PLR) + c(PLR)^2 + d(PLR)^3.","PLR = part load ratio (heating delivered/steady-state heating capacity).","Use curve coefficients of 1,0,0 or leave this field blank when neglecting performance impacts","due to variations in part load ratio.","",),"QuadraticCubicCurves"))
 
 
+        self.setRequiredFields([0, 1, 14, 15, 16, 17])
         self.addReference("HeatPumpWaterHeaterDXCoils")
         self.setRequired(False)
         self.setMinfields(21)
@@ -11314,6 +11551,7 @@ class Coil_WaterHeating_Desuperheater(ObjectAbstract):
         self.InsertField(FieldReal(self,"Off-Cycle Parasitic Electric Load","0",("Parasitic electric load consumed when the desuperheater water heating coil is off.","Parasitic electric load does not contribute to water heating or the zone air heat balance.","Off-cycle parasitic power is 0 when the availability schedule is 0.","Units: W",),0,"","",""))
 
 
+        self.setRequiredFields([0, 2, 5, 6, 7, 9, 10, 11, 12, 13, 14, 15])
         self.addReference("WaterHeatingCoilsDesuperheater")
         self.setRequired(False)
         self.setMinfields(18)
@@ -11334,6 +11572,7 @@ class CoilSystem_Cooling_Water_HeatExchangerAssisted(ObjectAbstract):
         self.InsertField(FieldObjectlist(self,"Cooling Coil Name","","","CoolingCoilsWaterNoHX"))
 
 
+        self.setRequiredFields([0, 1, 2, 3, 4])
         self.addReference("CoolingCoilsWater")
         self.setRequired(False)
         self.setMinfields(5)
@@ -11354,6 +11593,7 @@ class CoilSystem_Cooling_DX_HeatExchangerAssisted(ObjectAbstract):
         self.InsertField(FieldObjectlist(self,"Cooling Coil Name","","","CoolingCoilsDXBypassFactorEmpirical"))
 
 
+        self.setRequiredFields([0, 1, 2, 3, 4])
         self.addReference("CoolingCoilsDX")
         self.addReference("CoolingCoilsDXSingleSpeed")
         self.setRequired(False)
@@ -11407,6 +11647,7 @@ class EvaporativeCooler_Indirect_CelDekPad(ObjectAbstract):
         self.InsertField(FieldText(self,"Secondary Air Inlet Node Name","",("Enter the name of an outdoor air node","",)))
 
 
+        self.setRequiredFields([0])
         self.setRequired(False)
         self.setMinfields(0)
         self.setGroup("Evaporative Coolers") 
@@ -11513,6 +11754,7 @@ class Humidifier_Steam_Electric(ObjectAbstract):
         self.InsertField(FieldObjectlist(self,"Water Storage Tank Name","","","WaterStorageTankNames"))
 
 
+        self.setRequiredFields([0])
         self.setRequired(False)
         self.setMinfields(0)
         self.setGroup("Humidifiers and Dehumidifiers") 
@@ -11552,6 +11794,7 @@ class Dehumidifier_Desiccant_NoFans(ObjectAbstract):
         self.InsertField(FieldReal(self,"Nominal Regeneration Temperature",0,("Nominal regen temperature upon which the regen energy modifier"," curve is based.  Not used if Default if chosen for the field Performance Mode Type.","121 C is a commonly used value.","Units: C",),40,250,"",""))
 
 
+        self.setRequiredFields([0])
         self.insertMemo(("This object models a solid desiccant dehumidifier. The process","air stream is the air which is dehumidified. The regeneration air","stream is the air which is heated to regenerate the desiccant.","This object determines the process air outlet conditions, the","load on the regeneration heating coil, the electric power consumption","for the wheel rotor motor, and the regeneration air fan mass flow rate.","All other heat exchangers are modeled as separate objects connected","to the inlet and outlet nodes of the dehumidifier. The solid","desiccant dehumidifier is typically used in an AirLoopHVAC:OutdoorAirSystem,","but can also be specified in any AirLoopHVAC.",))
         self.setRequired(False)
         self.setMinfields(0)
@@ -11585,6 +11828,7 @@ class Dehumidifier_Desiccant_System(ObjectAbstract):
         self.InsertField(FieldText(self,"Exhaust Fan Power Curve Name","",("Curve object type must be Curve:Quadratic or Curve:Cubic","",)))
 
 
+        self.setRequiredFields([0, 1, 2, 3, 4, 5, 6])
         self.insertMemo(("This compound object models a desiccant heat exchanger, an optional","heater, and associated fans. The process air stream is the air which","is dehumidified. The regeneration air stream is the air which is","heated to regenerate the desiccant. The desiccant heat exchanger","transfers both sensible and latent energy between the process and","regeneration air streams. The desiccant dehumidifier is typically used","in an AirLoopHVAC:OutdoorAirSystem, but can also be specified in any AirLoopHVAC.",))
         self.setRequired(False)
         self.setMinfields(8)
@@ -11615,6 +11859,7 @@ class HeatExchanger_AirToAir_FlatPlate(ObjectAbstract):
         self.InsertField(FieldText(self,"Secondary Air Outlet Node Name","",""))
 
 
+        self.setRequiredFields([0])
         self.addReference("HXAirToAirNames")
         self.addReference("HXAirToAirFlatPlateNames")
         self.setRequired(False)
@@ -11654,6 +11899,7 @@ class HeatExchanger_AirToAir_SensibleAndLatent(ObjectAbstract):
         self.InsertField(FieldYesNo(self,"Economizer Lockout","Yes",("Yes means that the heat exchanger will be locked out (off)","when the economizer is operating or high humidity control is active","",),["Yes","No",]))
 
 
+        self.setRequiredFields([0, 1, 2, 11, 12, 13, 14])
         self.insertMemo(("This object models an air-to-air heat exchanger using effectiveness relationships.","The heat exchanger can transfer sensible energy, latent energy, or both between the","supply (primary) and exhaust (secondary) air streams.",))
         self.addReference("HXAirToAirNames")
         self.addReference("HXAirToAirSensibleAndLatentNames")
@@ -11680,6 +11926,7 @@ class HeatExchanger_Desiccant_BalancedFlow(ObjectAbstract):
         self.InsertField(FieldYesNo(self,"Economizer Lockout","No",("Yes means that the heat exchanger will be locked out (off)","when the economizer is operating or high humidity control is active","",),["Yes","No",]))
 
 
+        self.setRequiredFields([0, 1, 2, 3, 4, 5, 7])
         self.insertMemo(("This object models a balanced desiccant heat exchanger.","The heat exchanger transfers both sensible and latent energy between the","process and regeneration air streams. The air flow rate and face velocity","are assumed to be the same on both the process and regeneration sides of the","heat exchanger.",))
         self.addReference("HXDesiccantBalanced")
         self.addReference("HXAirToAirNames")
@@ -11749,6 +11996,7 @@ class HeatExchanger_Desiccant_BalancedFlow_PerformanceDataType1(ObjectAbstract):
         self.InsertField(FieldReal(self,"Maximum Process Inlet Air Relative Humidity for Humidity Ratio Equation",0,"",0.0,100.0,"",""))
 
 
+        self.setRequiredFields([0, 2, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51])
         self.insertMemo(("RTO = B1 + B2*RWI + B3*RTI + B4*(RWI/RTI) + B5*PWI + B6*PTI + B7*(PWI/PTI)","      + B8*RFV","RWO = C1 + C2*RWI + C3*RTI + C4*(RWI/RTI) + C5*PWI + C6*PTI + C7*(PWI/PTI)","      + C8*RFV","where,","RTO = Dry-bulb temperature of the regeneration outlet air (C)","RWO = Humidity ratio of the regeneration outlet air (kg/kg)","RWI = Humidity ratio of the regeneration inlet air (kg/kg)","RTI = Dry-bulb temperature of the regeneration inlet air (C)","PWI = Humidity ratio of the process inlet air (kg/kg)","PTI = Dry-bulb temperature of the process inlet air (C)","RFV = Regeneration Face Velocity (m/s)",))
         self.addReference("DesiccantHXPerfData")
         self.setRequired(False)
@@ -11779,6 +12027,7 @@ class AirLoopHVAC_Unitary_Furnace_HeatOnly(ObjectAbstract):
         self.InsertField(FieldObjectlist(self,"Heating Coil Name","","","HeatingCoilsGasElec"))
 
 
+        self.setRequiredFields([0, 1, 2, 3, 6, 7, 8, 9, 10, 12, 13])
         self.insertMemo(("identical to the AirLoopHVAC:UnitaryHeatOnly object",))
         self.setRequired(False)
         self.setMinfields(14)
@@ -11815,6 +12064,7 @@ class AirLoopHVAC_Unitary_Furnace_HeatCool(ObjectAbstract):
         self.InsertField(FieldObjectlist(self,"Reheat Coil Name","",("Only required if dehumidification control type is *CoolReheat*","",),"HeatingCoilsGasElecDesup"))
 
 
+        self.setRequiredFields([0, 1, 2, 3, 6, 7, 9, 10, 11, 12, 14, 15, 16, 17])
         self.insertMemo(("identical to the AirLoopHVAC:UnitaryHeatCool object",))
         self.setRequired(False)
         self.setMinfields(18)
@@ -11844,6 +12094,7 @@ class AirLoopHVAC_UnitaryHeatOnly(ObjectAbstract):
         self.InsertField(FieldObjectlist(self,"Heating Coil Name","","","HeatingCoilsGasElec"))
 
 
+        self.setRequiredFields([0, 1, 2, 3, 6, 7, 8, 9, 10, 12, 13])
         self.setRequired(False)
         self.setMinfields(14)
         self.setGroup("Unitary Equipment") 
@@ -11879,6 +12130,7 @@ class AirLoopHVAC_UnitaryHeatCool(ObjectAbstract):
         self.InsertField(FieldObjectlist(self,"Reheat Coil Name","",("Only required if dehumidification control type is *CoolReheat*","",),"HeatingCoilsGasElecDesup"))
 
 
+        self.setRequiredFields([0, 1, 2, 3, 6, 7, 9, 10, 11, 12, 14, 15, 16, 17])
         self.setRequired(False)
         self.setMinfields(18)
         self.setGroup("Unitary Equipment") 
@@ -11914,6 +12166,7 @@ class AirLoopHVAC_UnitaryHeatPump_AirToAir(ObjectAbstract):
         self.InsertField(FieldObjectlist(self,"Supply Air Fan Operating Mode Schedule Name","",("A fan operating mode schedule value of 0 indicates cycling fan mode (supply air","fan cycles on and off in tandem with the cooling or heating coil).","Any other schedule value indicates continuous fan mode (supply air fan operates","continuously regardless of cooling or heating coil operation).","Leaving this schedule name blank will default to cycling fan mode for the","entire simulation period.","",),"ScheduleNames"))
 
 
+        self.setRequiredFields([0, 1, 2, 3, 4, 5, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17])
         self.setRequired(False)
         self.setMinfields(20)
         self.setGroup("Unitary Equipment") 
@@ -11954,6 +12207,7 @@ class AirLoopHVAC_UnitaryHeatPump_WaterToAir(ObjectAbstract):
         self.InsertField(FieldObjectlist(self,"Supply Air Fan Operating Mode Schedule Name","",("Enter the name of a schedule that controls fan operation. Schedule values of 0 denote","cycling fan operation (fan cycles with cooling or heating coil). Schedule values greater","than 0 denote constant fan operation (fan runs continually regardless of coil operation).","The fan operating mode defaults to cycling fan operation if this field is left blank.","",),"ScheduleNames"))
 
 
+        self.setRequiredFields([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 19, 20, 21])
         self.setRequired(False)
         self.setMinfields(26)
         self.setGroup("Unitary Equipment") 
@@ -11994,6 +12248,7 @@ class AirLoopHVAC_UnitaryHeatCool_VAVChangeoverBypass(ObjectAbstract):
         self.InsertField(FieldChoice(self,"Dehumidification Control Type","None",("None = meet sensible load only.","Multimode = activate enhanced dehumidification mode","as needed and meet sensible load.  Valid only with","Coil:Cooling:DX:TwoStageWithHumidityControlMode.","CoolReheat = cool beyond the Dry-Bulb temperature setpoint","as required to meet the humidity setpoint.  Valid only with","Coil:Cooling:DX:TwoStageWithHumidityControlMode.","For all dehumidification controls, the max humidity setpoint","on this unitary system's air outlet node is used.","This must be set using ZoneControl:Humidistat and","SetpointManager:SingleZone:Humidity:Maximum objects.","",),["None","Multimode","CoolReheat",]))
 
 
+        self.setRequiredFields([0, 1, 2, 3, 5, 6, 9, 10, 11, 12, 13, 14, 15, 16, 18, 19, 20, 21])
         self.setRequired(False)
         self.setMinfields(22)
         self.setGroup("Unitary Equipment") 
@@ -12044,6 +12299,7 @@ class AirLoopHVAC_UnitaryHeatPump_AirToAir_MultiSpeed(ObjectAbstract):
         self.InsertField(FieldRealAutocalculate(self,"Speed 4 Supply Air Flow Rate During Cooling Operation",0,("Enter the operating supply air flow rate during cooling","operation or specify autosize.","Units: m3/s",),"","",0,""))
 
 
+        self.setRequiredFields([0, 1, 2, 3, 4, 5, 6, 7, 8, 10, 11, 13, 14, 26, 27, 28, 29, 30, 31])
         self.setRequired(False)
         self.setMinfields(32)
         self.setGroup("Unitary Equipment") 
@@ -12068,6 +12324,7 @@ class AirLoopHVAC_UnitaryCoolOnly(ObjectAbstract):
         self.InsertField(FieldYesNo(self,"Run on Latent Load","No",("If Yes, unit will run if there is a latent load.","even if there is no sensible load.","If No, unit will not run only if there is a latent load.","Dehumidification controls will be active if specified.","",),["Yes","No",]))
 
 
+        self.setRequiredFields([0, 1, 2, 3, 4, 5, 6])
         self.setRequired(False)
         self.setMinfields(7)
         self.setGroup("Controllers") 
@@ -12091,6 +12348,7 @@ class Controller_WaterCoil(ObjectAbstract):
         self.InsertField(FieldReal(self,"Minimum Actuated Flow","0.0000001","","","","",""))
 
 
+        self.setRequiredFields([0])
         self.addReference("AirLoopControllers")
         self.setRequired(False)
         self.setMinfields(9)
@@ -12131,6 +12389,7 @@ class Controller_OutdoorAir(ObjectAbstract):
         self.InsertField(FieldYesNo(self,"Control High Indoor Humidity Based on Outdoor Humidity Ratio","Yes",("If No is selected, the outdoor air flow rate is modified any time indoor relative","humidity is above the humidistat setpoint. If Yes is selected, the outdoor air","flow rate is modified any time the indoor relative humidity is above the humidistat","setpoint and the outdoor humidity ratio is less than the indoor humidity ratio.","This field is only used when the field High Humidity Control = Yes.","",),["Yes","No",]))
 
 
+        self.setRequiredFields([0, 1, 2, 3, 4, 5, 6])
         self.addReference("AirLoopControllers")
         self.setRequired(False)
         self.setMinfields(16)
@@ -12156,6 +12415,7 @@ class Controller_MechanicalVentilation(ObjectAbstract):
         self.InsertField(FieldObjectlist(self,"Zone Air Distribution Effectiveness Schedule Name 1","",("optionally used to replace Zone Air Distribution Effectiveness in Cooling and","Heating Mode","",),"ScheduleNames"))
 
 
+        self.setRequiredFields([0, 1, 4, 5, 6])
         self.insertMemo(("This object is used in conjuction with Controller:OutdoorAir to specify outdoor","ventilation air based on flow rate per unit floor area and flow rate per person.","The Controller:OutdoorAir object is associated with a specific air loop, so the","outdoor air flow rates specified in Controller:MechanicalVentilation correspond to the zones","attached to that specific air loop.",))
         self.setRequired(False)
         self.setMinfields(10)
@@ -12188,6 +12448,7 @@ class AirLoopHVAC_ControllerList(ObjectAbstract):
         self.InsertField(FieldObjectlist(self,"Controller 8 Name","","","AirLoopControllers"))
 
 
+        self.setRequiredFields([0, 1, 2])
         self.insertMemo(("List controllers in order of control sequence",))
         self.addReference("ControllerLists")
         self.setRequired(False)
@@ -12214,6 +12475,7 @@ class AirLoopHVAC(ObjectAbstract):
         self.InsertField(FieldText(self,"Supply Side Outlet Node Names","",("Name of a Node or NodeList containing the outlet node(s) supplying air to the demand side.","",)))
 
 
+        self.setRequiredFields([0, 4, 6, 7, 8, 9])
         self.insertMemo(("Defines a central forced air system",))
         self.addReference("AirPrimaryLoops")
         self.setRequired(False)
@@ -12249,6 +12511,7 @@ class AirLoopHVAC_OutdoorAirSystem_EquipmentList(ObjectAbstract):
         self.InsertField(FieldText(self,"Component 9 Name","",""))
 
 
+        self.setRequiredFields([0, 1, 2])
         self.insertMemo(("List equipment in simulation order",))
         self.addReference("AirLoopOAEquipmentLists")
         self.setRequired(False)
@@ -12269,6 +12532,7 @@ class AirLoopHVAC_OutdoorAirSystem(ObjectAbstract):
         self.InsertField(FieldObjectlist(self,"Availability Manager List Name","",("Enter the name of an AvailabilityManagerAssignmentList object.","",),"SystemAvailabilityManagerLists"))
 
 
+        self.setRequiredFields([0, 1, 2])
         self.setRequired(False)
         self.setMinfields(3)
         self.setGroup("Air Distribution") 
@@ -12288,6 +12552,7 @@ class OutdoorAir_Mixer(ObjectAbstract):
         self.InsertField(FieldText(self,"Return Air Stream Node Name","",("Name of Return Air Stream Node","",)))
 
 
+        self.setRequiredFields([0, 1, 2, 3, 4])
         self.insertMemo(("Node names cannot be duplicated within a single OutdoorAir:Mixer object.",))
         self.addReference("OutdoorAirMixers")
         self.setRequired(False)
@@ -12307,6 +12572,7 @@ class AirLoopHVAC_ZoneSplitter(ObjectAbstract):
         self.InsertField(FieldText(self,"Outlet 1 Node Name","",""))
 
 
+        self.setRequiredFields([0, 1, 2])
         self.insertMemo(("Split one air stream into N outlet streams (currently 50 per air loop, but extensible).  Node names","cannot be duplicated within a single zone splitter (AirLoopHVAC:ZoneSplitter) list.",))
         self.addReference("ZoneSplitters")
         self.addReference("SupplyPathComponentNames")
@@ -12329,6 +12595,7 @@ class AirLoopHVAC_SupplyPlenum(ObjectAbstract):
         self.InsertField(FieldText(self,"Outlet 1 Node Name","",""))
 
 
+        self.setRequiredFields([0, 1, 2, 3, 4])
         self.insertMemo(("Connects 1 zone inlet air stream, through zone supply plenum, to one or more outlets.","Node names cannot be duplicated within a single supply plenum list.",))
         self.addReference("ZonePlenums")
         self.addReference("SupplyPathComponentNames")
@@ -12350,6 +12617,7 @@ class AirLoopHVAC_SupplyPath(ObjectAbstract):
         self.InsertField(FieldObjectlist(self,"Component 1 Name","","","SupplyPathComponentNames"))
 
 
+        self.setRequiredFields([0, 1, 2, 3])
         self.insertMemo(("A supply path can only contain AirLoopHVAC:ZoneSplitter and AirLoopHVAC:SupplyPlenum objects","which may be in series or parallel.",))
         self.addReference("ZoneSupplyAirPaths")
         self.setRequired(False)
@@ -12369,6 +12637,7 @@ class AirLoopHVAC_ZoneMixer(ObjectAbstract):
         self.InsertField(FieldText(self,"Inlet 1 Node Name","",""))
 
 
+        self.setRequiredFields([0, 1, 2])
         self.insertMemo(("Mix N inlet air streams into one (currently 50 per air loop, but extensible).  Node names cannot","be duplicated within a single zone mixer (AirLoopHVAC:ZoneMixer) list.",))
         self.addReference("ZoneMixers")
         self.addReference("ReturnPathComponentNames")
@@ -12391,6 +12660,7 @@ class AirLoopHVAC_ReturnPlenum(ObjectAbstract):
         self.InsertField(FieldText(self,"Inlet 1 Node Name","",""))
 
 
+        self.setRequiredFields([0, 1, 2, 3, 4])
         self.insertMemo(("Connects N zone inlet air streams, through zone return plenum, to outlet (currently 30 per air loop)","Node names cannot be duplicated within a single plenum list.",))
         self.addReference("ReturnPathComponentNames")
         self.setRequired(False)
@@ -12411,6 +12681,7 @@ class AirLoopHVAC_ReturnPath(ObjectAbstract):
         self.InsertField(FieldObjectlist(self,"Component 1 Name","","","ReturnPathComponentNames"))
 
 
+        self.setRequiredFields([0, 1, 2, 3])
         self.insertMemo(("A return air path can only contain one AirLoopHVAC:ZoneMixer","and one or more AirLoopHVAC:ReturnPlenum objects.",))
         self.addReference("ZoneReturnAirPaths")
         self.setRequired(False)
@@ -12430,6 +12701,7 @@ class Duct(ObjectAbstract):
         self.InsertField(FieldText(self,"Outlet Node Name","",""))
 
 
+        self.setRequiredFields([0, 1, 2])
         self.insertMemo(("Passes inlet node state variables to outlet node state variables",))
         self.setRequired(False)
         self.setMinfields(0)
@@ -12452,6 +12724,7 @@ class Branch(ObjectAbstract):
         self.InsertField(FieldChoice(self,"Component 1 Branch Control Type","",("for ACTIVE, Component tries to set branch flow and turns off branch if the component is off","for PASSIVE, Component does not try to set branch flow","for SERIESACTIVE, component is active but does not turn off branch when the component is off","for BYPASS,  Component designates a loop bypass","",),["Active","Passive","SeriesActive","Bypass",]))
 
 
+        self.setRequiredFields([0, 2, 3, 4, 5, 6])
         self.insertMemo(("List components on the branch in simulation and connection order","Note: this should NOT include splitters or mixers which define","endpoints of branches",))
         self.addReference("Branches")
         self.setRequired(False)
@@ -12470,6 +12743,7 @@ class BranchList(ObjectAbstract):
         self.InsertField(FieldObjectlist(self,"Branch 1 Name","","","Branches"))
 
 
+        self.setRequiredFields([0, 1])
         self.insertMemo(("Branches MUST be listed in Flow order: Inlet branch, then parallel branches, then Outlet branch.","Branches are simulated in the order listed.  Branch names cannot be duplicated within a single branch list.",))
         self.addReference("BranchLists")
         self.setRequired(False)
@@ -12489,6 +12763,7 @@ class Connector_Splitter(ObjectAbstract):
         self.InsertField(FieldObjectlist(self,"Outlet Branch 1 Name","","","Branches"))
 
 
+        self.setRequiredFields([0, 1, 2])
         self.insertMemo(("Split one air/water stream into N outlet streams.  Branch names cannot be duplicated","within a single Splitter list.",))
         self.setRequired(False)
         self.setMinfields(3)
@@ -12507,6 +12782,7 @@ class Connector_Mixer(ObjectAbstract):
         self.InsertField(FieldObjectlist(self,"Inlet Branch 1 Name","","","Branches"))
 
 
+        self.setRequiredFields([0, 1, 2])
         self.insertMemo(("Mix N inlet air/water streams into one.  Branch names cannot be duplicated within","a single mixer list.",))
         self.setRequired(False)
         self.setMinfields(3)
@@ -12527,6 +12803,7 @@ class ConnectorList(ObjectAbstract):
         self.InsertField(FieldText(self,"Connector 2 Name","",""))
 
 
+        self.setRequiredFields([0, 1, 2])
         self.insertMemo(("only two connectors allowed per loop","if two entered, one must be Connector:Splitter and one must be Connector:Mixer",))
         self.addReference("ConnectorLists")
         self.setRequired(False)
@@ -12569,6 +12846,7 @@ class NodeList(ObjectAbstract):
         self.InsertField(FieldText(self,"Node 25 Name","",""))
 
 
+        self.setRequiredFields([0, 1])
         self.insertMemo(("This object is used in places where lists of nodes may be","needed, e.g. ZoneHVAC:EquipmentConnections field Zone Air Inlet Node or NodeList Name",))
         self.addReference("NodeLists")
         self.setRequired(False)
@@ -12587,6 +12865,7 @@ class OutdoorAir_Node(ObjectAbstract):
         self.InsertField(FieldReal(self,"Height Above Ground","-1.0",("A value less than zero indicates that the height will be ignored and the weather file conditions will be used.","Units: m",),"","","",""))
 
 
+        self.setRequiredFields([0])
         self.insertMemo(("This object sets the temperature and humidity conditions","for an outdoor air node.  It allows the height above ground to be","specified.  This object may be used more than once.","The same node name may not appear in both an OutdoorAir:Node object and","an OutdoorAir:NodeList object.",))
         self.setRequired(False)
         self.setMinfields(0)
@@ -12627,6 +12906,7 @@ class OutdoorAir_NodeList(ObjectAbstract):
         self.InsertField(FieldText(self,"Node or NodeList Name 25","",""))
 
 
+        self.setRequiredFields([0])
         self.insertMemo(("This object sets the temperature and humidity conditions","for an outdoor air node using the weather data values.","to vary outdoor air node conditions with height above ground","use OutdoorAir:Node instead of this object.","This object may be used more than once.","The same node name may not appear in both an OutdoorAir:Node object and","an OutdoorAir:NodeList object.",))
         self.setRequired(False)
         self.setMinfields(0)
@@ -12657,6 +12937,7 @@ class Pump_VariableSpeed(ObjectAbstract):
         self.InsertField(FieldObjectlist(self,"Pump Flow Rate Schedule Name","",("modifies the Rated Flow Rate of the pump on a time basis","the default is that the pump is ON and runs according to its other","operational requirements specified above.  The schedule is for special pump operations","",),"ScheduleNames"))
 
 
+        self.setRequiredFields([0, 1, 2])
         self.insertMemo(("This pump model is described in the ASHRAE secondary HVAC toolkit.",))
         self.setRequired(False)
         self.setMinfields(14)
@@ -12682,6 +12963,7 @@ class Pump_ConstantSpeed(ObjectAbstract):
         self.InsertField(FieldObjectlist(self,"Pump Flow Rate Schedule Name","",("modifies the Rated Flow Rate of the pump on a time basis","the default is that the pump is on and runs according to its other","operational requirements specified above.  The schedule is for special pump operations","",),"ScheduleNames"))
 
 
+        self.setRequiredFields([0, 1, 2])
         self.insertMemo(("This pump model is described in the ASHRAE secondary HVAC toolkit.",))
         self.setRequired(False)
         self.setMinfields(9)
@@ -12710,6 +12992,7 @@ class Pump_VariableSpeed_Condensate(ObjectAbstract):
         self.InsertField(FieldObjectlist(self,"Pump Flow Rate Schedule Name","",("modifies the Rated Flow Rate of the pump on a time basis","the default is that the pump is on and runs according to its other","operational requirements specified above.  This schedule is for special pump operations.","",),"ScheduleNames"))
 
 
+        self.setRequiredFields([0, 1, 2])
         self.insertMemo(("This pump model is described in the ASHRAE secondary HVAC toolkit.","Variable Speed Condensate pump for Steam Systems",))
         self.setRequired(False)
         self.setMinfields(13)
@@ -12742,6 +13025,7 @@ class HeaderedPumps_VariableSpeed(ObjectAbstract):
         self.InsertField(FieldObjectlist(self,"Pump Flow Rate Schedule Name","",("modifies the rated flow rate of the pump on a time basis","the default is that the pump is on and runs according to its other","operational requirements specified above.  The schedule is for special pump operations","",),"ScheduleNames"))
 
 
+        self.setRequiredFields([0, 1, 2])
         self.insertMemo(("This Headered pump object describes a pump bank with more than 1 pump in parallel",))
         self.setRequired(False)
         self.setMinfields(14)
@@ -12769,6 +13053,7 @@ class HeaderedPumps_ConstantSpeed(ObjectAbstract):
         self.InsertField(FieldObjectlist(self,"Pump Flow Rate Schedule Name","",("modifies the rated flow rate of the pump on a time basis","the default is that the pump is on and runs according to its other","operational requirements specified above.  The schedule is for special pump operations","",),"ScheduleNames"))
 
 
+        self.setRequiredFields([0, 1, 2])
         self.insertMemo(("This Headered pump object describes a pump bank with more than 1 pump in parallel",))
         self.setRequired(False)
         self.setMinfields(9)
@@ -12790,6 +13075,7 @@ class TemperingValve(ObjectAbstract):
         self.InsertField(FieldText(self,"Pump Outlet Node Name","",""))
 
 
+        self.setRequiredFields([0, 1, 2, 3, 4, 5])
         self.setRequired(False)
         self.setMinfields(0)
         self.setGroup("Non-Zone Equipment") 
@@ -12810,6 +13096,7 @@ class LoadProfile_Plant(ObjectAbstract):
         self.InsertField(FieldObjectlist(self,"Flow Rate Fraction Schedule Name","","","ScheduleNames"))
 
 
+        self.setRequiredFields([0, 1, 2, 3, 4, 5])
         self.setRequired(False)
         self.setMinfields(0)
         self.setGroup("Solar Collectors") 
@@ -12834,6 +13121,7 @@ class SolarCollectorPerformance_FlatPlate(ObjectAbstract):
         self.InsertField(FieldReal(self,"Coefficient 3 of Incident Angle Modifier",0,("2nd order term","",),"","","",""))
 
 
+        self.setRequiredFields([0, 2, 3, 4, 5, 6])
         self.addReference("FlatPlateSolarCollectorParameters")
         self.setRequired(False)
         self.setMinfields(0)
@@ -12855,6 +13143,7 @@ class SolarCollector_FlatPlate_Water(ObjectAbstract):
         self.InsertField(FieldReal(self,"Maximum Flow Rate",0,"","","",0,""))
 
 
+        self.setRequiredFields([0, 1, 2, 3, 4])
         self.insertMemo(("Solar Radiation Certification Corporation model",))
         self.setRequired(False)
         self.setMinfields(0)
@@ -12880,6 +13169,7 @@ class SolarCollector_FlatPlate_PhotovoltaicThermal(ObjectAbstract):
         self.InsertField(FieldRealAutocalculate(self,"Design Flow Rate",0,"","","","",""))
 
 
+        self.setRequiredFields([1])
         self.setRequired(False)
         self.setMinfields(0)
         self.setGroup("Solar Collectors") 
@@ -12900,6 +13190,7 @@ class SolarCollectorPerformance_PhotovoltaicThermal_Simple(ObjectAbstract):
         self.InsertField(FieldReal(self,"Front Surface Emittance","0.84","","","",0.00,1.00))
 
 
+        self.setRequiredFields([1])
         self.addReference("FlatPlatePVTParameters")
         self.setRequired(False)
         self.setMinfields(0)
@@ -12938,6 +13229,7 @@ class SolarCollector_UnglazedTranspired(ObjectAbstract):
         self.InsertField(FieldObjectlist(self,"Surface 1 Name","","","AllShadingAndHTSurfNames"))
 
 
+        self.setRequiredFields([0, 2, 18, 22])
         self.addReference("UTSCNames")
         self.setRequired(False)
         self.setMinfields(0)
@@ -12958,6 +13250,7 @@ class SolarCollector_UnglazedTranspired_Multisystem(ObjectAbstract):
         self.InsertField(FieldText(self,"Outdoor Air System 1 Zone Node","",""))
 
 
+        self.setRequiredFields([0])
         self.setRequired(False)
         self.setMinfields(0)
         self.setGroup("Plant Heating and Cooling Equipment") 
@@ -12988,6 +13281,7 @@ class Boiler_HotWater(ObjectAbstract):
         self.InsertField(FieldReal(self,"Sizing Factor","1.0",("Multiplies the autosized capacity and flow rates","",),"","",0.0,""))
 
 
+        self.setRequiredFields([0, 1, 3, 10, 11])
         self.insertMemo(("This boiler model is an adaptation of the empirical model from the Building","Loads and System Thermodynamics (BLAST) program.  Boiler performance","curves are generated by fitting catalog data to polynomial equations.","A constant efficiency boiler may be modeled by leaving the normalized","boiler efficiency curve name input blank.",))
         self.setRequired(False)
         self.setMinfields(11)
@@ -13018,6 +13312,7 @@ class Boiler_Steam(ObjectAbstract):
         self.InsertField(FieldReal(self,"Sizing Factor","1.0",("Multiplies the autosized capacity and flow rates","",),"","",0.0,""))
 
 
+        self.setRequiredFields([0, 1])
         self.insertMemo(("This boiler model is an adaptation of the empirical model from the Building","Loads and System Thermodynamics (BLAST) program.  Boiler performance","curves are generated by fitting catalog data to third order","polynomial equations.  A constant efficiency boiler is modeled by setting","the fuel use coefficients as follows: N9=1, N10=0, N11=0",))
         self.setRequired(False)
         self.setMinfields(0)
@@ -13051,6 +13346,7 @@ class Boiler_HotWater_SPARK(ObjectAbstract):
         self.InsertField(FieldReal(self,"Sizing Factor","1.0",("Multiplies the autosized capacity and flow rates","",),"","",0.0,""))
 
 
+        self.setRequiredFields([0, 1])
         self.insertMemo(("This boiler model is an adaptation of the empirical model from the Building","Loads and System Thermodynamics (BLAST) program.  Boiler performance","curves are generated by fitting catalog data to third order","polynomial equations.  A constant efficiency boiler is modeled by setting","the fuel use coefficients as follows: N9=1, N10=0, N11=0",))
         self.setRequired(False)
         self.setMinfields(0)
@@ -13093,6 +13389,7 @@ class Chiller_Electric_EIR(ObjectAbstract):
         self.InsertField(FieldReal(self,"Sizing Factor","1.0",("Multiplies the autosized capacity and flow rates","",),"","",0.0,""))
 
 
+        self.setRequiredFields([0, 1, 2, 7, 8, 9, 14, 15])
         self.insertMemo(("This chiller model is the empirical model from the DOE-2 building Energy","simulation program. Chiller performance at off-reference conditions is modeled","using three polynomial equations. Three curves objects are required.",))
         self.setRequired(False)
         self.setMinfields(23)
@@ -13133,6 +13430,7 @@ class Chiller_Electric_ReformulatedEIR(ObjectAbstract):
         self.InsertField(FieldReal(self,"Sizing Factor","1.0",("Multiplies the autosized capacity and flow rates","",),"","",0.0,""))
 
 
+        self.setRequiredFields([0, 1, 2, 7, 8, 9, 14, 15, 16, 17])
         self.insertMemo(("This chiller model is an empirical model, a reformulated version of Chiller:Electric:EIR","where the performance is a function of condenser leaving fluid Temperature instead of","condenser entering fluid Temperature. Chiller performance at off-reference conditions is","modeled using three polynomial equations. Three curve objects are required.",))
         self.setRequired(False)
         self.setMinfields(21)
@@ -13179,6 +13477,7 @@ class Chiller_Electric(ObjectAbstract):
         self.InsertField(FieldReal(self,"Sizing Factor","1.0",("Multiplies the autosized capacity and flow rates","",),"","",0.0,""))
 
 
+        self.setRequiredFields([0, 2, 3, 4, 5, 12])
         self.insertMemo(("This chiller model is the empirical model from the Building Loads","and System Thermodynamics (BLAST) program.  Chiller performance","curves are generated by fitting catalog data to third order","polynomial equations.  Three sets of coefficients are required.",))
         self.setRequired(False)
         self.setMinfields(27)
@@ -13213,6 +13512,7 @@ class Chiller_Electric_SPARK(ObjectAbstract):
         self.InsertField(FieldReal(self,"Condenser Heat Transfer Coefficient",0,"","","","",""))
 
 
+        self.setRequiredFields([0, 2, 3, 4, 5, 8, 9, 10, 14, 15, 16, 17, 18])
         self.insertMemo(("This chiller model is the pissim1 model in the primary ASHRAE toolkit","with the addition of a control law that adapts the flow rate","through the compressor to meet the requested load.",))
         self.setRequired(False)
         self.setMinfields(19)
@@ -13259,6 +13559,7 @@ class Chiller_Absorption_Indirect(ObjectAbstract):
         self.InsertField(FieldReal(self,"Sizing Factor","1.0",("Multiplies the autosized capacity and flow rates","",),"","",0.0,""))
 
 
+        self.setRequiredFields([0, 1, 2, 3, 4, 5, 6, 16])
         self.insertMemo(("This indirect absorption chiller model is an enhanced model from the","Building Loads and System Thermodynamics (BLAST) program.  Chiller","performance curves are generated by fitting catalog data to third order","polynomial equations. The chiller capacity is a function of condenser,","chilled water, and generator temperatures. The heat input is a function","of part-load ratio, condenser temperature, and chilled water temperature.",))
         self.setRequired(False)
         self.setMinfields(17)
@@ -13301,6 +13602,7 @@ class Chiller_Absorption(ObjectAbstract):
         self.InsertField(FieldReal(self,"Sizing Factor","1.0",("Multiplies the autosized capacity and flow rates","",),"","",0.0,""))
 
 
+        self.setRequiredFields([0, 1, 2, 3, 4, 5, 6])
         self.insertMemo(("This indirect absorption chiller model is the empirical model from the","Building Loads and System Thermodynamics (BLAST) program.  Chiller","performance curves are generated by fitting catalog data to third order","polynomial equations.  Two sets of coefficients are required.",))
         self.setRequired(False)
         self.setMinfields(23)
@@ -13328,6 +13630,7 @@ class Chiller_ConstantCOP(ObjectAbstract):
         self.InsertField(FieldReal(self,"Sizing Factor","1.0",("Multiplies the autosized capacity and flow rates","",),"","",0.0,""))
 
 
+        self.setRequiredFields([0, 1, 2, 5, 6])
         self.insertMemo(("This constant COP chiller model provides a means of quickly specifying a","Chiller where performance data is not available.",))
         self.setRequired(False)
         self.setMinfields(12)
@@ -13386,6 +13689,7 @@ class Chiller_EngineDriven(ObjectAbstract):
         self.InsertField(FieldReal(self,"Sizing Factor","1.0",("Multiplies the autosized capacity and flow rates","",),"","",0.0,""))
 
 
+        self.setRequiredFields([0, 1, 2, 3, 4, 5, 12, 35])
         self.insertMemo(("This chiller model is the empirical model from the Building Loads","and System Thermodynamics (BLAST) program.  Chiller performance","curves are generated by fitting catalog data to third order","polynomial equations.  Three sets of coefficients are required.",))
         self.setRequired(False)
         self.setMinfields(43)
@@ -13458,6 +13762,7 @@ class Chiller_CombustionTurbine(ObjectAbstract):
         self.InsertField(FieldReal(self,"Sizing Factor","1.0",("Multiplies the autosized capacity and flow rates","",),"","",0.0,""))
 
 
+        self.setRequiredFields([0, 2, 3, 4, 5, 12, 54])
         self.insertMemo(("This chiller model is the empirical model from the Building Loads","and System Thermodynamics (BLAST) program.  Chiller performance","curves are generated by fitting catalog data to third order","polynomial equations.  Three sets of coefficients are required.",))
         self.setRequired(False)
         self.setMinfields(56)
@@ -13508,6 +13813,7 @@ class ChillerHeater_Absorption_DirectFired(ObjectAbstract):
         self.InsertField(FieldReal(self,"Sizing Factor","1.0",("Multiplies the autosized capacity and flow rates","",),"","",0.0,""))
 
 
+        self.setRequiredFields([0, 1, 7, 8, 9, 10, 11, 12, 19, 33])
         self.insertMemo(("Direct fired gas absorption chiller-heater using performance curves similar to DOE-2",))
         self.setRequired(False)
         self.setMinfields(35)
@@ -13543,6 +13849,7 @@ class HeatPump_WaterToWater_EquationFit_Heating(ObjectAbstract):
         self.InsertField(FieldReal(self,"Cycle Time",".1","","","",0.016,""))
 
 
+        self.setRequiredFields([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19])
         self.insertMemo(("simple water-water hp curve-fit model",))
         self.setRequired(False)
         self.setMinfields(20)
@@ -13578,6 +13885,7 @@ class HeatPump_WaterToWater_EquationFit_Cooling(ObjectAbstract):
         self.InsertField(FieldReal(self,"Cycle Time",".1","","","",0.016,""))
 
 
+        self.setRequiredFields([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19])
         self.insertMemo(("simple water-water heatpump curve-fit model",))
         self.setRequired(False)
         self.setMinfields(20)
@@ -13616,6 +13924,7 @@ class HeatPump_WaterToWater_ParameterEstimation_Cooling(ObjectAbstract):
         self.InsertField(FieldReal(self,"Cycle Time",".1","","","",0.016,""))
 
 
+        self.setRequiredFields([0, 1, 2, 3, 4])
         self.insertMemo(("OSU parameter estimation model",))
         self.setRequired(False)
         self.setMinfields(20)
@@ -13654,6 +13963,7 @@ class HeatPump_WaterToWater_ParameterEstimation_Heating(ObjectAbstract):
         self.InsertField(FieldReal(self,"Cycle Time",".1","","","",0.016,""))
 
 
+        self.setRequiredFields([0, 1, 2, 3, 4])
         self.insertMemo(("OSU parameter estimation model",))
         self.setRequired(False)
         self.setMinfields(20)
@@ -13673,6 +13983,7 @@ class DistrictCooling(ObjectAbstract):
         self.InsertField(FieldReal(self,"Nominal Capacity",0,"",0.0,"","",""))
 
 
+        self.setRequiredFields([0, 1, 2, 3])
         self.setRequired(False)
         self.setMinfields(0)
         self.setGroup("Plant Heating and Cooling Equipment") 
@@ -13691,6 +14002,7 @@ class DistrictHeating(ObjectAbstract):
         self.InsertField(FieldReal(self,"Nominal Capacity",0,"",0.0,"","",""))
 
 
+        self.setRequiredFields([0, 1, 2, 3])
         self.setRequired(False)
         self.setMinfields(0)
         self.setGroup("Condenser Equipment and Heat Exchangers") 
@@ -13727,6 +14039,7 @@ class CoolingTower_SingleSpeed(ObjectAbstract):
         self.InsertField(FieldReal(self,"Sizing Factor","1.0",("Multiplies the autosized capacity and flow rates","",),"","",0.0,""))
 
 
+        self.setRequiredFields([0, 1, 2, 4, 5])
         self.insertMemo(("This tower model is based on Merkel's theory, which is also the basis","for the tower model in ASHRAE's HVAC1 Toolkit. The closed-circuit cooling tower","is modeled as a counter flow heat exchanger with a single-speed fan drawing air","through the tower (induced-draft configuration).","Added fluid bypass as an additional capacity control. 8/2008.",))
         self.setRequired(False)
         self.setMinfields(9)
@@ -13767,6 +14080,7 @@ class CoolingTower_TwoSpeed(ObjectAbstract):
         self.InsertField(FieldReal(self,"Sizing Factor","1.0",("Multiplies the autosized capacity and flow rates","",),"","",0.0,""))
 
 
+        self.setRequiredFields([0, 1, 2, 4, 5, 7, 8])
         self.insertMemo(("This tower model is based on Merkel's theory, which is also the basis","for the tower model in ASHRAE's HVAC1 Toolkit. The closed-circuit cooling tower","is modeled as a counter flow heat exchanger with a two-speed fan drawing air","through the tower (induced-draft configuration).",))
         self.setRequired(False)
         self.setMinfields(12)
@@ -13808,6 +14122,7 @@ class CoolingTower_VariableSpeed(ObjectAbstract):
         self.InsertField(FieldReal(self,"Sizing Factor","1.0",("Multiplies the autosized capacity and flow rates","",),"","",0.0,""))
 
 
+        self.setRequiredFields([0, 1, 2, 8, 9, 10])
         self.insertMemo(("This tower model is based on purely empirical algorithms derived from manufacturer's","performance data or field measurements. The user can select from two existing","algorithms (CoolTools or YorkCalc), or they can enter their own correlation for","approach temperature by using a variable speed tower model coefficient object.",))
         self.setRequired(False)
         self.setMinfields(15)
@@ -13867,6 +14182,7 @@ class CoolingTowerPerformance_CoolTools(ObjectAbstract):
         self.InsertField(FieldReal(self,"Coefficient 35",0,"","","","",""))
 
 
+        self.setRequiredFields([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43])
         self.insertMemo(("This object is used to define coefficients for the approach temperature","correlation for a variable speed cooling tower when tower Model Type is","specified as CoolToolsUserDefined in the object CoolingTower:VariableSpeed.",))
         self.addReference("VariableSpeedTowerCoefficient")
         self.setRequired(False)
@@ -13920,6 +14236,7 @@ class CoolingTowerPerformance_YorkCalc(ObjectAbstract):
         self.InsertField(FieldReal(self,"Coefficient 27",0,"","","","",""))
 
 
+        self.setRequiredFields([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36])
         self.insertMemo(("This object is used to define coefficients for the approach temperature","correlation for a variable speed cooling tower when tower Model Type is","specified as YorkCalcUserDefined in the object CoolingTower:VariableSpeed.",))
         self.addReference("VariableSpeedTowerCoefficient")
         self.setRequired(False)
@@ -13951,6 +14268,7 @@ class FluidCooler_SingleSpeed(ObjectAbstract):
         self.InsertField(FieldText(self,"Outdoor Air Inlet Node Name","",("Enter the name of an outdoor air node","",)))
 
 
+        self.setRequiredFields([0, 1, 2, 10, 11, 12, 13])
         self.insertMemo(("This fluid cooler model is based on Merkel's theory, which is also the basis","for the fluid cooler model in ASHRAE's HVAC1 Toolkit. The closed-circuit fluid cooler","is modeled as a counterflow heat exchanger with a single-speed fan drawing air","through the fluid cooler (induced-draft configuration).",))
         self.setRequired(False)
         self.setMinfields(9)
@@ -13985,6 +14303,7 @@ class FluidCooler_TwoSpeed(ObjectAbstract):
         self.InsertField(FieldText(self,"Outdoor Air Inlet Node Name","",""))
 
 
+        self.setRequiredFields([0, 1, 2, 12, 13, 14, 15, 16, 17])
         self.insertMemo(("This fluid cooler model is based on Merkel's theory, which is also the basis","for the fluid cooler model in ASHRAE's HVAC1 Toolkit. The closed-circuit fluid cooler","is modeled as a counterflow heat exchanger with a two-speed fan drawing air","through the fluid cooler (induced-draft configuration).",))
         self.setRequired(False)
         self.setMinfields(12)
@@ -14222,6 +14541,7 @@ class GroundHeatExchanger_Vertical(ObjectAbstract):
         self.InsertField(FieldReal(self,"G-Function G Value 100",0,"","","","",""))
 
 
+        self.setRequiredFields([0, 1, 2])
         self.insertMemo(("Variable short time step vertical ground heat exchanger model based on","Yavuztruk, C., J.D.Spitler. 1999. A Short Time Step response Factor Model for","Vertical Ground Loop Heat Exchangers",))
         self.setRequired(False)
         self.setMinfields(24)
@@ -14250,6 +14570,7 @@ class GroundHeatExchanger_Pond(ObjectAbstract):
         self.InsertField(FieldReal(self,"Length of Each Tubing Circuit",0,"",0,"","",""))
 
 
+        self.setRequiredFields([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12])
         self.insertMemo(("A model of a shallow pond with immersed pipe loops.","Typically used in hybrid geothermal systems and included in the condenser loop.","This component may also be used as a simple solar collector.",))
         self.setRequired(False)
         self.setMinfields(0)
@@ -14276,6 +14597,7 @@ class GroundHeatExchanger_Surface(ObjectAbstract):
         self.InsertField(FieldChoice(self,"Lower Surface Environment","Ground","",["Ground","Exposed",]))
 
 
+        self.setRequiredFields([0, 1, 2, 3, 4])
         self.insertMemo(("A hydronic surface/panel consisting of a multi-layer construction with embedded rows of tubes.","Typically used in hybrid geothermal systems and included in the condenser loop.","This component may also be used as a simple solar collector.","The bottom surface may be defined as ground-coupled or exposed to wind (eg. bridge deck).",))
         self.setRequired(False)
         self.setMinfields(0)
@@ -14311,6 +14633,7 @@ class HeatExchanger_Hydronic(ObjectAbstract):
         self.InsertField(FieldText(self,"Controlled Component Plant Outlet Node Name","",""))
 
 
+        self.setRequiredFields([0, 1, 2, 4, 5, 6, 7, 8, 9, 10, 12, 16, 17, 18, 19])
         self.insertMemo(("A fluid/fluid heat exchanger designed to couple the plant loop to the condenser loop.","May be set as an ideal heat exchanger to emulate complete coupling of the loops.","May also be used as a 'real' heat exchanger using an U-Factor Times Area-Effectiveness model.","For controlled free cooling a component on another branch (e.g. chiller) can","be switched on/off.",))
         self.setRequired(False)
         self.setMinfields(0)
@@ -14339,6 +14662,7 @@ class HeatExchanger_Plate(ObjectAbstract):
         self.InsertField(FieldReal(self,"Supply Side Flow Rate",0,"","","",0.0,""))
 
 
+        self.setRequiredFields([0, 1, 2, 3, 4, 5, 6, 7, 8, 9])
         self.insertMemo(("A fluid/fluid heat exchanger designed to couple one condenser loop to another condenser loop.","May be set as an ideal heat exchanger to emulate complete coupling of the loops.","May also be used as a 'real' heat exchanger using an U-Factor Times Area-Effectiveness model.","For controlled free cooling a component is series (e.g. chiller) can be switched on/off.",))
         self.setRequired(False)
         self.setMinfields(0)
@@ -14367,6 +14691,7 @@ class HeatExchanger_WatersideEconomizer(ObjectAbstract):
         self.InsertField(FieldReal(self,"Minimum Temperature Difference to Activate Heat Exchanger","0.001",("Minimum temp difference between chilled water side heat exchanger inlet and condenser","side heat exchanger inlet required to turn on heat exchanger.","Units: deltaC",),"",50,0.0,""))
 
 
+        self.setRequiredFields([0, 1, 3, 4, 5, 6, 7, 8, 9, 10, 11])
         self.insertMemo(("A fluid/fluid heat exchanger designed to model plant waterside economizers",))
         self.setRequired(False)
         self.setMinfields(13)
@@ -14421,6 +14746,7 @@ class WaterHeater_Mixed(ObjectAbstract):
         self.InsertField(FieldReal(self,"Indirect Water Heating Recovery Time","1.5",("Parameter for autosizing design flow rates for indirectly heated water tanks","Time required to raise temperature of entire tank from 14.4C to 57.2C","Units: hr",),"","",0.0,""))
 
 
+        self.setRequiredFields([0, 10, 19])
         self.addReference("WaterHeaterNames")
         self.setRequired(False)
         self.setMinfields(0)
@@ -14499,6 +14825,7 @@ class WaterHeater_Stratified(ObjectAbstract):
         self.InsertField(FieldReal(self,"Node 10 Additional Loss Coefficient","0.0","","","","",""))
 
 
+        self.setRequiredFields([0, 2, 3, 16, 26])
         self.addReference("WaterHeaterNames")
         self.setRequired(False)
         self.setMinfields(0)
@@ -14530,6 +14857,7 @@ class WaterHeater_Sizing(ObjectAbstract):
         self.InsertField(FieldReal(self,"Height Aspect Ratio",0,("only used if for WaterHeater:Stratified","",),0.0,"","",""))
 
 
+        self.setRequiredFields([0])
         self.insertMemo(("This input object is used with WaterHeater:Mixed or","with WaterHeater:Stratified to autosize tank volume and heater capacity","This object is not needed if water heaters are not autosized.",))
         self.setRequired(False)
         self.setMinfields(4)
@@ -14579,6 +14907,7 @@ class WaterHeater_HeatPump(ObjectAbstract):
         self.InsertField(FieldObjectlist(self,"Inlet Air Mixer Schedule Name","",("Required only if Inlet Air Configuration is ZoneAndOutdoorAir, otherwise","leave field blank. Schedule values define whether the heat pump draws its","inlet air from the zone, outdoors or a combination of zone and outdoor air.","A schedule value of 0 denotes inlet air is drawn only from the zone.","A schedule value of 1 denotes inlet air is drawn only from outdoors.","Schedule values between 0 and 1 denote a mixture of zone and outdoor air","proportional to the schedule value.","",),"ScheduleNames"))
 
 
+        self.setRequiredFields([0, 1, 2, 4, 5, 8, 16, 17, 20, 21, 23, 25, 26])
         self.insertMemo(("This object models an air-source heat pump for water heating.","WaterHeater:HeatPump is a compound object that references other component objects -","Coil:WaterHeating:AirToWaterHeatPump, Fan:OnOff, WaterHeater:Mixed",))
         self.setRequired(False)
         self.setMinfields(31)
@@ -14599,6 +14928,7 @@ class ThermalStorage_Ice_Simple(ObjectAbstract):
         self.InsertField(FieldText(self,"Outlet Node Name","",""))
 
 
+        self.setRequiredFields([0, 1, 2, 3, 4])
         self.insertMemo(("This ice storage model is a simplified model","It requires a setpoint placed on the Chilled Water Side Outlet Node","It should be placed in the chilled water supply side outlet branch","followed by a pipe.","Use the PlantEquipmentOperation:ComponentSetpoint plant operation scheme.",))
         self.setRequired(False)
         self.setMinfields(5)
@@ -14628,6 +14958,7 @@ class ThermalStorage_Ice_Detailed(ObjectAbstract):
         self.InsertField(FieldReal(self,"Freezing Temperature of Storage Medium","0.0",("This temperature is typically 0C for water.","Simply changing this temperature without adjusting the performance","parameters input above is inappropriate and not advised.","Units: C",),"","","",""))
 
 
+        self.setRequiredFields([0, 1, 2, 3, 4])
         self.insertMemo(("This input syntax is intended to describe a thermal storage system that","includes smaller containers filled with water that are placed in a larger","tank or series of tanks.","The model uses polynomial equations to describe the system performance.",))
         self.setRequired(False)
         self.setMinfields(14)
@@ -14665,6 +14996,7 @@ class ThermalStorage_ChilledWater_Mixed(ObjectAbstract):
         self.InsertField(FieldReal(self,"Tank Recovery Time","4.0",("Parameter for autosizing design flow rates for indirectly cooled water tanks","time required to lower temperature of entire tank from 14.4C to 9.0C","Units: hr",),"","",0.0,""))
 
 
+        self.setRequiredFields([0, 6])
         self.addReference("ChilledWaterStorageNames")
         self.setRequired(False)
         self.setMinfields(0)
@@ -14723,6 +15055,7 @@ class ThermalStorage_ChilledWater_Stratified(ObjectAbstract):
         self.InsertField(FieldReal(self,"Node 10 Additional Loss Coefficient","0.0","","","","",""))
 
 
+        self.setRequiredFields([0, 1, 2, 10])
         self.addReference("ChilledWaterStorageNames")
         self.setRequired(False)
         self.setMinfields(0)
@@ -14759,6 +15092,7 @@ class PlantLoop(ObjectAbstract):
         self.InsertField(FieldChoice(self,"Common Pipe Simulation","None","",["CommonPipe","TwoWayCommonPipe","None",]))
 
 
+        self.setRequiredFields([0, 1, 2, 3, 4, 5, 6, 9, 10, 11, 13, 14, 15])
         self.addReference("PlantLoops")
         self.setRequired(False)
         self.setMinfields(0)
@@ -14792,6 +15126,7 @@ class CondenserLoop(ObjectAbstract):
         self.InsertField(FieldChoice(self,"Load Distribution Scheme","Sequential","",["Optimal","Sequential",]))
 
 
+        self.setRequiredFields([0, 1, 2, 3, 4, 5, 6, 9, 10, 11, 12, 13, 14, 15, 16])
         self.addReference("PlantLoops")
         self.setRequired(False)
         self.setMinfields(0)
@@ -14810,6 +15145,7 @@ class Pipe_Adiabatic(ObjectAbstract):
         self.InsertField(FieldText(self,"Outlet Node Name","",""))
 
 
+        self.setRequiredFields([0, 1, 2])
         self.insertMemo(("Passes Inlet Node state variables to Outlet Node state variables",))
         self.setRequired(False)
         self.setMinfields(0)
@@ -14828,6 +15164,7 @@ class Pipe_Adiabatic_Steam(ObjectAbstract):
         self.InsertField(FieldText(self,"Outlet Node Name","",""))
 
 
+        self.setRequiredFields([0, 1, 2])
         self.insertMemo(("Passes Inlet Node state variables to Outlet Node state variables",))
         self.setRequired(False)
         self.setMinfields(0)
@@ -14854,6 +15191,7 @@ class Pipe_Indoor(ObjectAbstract):
         self.InsertField(FieldReal(self,"Pipe Length",0,"","","",0.0,""))
 
 
+        self.setRequiredFields([0, 1, 2, 3, 4])
         self.insertMemo(("Pipe model with transport delay and heat transfer to the environment.","Heat transfer pipes only allowed on loop supply sides",))
         self.setRequired(False)
         self.setMinfields(0)
@@ -14877,6 +15215,7 @@ class Pipe_Outdoor(ObjectAbstract):
         self.InsertField(FieldReal(self,"Pipe Length",0,"","","",0.0,""))
 
 
+        self.setRequiredFields([0, 1, 2, 3, 4])
         self.insertMemo(("Pipe model with transport delay and heat transfer to the environment.","Heat transfer pipes only allowed on loop supply sides",))
         self.setRequired(False)
         self.setMinfields(0)
@@ -14904,6 +15243,7 @@ class Pipe_Underground(ObjectAbstract):
         self.InsertField(FieldReal(self,"Phase Constant of Soil Surface Temperature","0",("optional","Units: days",),0,"","",""))
 
 
+        self.setRequiredFields([0, 1, 2, 3, 4, 5, 8])
         self.insertMemo(("Buried Pipe model: For pipes buried at a depth less","than one meter, this is an alternative object to:","HeatExchanger:Surface","Heat transfer pipes only allowed on loop supply sides",))
         self.setRequired(False)
         self.setMinfields(0)
@@ -14928,6 +15268,7 @@ class PlantLoopConnection(ObjectAbstract):
         self.InsertField(FieldChoice(self,"Secondary Side Flow Mode","VariableFlow",("Sets the Secondary Side to either a Variable or ConstantFlow Simulation","",),["ConstantFlow  !Not implemented yet","VariableFlow",]))
 
 
+        self.setRequiredFields([0, 1, 2, 3, 4, 5, 7])
         self.insertMemo(("This component is used to connect to Plant Loops together.",))
         self.setRequired(False)
         self.setMinfields(0)
@@ -14951,6 +15292,7 @@ class PlantLoopConnection_Controlled(ObjectAbstract):
         self.InsertField(FieldText(self,"Secondary Side Setpoint Node Name","",""))
 
 
+        self.setRequiredFields([0, 1, 2, 3, 4, 5, 6, 7])
         self.insertMemo(("This component is used to connect to Plant Loops together.","The controlled connection component simulates a 3-way mixing","valve to allow the secondary loop to be controlled to a different","setpoint temperature than the primary loop.",))
         self.setRequired(False)
         self.setMinfields(0)
@@ -14987,6 +15329,7 @@ class PlantEquipmentList(ObjectAbstract):
         self.InsertField(FieldText(self,"Equipment 10 Name","",""))
 
 
+        self.setRequiredFields([0, 1, 2])
         self.insertMemo(("List plant equipment in order of operating priority, 1st in list will be used 1st, etc","Use only plant equipment in this list.",))
         self.addReference("PlantAndCondenserEquipmentLists")
         self.addReference("PlantEquipmentLists")
@@ -15025,6 +15368,7 @@ class CondenserEquipmentList(ObjectAbstract):
         self.InsertField(FieldText(self,"Equipment 10 Name","",""))
 
 
+        self.setRequiredFields([0, 1, 2])
         self.insertMemo(("List condenser equipment in order of operating priority, 1st in list will be used 1st, etc","Use only condenser equipment in this list.",))
         self.addReference("PlantAndCondenserEquipmentLists")
         self.addReference("CondenserEquipmentLists")
@@ -15044,6 +15388,7 @@ class PlantEquipmentOperation_Uncontrolled(ObjectAbstract):
         self.InsertField(FieldObjectlist(self,"Equipment List Name","","","PlantAndCondenserEquipmentLists"))
 
 
+        self.setRequiredFields([0])
         self.addReference("ControlSchemeList")
         self.setRequired(False)
         self.setMinfields(0)
@@ -15090,6 +15435,7 @@ class PlantEquipmentOperation_CoolingLoad(ObjectAbstract):
         self.InsertField(FieldObjectlist(self,"Priority Control 10 Equipment List Name","","","PlantAndCondenserEquipmentLists"))
 
 
+        self.setRequiredFields([0, 1, 2, 3])
         self.addReference("ControlSchemeList")
         self.setRequired(False)
         self.setMinfields(0)
@@ -15136,6 +15482,7 @@ class PlantEquipmentOperation_HeatingLoad(ObjectAbstract):
         self.InsertField(FieldObjectlist(self,"Priority Control 10 Equipment List Name","","","PlantAndCondenserEquipmentLists"))
 
 
+        self.setRequiredFields([0, 1, 2, 3])
         self.addReference("ControlSchemeList")
         self.setRequired(False)
         self.setMinfields(0)
@@ -15182,6 +15529,7 @@ class PlantEquipmentOperation_OutdoorDryBulb(ObjectAbstract):
         self.InsertField(FieldObjectlist(self,"Priority Control 10 Equipment List Name","","","CondenserEquipmentLists"))
 
 
+        self.setRequiredFields([0, 1, 2, 3])
         self.addReference("ControlSchemeList")
         self.setRequired(False)
         self.setMinfields(0)
@@ -15228,6 +15576,7 @@ class PlantEquipmentOperation_OutdoorWetBulb(ObjectAbstract):
         self.InsertField(FieldObjectlist(self,"Priority Control 10 Equipment List Name","","","CondenserEquipmentLists"))
 
 
+        self.setRequiredFields([0, 1, 2, 3])
         self.addReference("ControlSchemeList")
         self.setRequired(False)
         self.setMinfields(0)
@@ -15274,6 +15623,7 @@ class PlantEquipmentOperation_OutdoorRelativeHumidity(ObjectAbstract):
         self.InsertField(FieldObjectlist(self,"Priority Control 10 Equipment List Name","","","CondenserEquipmentLists"))
 
 
+        self.setRequiredFields([0, 1, 2, 3])
         self.addReference("ControlSchemeList")
         self.setRequired(False)
         self.setMinfields(0)
@@ -15350,6 +15700,7 @@ class PlantEquipmentOperation_ComponentSetpoint(ObjectAbstract):
         self.InsertField(FieldChoice(self,"Operation 10 Type","","",["Heating","Cooling","Dual",]))
 
 
+        self.setRequiredFields([0, 1, 2, 3, 4, 5, 6])
         self.addReference("ControlSchemeList")
         self.setRequired(False)
         self.setMinfields(0)
@@ -15407,6 +15758,7 @@ class PlantEquipmentOperation_OutdoorDryBulbDifference(ObjectAbstract):
         self.InsertField(FieldObjectlist(self,"Priority Control 10 Equipment List Name","","","CondenserEquipmentLists"))
 
 
+        self.setRequiredFields([0, 1, 5])
         self.addReference("ControlSchemeList")
         self.setRequired(False)
         self.setMinfields(0)
@@ -15464,6 +15816,7 @@ class PlantEquipmentOperation_OutdoorWetBulbDifference(ObjectAbstract):
         self.InsertField(FieldObjectlist(self,"Priority Control 10 Equipment List Name","","","CondenserEquipmentLists"))
 
 
+        self.setRequiredFields([0, 1, 5])
         self.addReference("ControlSchemeList")
         self.setRequired(False)
         self.setMinfields(0)
@@ -15510,6 +15863,7 @@ class PlantEquipmentOperation_OutdoorDewpoint(ObjectAbstract):
         self.InsertField(FieldObjectlist(self,"Priority Control 10 Equipment List Name","","","CondenserEquipmentLists"))
 
 
+        self.setRequiredFields([0, 1, 2, 3])
         self.addReference("ControlSchemeList")
         self.setRequired(False)
         self.setMinfields(0)
@@ -15567,6 +15921,7 @@ class PlantEquipmentOperation_OutdoorDewpointDifference(ObjectAbstract):
         self.InsertField(FieldObjectlist(self,"Priority Control 10 Equipment List Name","","","CondenserEquipmentLists"))
 
 
+        self.setRequiredFields([0, 1, 5])
         self.addReference("ControlSchemeList")
         self.setRequired(False)
         self.setMinfields(0)
@@ -15607,6 +15962,7 @@ class PlantEquipmentOperationSchemes(ObjectAbstract):
         self.InsertField(FieldObjectlist(self,"Control Scheme 8 Schedule Name","","","ScheduleNames"))
 
 
+        self.setRequiredFields([0, 1, 2, 3])
         self.insertMemo(("Operation schemes are listed in *priority* order.  Note that each scheme","must address the entire load and/or condition ranges for the simulation.","The actual one selected for use will be the first that is *Scheduled*","on.  That is, if control scheme 1 is not *on* and control scheme 2","is -- then control scheme 2 is selected.","Only plant equipment should be listed on a Control Scheme for this item.",))
         self.addReference("PlantOperationSchemes")
         self.setRequired(False)
@@ -15648,6 +16004,7 @@ class CondenserEquipmentOperationSchemes(ObjectAbstract):
         self.InsertField(FieldObjectlist(self,"Control Scheme 8 Schedule Name","","","ScheduleNames"))
 
 
+        self.setRequiredFields([0, 1, 2, 3])
         self.insertMemo(("Operation schemes are listed in *priority* order.  Note that each scheme","must address the entire load and/or condition ranges for the simulation.","The actual one selected for use will be the first that is *Scheduled*","on.  That is, if control scheme 1 is not *on* and control scheme 2","is -- then control scheme 2 is selected.","Only condenser equipment should be listed on a Control Scheme for this item.",))
         self.addReference("CondenserOperationSchemes")
         self.setRequired(False)
@@ -15666,6 +16023,7 @@ class AvailabilityManager_Scheduled(ObjectAbstract):
         self.InsertField(FieldObjectlist(self,"Schedule Name","","","ScheduleNames"))
 
 
+        self.setRequiredFields([0, 1])
         self.insertMemo(("Determines the availability of a loop or system: whether it is on or off.","Schedule overrides fan/pump schedule.",))
         self.addReference("SystemAvailabilityManagers")
         self.setRequired(False)
@@ -15684,6 +16042,7 @@ class AvailabilityManager_ScheduledOn(ObjectAbstract):
         self.InsertField(FieldObjectlist(self,"Schedule Name","","","ScheduleNames"))
 
 
+        self.setRequiredFields([0, 1])
         self.insertMemo(("Determines the availability of a loop or system: only controls the turn on action.","Schedule overrides fan/pump schedule.",))
         self.addReference("SystemAvailabilityManagers")
         self.setRequired(False)
@@ -15702,6 +16061,7 @@ class AvailabilityManager_ScheduledOff(ObjectAbstract):
         self.InsertField(FieldObjectlist(self,"Schedule Name","","","ScheduleNames"))
 
 
+        self.setRequiredFields([0, 1])
         self.insertMemo(("Determines the availability of a loop or system: only controls the turn off action.","Schedule overrides fan/pump schedule.",))
         self.addReference("SystemAvailabilityManagers")
         self.setRequired(False)
@@ -15725,6 +16085,7 @@ class AvailabilityManager_NightCycle(ObjectAbstract):
         self.InsertField(FieldObjectlist(self,"Control Zone Name","","","ZoneNames"))
 
 
+        self.setRequiredFields([0, 1, 2])
         self.insertMemo(("Determines the availability of a loop or system: whether it is on or off.","Depending on zone temperatures, overrides Schedules and forces system Fans on.",))
         self.addReference("SystemAvailabilityManagers")
         self.setRequired(False)
@@ -15746,6 +16107,7 @@ class AvailabilityManager_DifferentialThermostat(ObjectAbstract):
         self.InsertField(FieldReal(self,"Temperature Difference Off Limit",0,("Defaults to Temperature Difference On Limit.","Units: deltaC",),"","","",""))
 
 
+        self.setRequiredFields([0, 1, 2, 3])
         self.insertMemo(("Overrides fan/pump schedules depending on temperature difference between two nodes.",))
         self.addReference("SystemAvailabilityManagers")
         self.setRequired(False)
@@ -15765,6 +16127,7 @@ class AvailabilityManager_HighTemperatureTurnOff(ObjectAbstract):
         self.InsertField(FieldReal(self,"Temperature",0,"","","","",""))
 
 
+        self.setRequiredFields([0, 1, 2])
         self.insertMemo(("Overrides fan/pump schedules depending on temperature at sensor node.",))
         self.addReference("SystemAvailabilityManagers")
         self.setRequired(False)
@@ -15784,6 +16147,7 @@ class AvailabilityManager_HighTemperatureTurnOn(ObjectAbstract):
         self.InsertField(FieldReal(self,"Temperature",0,"","","","",""))
 
 
+        self.setRequiredFields([0, 1, 2])
         self.insertMemo(("Overrides fan/pump schedules depending on temperature at sensor node.",))
         self.addReference("SystemAvailabilityManagers")
         self.setRequired(False)
@@ -15804,6 +16168,7 @@ class AvailabilityManager_LowTemperatureTurnOff(ObjectAbstract):
         self.InsertField(FieldObjectlist(self,"Applicability Schedule Name","",("If blank, defaults to always active","",),"ScheduleNames"))
 
 
+        self.setRequiredFields([0, 1, 2])
         self.insertMemo(("Overrides fan/pump schedules depending on temperature at sensor node.",))
         self.addReference("SystemAvailabilityManagers")
         self.setRequired(False)
@@ -15823,6 +16188,7 @@ class AvailabilityManager_LowTemperatureTurnOn(ObjectAbstract):
         self.InsertField(FieldReal(self,"Temperature",0,"","","","",""))
 
 
+        self.setRequiredFields([0, 1, 2])
         self.insertMemo(("Overrides fan/pump schedules depending on temperature at sensor node.",))
         self.addReference("SystemAvailabilityManagers")
         self.setRequired(False)
@@ -15847,6 +16213,7 @@ class AvailabilityManager_NightVentilation(ObjectAbstract):
         self.InsertField(FieldObjectlist(self,"Control Zone Name","","","ZoneNames"))
 
 
+        self.setRequiredFields([0, 1, 2, 7])
         self.insertMemo(("depending on zone and outdoor conditions overides fan schedule to do","precooling with outdoor air",))
         self.addReference("SystemAvailabilityManagers")
         self.setRequired(False)
@@ -15880,6 +16247,7 @@ class AvailabilityManager_HybridVentilation(ObjectAbstract):
         self.InsertField(FieldObjectlist(self,"ZoneVentilation Object Name","",("The other ventilation and mixing objects controlled in the same air primary loop","will work in the same way as this ventilation object.","",),"VentilationNames"))
 
 
+        self.setRequiredFields([0, 1, 2, 3])
         self.insertMemo(("Depending on zone and outdoor conditions overrides window/door opening controls","to maximize natural ventilation and turn off an HVAC system when ventilation control","conditions are met.",))
         self.addReference("SystemAvailabilityManagers")
         self.setRequired(False)
@@ -15899,6 +16267,7 @@ class AvailabilityManagerAssignmentList(ObjectAbstract):
         self.InsertField(FieldObjectlist(self,"Availability Manager 1 Name","","","SystemAvailabilityManagers"))
 
 
+        self.setRequiredFields([0, 1, 2])
         self.addReference("SystemAvailabilityManagerLists")
         self.setRequired(False)
         self.setMinfields(3)
@@ -15918,6 +16287,7 @@ class SetpointManager_Scheduled(ObjectAbstract):
         self.InsertField(FieldText(self,"Setpoint Node or NodeList Name","",("Node(s) at which control variable will be set","",)))
 
 
+        self.setRequiredFields([0, 1, 2, 3])
         self.addReference("SetpointManagers")
         self.setRequired(False)
         self.setMinfields(0)
@@ -15938,6 +16308,7 @@ class SetpointManager_Scheduled_DualSetpoint(ObjectAbstract):
         self.InsertField(FieldText(self,"Setpoint Node or NodeList Name","",("Node(s) at which temperature will be set","",)))
 
 
+        self.setRequiredFields([0, 2, 3, 4])
         self.addReference("SetpointManagers")
         self.setRequired(False)
         self.setMinfields(0)
@@ -15965,6 +16336,7 @@ class SetpointManager_OutdoorAirReset(ObjectAbstract):
         self.InsertField(FieldReal(self,"Outdoor High Temperature 2",0,("2nd outdoor air temperature reset rule","Units: C",),"","","",""))
 
 
+        self.setRequiredFields([0, 2, 3, 4, 5, 6])
         self.addReference("SetpointManagers")
         self.setRequired(False)
         self.setMinfields(0)
@@ -15988,6 +16360,7 @@ class SetpointManager_SingleZone_Reheat(ObjectAbstract):
         self.InsertField(FieldText(self,"Setpoint Node or NodeList Name","",("Node(s) at which the temperature will be set","",)))
 
 
+        self.setRequiredFields([0, 4, 5, 6, 7])
         self.addReference("SetpointManagers")
         self.setRequired(False)
         self.setMinfields(0)
@@ -16011,6 +16384,7 @@ class SetpointManager_SingleZone_Heating(ObjectAbstract):
         self.InsertField(FieldText(self,"Setpoint Node or NodeList Name","",("Node(s) at which the temperature will be set","",)))
 
 
+        self.setRequiredFields([0, 4, 5, 6, 7])
         self.addReference("SetpointManagers")
         self.setRequired(False)
         self.setMinfields(8)
@@ -16034,6 +16408,7 @@ class SetpointManager_SingleZone_Cooling(ObjectAbstract):
         self.InsertField(FieldText(self,"Setpoint Node or NodeList Name","",("Node(s) at which the temperature will be set","",)))
 
 
+        self.setRequiredFields([0, 4, 5, 6, 7])
         self.addReference("SetpointManagers")
         self.setRequired(False)
         self.setMinfields(8)
@@ -16054,6 +16429,7 @@ class SetpointManager_SingleZone_Humidity_Minimum(ObjectAbstract):
         self.InsertField(FieldText(self,"Control Zone Air Node Name","",("Name of the zone air node for the humidity control zone","",)))
 
 
+        self.setRequiredFields([0, 3, 4])
         self.addReference("SetpointManagers")
         self.setRequired(False)
         self.setMinfields(0)
@@ -16074,6 +16450,7 @@ class SetpointManager_SingleZone_Humidity_Maximum(ObjectAbstract):
         self.InsertField(FieldText(self,"Control Zone Air Node Name","",("Name of the zone air node for the humidity control zone","",)))
 
 
+        self.setRequiredFields([0, 3, 4])
         self.addReference("SetpointManagers")
         self.setRequired(False)
         self.setMinfields(5)
@@ -16095,6 +16472,7 @@ class SetpointManager_MixedAir(ObjectAbstract):
         self.InsertField(FieldText(self,"Setpoint Node or NodeList Name","",("Node(s) at which the temperature will be set","",)))
 
 
+        self.setRequiredFields([0, 2, 3, 4, 5])
         self.addReference("SetpointManagers")
         self.setRequired(False)
         self.setMinfields(0)
@@ -16121,6 +16499,7 @@ class SetpointManager_OutdoorAirPretreat(ObjectAbstract):
         self.InsertField(FieldText(self,"Setpoint Node or NodeList Name","",("Node(s) at which the temperature or humidity","ratio will be set","",)))
 
 
+        self.setRequiredFields([0, 7, 8, 9, 10])
         self.insertMemo(("This setpoint manager determines the required","conditions at the outdoor air stream node which will","produce the reference setpoint condition at the","mixed air node when mixed with the return air stream",))
         self.addReference("SetpointManagers")
         self.setRequired(False)
@@ -16144,6 +16523,7 @@ class SetpointManager_Warmest(ObjectAbstract):
         self.InsertField(FieldText(self,"Setpoint Node or NodeList Name","",("Node(s) at which the temperature will be set","",)))
 
 
+        self.setRequiredFields([0, 2, 6])
         self.addReference("SetpointManagers")
         self.setRequired(False)
         self.setMinfields(0)
@@ -16166,6 +16546,7 @@ class SetpointManager_Coldest(ObjectAbstract):
         self.InsertField(FieldText(self,"Setpoint Node or NodeList Name","",("Node(s) at which the temperature will be set","",)))
 
 
+        self.setRequiredFields([0, 2, 6])
         self.addReference("SetpointManagers")
         self.setRequired(False)
         self.setMinfields(0)
@@ -16185,6 +16566,7 @@ class SetpointManager_ReturnAirBypassFlow(ObjectAbstract):
         self.InsertField(FieldObjectlist(self,"Temperature Setpoint Schedule Name","","","ScheduleNames"))
 
 
+        self.setRequiredFields([0, 2])
         self.insertMemo(("This setpoint manager determines the required","mass flow rate through a return air bypass duct","to meet the specified temperature setpoint",))
         self.addReference("SetpointManagers")
         self.setRequired(False)
@@ -16209,6 +16591,7 @@ class SetpointManager_WarmestTemperatureFlow(ObjectAbstract):
         self.InsertField(FieldReal(self,"Minimum Turndown","1.","","","",0.0,""))
 
 
+        self.setRequiredFields([0, 2, 6])
         self.addReference("SetpointManagers")
         self.setRequired(False)
         self.setMinfields(0)
@@ -16258,6 +16641,7 @@ class Refrigeration_Case(ObjectAbstract):
         self.InsertField(FieldReal(self,"Average Refrigerant Charge Inventory","0.0",("Units are kg/m","",),"","","",""))
 
 
+        self.setRequiredFields([0, 1, 2, 11, 15])
         self.addReference("RefrigerationCaseNames")
         self.setRequired(False)
         self.setMinfields(27)
@@ -16298,6 +16682,7 @@ class Refrigeration_CompressorRack(ObjectAbstract):
         self.InsertField(FieldObjectlist(self,"Refrigeration Case Name or Caselist Name","",("Enter the name of a Refrigeration:Case object.","If there are more than one refrigerated case, enter the name of a Refrigeration:CaseList object.","",),"RefrigerationCaselistNames"))
 
 
+        self.setRequiredFields([0, 3, 24])
         self.addReference("RefrigeratedCaseCompressorRack")
         self.addReference("DesuperHeatingCoilSources")
         self.setRequired(False)
@@ -16316,6 +16701,7 @@ class Refrigeration_CaseList(ObjectAbstract):
         self.InsertField(FieldObjectlist(self,"Case 1 Name","",("Enter the name of a Refrigeration:Case object.","",),"RefrigerationCaseNames"))
 
 
+        self.setRequiredFields([0])
         self.addReference("RefrigerationCaseListNames")
         self.setRequired(False)
         self.setMinfields(0)
@@ -16341,6 +16727,7 @@ class Refrigeration_Condenser_AirCooled(ObjectAbstract):
         self.InsertField(FieldReal(self,"Condensate Piping Refrigerant Inventory","0.0",("optional input","Units: kg",),"","","",""))
 
 
+        self.setRequiredFields([0, 4])
         self.addReference("RefrigerationDetailedCondenserNames")
         self.addReference("CurveLinearNames")
         self.setRequired(False)
@@ -16379,6 +16766,7 @@ class Refrigeration_Condenser_EvaporativeCooled(ObjectAbstract):
         self.InsertField(FieldReal(self,"Condensate Piping Refrigerant Inventory","0.0",("optional input","Units: kg",),"","","",""))
 
 
+        self.setRequiredFields([0, 1, 4])
         self.addReference("RefrigerationDetailedCondenserNames")
         self.setRequired(False)
         self.setMinfields(11)
@@ -16411,6 +16799,7 @@ class Refrigeration_Condenser_WaterCooled(ObjectAbstract):
         self.InsertField(FieldReal(self,"Condensate Piping Refrigerant Inventory",0,("optional input","Units: kg",),"","","",""))
 
 
+        self.setRequiredFields([0, 2, 4])
         self.addReference("RefrigerationDetailedCondenserNames")
         self.setRequired(False)
         self.setMinfields(0)
@@ -16433,6 +16822,7 @@ class Refrigeration_Subcooler(ObjectAbstract):
         self.InsertField(FieldReal(self,"Outlet Control Temperature",0,("Control Temperature Out for subcooled liquid","Applicable only and required for mechanical subcoolers","Units: C",),"","","",""))
 
 
+        self.setRequiredFields([0])
         self.addReference("RefrigerationSubcoolerNames")
         self.setRequired(False)
         self.setMinfields(5)
@@ -16456,6 +16846,7 @@ class Refrigeration_Compressor(ObjectAbstract):
         self.InsertField(FieldText(self,"End-Use Subcategory","General",""))
 
 
+        self.setRequiredFields([0, 1, 2, 3, 4, 5, 6])
         self.addReference("RefrigerationCompressorNames")
         self.setRequired(False)
         self.setMinfields(4)
@@ -16473,6 +16864,7 @@ class Refrigeration_CompressorList(ObjectAbstract):
         self.InsertField(FieldObjectlist(self,"Refrigeration Compressor 1 Name","",("Enter the name of a Refrigeration:Compressor object.","",),"RefrigerationCompressorNames"))
 
 
+        self.setRequiredFields([0, 1])
         self.insertMemo(("IMPORTANT: List compressor names in the order in which the compressors will be loaded","Data is available for many compressors in the RefrigerationCompressor.idf dataset",))
         self.addReference("RefrigerationCompressorListNames")
         self.setRequired(False)
@@ -16499,6 +16891,7 @@ class Refrigeration_System(ObjectAbstract):
         self.InsertField(FieldText(self,"End-Use Subcategory","General",""))
 
 
+        self.setRequiredFields([0, 1, 2, 3, 4, 5])
         self.addReference("RefrigerationDetailedSystemNames")
         self.addReference("DesuperHeatingCoilSources")
         self.addReference("DesuperheaterWaterHeater")
@@ -16525,6 +16918,7 @@ class DemandManager_ExteriorLights(ObjectAbstract):
         self.InsertField(FieldObjectlist(self,"Exterior Lights 1 Name","",("Enter the name of an Exterior:Lights object.","",),"ExteriorLightsNames"))
 
 
+        self.setRequiredFields([0, 2, 6, 8])
         self.addReference("DemandManagerNames")
         self.setRequired(False)
         self.setMinfields(0)
@@ -16549,6 +16943,7 @@ class DemandManager_Lights(ObjectAbstract):
         self.InsertField(FieldObjectlist(self,"Lights 1 Name","","","LightsNames"))
 
 
+        self.setRequiredFields([0, 2, 6, 8])
         self.addReference("DemandManagerNames")
         self.setRequired(False)
         self.setMinfields(0)
@@ -16573,6 +16968,7 @@ class DemandManager_ElectricEquipment(ObjectAbstract):
         self.InsertField(FieldObjectlist(self,"Electric Equipment 1 Name","",("Enter the name of an ElectricEquipment object.","",),"ElectricEquipmentNames"))
 
 
+        self.setRequiredFields([0, 2, 6, 8])
         self.addReference("DemandManagerNames")
         self.setRequired(False)
         self.setMinfields(0)
@@ -16598,6 +16994,7 @@ class DemandManager_Thermostats(ObjectAbstract):
         self.InsertField(FieldObjectlist(self,"Thermostat 1 Name","",("Enter the name of a ZoneControl:Thermostat object.","",),"ZoneControlThermostaticNames"))
 
 
+        self.setRequiredFields([0, 2, 4, 5, 7, 9])
         self.addReference("DemandManagerNames")
         self.setRequired(False)
         self.setMinfields(0)
@@ -16623,6 +17020,7 @@ class DemandManagerAssignmentList(ObjectAbstract):
         self.InsertField(FieldObjectlist(self,"DemandManager 1 Name","","","DemandManagerNames"))
 
 
+        self.setRequiredFields([0, 1, 3, 6, 7])
         self.setRequired(False)
         self.setMinfields(0)
         self.setGroup("Electric Load Center-Generator Specifications") 
@@ -16658,6 +17056,7 @@ class Generator_InternalCombustionEngine(ObjectAbstract):
         self.InsertField(FieldReal(self,"Heat Recovery Maximum Temperature","80.0","",0.0,100.0,"",""))
 
 
+        self.setRequiredFields([0, 19])
         self.insertMemo(("This generator model is the empirical model from the Building Loads","and System Thermodynamics (BLAST) program.  Engine performance","curves are generated by fitting catalog data to second order","polynomial equations.  Three sets of coefficients are required.",))
         self.addReference("GeneratorNames")
         self.setRequired(False)
@@ -16698,6 +17097,7 @@ class Generator_CombustionTurbine(ObjectAbstract):
         self.InsertField(FieldText(self,"Outdoor Air Inlet Node Name","",("Enter the name of an outdoor air node","",)))
 
 
+        self.setRequiredFields([0, 21])
         self.insertMemo(("This generator model is the empirical model from the Building Loads","and System Thermodynamics (BLAST) program.  Generator performance","curves are generated by fitting catalog data to second order","polynomial equations.  Three sets of coefficients are required.",))
         self.addReference("GeneratorNames")
         self.setRequired(False)
@@ -16753,6 +17153,7 @@ class Generator_MicroTurbine(ObjectAbstract):
         self.InsertField(FieldObjectlist(self,"Exhaust Air Temperature Function of Part Load Ratio Curve Name","",("Quadratic curve = a + b*PLR + c*PLR**2","Cubic curve = a + b*PLR + c*PLR**2 + d*PLR**3","PLR = ratio of Generator Load to Steady-State Electrical Power Output at","current operating conditions.","If field is left blank, model assumes this modifier equals 1 for entire simulation.","",),"QuadraticCubicCurves"))
 
 
+        self.setRequiredFields([0, 1, 4, 8, 9, 10])
         self.addReference("GeneratorNames")
         self.setRequired(False)
         self.setMinfields(11)
@@ -16775,6 +17176,7 @@ class Generator_Photovoltaic(ObjectAbstract):
         self.InsertField(FieldReal(self,"Number of Modules in Series","1","",1,"","",""))
 
 
+        self.setRequiredFields([0, 1])
         self.addReference("GeneratorNames")
         self.addReference("PVGeneratorNames")
         self.setRequired(False)
@@ -16796,6 +17198,7 @@ class PhotovoltaicPerformance_Simple(ObjectAbstract):
         self.InsertField(FieldObjectlist(self,"Efficiency Schedule Name","","","ScheduleNames"))
 
 
+        self.setRequiredFields([1])
         self.addReference("PVModules")
         self.setRequired(False)
         self.setMinfields(0)
@@ -16911,6 +17314,7 @@ class Generator_FuelCell(ObjectAbstract):
         self.InsertField(FieldText(self,"Stack Cooler Name","",("Enter the name of a Generator:FuelCell:StackCooler object.","optional, used for PEMFC","",)))
 
 
+        self.setRequiredFields([0, 1, 2, 3, 4, 5, 6, 7, 8])
         self.insertMemo(("This generator model is the FC model from IEA Annex 42",))
         self.addReference("GeneratorNames")
         self.setRequired(False)
@@ -16960,6 +17364,7 @@ class Generator_FuelCell_PowerModule(ObjectAbstract):
         self.InsertField(FieldReal(self,"Maximum Operating Point",0,"","","","",""))
 
 
+        self.setRequiredFields([0, 2])
         self.addReference("FCPMNames")
         self.setRequired(False)
         self.setMinfields(0)
@@ -16989,6 +17394,7 @@ class Generator_FuelCell_AirSupply(ObjectAbstract):
         self.InsertField(FieldReal(self,"Molar Fraction 1",0,"",0.0,1.0,"",""))
 
 
+        self.setRequiredFields([0, 4, 9, 10])
         self.addReference("FCAirSupNames")
         self.setRequired(False)
         self.setMinfields(0)
@@ -17011,6 +17417,7 @@ class Generator_FuelCell_WaterSupply(ObjectAbstract):
         self.InsertField(FieldObjectlist(self,"Water Temperature Schedule Name","","","ScheduleNames"))
 
 
+        self.setRequiredFields([0])
         self.addReference("FCWaterSupNames")
         self.setRequired(False)
         self.setMinfields(0)
@@ -17038,6 +17445,7 @@ class Generator_FuelCell_AuxiliaryHeater(ObjectAbstract):
         self.InsertField(FieldReal(self,"Minimum Heating Capacity in Kmol per Second",0,"","","","",""))
 
 
+        self.setRequiredFields([0])
         self.addReference("FCAuxHeatNames")
         self.setRequired(False)
         self.setMinfields(0)
@@ -17077,6 +17485,7 @@ class Generator_FuelCell_ExhaustGasToWaterHeatExchanger(ObjectAbstract):
         self.InsertField(FieldReal(self,"Method 4 Condensation Threshold",0,"","","","",""))
 
 
+        self.setRequiredFields([0])
         self.addReference("FCExhaustHXNames,")
         self.setRequired(False)
         self.setMinfields(0)
@@ -17100,6 +17509,7 @@ class Generator_FuelCell_ElectricalStorage(ObjectAbstract):
         self.InsertField(FieldReal(self,"Initial Charge State",0,"","","","",""))
 
 
+        self.setRequiredFields([0])
         self.addReference("FCStorageNames")
         self.setRequired(False)
         self.setMinfields(0)
@@ -17119,6 +17529,7 @@ class Generator_FuelCell_Inverter(ObjectAbstract):
         self.InsertField(FieldObjectlist(self,"Efficiency Function of DC Power Curve Name","","","QuadraticCurves"))
 
 
+        self.setRequiredFields([0])
         self.addReference("FCInverterNames")
         self.setRequired(False)
         self.setMinfields(0)
@@ -17155,6 +17566,7 @@ class  Generator_FuelCell_StackCooler(ObjectAbstract):
         self.InsertField(FieldReal(self,"Stack Air Cooler Fan Coefficient f2",0,"","","","",""))
 
 
+        self.setRequiredFields([0])
         self.addReference("FCStackCoolerNames")
         self.setRequired(False)
         self.setMinfields(0)
@@ -17272,6 +17684,7 @@ class Generator_FuelSupply(ObjectAbstract):
         self.InsertField(FieldReal(self,"Constituent 12 Molar Fraction",0,"",0.0,1.0,"",""))
 
 
+        self.setRequiredFields([0])
         self.insertMemo(("Used only with Generator:FuelCell and Generator:MicroCHP",))
         self.addReference("GenFuelSupNames")
         self.setRequired(False)
@@ -17294,6 +17707,7 @@ class ElectricLoadCenter_Generators(ObjectAbstract):
         self.InsertField(FieldReal(self,"Generator 1 Rated Thermal to Electrical Power Ratio",0,"","","","",""))
 
 
+        self.setRequiredFields([0, 1, 2])
         self.addReference("GeneratorLists")
         self.setRequired(False)
         self.setMinfields(6)
@@ -17418,6 +17832,7 @@ class ElectricLoadCenter_Distribution(ObjectAbstract):
         self.InsertField(FieldObjectlist(self,"Electrical Storage Object Name","","","ElecStorageList"))
 
 
+        self.setRequiredFields([0])
         self.setRequired(False)
         self.setMinfields(0)
         self.setGroup("Water Systems") 
@@ -17442,6 +17857,7 @@ class WaterUse_Equipment(ObjectAbstract):
         self.InsertField(FieldObjectlist(self,"Latent Fraction Schedule Name","",("Defaults to 0.0 at all times","",),"ScheduleNames"))
 
 
+        self.setRequiredFields([0, 2])
         self.addReference("WaterUseEquipmentNames")
         self.setRequired(False)
         self.setMinfields(0)
@@ -17468,6 +17884,7 @@ class WaterUse_Connections(ObjectAbstract):
         self.InsertField(FieldObjectlist(self,"Water Use Equipment 1 Name","",("Enter the name of a WaterUse:Equipment object.","",),"WaterUseEquipmentNames"))
 
 
+        self.setRequiredFields([0, 10])
         self.setRequired(False)
         self.setMinfields(0)
         self.setGroup("Water Systems") 
@@ -17502,6 +17919,7 @@ class WaterUse_Storage(ObjectAbstract):
         self.InsertField(FieldObjectlist(self,"Tank Outside Surface Material Name","","","MaterialName"))
 
 
+        self.setRequiredFields([0, 13])
         self.addReference("WaterStorageTankNames")
         self.setRequired(False)
         self.setMinfields(0)
@@ -17529,6 +17947,7 @@ class WaterUse_Well(ObjectAbstract):
         self.InsertField(FieldObjectlist(self,"Water Table Depth Schedule Name","","","ScheduleNames"))
 
 
+        self.setRequiredFields([0, 1])
         self.setRequired(False)
         self.setMinfields(0)
         self.setGroup("Water Systems") 
@@ -17550,6 +17969,7 @@ class WaterUse_RainCollector(ObjectAbstract):
         self.InsertField(FieldObjectlist(self,"Collection Surface 1 Name","","","AllShadingAndHTSurfNames"))
 
 
+        self.setRequiredFields([0, 1, 6])
         self.setRequired(False)
         self.setMinfields(0)
         self.setGroup("Performance Curves") 
@@ -17571,6 +17991,7 @@ class Curve_Linear(ObjectAbstract):
         self.InsertField(FieldReal(self,"Maximum Curve Output",0,("Specify the maximum value calculated by this curve object","",),"","","",""))
 
 
+        self.setRequiredFields([0, 1, 2, 3, 4])
         self.addReference("LinearCurves")
         self.addReference("AllCurves")
         self.setRequired(False)
@@ -17595,6 +18016,7 @@ class Curve_Quadratic(ObjectAbstract):
         self.InsertField(FieldReal(self,"Maximum Curve Output",0,("Specify the maximum value calculated by this curve object","",),"","","",""))
 
 
+        self.setRequiredFields([0, 1, 2, 3, 4, 5])
         self.addReference("QuadraticCurves")
         self.addReference("AllCurves")
         self.addReference("QuadraticCubicCurves")
@@ -17622,6 +18044,7 @@ class Curve_Cubic(ObjectAbstract):
         self.InsertField(FieldReal(self,"Maximum Curve Output",0,("Specify the maximum value calculated by this curve object","",),"","","",""))
 
 
+        self.setRequiredFields([0, 1, 2, 3, 4, 5, 6])
         self.addReference("CubicCurves")
         self.addReference("AllCurves")
         self.addReference("QuadraticCubicCurves")
@@ -17649,6 +18072,7 @@ class Curve_Exponent(ObjectAbstract):
         self.InsertField(FieldReal(self,"Maximum Curve Output",0,("Specify the maximum value calculated by this curve object","",),"","","",""))
 
 
+        self.setRequiredFields([0, 1, 2, 3, 4, 5])
         self.addReference("ExponentCurves")
         self.addReference("AllCurves")
         self.setRequired(False)
@@ -17678,6 +18102,7 @@ class Curve_Biquadratic(ObjectAbstract):
         self.InsertField(FieldReal(self,"Maximum Curve Output",0,("Specify the maximum value calculated by this curve object","",),"","","",""))
 
 
+        self.setRequiredFields([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
         self.addReference("BiquadraticCurves")
         self.addReference("AllCurves")
         self.addReference("BiquadraticCubicCurves")
@@ -17714,6 +18139,7 @@ class Curve_Bicubic(ObjectAbstract):
         self.InsertField(FieldReal(self,"Maximum Curve Output",0,("Specify the maximum value calculated by this curve object","",),"","","",""))
 
 
+        self.setRequiredFields([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14])
         self.addReference("AllCurves")
         self.addReference("BicubicCurves")
         self.addReference("BicubicBiquadraticCurves")
@@ -17744,6 +18170,7 @@ class Curve_QuadraticLinear(ObjectAbstract):
         self.InsertField(FieldReal(self,"Maximum Curve Output",0,("Specify the maximum value calculated by this curve object","",),"","","",""))
 
 
+        self.setRequiredFields([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
         self.addReference("QuadraticLinearCurves")
         self.addReference("AllCurves")
         self.setRequired(False)
@@ -17796,6 +18223,7 @@ class Curve_Triquadratic(ObjectAbstract):
         self.InsertField(FieldReal(self,"Maximum Curve Output",0,("Specify the maximum value calculated by this curve object","",),"","","",""))
 
 
+        self.setRequiredFields([0])
         self.addReference("TriQuadraticCurves")
         self.addReference("AllCurves")
         self.setRequired(False)
@@ -18955,6 +19383,7 @@ class CurrencyType(ObjectAbstract):
         self.InsertField(FieldChoice(self,"Monetary Unit","",("The commonly used three letter currency code for the units of money for the country or region.","Based on ISO 4217 currency codes.  Common currency codes are USD for $ and EUR for Euros.","",),["USD","AFN","ALL","ANG","ARS","AUD","AWG","AZN","BAM","BBD","BGN","BMD","BND","BOB","BRL","BSD","BWP","BYR","BZD","CAD","CHF","CLP","CNY","COP","CRC","CUP","CZK","DKK","DOP","EEK","EGP","EUR","FJD","GBP","GHC","GIP","GTQ","GYD","HKD","HNL","HRK","HUF","IDR","ILS","IMP","INR","IRR","ISK","JEP","JMD","JPY","KGS","KHR","KPW","KRW","KYD","KZT","LAK","LBP","LKR","LRD","LTL","LVL","MKD","MNT","MUR","MXN","MYR","MZN","NAD","NGN","NIO","NOK","NPR","NZD","OMR","PAB","PEN","PHP","PKR","PLN","PYG","QAR","RON","RSD","RUB","SAR","SBD","SCR","SEK","SGD","SHP","SOS","SRD","SVC","SYP","THB","TRL","TRY","TTD","TVD","TWD","UAH","UYU","UZS","VEF","VND","XCD","YER","ZAR","ZWD",]))
 
 
+        self.setRequiredFields([0])
         self.insertMemo(("If CurrencyType is not specified, it will default to USD and produce $ in the reports.",))
         self.setRequired(False)
         self.setMinfields(0)
@@ -19033,6 +19462,7 @@ class ComponentCost_LineItem(ObjectAbstract):
         self.InsertField(FieldReal(self,"Residual Value at Replacement",0,("for future LCC","Units: $",),"","","",""))
 
 
+        self.setRequiredFields([2, 3])
         self.setRequired(False)
         self.setMinfields(0)
         self.setGroup("Economics") 
@@ -19062,6 +19492,7 @@ class UtilityCost_Tariff(ObjectAbstract):
         self.InsertField(FieldChoice(self,"Buy Or Sell","",("Sets whether the tariff is used for buying selling or both to the utility.  This","should be allowed to default to buyFromUtility unless a power generation system is included in the","building that may generate more power than the building needs during the year","",),["  BuyFromUtility","  SellToUtility","  NetMetering",]))
 
 
+        self.setRequiredFields([0, 1])
         self.setRequired(False)
         self.setMinfields(0)
         self.setGroup("Economics") 
@@ -19269,6 +19700,7 @@ class Output_Reports(ObjectSingleLine):
         self.InsertField(FieldText(self,"Report Specifications 2","",("Use ColorScheme Name for DXF reports","",)))
 
 
+        self.setRequiredFields([0])
         self.setRequired(False)
         self.setMinfields(0)
         self.setGroup("Output Reporting") 
@@ -19285,6 +19717,7 @@ class Output_VariableDictionary(ObjectAbstract):
         self.InsertField(FieldChoice(self,"Sort Option","","",["Name","Unsorted",]))
 
 
+        self.setRequiredFields([0])
         self.setRequired(False)
         self.setMinfields(0)
         self.setGroup("Output Reporting") 
@@ -19300,6 +19733,7 @@ class Output_Surfaces_List(ObjectAbstract):
         self.InsertField(FieldChoice(self,"Report Type","",("(IDF, only for Surfaces, Lines report -- will print transformed coordinates in IDF style)","",),["Details","Vertices","DetailsWithVertices","ViewFactorInfo","Lines","IDF",]))
 
 
+        self.setRequiredFields([0])
         self.setRequired(False)
         self.setMinfields(0)
         self.setGroup("Output Reporting") 
@@ -19317,6 +19751,7 @@ class Output_Surfaces_Drawing(ObjectAbstract):
         self.InsertField(FieldText(self,"Report Specifications 2","",("Use ColorScheme Name for DXF reports","",)))
 
 
+        self.setRequiredFields([0])
         self.setRequired(False)
         self.setMinfields(0)
         self.setGroup("Output Reporting") 
@@ -19332,6 +19767,7 @@ class Output_Schedules(ObjectAbstract):
         self.InsertField(FieldChoice(self,"Key Field","","",["Hourly","Timestep",]))
 
 
+        self.setRequiredFields([0])
         self.setRequired(False)
         self.setMinfields(0)
         self.setGroup("Output Reporting") 
@@ -19393,6 +19829,7 @@ class OutputControl_SurfaceColorScheme(ObjectAbstract):
         self.InsertField(FieldInt(self,"Color for Drawing Element 15",0,("use color number for output assignment (e.g. DXF)","",),0,255,"",""))
 
 
+        self.setRequiredFields([0])
         self.insertMemo(("This object is used to set colors for reporting on various building elements particularly for the","DXF reports.  We know the user can enter 0 to 255 and the color map is availble in DXF output","as well as Google Sketchup.  Therefore, we are limiting the colors in that range.  You can","extend by editing the IDD but you do so on your own.  Colors not changed in any scheme will","remain as the default scheme uses.",))
         self.addReference("ColorSchemes")
         self.setRequired(False)
@@ -19445,6 +19882,7 @@ class Output_Table_TimeBins(ObjectAbstract):
         self.InsertField(FieldObjectlist(self,"Schedule Name","",("Optional schedule name. Binning is performed for non-zero hours.  Binning always performed if left blank.","",),"ScheduleNames"))
 
 
+        self.setRequiredFields([1])
         self.setRequired(False)
         self.setMinfields(5)
         self.setGroup("Output Reporting") 
@@ -19511,6 +19949,7 @@ class Output_Table_Monthly(ObjectAbstract):
         self.InsertField(FieldChoice(self,"Aggregation Type for Variable or Meter 25","",("See instructions under AggregationType01","",),["SumOrAverage","Maximum","Minimum","ValueWhenMaximumOrMinimum","HoursNonZero","HoursZero","HoursPositive","HoursNonPositive","HoursNegative","HoursNonNegative","SumOrAverageDuringHoursShown","MaximumDuringHoursShown","MinimumDuringHoursShown",]))
 
 
+        self.setRequiredFields([0])
         self.addReference("StandardReportNames")
         self.setRequired(False)
         self.setMinfields(0)
@@ -19547,6 +19986,7 @@ class Output_Variable(ObjectSingleLine):
         self.InsertField(FieldObjectlist(self,"Schedule Name","","","ScheduleNames"))
 
 
+        self.setRequiredFields([1])
         self.insertMemo(("each Output:Variable command picks variables to be put onto the standard output file (.eso)","some variables may not be reported for every simulation.","a list of variables that can be reported are available after a run on the report dictionary file (.rdd)",))
         self.setRequired(False)
         self.setMinfields(0)
@@ -19564,6 +20004,7 @@ class Output_Meter(ObjectSingleLine):
         self.InsertField(FieldChoice(self,"Reporting Frequency","",("Timestep refers to the zone Timestep/Number of Timesteps in hour value","RunPeriod, Environment, and Annual are the same","RunPeriod, Environment, and Annual are synonymous","",),["Timestep","Hourly","Daily","Monthly","RunPeriod","Environment","Annual",]))
 
 
+        self.setRequiredFields([0])
         self.insertMemo(("each Output:Meter command picks meters to be put onto the standard output file (.eso) and","meter file (.mtr). Not all meters are reported in every simulation.","a list of meters that can be reported are available after a run on the meter dictionary file (.mdd)",))
         self.setRequired(False)
         self.setMinfields(0)
@@ -19581,6 +20022,7 @@ class Output_Meter_MeterFileOnly(ObjectSingleLine):
         self.InsertField(FieldChoice(self,"Reporting Frequency","",("Timestep refers to the zone Timestep/Number of Timesteps in hour value","RunPeriod, Environment, and Annual are the same","RunPeriod, Environment, and Annual are synonymous","",),["Timestep","Hourly","Daily","Monthly","RunPeriod","Environment","Annual",]))
 
 
+        self.setRequiredFields([0])
         self.insertMemo(("each Output:Meter:MeterFileOnly command picks meters to be put only onto meter file (.mtr).","Not all meters are reported in every simulation.","a list of meters that can be reported are available after a run on the meter dictionary file (.mdd)",))
         self.setRequired(False)
         self.setMinfields(0)
@@ -19598,6 +20040,7 @@ class Output_Meter_Cumulative(ObjectSingleLine):
         self.InsertField(FieldChoice(self,"Reporting Frequency","",("Timestep refers to the zone Timestep/Number of Timesteps in hour value","RunPeriod, Environment, and Annual are the same","RunPeriod, Environment, and Annual are synonymous","",),["Timestep","Hourly","Daily","Monthly","RunPeriod","Environment","Annual",]))
 
 
+        self.setRequiredFields([0])
         self.insertMemo(("each Output:Meter:Cumulative command picks meters to be reported cumulatively onto the","standard output file (.eso) and meter file (.mtr). Not all meters are reported in every simulation.","a list of meters that can be reported are available after a run on the meter dictionary file (.mdd)",))
         self.setRequired(False)
         self.setMinfields(0)
@@ -19615,6 +20058,7 @@ class Output_Meter_Cumulative_MeterFileOnly(ObjectSingleLine):
         self.InsertField(FieldChoice(self,"Reporting Frequency","",("Timestep refers to the zone Timestep/Number of Timesteps in hour value","RunPeriod, Environment, and Annual are the same","RunPeriod, Environment, and Annual are synonymous","",),["Timestep","Hourly","Daily","Monthly","RunPeriod","Environment","Annual",]))
 
 
+        self.setRequiredFields([0])
         self.insertMemo(("each Output:Meter:Cumulative:MeterFileOnly command picks meters to be reported cumulatively onto the","standard output file (.eso) and meter file (.mtr). Not all meters are reported in every simulation.","a list of meters that can be reported are available after a run on the meter dictionary file (.mdd)",))
         self.setRequired(False)
         self.setMinfields(0)
@@ -19634,6 +20078,7 @@ class Meter_Custom(ObjectAbstract):
         self.InsertField(FieldText(self,"Report Variable or Meter Name 1","",""))
 
 
+        self.setRequiredFields([0])
         self.insertMemo(("Used to allow users to combine specific variables and/or meters into","*custom* meter configurations.",))
         self.addReference("CustomMeterNames")
         self.setRequired(False)
@@ -19655,6 +20100,7 @@ class Meter_CustomDecrement(ObjectAbstract):
         self.InsertField(FieldText(self,"Report Variable or Meter Name 1","",""))
 
 
+        self.setRequiredFields([0])
         self.insertMemo(("Used to allow users to combine specific variables and/or meters into","*custom* meter configurations.",))
         self.addReference("CustomMeterNames")
         self.setRequired(False)
