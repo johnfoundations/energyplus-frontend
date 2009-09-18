@@ -19,42 +19,24 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************"""
 
-from PyQt4 import QtGui, QtCore
+import graphicsitem
+import verticemath
+import idfdata
 
-surfaceView = 0
-surfaceViewNorth = 1
-surfaceViewWest = 2
-surfaceViewSouth = 3
-surfaceViewEast = 4
+class surfaceItem():
+    def __init__(self,treeitem,idfclass,surfacemodel):
+        self.treeitem = treeitem
+        self.idfclass = idfclass
+        self.surfacemodel = surfacemodel
+        self.shape = verticemath.shape(self.idfclass)
+        self.graphicsitem = graphicsitem.surfacePolygonItem()
+        self.geometryrules = dict()
 
-#the assumptions on vertices is that all is xyz, and north is adjusted
-
-
-
-class surfacePolygonItem(QtGui.QGraphicsPolygon):
-    def __init__(self,parent):
-        QtGui.GraphicsPolygonItem.__init__ (self,parent=0)
-        self.polygonlist = []
-        self.buildPolygons()
-
-
-
-    def setActivePolygon(self, surfaceview = 0):
-        self.setPolygon(self.polygonlist[surfaceView])
-
-
-    def buildVerticePolygons(self):
-
-    def buildSurfaceElementPolygons(self):
-
-    def buildZonePolygons(self):
-
-    def buildAzimuthTiltPolygons(self):
-        
-
-
-
-
-
-        
-    
+    def getGeometryRules(self):
+        if len(self.geometryrules) == 0:
+            if treeitem.parentItem != None:
+                self.geometryrules = treeitem.parentItem.data.getGeometryRules()
+            else:
+                self.geometryrules = self.surfacemodel.getGeometryRules()
+        return self.geometryrules
+            

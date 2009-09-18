@@ -38,7 +38,7 @@ azimuthtiltclasses = "Ceiling:Adiabatic","Ceiling:Interzone","Floor:GroundContac
 
 
 class shape():
-    def __init__(self,idfclass,globalgeometryrules):
+    def __init__(self,idfclass):
         self.idfclass = idfclass
         self.ggrules = globalgeometryrules
         if self.idfclass.getClassnameIDD() in verticeclasses:
