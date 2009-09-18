@@ -19,48 +19,97 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************"""
 
-from PyQt4 import QtCore
+from PyQt4 import QtCore, QtGui
 import idfglobals
-from PyQt4 import QtGui
+import idfdata
+import iddclass
+import surfaceitem
+
 
 
 class idfZoneModel(QtCore.QAbstractItemModel):
     def __init__(self,zoneclass,idf,parent = None):
-        QtCore.QAbstractItemModel.__init__(self, parent)
+        print 'init'
         self.zone = zoneclass
         self.idf = idf
         self.parentmodel = parent
-        self.setZoneClass(self.zone)
+        self.zoneroot = None
         self.geometryrules = dict()
+        self.createZoneTree()
+        QtCore.QAbstractItemModel.__init__(self, parent)
 
 
 
-    def createZoneTree(self,zoneclass,group):
+    def createZoneTree(self):
         buildingclass = None
-        zonelist = []
+        zonelist = dict()
         surfacelist = []
 
-        for c in idf.idflist:
+        for c in self.idf.idflist:
             if c.getClassnameIDD() == 'Building':
                 buildingclass = c
-                continue
 
-            if c.getClassnameIDD() == 'GlobalGeometryRules':
+            elif c.getClassnameIDD() == 'GlobalGeometryRules':
                 self.geometryrules = c.getDataDict()
-                continue
+              
 
-            if c.getClassnameIDD() == 'Zone':
-                zonelist.append(c)
-                return
+            elif c.getClassnameIDD() == 'Zone':
+                zonelist[c.getName()] = [c]
 
-            if c.getGroup() == 'Thermal Zones and Surfaces':
+            elif c.getGroup() == 'Thermal Zones and Surfaces':
                 surfacelist.append(c)
+              
+
+        if buildingclass == None:
+            buildingclass = iddclass.Building()
+            idfdata.idf.insertRecord(buildingclass)
+            
+        self.zoneroot = idfdata.treeItem(None,surfaceitem.surfaceItem(buildingclass,self))
+        zonelist['Undefined'] = [None]
+        surfacedict = dict()
+
+
+        for c in surfacelist:
+            z = c.getFieldDataByName('Zone Name')
+            if z:
+                if z in zonelist:
+                    zonelist[z].append(c)
+                else:
+                    zonelist['Undefined'].append(c)
+            else:
+                s = c.getFieldDataByName("Building Surface Name")
+                if s:
+                    if s in surfacedict:
+                        surfacedict[s].append(c)
+                    else:
+                        surfacedict[s] = [c]
+                else:
+                    zonelist['Undefined'].append(c)
+        undefnode = None
+        for k,l in zonelist.iteritems():
+            #create treeitem
+            print 'zonelist item',k
+            
+            if l[0] == None:
                 continue
+            zti = idfdata.treeItem(self.zoneroot,surfaceitem.surfaceItem(l.pop(0),self))
+            if k == 'Undefined':
+                undefnode = zti
+            self.zoneroot.appendChild(zti)
+            for c in l:
+                sti = idfdata.treeItem(zti,surfaceitem.surfaceItem(c,self))
+                if c.getName() in surfacelist:
+                    for cl in surfacedict[c.getName()]:
+                        sti.appendChild(idfdata.treeItem(sti,surfaceitem.surfaceItem(cl,self)))
+                    del surfacedict[c.getName()]
+                zti.appendChild(sti)
+
+        for k,l in surfacedict.iteritems():
+            for c in l:
+                undefnode.appendChild(idfdata.treeItem(undefnode,surfaceitem.surfaceItem(c,self)))
 
         
 
-            
-            
 
 
 
@@ -68,32 +117,32 @@ class idfZoneModel(QtCore.QAbstractItemModel):
 
 
         
-        zlist = self.queryList(idfglobals.IdfQueryDependancy,'ZoneNames',self.idflist)
-        zalllist = []
-        for z in zlist:
-            for f in z.fieldlist:
-                if f.getValue() == zoneclass.getName():
-                    zalllist.append(z)
-        #zclist contains all classes that have a object-list field with reference 'zonenames' that contains zoneclass.getName
-        #extract group
-        zgrouplist = self.queryList(idfglobals.IdfQueryGroup,group,zalllist)
-        print
-        print zgrouplist
+        #zlist = self.queryList(idfglobals.IdfQueryDependancy,'ZoneNames',self.idflist)
+        #zalllist = []
+        #for z in zlist:
+            #for f in z.fieldlist:
+                #if f.getValue() == zoneclass.getName():
+                    #zalllist.append(z)
+        ##zclist contains all classes that have a object-list field with reference 'zonenames' that contains zoneclass.getName
+        ##extract group
+        #zgrouplist = self.queryList(idfglobals.IdfQueryGroup,group,zalllist)
+        #print
+        #print zgrouplist
 
-        zonetree = treeItem(None,zoneclass)
+        #zonetree = treeItem(None,zoneclass)
 
-        sublist = []
-        for g in zgrouplist:
-            sublist = self.queryList(idfglobals.IdfQueryFieldValue,g.getName(),self.idflist)
-            print
-            print sublist
-            citem = treeItem(zonetree,g)
-            for c in sublist:
-                if c not in zgrouplist:
-                    citem.appendChild(treeItem(citem,c))
-            zonetree.appendChild(citem)
+        #sublist = []
+        #for g in zgrouplist:
+            #sublist = self.queryList(idfglobals.IdfQueryFieldValue,g.getName(),self.idflist)
+            #print
+            #print sublist
+            #citem = treeItem(zonetree,g)
+            #for c in sublist:
+                #if c not in zgrouplist:
+                    #citem.appendChild(treeItem(citem,c))
+            #zonetree.appendChild(citem)
 
-        return zonetree
+        #return zonetree
 
 
 
@@ -169,16 +218,17 @@ class idfZoneModel(QtCore.QAbstractItemModel):
         idf = modelindex.internalPointer()
 
         if role == QtCore.Qt.ToolTipRole:
-            return QtCore.QVariant(idf.data.getMemo())
+            return QtCore.QVariant(idf.data.idfclass.getMemo())
 
         if role == QtCore.Qt.DisplayRole:
-            return QtCore.QVariant(idf.data.getName())
+            return QtCore.QVariant(idf.data.idfclass.getName())
 
         return QtCore.QVariant()
 
 
     def index(self, row, column, parent):
         if row < 0 or column < 0 or row >= self.rowCount(parent) or column >= self.columnCount(parent):
+            print 'index data out of range'
             return QtCore.QModelIndex()
 
         if not parent.isValid():
@@ -203,23 +253,23 @@ class zonemodeltest(QtGui.QMainWindow):
         f = idfdata.idfData()
         f.openIdf(fname)
 
-        model = idfabstractmodel.idfAbstractModel(f)
+ #       model = idfabstractmodel.idfAbstractModel(f)
         self.zonemodel = idfZoneModel(None,f)
 
-        model.query(idfglobals.IdfQueryClassname,'Zone')
+ #       model.query(idfglobals.IdfQueryClassname,'Zone')
 
 
         widget = QtGui.QWidget()
         layout = QtGui.QHBoxLayout(widget)
-        view = QtGui.QTreeView()
-        view.setModel(model)
-        layout.addWidget(view)
+ #       view = QtGui.QTreeView()
+ #       view.setModel(model)
+ #       layout.addWidget(view)
 
         view2 = QtGui.QTreeView()
         view2.setModel(self.zonemodel)
         layout.addWidget(view2)
         self.setCentralWidget(widget)
-        self.connect(view, QtCore.SIGNAL('activated (QModelIndex)'),self.classActivated)
+ #       self.connect(view, QtCore.SIGNAL('activated (QModelIndex)'),self.classActivated)
 
     def classActivated(self,index):
         idf = index.internalPointer().data

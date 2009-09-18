@@ -19,17 +19,16 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************"""
 
-import graphicsitem
+import graphicitems
 import verticemath
 import idfdata
 
 class surfaceItem():
-    def __init__(self,treeitem,idfclass,surfacemodel):
-        self.treeitem = treeitem
+    def __init__(self,idfclass,surfacemodel):
         self.idfclass = idfclass
         self.surfacemodel = surfacemodel
         self.shape = verticemath.shape(self.idfclass)
-        self.graphicsitem = graphicsitem.surfacePolygonItem()
+        self.graphicitems = graphicitems.surfacePolygonItem()
         self.geometryrules = dict()
 
     def getGeometryRules(self):
