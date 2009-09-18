@@ -31,6 +31,73 @@ class idfZoneModel(QtCore.QAbstractItemModel):
         self.idf = idf
         self.parentmodel = parent
         self.setZoneClass(self.zone)
+        self.geometryrules = dict()
+
+
+
+    def createZoneTree(self,zoneclass,group):
+        buildingclass = None
+        zonelist = []
+        surfacelist = []
+
+        for c in idf.idflist:
+            if c.getClassnameIDD() == 'Building':
+                buildingclass = c
+                continue
+
+            if c.getClassnameIDD() == 'GlobalGeometryRules':
+                self.geometryrules = c.getDataDict()
+                continue
+
+            if c.getClassnameIDD() == 'Zone':
+                zonelist.append(c)
+                return
+
+            if c.getGroup() == 'Thermal Zones and Surfaces':
+                surfacelist.append(c)
+                continue
+
+        
+
+            
+            
+
+
+
+
+
+
+        
+        zlist = self.queryList(idfglobals.IdfQueryDependancy,'ZoneNames',self.idflist)
+        zalllist = []
+        for z in zlist:
+            for f in z.fieldlist:
+                if f.getValue() == zoneclass.getName():
+                    zalllist.append(z)
+        #zclist contains all classes that have a object-list field with reference 'zonenames' that contains zoneclass.getName
+        #extract group
+        zgrouplist = self.queryList(idfglobals.IdfQueryGroup,group,zalllist)
+        print
+        print zgrouplist
+
+        zonetree = treeItem(None,zoneclass)
+
+        sublist = []
+        for g in zgrouplist:
+            sublist = self.queryList(idfglobals.IdfQueryFieldValue,g.getName(),self.idflist)
+            print
+            print sublist
+            citem = treeItem(zonetree,g)
+            for c in sublist:
+                if c not in zgrouplist:
+                    citem.appendChild(treeItem(citem,c))
+            zonetree.appendChild(citem)
+
+        return zonetree
+
+
+
+
 
     def setZoneClass(self,zoneclass):
         self.zone = zoneclass
