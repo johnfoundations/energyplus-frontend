@@ -374,11 +374,19 @@ class IddObject :
         fh.write("    def CreateFields(self) :\n")
         if 'extensible' in self.iddValues:
             self.adjustFieldList(self.iddValues['extensible'])
-        for f in self.fields:
+
+        requiredfieldlist = []
+        for c,f in enumerate(self.fields):
+            if 'required-field' in f.Fieldattr:
+                requiredfieldlist.append(c)
             f.createWidgetInitLine()
             fh.write('        self.InsertField(' + f.PrintFieldInit() + ")\n")
 
         fh.write("\n\n")
+
+        if len(requiredfieldlist) > 0:
+            fh.write('        self.setRequiredFields(' + requiredfieldlist.__str__() + ')\n')
+            
         if 'memo' in self.iddValues :
             memolist = self.iddValues['memo']
             memostr = ''
@@ -392,7 +400,7 @@ class IddObject :
             for r in reflist:
                 fh.write('        self.addReference("' + r + '")\n')
 
-        if 'required-field' in self.iddValues :
+        if 'required-object' in self.iddValues :
             fh.write('        self.setRequired(True)\n')
         else:
             fh.write('        self.setRequired(False)\n')

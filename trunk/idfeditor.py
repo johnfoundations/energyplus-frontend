@@ -254,7 +254,7 @@ class idfmodeltest(QtGui.QMainWindow):
 
 
 
-
+if __name__ == "__main__":
 
     app = QtGui.QApplication(sys.argv)
     window = idfmodeltest()

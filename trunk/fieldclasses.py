@@ -34,6 +34,7 @@ class FieldAbstract :
         self.value = default
         self.default = default
         self.notes = notes
+        self.required = False
         
 
     def createEditor(self,parent,index):
@@ -74,6 +75,10 @@ class FieldAbstract :
     
     def getFieldName(self):
         return self.fieldname
+
+    def setRequired(self):
+        self.required = True
+        
 
 class FieldReal(FieldAbstract) :
     def __init__(self,parent,fieldname,default,notes,minv,maxv,mingtv,maxltv) :

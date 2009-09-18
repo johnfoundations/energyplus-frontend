@@ -79,7 +79,18 @@ class ObjectAbstract :
         self.parseRawData()
 
     def getData(self) :
-        print self.getClassnameIDD() + ' getData not implemented'
+        d = []
+        for f in self.fieldlist:
+            d.append(f.getValue())
+
+        return d
+
+    def getDataDict(self):
+        d = dict()
+        for f in self.fieldlist:
+            d[f.getFieldName()] = f.getValue()
+
+        return d
 
     def getFieldData(self,index):
         try:
@@ -91,6 +102,10 @@ class ObjectAbstract :
 
     def CreateFields(self) :
         print 'to be subclassed'
+
+    def setRequiredFields(self,flist):
+        for f in flist:
+            self.fieldlist[f].setRequired()
 
     def PrintIDF(self,fh) :
         print(self.getClassnameIDD() + ',\n')
