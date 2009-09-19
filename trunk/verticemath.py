@@ -21,6 +21,7 @@
 
 import math
 import iddclass
+import numpy
 
 verticeclasses = "BuildingSurface:Detailed","Wall:Detailed","RoofCeiling:Detailed","Floor:Detailed","FenestrationSurface:Detailed",\
                  "Shading:Zone:Detailed","Shading:Site:Detailed","Shading:Building:Detailed"
@@ -38,9 +39,10 @@ azimuthtiltclasses = "Ceiling:Adiabatic","Ceiling:Interzone","Floor:GroundContac
 
 
 class shape():
-    def __init__(self,idfclass):
+    def __init__(self,surfaceitem,idfclass):
         self.idfclass = idfclass
-#        self.ggrules = globalgeometryrules
+        self.surfaceitem = surfaceitem
+        self.verticelist = []
         if self.idfclass.getClassnameIDD() in verticeclasses:
             self.buildVerticePolygons()
 
@@ -54,7 +56,83 @@ class shape():
             self.buildZonePolygons()
       
     def buildVerticePolygons(self):
-        pass
+        #translate into lower left, clockwise
+        #first get vertices
+        vindex = 0
+        vertices = []
+        v = []
+        for c,f in enumerate(self.idfclass.fieldlist):
+            if f.getFieldName() == 'Number of Vertices':
+                vindex = c + 1
+                ei = 0
+                vi = 0
+                continue
+
+            if vindex > 0:
+                v.append(float(f.getValue()))
+                if ei == 2:
+                    vertices.append(v)
+                    v = []
+                    ei = 0
+                    continue
+                ei = ei + 1
+                
+
+#        print self.idfclass.getName(),vertices
+
+        if self.surfaceitem.getGeometryRules()["Vertex Entry Direction"] == "Counterclockwise":
+            vertices.reverse()
+            first = vertices.pop()
+            vertices.insert(0,first)
+
+            
+        
+        rules = self.surfaceitem.getGeometryRules()["Starting Vertex Position"]
+        if rules == "UpperLeftCorner" or "UpperRightCorner" or "LowerRightCorner":
+            v1 = numpy.subtract(vertices[1],vertices[0])
+            v2 = numpy.subtract(vertices[-1],vertices[0])
+            v3 = numpy.cross(v1,v2)
+
+            d = numpy.square(v3)
+            lv3 = numpy.divide(v3,numpy.sqrt(numpy.sum(d)))
+            d = numpy.square(v1)
+            lv1 = numpy.divide(v1,numpy.sqrt(numpy.sum(d)))
+
+            dot =  numpy.dot(lv1,[-0.7,-0.7,0])
+
+            v4 = numpy.add(v3,[-0.7*v3[2]*numpy.sign(dot),-0.7*v3[2],-1*v3[2]])
+
+            base = vertices[0]
+            dist = 0
+            #calculate largest distance between points
+            for v in vertices:
+                d = numpy.subtract(base,v)
+                s = numpy.square(d)
+                l = numpy.sqrt(numpy.sum(s))
+                if l > dist:
+                    dist = l
+
+            bl = numpy.multiply(v4,dist)
+            bottomleft = numpy.add(vertices[0],bl)
+            dist = 0
+            dindex = 0
+            #find closest to bottom right
+            for c,v in enumerate(vertices):
+                d = numpy.subtract(base,v)
+                s = numpy.square(d)
+                l = numpy.sqrt(numpy.sum(s))
+                if l > dist:
+                    dist = l
+                    dindex = c
+
+            #resort vertices
+            print 'resort',dindex,vertices
+            if dindex > 0:
+                vertices = vertices[dindex:len(vertices)] + vertices[0:dindex]
+            print vertices
+            self.vertices = vertices
+
+        
 
     def buildSurfaceElementPolygons(self):
         pass
@@ -74,9 +152,11 @@ class shape():
 #        print azimuth, 'radians'
         tilt = math.radians(float(self.idfclass.getFieldDataByName('Tilt Angle')))
 #        print tilt, 'radians'
-        vertices[0] = [float(self.idfclass.getFieldDataByName('Starting X Coordinate')), \
+        sorigin     = [float(self.idfclass.getFieldDataByName('Starting X Coordinate')), \
                        float(self.idfclass.getFieldDataByName('Starting Y Coordinate')), \
                        float(self.idfclass.getFieldDataByName('Starting Z Coordinate'))]
+
+        vertices[0] = sorigin
         length = float(self.idfclass.getFieldDataByName('Length'))
         height = self.idfclass.getFieldDataByName('Width')
         if height == None:
@@ -96,15 +176,54 @@ class shape():
         vertices[2][1] = vertices[3][1]
         vertices[2][2] = vertices[1][2]
 
-#        print '%f,%f,%f' % (vertices[0][0],vertices[0][1],vertices[0][2])
-#        print '%f,%f,%f' % (vertices[1][0],vertices[1][1],vertices[1][2])
-#        print '%f,%f,%f' % (vertices[2][0],vertices[2][1],vertices[2][2])
-#        print '%f,%f,%f' % (vertices[3][0],vertices[3][1],vertices[3][2])
+
+        #relative vertice
+        if self.surfaceitem.getGeometryRules()["Rectangular Surface Coordinate System"] == "Relative":
+            origin = self.getZoneOrigin()
+        else: origin = [0,0,0]
+
+        print self.idfclass.getClassnameIDD(),self.idfclass.getName()
+        print origin
+        print '%f,%f,%f' % (origin[0],origin[1],origin[2])
+        print '%f,%f,%f' % (vertices[0][0],vertices[0][1],vertices[0][2])
+        print '%f,%f,%f' % (vertices[1][0],vertices[1][1],vertices[1][2])
+        print '%f,%f,%f' % (vertices[2][0],vertices[2][1],vertices[2][2])
+        print '%f,%f,%f' % (vertices[3][0],vertices[3][1],vertices[3][2])
+
+
+        vertices[0][0] = origin[0] + sorigin[0]
+        vertices[0][1] = origin[1] + sorigin[1]
+        vertices[0][2] = origin[2] + sorigin[2]
+        
+        vertices[1][0] = vertices[1][0] + origin[0] + sorigin[0]
+        vertices[1][1] = vertices[1][1] + origin[1] + sorigin[1]
+        vertices[1][2] = vertices[1][2] + origin[2] + sorigin[2]
+        
+        vertices[2][0] = vertices[2][0] + origin[0] + sorigin[0]
+        vertices[2][1] = vertices[2][1] + origin[1] + sorigin[1]
+        vertices[2][2] = vertices[2][2] + origin[2] + sorigin[2]
+        
+        vertices[3][0] = vertices[3][0] + origin[0] + sorigin[0]
+        vertices[3][1] = vertices[3][1] + origin[1] + sorigin[1]
+        vertices[3][2] = vertices[3][2] + origin[2] + sorigin[2]
+
+        print '%f,%f,%f' % (vertices[0][0],vertices[0][1],vertices[0][2])
+        print '%f,%f,%f' % (vertices[1][0],vertices[1][1],vertices[1][2])
+        print '%f,%f,%f' % (vertices[2][0],vertices[2][1],vertices[2][2])
+        print '%f,%f,%f' % (vertices[3][0],vertices[3][1],vertices[3][2])
+
+        self.verticelist = vertices
 
         
-        
-    def buildSimpleHorizontalPolygons(self):
-        pass
+
+
+    def getZoneOrigin(self):
+        zone = self.surfaceitem.getZone(self.idfclass.getFieldDataByName('Zone Name'))
+        x = float(zone.getFieldDataByName('X Origin'))
+        y = float(zone.getFieldDataByName('Y Origin'))
+        z = float(zone.getFieldDataByName('Z Origin'))
+        return [x,y,x]
+
 
 
     def azimuthtoccw(self,azimuth):
@@ -136,6 +255,10 @@ class shape():
         res[2] = v1[2] *m
         return res
 
+
+    def getVertices(self,viewpoint):
+        return self.vertices
+    
 
 if __name__ == "__main__":
     wall = iddclass.Wall_Exterior()
