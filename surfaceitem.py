@@ -27,15 +27,16 @@ class surfaceItem():
     def __init__(self,idfclass,surfacemodel):
         self.idfclass = idfclass
         self.surfacemodel = surfacemodel
-        self.shape = verticemath.shape(self.idfclass)
+        self.shape = verticemath.shape(self,self.idfclass)
         self.graphicitems = graphicitems.surfacePolygonItem()
-        self.geometryrules = dict()
 
     def getGeometryRules(self):
-        if len(self.geometryrules) == 0:
-            if treeitem.parentItem != None:
-                self.geometryrules = treeitem.parentItem.data.getGeometryRules()
-            else:
-                self.geometryrules = self.surfacemodel.getGeometryRules()
-        return self.geometryrules
+        return self.surfacemodel.getGeometryRules()
+
+
+    def getZone(self,zname):
+        if self.idfclass.getClassnameIDD() == 'Zone' and self.idfclass.getName() == zname:
+            return self.idfclass
+        else:
+            return self.surfacemodel.getZone(zname)
             

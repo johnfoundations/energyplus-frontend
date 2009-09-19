@@ -34,8 +34,13 @@ surfaceViewEast = 4
 class surfacePolygonItem(QtGui.QGraphicsPolygonItem):
     def __init__(self,parent=None):
         QtGui.QGraphicsPolygonItem.__init__ (self,parent)
-        self.polygonlist = []
 
+    def setPolygon(self,polygon):
+        #reverse y in array
+        for e in polygon:
+            e[1] = e[1] * -1
+
+        QtGui.QGraphicsPolygonItem.setPolygon(QtGui.QPolygonF(polygon))
 
 
 
