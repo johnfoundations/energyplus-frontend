@@ -122,6 +122,7 @@ class idfRead :
                     return False
             
             evalstr = 'iddclass.'+ re.sub(r'[:-]','_',params[0]) +'()'
+            evalstr = evalstr.lower()
             try:
                 classinstance = eval (evalstr)
             except:

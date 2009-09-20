@@ -294,9 +294,10 @@ class IddObject :
         return self.iddValues['group']
 
     def getClassnamePy(self):
-        str = re.sub(r'[:-]','_',self.iddValues['classname'])
+        s = re.sub(r'[:-]','_',self.iddValues['classname'])
+        s = s.lower()
         #pdb.set_trace()
-        return str
+        return s
 
     def objectFixup(self) :
         pass

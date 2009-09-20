@@ -6,7 +6,7 @@ import idfglobals
 
 
 
-class Version(ObjectSingleLine):
+class version(ObjectSingleLine):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Version Identifier","3.1.0",""))
 
@@ -22,7 +22,7 @@ class Version(ObjectSingleLine):
 
 
 
-class SimulationControl(ObjectAbstract):
+class simulationcontrol(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldYesNo(self,"Do Zone Sizing Calculation","No","",["Yes","No",]))
         self.InsertField(FieldYesNo(self,"Do System Sizing Calculation","No","",["Yes","No",]))
@@ -41,7 +41,7 @@ class SimulationControl(ObjectAbstract):
 
 
 
-class Building(ObjectAbstract):
+class building(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","NONE",""))
         self.InsertField(FieldReal(self,"North Axis","0.0",("degrees from true North","Units: deg",),"","","",""))
@@ -63,7 +63,7 @@ class Building(ObjectAbstract):
 
 
 
-class ShadowCalculation(ObjectAbstract):
+class shadowcalculation(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldInt(self,"Calculation Frequency","20",("0=Use Default Periodic Calculation|<else> calculate every <value> day","only really applicable to RunPeriods","",),1,"","",""))
         self.InsertField(FieldInt(self,"Maximum Figures in Shadow Overlap Calculations","15000",("Number of allowable figures in shadow overlap calculations","",),200,"","",""))
@@ -80,7 +80,7 @@ class ShadowCalculation(ObjectAbstract):
 
 
 
-class SurfaceConvectionAlgorithm_Inside(ObjectSingleLine):
+class surfaceconvectionalgorithm_inside(ObjectSingleLine):
     def CreateFields(self) :
         self.InsertField(FieldChoice(self,"Algorithm","Detailed",("Simple = constant natural convection (ASHRAE)","Detailed = variable natural convection based on temperature difference (ASHRAE)","CeilingDiffuser = ACH based forced and mixed convection correlations"," for ceiling diffuser configuration with simple natural convection limit","",),["Simple","Detailed","CeilingDiffuser",]))
 
@@ -97,7 +97,7 @@ class SurfaceConvectionAlgorithm_Inside(ObjectSingleLine):
 
 
 
-class SurfaceConvectionAlgorithm_Outside(ObjectSingleLine):
+class surfaceconvectionalgorithm_outside(ObjectSingleLine):
     def CreateFields(self) :
         self.InsertField(FieldChoice(self,"Algorithm","DOE-2",("Simple = ASHRAE Simple","Detailed = ASHRAE Detailed","BLAST is identical to Detailed as of version 1.2.1","TARP is identical to Detailed as of version 1.3.0","",),["Simple","Detailed","BLAST","TARP","DOE-2","MoWiTT",]))
 
@@ -114,7 +114,7 @@ class SurfaceConvectionAlgorithm_Outside(ObjectSingleLine):
 
 
 
-class HeatBalanceAlgorithm(ObjectSingleLine):
+class heatbalancealgorithm(ObjectSingleLine):
     def CreateFields(self) :
         self.InsertField(FieldChoice(self,"Algorithm","ConductionTransferFunction","",["ConductionTransferFunction","MoisturePenetrationDepthConductionTransferFunction","ConductionFiniteDifference","CombinedHeatAndMoistureFiniteElement",]))
         self.InsertField(FieldReal(self,"Surface Temperature Upper Limit","200","",200,"","",""))
@@ -132,7 +132,7 @@ class HeatBalanceAlgorithm(ObjectSingleLine):
 
 
 
-class ZoneCapacitanceMultiplier(ObjectSingleLine):
+class zonecapacitancemultiplier(ObjectSingleLine):
     def CreateFields(self) :
         self.InsertField(FieldReal(self,"Multiplier","1.0",("Used for stability in predictor-corrector step by increasing air heat capacity of the zone air.","",),0.0,"","",""))
 
@@ -147,7 +147,7 @@ class ZoneCapacitanceMultiplier(ObjectSingleLine):
 
 
 
-class Timestep(ObjectSingleLine):
+class timestep(ObjectSingleLine):
     def CreateFields(self) :
         self.InsertField(FieldInt(self,"Number of Timesteps per Hour","6",("Number in hour: normal validity 4 to 60: 6 suggested","Must be evenly divisible into 60","Allowable values include 1, 2, 3, 4, 5, 6, 10, 12, 15, 20, 30, and 60","Normal 6 is mimimum as lower values may cause inaccuracies","A minimum value of 20 is suggested for both ConductionFiniteDifference","and CombinedHeatAndMoistureFiniteElement surface heat balance alogorithms","",),1,60,"",""))
 
@@ -163,7 +163,7 @@ class Timestep(ObjectSingleLine):
 
 
 
-class ConvergenceLimits(ObjectAbstract):
+class convergencelimits(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldInt(self,"Minimum System Timestep",0,("0 sets the minimum to the zone timestep (ref: Timestep)","1 is normal (ratchet down to 1 minute)","setting greater than zone timestep (in minutes) will effectively set to zone timestep","Units: minutes",),0,60,"",""))
         self.InsertField(FieldInt(self,"Maximum HVAC Iterations","20","",1,"","",""))
@@ -179,7 +179,7 @@ class ConvergenceLimits(ObjectAbstract):
 
 
 
-class Compliance_Building(ObjectAbstract):
+class compliance_building(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldReal(self,"Building Rotation for Appendix G","0.0",("Additional degrees of rotation to be used with the requirement in ASHRAE Standard 90.1 Appendix G","that states that the baseline building should be rotated in four directions.","Units: deg",),"","","",""))
 
@@ -195,7 +195,7 @@ class Compliance_Building(ObjectAbstract):
 
 
 
-class Site_Location(ObjectAbstract):
+class site_location(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldReal(self,"Latitude","0.0",("+ is North, - is South, degree minutes represented in decimal (i.e. 30 minutes is .5)","Units: deg",),-90.0,+90.0,"",""))
@@ -215,7 +215,7 @@ class Site_Location(ObjectAbstract):
 
 
 
-class SizingPeriod_DesignDay(ObjectAbstract):
+class sizingperiod_designday(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldReal(self,"Maximum Dry-Bulb Temperature",0,"",-70,70,"",""))
@@ -252,7 +252,7 @@ class SizingPeriod_DesignDay(ObjectAbstract):
 
 
 
-class SizingPeriod_WeatherFileDays(ObjectAbstract):
+class sizingperiod_weatherfiledays(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",("user supplied name for reporting","",)))
         self.InsertField(FieldInt(self,"Begin Month",0,"",1,12,"",""))
@@ -277,7 +277,7 @@ class SizingPeriod_WeatherFileDays(ObjectAbstract):
 
 
 
-class SizingPeriod_WeatherFileConditionType(ObjectAbstract):
+class sizingperiod_weatherfileconditiontype(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",("user supplied name for reporting","",)))
         self.InsertField(FieldChoice(self,"Period Selection","",("Following is a list of all possible types of Extreme and Typical periods that","might be identified in the Weather File. Not all possible types are available","for all weather files.","",),["SummerExtreme","SummerTypical","WinterExtreme","WinterTypical","AutumnTypical","SpringTypical","WetSeason","DrySeason","NoDrySeason","NoWetSeason","TropicalHot","TropicalCold",]))
@@ -298,7 +298,7 @@ class SizingPeriod_WeatherFileConditionType(ObjectAbstract):
 
 
 
-class RunPeriod(ObjectAbstract):
+class runperiod(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldInt(self,"Begin Month",0,"",1,12,"",""))
         self.InsertField(FieldInt(self,"Begin Day of Month",0,"",1,31,"",""))
@@ -324,7 +324,7 @@ class RunPeriod(ObjectAbstract):
 
 
 
-class RunPeriodControl_SpecialDays(ObjectAbstract):
+class runperiodcontrol_specialdays(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldText(self,"Start Date","",(" Dates can be several formats:"," <number>/<number>  (month/day)"," <number> <Month>"," <Month> <number>","<Nth> <Weekday> in <Month)","Last <WeekDay> in <Month>","<Month> can be January, February, March, April, May, June, July, August, September, October, November, December","Months can be the first 3 letters of the month","<Weekday> can be Sunday, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday","<Nth> can be 1 or 1st, 2 or 2nd, etc. up to 5(?)","",)))
@@ -344,7 +344,7 @@ class RunPeriodControl_SpecialDays(ObjectAbstract):
 
 
 
-class RunPeriodControl_DaylightSavingTime(ObjectAbstract):
+class runperiodcontrol_daylightsavingtime(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Start Date","",""))
         self.InsertField(FieldText(self,"End Date","",(" Dates can be several formats:"," <number>/<number>  (month/day)"," <number> <Month>"," <Month> <number>","<Nth> <Weekday> in <Month)","Last <WeekDay> in <Month>","<Month> can be January, February, March, April, May, June, July, August, September, October, November, December","Months can be the first 3 letters of the month","<Weekday> can be Sunday, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday","<Nth> can be 1 or 1st, 2 or 2nd, etc. up to 5(?)","",)))
@@ -362,7 +362,7 @@ class RunPeriodControl_DaylightSavingTime(ObjectAbstract):
 
 
 
-class Site_WeatherStation(ObjectAbstract):
+class site_weatherstation(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldReal(self,"Wind Sensor Height Above Ground","10.0","","","",0.0,""))
         self.InsertField(FieldReal(self,"Wind Speed Profile Exponent","0.14","",0.0,"","",""))
@@ -381,7 +381,7 @@ class Site_WeatherStation(ObjectAbstract):
 
 
 
-class Site_HeightVariation(ObjectAbstract):
+class site_heightvariation(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldReal(self,"Wind Speed Profile Exponent","0.22",("Set to zero for no wind speed dependence on height.","",),0.0,"","",""))
         self.InsertField(FieldReal(self,"Wind Speed Profile Boundary Layer Thickness","370.0","","","",0.0,""))
@@ -399,7 +399,7 @@ class Site_HeightVariation(ObjectAbstract):
 
 
 
-class Site_GroundTemperature_BuildingSurface(ObjectSingleLine):
+class site_groundtemperature_buildingsurface(ObjectSingleLine):
     def CreateFields(self) :
         self.InsertField(FieldReal(self,"January Ground Temperature","18","","","","",""))
         self.InsertField(FieldReal(self,"February Ground Temperature","18","","","","",""))
@@ -427,7 +427,7 @@ class Site_GroundTemperature_BuildingSurface(ObjectSingleLine):
 
 
 
-class Site_GroundTemperature_Shallow(ObjectSingleLine):
+class site_groundtemperature_shallow(ObjectSingleLine):
     def CreateFields(self) :
         self.InsertField(FieldReal(self,"January Surface Ground Temperature","13","","","","",""))
         self.InsertField(FieldReal(self,"February Surface Ground Temperature","13","","","","",""))
@@ -455,7 +455,7 @@ class Site_GroundTemperature_Shallow(ObjectSingleLine):
 
 
 
-class Site_GroundTemperature_Deep(ObjectSingleLine):
+class site_groundtemperature_deep(ObjectSingleLine):
     def CreateFields(self) :
         self.InsertField(FieldReal(self,"January Deep Ground Temperature","16","","","","",""))
         self.InsertField(FieldReal(self,"February Deep Ground Temperature","16","","","","",""))
@@ -483,7 +483,7 @@ class Site_GroundTemperature_Deep(ObjectSingleLine):
 
 
 
-class Site_GroundReflectance(ObjectSingleLine):
+class site_groundreflectance(ObjectSingleLine):
     def CreateFields(self) :
         self.InsertField(FieldReal(self,"January Ground Reflectance","0.2","",0.0,1.0,"",""))
         self.InsertField(FieldReal(self,"February Ground Reflectance","0.2","",0.0,1.0,"",""))
@@ -509,7 +509,7 @@ class Site_GroundReflectance(ObjectSingleLine):
 
 
 
-class Site_GroundReflectance_SnowModifier(ObjectAbstract):
+class site_groundreflectance_snowmodifier(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldReal(self,"Ground Reflected Solar Modifier","1.0",("Value for modifying the *normal* ground reflectance when Snow is on ground"," when calculating the *Ground Reflected Solar Radiation Value*"," a value of 1.0 here uses the *normal* ground reflectance"," Ground Reflected Solar = (BeamSolar*CosSunZenith + DiffuseSolar)*GroundReflectance","   This would be further modified by the Snow Ground Reflectance Modifier when Snow was on the ground","   When Snow on ground, effective GroundReflectance is normal GroundReflectance**Ground Reflectance Snow Modifier*"," Ground Reflectance achieved in this manner will be restricted to [0.0,1.0]","",),0.0,"","",""))
         self.InsertField(FieldReal(self,"Daylighting Ground Reflected Solar Modifier","1.0",("Value for modifying the *normal* daylighting ground reflectance when Snow is on ground"," when calculating the *Ground Reflected Solar Radiation Value*"," a value of 1.0 here uses the *normal* ground reflectance"," Ground Reflected Solar = (BeamSolar*CosSunZenith + DiffuseSolar)*GroundReflectance","   This would be further modified by the Snow Ground Reflectance Modifier when Snow was on the ground","   When Snow on ground, effective GroundReflectance is normal GroundReflectance**Daylighting Ground Reflectance Snow Modifier*"," Ground Reflectance achieved in this manner will be restricted to [0.0,1.0]","",),0.0,"","",""))
@@ -525,7 +525,7 @@ class Site_GroundReflectance_SnowModifier(ObjectAbstract):
 
 
 
-class Site_WaterMainsTemperature(ObjectAbstract):
+class site_watermainstemperature(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldChoice(self,"Calculation Method","","",["Schedule","Correlation",]))
         self.InsertField(FieldObjectlist(self,"Temperature Schedule Name","","","ScheduleNames"))
@@ -544,7 +544,7 @@ class Site_WaterMainsTemperature(ObjectAbstract):
 
 
 
-class Site_Precipitation(ObjectAbstract):
+class site_precipitation(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldChoice(self,"Precipitation Model Type","","",["ScheduleAndDesignLevel",]))
         self.InsertField(FieldReal(self,"Design Level for Total Annual Precipitation",0,("meters of water per year used for design level","",),"","","",""))
@@ -562,7 +562,7 @@ class Site_Precipitation(ObjectAbstract):
 
 
 
-class ScheduleTypeLimits(ObjectAbstract):
+class scheduletypelimits(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",("used to validate schedule types in various schedule objects","",)))
         self.InsertField(FieldText(self,"Range","",("put in minimum:maximum here or blank if not a limited value, e.g. 0.0:1.0 for fraction","",)))
@@ -582,7 +582,7 @@ class ScheduleTypeLimits(ObjectAbstract):
 
 
 
-class Schedule_Day_Hourly(ObjectAbstract):
+class schedule_day_hourly(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Schedule Type Limits Name","","","ScheduleTypeLimitsNames"))
@@ -625,7 +625,7 @@ class Schedule_Day_Hourly(ObjectAbstract):
 
 
 
-class Schedule_Day_Interval(ObjectAbstract):
+class schedule_day_interval(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Schedule Type Limits Name","","","ScheduleTypeLimitsNames"))
@@ -647,7 +647,7 @@ class Schedule_Day_Interval(ObjectAbstract):
 
 
 
-class Schedule_Day_List(ObjectAbstract):
+class schedule_day_list(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Schedule Type Limits Name","","","ScheduleTypeLimitsNames"))
@@ -2107,7 +2107,7 @@ class Schedule_Day_List(ObjectAbstract):
 
 
 
-class Schedule_Week_Daily(ObjectAbstract):
+class schedule_week_daily(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Sunday Schedule:Day Name","","","DayScheduleNames"))
@@ -2137,7 +2137,7 @@ class Schedule_Week_Daily(ObjectAbstract):
 
 
 
-class Schedule_Week_Compact(ObjectAbstract):
+class schedule_week_compact(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldChoice(self,"DayType List 1","",("*For* is an optional prefix/start of the For fields.  Choices can be combined on single line","if sepaRated by spaces. i.e. *Holiday Weekends*","Should have a space after For, if it is included. i.e. *For Alldays*","",),["AllDays","Weekdays","Weekends","Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Holiday","SummerDesignDay","WinterDesignDay","CustomDay1","CustomDay2",]))
@@ -2157,7 +2157,7 @@ class Schedule_Week_Compact(ObjectAbstract):
 
 
 
-class Schedule_Year(ObjectAbstract):
+class schedule_year(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Schedule Type Limits Name","","","ScheduleTypeLimitsNames"))
@@ -2441,7 +2441,7 @@ class Schedule_Year(ObjectAbstract):
 
 
 
-class Schedule_Compact(ObjectCompactSchedule):
+class schedule_compact(ObjectCompactSchedule):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Schedule Type Limits Name","","","ScheduleTypeLimitsNames"))
@@ -2461,7 +2461,7 @@ class Schedule_Compact(ObjectCompactSchedule):
 
 
 
-class Schedule_File(ObjectAbstract):
+class schedule_file(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Schedule Type Limits Name","","","ScheduleTypeLimitsNames"))
@@ -2484,7 +2484,7 @@ class Schedule_File(ObjectAbstract):
 
 
 
-class Schedule_Constant(ObjectCompactSchedule):
+class schedule_constant(ObjectCompactSchedule):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Schedule Type Limits Name","","","ScheduleTypeLimitsNames"))
@@ -2504,7 +2504,7 @@ class Schedule_Constant(ObjectCompactSchedule):
 
 
 
-class Material(ObjectAbstract):
+class material(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldChoice(self,"Roughness","","",["VeryRough","Rough","MediumRough","MediumSmooth","Smooth","VerySmooth",]))
@@ -2530,7 +2530,7 @@ class Material(ObjectAbstract):
 
 
 
-class Material_NoMass(ObjectAbstract):
+class material_nomass(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldChoice(self,"Roughness","","",["VeryRough","Rough","MediumRough","MediumSmooth","Smooth","VerySmooth",]))
@@ -2553,7 +2553,7 @@ class Material_NoMass(ObjectAbstract):
 
 
 
-class Material_InfraredTransparent(ObjectAbstract):
+class material_infraredtransparent(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
 
@@ -2571,7 +2571,7 @@ class Material_InfraredTransparent(ObjectAbstract):
 
 
 
-class Material_AirGap(ObjectAbstract):
+class material_airgap(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldReal(self,"Thermal Resistance",0,"","","",0,""))
@@ -2590,7 +2590,7 @@ class Material_AirGap(ObjectAbstract):
 
 
 
-class Material_RoofVegetation(ObjectAbstract):
+class material_roofvegetation(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldReal(self,"Height of Plants",".2",("The ecoroof module is designed for short plants and shrubs.","Units: m",),"", 1.0,0.01,""))
@@ -2625,7 +2625,7 @@ class Material_RoofVegetation(ObjectAbstract):
 
 
 
-class RoofIrrigation(ObjectAbstract):
+class roofirrigation(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldChoice(self,"Irrigation Model Type","",("SmartSchedule will not allow irrigation when soil is already moist.","Current threshold set at 30% of saturation.","",),["Schedule","SmartSchedule",]))
         self.InsertField(FieldObjectlist(self,"Irrigation Rate Schedule Name","",("Schedule values in meters of water per hour","values should be non-negative","",),"ScheduleNames"))
@@ -2641,7 +2641,7 @@ class RoofIrrigation(ObjectAbstract):
 
 
 
-class WindowMaterial_Glazing(ObjectAbstract):
+class windowmaterial_glazing(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldChoice(self,"Optical Data Type","","",["SpectralAverage","Spectral",]))
@@ -2675,7 +2675,7 @@ class WindowMaterial_Glazing(ObjectAbstract):
 
 
 
-class WindowMaterial_GlazingGroup_Thermochromic(ObjectAbstract):
+class windowmaterial_glazinggroup_thermochromic(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldReal(self,"Optical Data Temperature 1",0,"","","","",""))
@@ -2694,7 +2694,7 @@ class WindowMaterial_GlazingGroup_Thermochromic(ObjectAbstract):
 
 
 
-class WindowMaterial_Glazing_RefractionExtinctionMethod(ObjectAbstract):
+class windowmaterial_glazing_refractionextinctionmethod(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldReal(self,"Thickness",0,"","","",0.0,""))
@@ -2723,7 +2723,7 @@ class WindowMaterial_Glazing_RefractionExtinctionMethod(ObjectAbstract):
 
 
 
-class WindowMaterial_Gas(ObjectAbstract):
+class windowmaterial_gas(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldChoice(self,"Gas Type","","",["Air","Argon","Krypton","Xenon","Custom",]))
@@ -2750,7 +2750,7 @@ class WindowMaterial_Gas(ObjectAbstract):
 
 
 
-class WindowMaterial_GasMixture(ObjectAbstract):
+class windowmaterial_gasmixture(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldReal(self,"Thickness",0,"","","",0.0,""))
@@ -2778,7 +2778,7 @@ class WindowMaterial_GasMixture(ObjectAbstract):
 
 
 
-class WindowMaterial_Shade(ObjectAbstract):
+class windowmaterial_shade(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldReal(self,"Solar Transmittance",0,("Assumed independent of incidence angle","",),0,"","",1))
@@ -2811,7 +2811,7 @@ class WindowMaterial_Shade(ObjectAbstract):
 
 
 
-class WindowMaterial_Blind(ObjectAbstract):
+class windowmaterial_blind(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldChoice(self,"Slat Orientation","Horizontal","",["Horizontal","Vertical",]))
@@ -2858,7 +2858,7 @@ class WindowMaterial_Blind(ObjectAbstract):
 
 
 
-class WindowMaterial_Screen(ObjectAbstract):
+class windowmaterial_screen(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",("Enter a unique name for this window screen material.","",)))
         self.InsertField(FieldChoice(self,"Reflected Beam Transmittance Accounting Method","ModelAsDiffuse",("Select the method used to account for the beam solar reflected off the material surface.","",),["DoNotModel","ModelAsDirectBeam","ModelAsDiffuse",]))
@@ -2890,7 +2890,7 @@ class WindowMaterial_Screen(ObjectAbstract):
 
 
 
-class MaterialProperty_MoisturePenetrationDepth_Settings(ObjectAbstract):
+class materialproperty_moisturepenetrationdepth_settings(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldObjectlist(self,"Name","",("Material Name that the moisture properties will be added to.","Additional material properties required to perform the EMPD model.","Effective Mean Penetration Depth (EMPD)","",),"MaterialName"))
         self.InsertField(FieldReal(self,"Moisture Penetration Depth",0,("This is the penetration depth","Units: m",),0.0,"","",""))
@@ -2912,7 +2912,7 @@ class MaterialProperty_MoisturePenetrationDepth_Settings(ObjectAbstract):
 
 
 
-class MaterialProperty_PhaseChange(ObjectAbstract):
+class materialproperty_phasechange(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldObjectlist(self,"Name","",("Regular Material Name to which the additional properties will be added.","this the material name for the basic material properties.","",),"MaterialName"))
         self.InsertField(FieldReal(self,"Temperature Coefficient for Thermal Conductivity","0.0",("The base temperature is 20C.","This is the thermal conductivity change per degree excursion from 20C.","Units: W/m-K2",),"","","",""))
@@ -2962,7 +2962,7 @@ class MaterialProperty_PhaseChange(ObjectAbstract):
 
 
 
-class MaterialProperty_HeatAndMoistureTransfer_Settings(ObjectAbstract):
+class materialproperty_heatandmoisturetransfer_settings(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldObjectlist(self,"Material Name","",("Material Name that the moisture properties will be added to.","This augments material properties needed for combined heat and moisture transfer for surfaces.","",),"MaterialName"))
         self.InsertField(FieldReal(self,"Porosity",0,"",0.0,1.0,"",""))
@@ -2981,7 +2981,7 @@ class MaterialProperty_HeatAndMoistureTransfer_Settings(ObjectAbstract):
 
 
 
-class MaterialProperty_HeatAndMoistureTransfer_SorptionIsotherm(ObjectAbstract):
+class materialproperty_heatandmoisturetransfer_sorptionisotherm(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldObjectlist(self,"Material Name","",("The Material Name that the moisture sorption isotherm will be added to.","",),"MaterialName"))
         self.InsertField(FieldInt(self,"Number of Isotherm Coordinates",0,("Number of data Coordinates","",),1,25,"",""))
@@ -3049,7 +3049,7 @@ class MaterialProperty_HeatAndMoistureTransfer_SorptionIsotherm(ObjectAbstract):
 
 
 
-class MaterialProperty_HeatAndMoistureTransfer_Suction(ObjectAbstract):
+class materialproperty_heatandmoisturetransfer_suction(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldObjectlist(self,"Material Name","",("Material Name that the moisture properties will be added to.","",),"MaterialName"))
         self.InsertField(FieldInt(self,"Number of Suction points",0,("Number of Suction Liquid Transport Coefficient coordinates","",),1,25,"",""))
@@ -3117,7 +3117,7 @@ class MaterialProperty_HeatAndMoistureTransfer_Suction(ObjectAbstract):
 
 
 
-class MaterialProperty_HeatAndMoistureTransfer_Redistribution(ObjectAbstract):
+class materialproperty_heatandmoisturetransfer_redistribution(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldObjectlist(self,"Material Name","",("Moisture Material Name that the moisture properties will be added to.","",),"MaterialName"))
         self.InsertField(FieldInt(self,"Number of Redistribution points",0,("number of data points","",),1,25,"",""))
@@ -3185,7 +3185,7 @@ class MaterialProperty_HeatAndMoistureTransfer_Redistribution(ObjectAbstract):
 
 
 
-class MaterialProperty_HeatAndMoistureTransfer_Diffusion(ObjectAbstract):
+class materialproperty_heatandmoisturetransfer_diffusion(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldObjectlist(self,"Material Name","",("Moisture Material Name that the moisture properties will be added to.","",),"MaterialName"))
         self.InsertField(FieldInt(self,"Number of Data Pairs",0,("Water Vapor Diffusion Resistance Factor","",),0,25,"",""))
@@ -3253,7 +3253,7 @@ class MaterialProperty_HeatAndMoistureTransfer_Diffusion(ObjectAbstract):
 
 
 
-class MaterialProperty_HeatAndMoistureTransfer_ThermalConductivity(ObjectAbstract):
+class materialproperty_heatandmoisturetransfer_thermalconductivity(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldObjectlist(self,"Material Name","",("Moisture Material Name that the Thermal Conductivity will be added to.","",),"MaterialName"))
         self.InsertField(FieldInt(self,"Number of Thermal Coordinates",0,("number of data coordinates","",),0,25,"",""))
@@ -3321,7 +3321,7 @@ class MaterialProperty_HeatAndMoistureTransfer_ThermalConductivity(ObjectAbstrac
 
 
 
-class MaterialProperty_GlazingSpectralData(ObjectSpectral):
+class materialproperty_glazingspectraldata(ObjectSpectral):
     def CreateFields(self) :
         self.InsertField(FieldReal(self,"N1",0,"","","","",""))
         self.InsertField(FieldReal(self,"N2",0,"","","","",""))
@@ -5138,7 +5138,7 @@ class MaterialProperty_GlazingSpectralData(ObjectSpectral):
 
 
 
-class Construction(ObjectAbstract):
+class construction(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Outside Layer","","","MaterialName"))
@@ -5166,7 +5166,7 @@ class Construction(ObjectAbstract):
 
 
 
-class Construction_InternalSource(ObjectAbstract):
+class construction_internalsource(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldInt(self,"Source Present After Layer Number",0,("refers to the list of materials which follows","",),1,"","",""))
@@ -5198,7 +5198,7 @@ class Construction_InternalSource(ObjectAbstract):
 
 
 
-class Construction_WindowDataFile(ObjectAbstract):
+class construction_windowdatafile(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldText(self,"File Name","",("default file name is *Window5DataFile.dat*","limit on this field is 100 characters.","",)))
@@ -5217,7 +5217,7 @@ class Construction_WindowDataFile(ObjectAbstract):
 
 
 
-class GlobalGeometryRules(ObjectAbstract):
+class globalgeometryrules(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldChoice(self,"Starting Vertex Position","",("Specified as entry for a 4 sided surface/rectangle","Surfaces are specified as viewed from outside the surface","Shading surfaces as viewed from behind.  (towards what they are shading)","",),["UpperLeftCorner","LowerLeftCorner","UpperRightCorner","LowerRightCorner",]))
         self.InsertField(FieldChoice(self,"Vertex Entry Direction","","",["Counterclockwise","Clockwise",]))
@@ -5237,7 +5237,7 @@ class GlobalGeometryRules(ObjectAbstract):
 
 
 
-class GeometryTransform(ObjectAbstract):
+class geometrytransform(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldChoice(self,"Plane of Transform","XY",("only current allowed value is *XY*","",),["XY",]))
         self.InsertField(FieldReal(self,"Current Aspect Ratio",0,("Aspect ratio of building as described in idf","",),"","",0,""))
@@ -5255,7 +5255,7 @@ class GeometryTransform(ObjectAbstract):
 
 
 
-class Zone(ObjectVertice):
+class zone(ObjectVertice):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldReal(self,"Direction of Relative North","0","","","","",""))
@@ -5285,7 +5285,7 @@ class Zone(ObjectVertice):
 
 
 
-class ZoneList(ObjectAbstract):
+class zonelist(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Zone List Name","",""))
         self.InsertField(FieldObjectlist(self,"Zone 1 Name","","","ZoneNames"))
@@ -5304,7 +5304,7 @@ class ZoneList(ObjectAbstract):
 
 
 
-class ZoneGroup(ObjectAbstract):
+class zonegroup(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Zone Group Name","",""))
         self.InsertField(FieldObjectlist(self,"Zone List Name","","","ZoneListNames"))
@@ -5322,7 +5322,7 @@ class ZoneGroup(ObjectAbstract):
 
 
 
-class BuildingSurface_Detailed(ObjectVertice):
+class buildingsurface_detailed(ObjectVertice):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldChoice(self,"Surface Type","","",["Floor","Wall","Ceiling","Roof",]))
@@ -5359,7 +5359,7 @@ class BuildingSurface_Detailed(ObjectVertice):
 
 
 
-class Wall_Detailed(ObjectVertice):
+class wall_detailed(ObjectVertice):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Construction Name","",("To be matched with a construction in this input file","",),"ConstructionNames"))
@@ -5395,7 +5395,7 @@ class Wall_Detailed(ObjectVertice):
 
 
 
-class RoofCeiling_Detailed(ObjectVertice):
+class roofceiling_detailed(ObjectVertice):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Construction Name","",("To be matched with a construction in this input file","",),"ConstructionNames"))
@@ -5431,7 +5431,7 @@ class RoofCeiling_Detailed(ObjectVertice):
 
 
 
-class Floor_Detailed(ObjectVertice):
+class floor_detailed(ObjectVertice):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Construction Name","",("To be matched with a construction in this input file","",),"ConstructionNames"))
@@ -5467,7 +5467,7 @@ class Floor_Detailed(ObjectVertice):
 
 
 
-class Wall_Exterior(ObjectAbstract):
+class wall_exterior(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Construction Name","",("To be matched with a construction in this input file","",),"ConstructionNames"))
@@ -5502,7 +5502,7 @@ class Wall_Exterior(ObjectAbstract):
 
 
 
-class Wall_Adiabatic(ObjectAbstract):
+class wall_adiabatic(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Construction Name","",("To be matched with a construction in this input file","",),"ConstructionNames"))
@@ -5536,7 +5536,7 @@ class Wall_Adiabatic(ObjectAbstract):
 
 
 
-class Wall_Underground(ObjectAbstract):
+class wall_underground(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Construction Name","",("To be matched with a construction in this input file","",),"ConstructionNames"))
@@ -5570,7 +5570,7 @@ class Wall_Underground(ObjectAbstract):
 
 
 
-class Wall_Interzone(ObjectAbstract):
+class wall_interzone(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Construction Name","",("To be matched with a construction in this input file","",),"ConstructionNames"))
@@ -5605,7 +5605,7 @@ class Wall_Interzone(ObjectAbstract):
 
 
 
-class Roof(ObjectAbstract):
+class roof(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Construction Name","",("To be matched with a construction in this input file","",),"ConstructionNames"))
@@ -5640,7 +5640,7 @@ class Roof(ObjectAbstract):
 
 
 
-class Ceiling_Adiabatic(ObjectAbstract):
+class ceiling_adiabatic(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Construction Name","",("To be matched with a construction in this input file","",),"ConstructionNames"))
@@ -5674,7 +5674,7 @@ class Ceiling_Adiabatic(ObjectAbstract):
 
 
 
-class Ceiling_Interzone(ObjectAbstract):
+class ceiling_interzone(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Construction Name","",("To be matched with a construction in this input file","",),"ConstructionNames"))
@@ -5709,7 +5709,7 @@ class Ceiling_Interzone(ObjectAbstract):
 
 
 
-class Floor_GroundContact(ObjectAbstract):
+class floor_groundcontact(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Construction Name","",("To be matched with a construction in this input file","",),"ConstructionNames"))
@@ -5744,7 +5744,7 @@ class Floor_GroundContact(ObjectAbstract):
 
 
 
-class Floor_Adiabatic(ObjectAbstract):
+class floor_adiabatic(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Construction Name","",("To be matched with a construction in this input file","",),"ConstructionNames"))
@@ -5778,7 +5778,7 @@ class Floor_Adiabatic(ObjectAbstract):
 
 
 
-class Floor_Interzone(ObjectAbstract):
+class floor_interzone(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Construction Name","",("To be matched with a construction in this input file","",),"ConstructionNames"))
@@ -5813,7 +5813,7 @@ class Floor_Interzone(ObjectAbstract):
 
 
 
-class FenestrationSurface_Detailed(ObjectVertice):
+class fenestrationsurface_detailed(ObjectVertice):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldChoice(self,"Surface Type","","",["Window","Door","GlassDoor","TubularDaylightDome","TubularDaylightDiffuser",]))
@@ -5858,7 +5858,7 @@ class FenestrationSurface_Detailed(ObjectVertice):
 
 
 
-class Window(ObjectAbstract):
+class window(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Construction Name","",("To be matched with a construction in this input file","",),"ConstructionNames"))
@@ -5891,7 +5891,7 @@ class Window(ObjectAbstract):
 
 
 
-class Door(ObjectAbstract):
+class door(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Construction Name","",("To be matched with a construction in this input file","",),"ConstructionNames"))
@@ -5923,7 +5923,7 @@ class Door(ObjectAbstract):
 
 
 
-class GlazedDoor(ObjectAbstract):
+class glazeddoor(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Construction Name","",("To be matched with a construction in this input file","",),"ConstructionNames"))
@@ -5957,7 +5957,7 @@ class GlazedDoor(ObjectAbstract):
 
 
 
-class Window_Interzone(ObjectAbstract):
+class window_interzone(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Construction Name","",("To be matched with a construction in this input file","",),"ConstructionNames"))
@@ -5990,7 +5990,7 @@ class Window_Interzone(ObjectAbstract):
 
 
 
-class Door_Interzone(ObjectAbstract):
+class door_interzone(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Construction Name","",("To be matched with a construction in this input file","",),"ConstructionNames"))
@@ -6023,7 +6023,7 @@ class Door_Interzone(ObjectAbstract):
 
 
 
-class GlazedDoor_Interzone(ObjectAbstract):
+class glazeddoor_interzone(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Construction Name","",("To be matched with a construction in this input file","",),"ConstructionNames"))
@@ -6056,7 +6056,7 @@ class GlazedDoor_Interzone(ObjectAbstract):
 
 
 
-class WindowProperty_ShadingControl(ObjectAbstract):
+class windowproperty_shadingcontrol(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",("Referenced by surfaces that are exterior windows","Not used by interzone windows","",)))
         self.InsertField(FieldChoice(self,"Shading Type","","",["InteriorShade","ExteriorShade","ExteriorScreen","InteriorBlind","ExteriorBlind","BetweenGlassShade","BetweenGlassBlind","SwitchableGlazing",]))
@@ -6084,7 +6084,7 @@ class WindowProperty_ShadingControl(ObjectAbstract):
 
 
 
-class WindowProperty_FrameAndDivider(ObjectAbstract):
+class windowproperty_frameanddivider(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",("Referenced by surfaces that are exterior windows","Not used by interzone windows","",)))
         self.InsertField(FieldReal(self,"Frame Width","0.0",("Width of frame in plane of window","Frame width assumed the same on all sides of window","Units: m",),0.0,1.0,"",""))
@@ -6125,7 +6125,7 @@ class WindowProperty_FrameAndDivider(ObjectAbstract):
 
 
 
-class WindowProperty_AirflowControl(ObjectAbstract):
+class windowproperty_airflowcontrol(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldObjectlist(self,"Name","",("Name must be that of an exterior window with two or three glass layers.","",),"SubSurfNames"))
         self.InsertField(FieldChoice(self,"Airflow Source","IndoorAir","",["IndoorAir","OutdoorAir",]))
@@ -6148,7 +6148,7 @@ class WindowProperty_AirflowControl(ObjectAbstract):
 
 
 
-class WindowProperty_StormWindow(ObjectAbstract):
+class windowproperty_stormwindow(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Window Name","",("Must be the name of a FenestrationSurface:Detailed object with Surface Type = WINDOW.","The WindowProperty:StormWindow object can only be used with exterior windows.","",)))
         self.InsertField(FieldObjectlist(self,"Storm Glass Layer Name","",("Must be a WindowMaterial:Glazing or WindowMaterial:Glazing:RefractionExtinctionMethod","Gap between storm glass layer and adjacent glass layer is assumed to be filled","with Air","",),"GlazingMaterialName"))
@@ -6171,7 +6171,7 @@ class WindowProperty_StormWindow(ObjectAbstract):
 
 
 
-class InternalMass(ObjectAbstract):
+class internalmass(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Construction Name","",("To be matched with a construction in this input file","",),"ConstructionNames"))
@@ -6194,7 +6194,7 @@ class InternalMass(ObjectAbstract):
 
 
 
-class Shading_Site(ObjectAbstract):
+class shading_site(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldReal(self,"Azimuth Angle",0,("Facing direction of outside of shading device (S=180,N=0,E=90,W=270)","Units: deg",),0,360,"",""))
@@ -6220,7 +6220,7 @@ class Shading_Site(ObjectAbstract):
 
 
 
-class Shading_Building(ObjectAbstract):
+class shading_building(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldReal(self,"Azimuth Angle",0,("Facing direction of outside of shading device (S=180,N=0,E=90,W=270)","Units: deg",),0,360,"",""))
@@ -6246,7 +6246,7 @@ class Shading_Building(ObjectAbstract):
 
 
 
-class Shading_Site_Detailed(ObjectVertice):
+class shading_site_detailed(ObjectVertice):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Transmittance Schedule Name","",("Transmittance schedule for the shading device, defaults to zero (always opaque)","",),"ScheduleNames"))
@@ -6270,7 +6270,7 @@ class Shading_Site_Detailed(ObjectVertice):
 
 
 
-class Shading_Building_Detailed(ObjectVertice):
+class shading_building_detailed(ObjectVertice):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Transmittance Schedule Name","",("Transmittance schedule for the shading device, defaults to zero (always opaque)","",),"ScheduleNames"))
@@ -6294,7 +6294,7 @@ class Shading_Building_Detailed(ObjectVertice):
 
 
 
-class Shading_Overhang(ObjectAbstract):
+class shading_overhang(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Window or Door Name","","","SubSurfNames"))
@@ -6320,7 +6320,7 @@ class Shading_Overhang(ObjectAbstract):
 
 
 
-class Shading_Overhang_Projection(ObjectAbstract):
+class shading_overhang_projection(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Window or Door Name","","","SubSurfNames"))
@@ -6346,7 +6346,7 @@ class Shading_Overhang_Projection(ObjectAbstract):
 
 
 
-class Shading_Fin(ObjectAbstract):
+class shading_fin(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Window or Door Name","","","SubSurfNames"))
@@ -6377,7 +6377,7 @@ class Shading_Fin(ObjectAbstract):
 
 
 
-class Shading_Fin_Projection(ObjectAbstract):
+class shading_fin_projection(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Window or Door Name","","","SubSurfNames"))
@@ -6408,7 +6408,7 @@ class Shading_Fin_Projection(ObjectAbstract):
 
 
 
-class Shading_Zone_Detailed(ObjectVertice):
+class shading_zone_detailed(ObjectVertice):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Base Surface Name","","","SurfaceNames"))
@@ -6434,7 +6434,7 @@ class Shading_Zone_Detailed(ObjectVertice):
 
 
 
-class ShadingProperty_Reflectance(ObjectAbstract):
+class shadingproperty_reflectance(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldObjectlist(self,"Shading Surface Name","","","AllShadingSurfNames"))
         self.InsertField(FieldReal(self,"Diffuse Solar Reflectance of Unglazed Part of Shading Surface","0.2","",0.0,1.0,"",""))
@@ -6455,7 +6455,7 @@ class ShadingProperty_Reflectance(ObjectAbstract):
 
 
 
-class SurfaceControl_MovableInsulation(ObjectAbstract):
+class surfacecontrol_movableinsulation(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldChoice(self,"Insulation Type","","",["Outside","Inside",]))
         self.InsertField(FieldObjectlist(self,"Surface Name","","","SurfaceNames"))
@@ -6475,7 +6475,7 @@ class SurfaceControl_MovableInsulation(ObjectAbstract):
 
 
 
-class SurfaceProperty_OtherSideCoefficients(ObjectAbstract):
+class surfaceproperty_othersidecoefficients(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldReal(self,"Combined Convective/Radiative Film Coefficient",0,("if>0, this field becomes the exterior convective/radiative film coefficient","and the other fields are used to calculate the outdoor air temperature","then exterior surface temperature based on outdoor air and specified coefficient","if<=0, then remaining fields calculate the outside surface temperature","following fields are used in the equation:","SurfTemp=N7*TempZone + N4*OutdoorDry-bulb + N2*N3 + GroundTemp*N5 + WindSpeed*N6*OutdoorDry-bulb","",),"","","",""))
@@ -6504,7 +6504,7 @@ class SurfaceProperty_OtherSideCoefficients(ObjectAbstract):
 
 
 
-class SurfaceProperty_OtherSideConditionsModel(ObjectAbstract):
+class surfaceproperty_othersideconditionsmodel(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldChoice(self,"Type of Modeling","GapConvectionRadiation",("GapConvectionRadiation provides boundary conditions for convection","and linearized thermal radiation across a gap or cavity","on the other side of the surface that are modeled sperately.","",),["GapConvectionRadiation",]))
@@ -6524,7 +6524,7 @@ class SurfaceProperty_OtherSideConditionsModel(ObjectAbstract):
 
 
 
-class SurfaceProperty_ConvectionCoefficients(ObjectAbstract):
+class surfaceproperty_convectioncoefficients(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldObjectlist(self,"Surface Name","","","SurfaceNames"))
         self.InsertField(FieldChoice(self,"Convection Coefficient 1 Location","","",["Outside","Inside",]))
@@ -6549,7 +6549,7 @@ class SurfaceProperty_ConvectionCoefficients(ObjectAbstract):
 
 
 
-class SurfaceProperty_ConvectionCoefficients_MultipleSurface(ObjectAbstract):
+class surfaceproperty_convectioncoefficients_multiplesurface(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldChoice(self,"Surface Type","","",["AllExteriorSurfaces","AllExteriorWindows","AllExteriorWalls","AllExteriorRoofs","AllExteriorFloors","AllInteriorSurfaces","AllInteriorWalls","AllInteriorWindows","AllInteriorCeilings","AllInteriorFloors",]))
         self.InsertField(FieldChoice(self,"Convection Coefficient 1 Location","","",["Outside","Inside",]))
@@ -6574,7 +6574,7 @@ class SurfaceProperty_ConvectionCoefficients_MultipleSurface(ObjectAbstract):
 
 
 
-class SurfaceProperties_VaporCoefficients(ObjectAbstract):
+class surfaceproperties_vaporcoefficients(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldObjectlist(self,"Surface Name","","","SurfaceNames"))
         self.InsertField(FieldYesNo(self,"Constant External Vapor Transfer Coefficient","No","",["Yes","No",]))
@@ -6595,7 +6595,7 @@ class SurfaceProperties_VaporCoefficients(ObjectAbstract):
 
 
 
-class SurfaceProperty_ExteriorNaturalVentedCavity(ObjectAbstract):
+class surfaceproperty_exteriornaturalventedcavity(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Boundary Conditions Model Name","",("Enter the name of a SurfaceProperty:OtherSideConditionsModel object","",),"OSCMNames"))
@@ -6623,7 +6623,7 @@ class SurfaceProperty_ExteriorNaturalVentedCavity(ObjectAbstract):
 
 
 
-class ZoneProperty_UserViewFactors(ObjectViewFactor):
+class zoneproperty_userviewfactors(ObjectViewFactor):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Zone Name","",""))
         self.InsertField(FieldInt(self,"i 1",0,("index for following Fij","the view factor numbers are triples in the order i, j, Fij.","",),"","","",""))
@@ -6642,7 +6642,7 @@ class ZoneProperty_UserViewFactors(ObjectViewFactor):
 
 
 
-class RoomAirModelType(ObjectAbstract):
+class roomairmodeltype(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Zone Name","","","ZoneNames"))
@@ -6661,7 +6661,7 @@ class RoomAirModelType(ObjectAbstract):
 
 
 
-class RoomAir_TemperaturePattern_UserDefined(ObjectAbstract):
+class roomair_temperaturepattern_userdefined(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Zone Name","","","ZoneNames"))
@@ -6680,7 +6680,7 @@ class RoomAir_TemperaturePattern_UserDefined(ObjectAbstract):
 
 
 
-class RoomAir_TemperaturePattern_ConstantGradient(ObjectAbstract):
+class roomair_temperaturepattern_constantgradient(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldInt(self,"Control Integer for Pattern Control Schedule Name",0,("reference this entry in Schedule Name","",),"","","",""))
@@ -6701,7 +6701,7 @@ class RoomAir_TemperaturePattern_ConstantGradient(ObjectAbstract):
 
 
 
-class RoomAir_TemperaturePattern_TwoGradient(ObjectAbstract):
+class roomair_temperaturepattern_twogradient(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldInt(self,"Control Integer for Pattern Control Schedule Name",0,("reference this entry in Schedule Name","",),"","","",""))
@@ -6728,7 +6728,7 @@ class RoomAir_TemperaturePattern_TwoGradient(ObjectAbstract):
 
 
 
-class RoomAir_TemperaturePattern_NondimensionalHeight(ObjectAbstract):
+class roomair_temperaturepattern_nondimensionalheight(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldInt(self,"Control Integer for Pattern Control Schedule Name",0,("this value should appear in as a schedule value","",),"","","",""))
@@ -6750,7 +6750,7 @@ class RoomAir_TemperaturePattern_NondimensionalHeight(ObjectAbstract):
 
 
 
-class RoomAir_TemperaturePattern_SurfaceMapping(ObjectAbstract):
+class roomair_temperaturepattern_surfacemapping(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldInt(self,"Control Integer for Pattern Control Schedule Name",0,("reference this entry in schedule","",),"","","",""))
@@ -6772,7 +6772,7 @@ class RoomAir_TemperaturePattern_SurfaceMapping(ObjectAbstract):
 
 
 
-class RoomAir_Node(ObjectAbstract):
+class roomair_node(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldChoice(self,"Node Type","","",["Inlet","Floor","Control","Ceiling","MundtRoom","Return",]))
@@ -6813,7 +6813,7 @@ class RoomAir_Node(ObjectAbstract):
 
 
 
-class RoomAirSettings_OneNodeDisplacementVentilation(ObjectAbstract):
+class roomairsettings_onenodedisplacementventilation(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldObjectlist(self,"Zone Name","","","ZoneNames"))
         self.InsertField(FieldReal(self,"Fraction of Convective Internal Loads Added to Floor Air",0,"",0.0,1.0,"",""))
@@ -6832,7 +6832,7 @@ class RoomAirSettings_OneNodeDisplacementVentilation(ObjectAbstract):
 
 
 
-class RoomAirSettings_ThreeNodeDisplacementVentilation(ObjectAbstract):
+class roomairsettings_threenodedisplacementventilation(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldObjectlist(self,"Zone Name","",("Name of Zone being described. Any existing zone name","",),"ZoneNames"))
         self.InsertField(FieldObjectlist(self,"Gain Distribution Schedule Name","",("Distribution of the convective heat gains between the occupied and mixed zones.","0<= Accepted Value <= 1.","In the DV model 1 means all convective gains in the lower layer.","",),"ScheduleNames"))
@@ -6854,7 +6854,7 @@ class RoomAirSettings_ThreeNodeDisplacementVentilation(ObjectAbstract):
 
 
 
-class RoomAirSettings_CrossVentilation(ObjectAbstract):
+class roomairsettings_crossventilation(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldObjectlist(self,"Zone Name","",("Name of Zone being described. Any existing zone name","",),"ZoneNames"))
         self.InsertField(FieldObjectlist(self,"Gain Distribution Schedule Name","",("Distribution of the convective heat gains between the jet and recirculation zones.","0<= Accepted Value <= 1.","In the CV model 1 means all convective gains in the jet region.","",),"ScheduleNames"))
@@ -6872,7 +6872,7 @@ class RoomAirSettings_CrossVentilation(ObjectAbstract):
 
 
 
-class RoomAirSettings_UnderFloorAirDistributionInterior(ObjectAbstract):
+class roomairsettings_underfloorairdistributioninterior(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldObjectlist(self,"Zone Name","",("Name of Zone with underfloor air distribution","",),"ZoneNames"))
         self.InsertField(FieldRealAutocalculate(self,"Number of Diffusers","autocalculate",("Total number of diffusers in this zone","",),"","",0.0,""))
@@ -6902,7 +6902,7 @@ class RoomAirSettings_UnderFloorAirDistributionInterior(ObjectAbstract):
 
 
 
-class RoomAirSettings_UnderFloorAirDistributionExterior(ObjectAbstract):
+class roomairsettings_underfloorairdistributionexterior(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldObjectlist(self,"Zone Name","",("Name of Zone being described. Any existing zone name","",),"ZoneNames"))
         self.InsertField(FieldRealAutocalculate(self,"Number of Diffusers per Zone","Autocalculate","","","",0.0,""))
@@ -6932,7 +6932,7 @@ class RoomAirSettings_UnderFloorAirDistributionExterior(ObjectAbstract):
 
 
 
-class People(ObjectAbstract):
+class people(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Zone Name","","","ZoneNames"))
@@ -6968,7 +6968,7 @@ class People(ObjectAbstract):
 
 
 
-class ComfortViewFactorAngles(ObjectAbstract):
+class comfortviewfactorangles(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Zone Name","","","ZoneNames"))
@@ -7025,7 +7025,7 @@ class ComfortViewFactorAngles(ObjectAbstract):
 
 
 
-class Lights(ObjectAbstract):
+class lights(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Zone Name","","","ZoneNames"))
@@ -7057,7 +7057,7 @@ class Lights(ObjectAbstract):
 
 
 
-class ElectricEquipment(ObjectAbstract):
+class electricequipment(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Zone Name","","","ZoneNames"))
@@ -7085,7 +7085,7 @@ class ElectricEquipment(ObjectAbstract):
 
 
 
-class GasEquipment(ObjectAbstract):
+class gasequipment(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Zone Name","","","ZoneNames"))
@@ -7113,7 +7113,7 @@ class GasEquipment(ObjectAbstract):
 
 
 
-class HotWaterEquipment(ObjectAbstract):
+class hotwaterequipment(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Zone Name","","","ZoneNames"))
@@ -7141,7 +7141,7 @@ class HotWaterEquipment(ObjectAbstract):
 
 
 
-class SteamEquipment(ObjectAbstract):
+class steamequipment(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Zone Name","","","ZoneNames"))
@@ -7169,7 +7169,7 @@ class SteamEquipment(ObjectAbstract):
 
 
 
-class OtherEquipment(ObjectAbstract):
+class otherequipment(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Zone Name","","","ZoneNames"))
@@ -7196,7 +7196,7 @@ class OtherEquipment(ObjectAbstract):
 
 
 
-class ZoneBaseboard_OutdoorTemperatureControlled(ObjectAbstract):
+class zonebaseboard_outdoortemperaturecontrolled(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Zone Name","","","ZoneNames"))
@@ -7221,7 +7221,7 @@ class ZoneBaseboard_OutdoorTemperatureControlled(ObjectAbstract):
 
 
 
-class Daylighting_Controls(ObjectAbstract):
+class daylighting_controls(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldObjectlist(self,"Zone Name","","","ZoneNames"))
         self.InsertField(FieldInt(self,"Total Daylighting Reference Points","1","",1,2,"",""))
@@ -7256,7 +7256,7 @@ class Daylighting_Controls(ObjectAbstract):
 
 
 
-class Daylighting_DELight_Controls(ObjectAbstract):
+class daylighting_delight_controls(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Zone Name","",("Name of Thermal Zone hosting the given DElight Zone","",),"ZoneNames"))
@@ -7281,7 +7281,7 @@ class Daylighting_DELight_Controls(ObjectAbstract):
 
 
 
-class Daylighting_DELight_ReferencePoint(ObjectAbstract):
+class daylighting_delight_referencepoint(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"DElight Name","","","DElightZoneNames"))
@@ -7304,7 +7304,7 @@ class Daylighting_DELight_ReferencePoint(ObjectAbstract):
 
 
 
-class Daylighting_DELight_ComplexFenestration(ObjectAbstract):
+class daylighting_delight_complexfenestration(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",("Only used for user reference","",)))
         self.InsertField(FieldText(self,"Complex Fenestration Type","",("Used to select the appropriate Complex Fenestration BTDF data","",)))
@@ -7325,7 +7325,7 @@ class Daylighting_DELight_ComplexFenestration(ObjectAbstract):
 
 
 
-class DaylightingDevice_Tubular(ObjectAbstract):
+class daylightingdevice_tubular(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Dome Name","",("This must refer to a subsurface object of type TubularDaylightDome","",),"SubSurfNames"))
@@ -7349,7 +7349,7 @@ class DaylightingDevice_Tubular(ObjectAbstract):
 
 
 
-class DaylightingDevice_Shelf(ObjectAbstract):
+class daylightingdevice_shelf(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Window Name","","","SubSurfNames"))
@@ -7370,7 +7370,7 @@ class DaylightingDevice_Shelf(ObjectAbstract):
 
 
 
-class DaylightingDevice_LightWell(ObjectAbstract):
+class daylightingdevice_lightwell(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Exterior Window Name","",""))
         self.InsertField(FieldReal(self,"Height of Well",0,("Distance from Bottom of Window to Bottom of Well","",),0.0,"","",""))
@@ -7391,7 +7391,7 @@ class DaylightingDevice_LightWell(ObjectAbstract):
 
 
 
-class Output_IlluminanceMap(ObjectAbstract):
+class output_illuminancemap(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Zone Name","","","ZoneNames"))
@@ -7416,7 +7416,7 @@ class Output_IlluminanceMap(ObjectAbstract):
 
 
 
-class OutputControl_IlluminanceMap_Style(ObjectAbstract):
+class outputcontrol_illuminancemap_style(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldChoice(self,"Column Separator","Comma","",["Comma","Tab","Fixed",]))
 
@@ -7432,7 +7432,7 @@ class OutputControl_IlluminanceMap_Style(ObjectAbstract):
 
 
 
-class ZoneInfiltration_DesignFlowRate(ObjectAbstract):
+class zoneinfiltration_designflowrate(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Zone Name","","","ZoneNames"))
@@ -7460,7 +7460,7 @@ class ZoneInfiltration_DesignFlowRate(ObjectAbstract):
 
 
 
-class ZoneInfiltration_EffectiveLeakageArea(ObjectAbstract):
+class zoneinfiltration_effectiveleakagearea(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Zone Name","","","ZoneNames"))
@@ -7482,7 +7482,7 @@ class ZoneInfiltration_EffectiveLeakageArea(ObjectAbstract):
 
 
 
-class ZoneInfiltration_FlowCoefficient(ObjectAbstract):
+class zoneinfiltration_flowcoefficient(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Zone Name","","","ZoneNames"))
@@ -7506,7 +7506,7 @@ class ZoneInfiltration_FlowCoefficient(ObjectAbstract):
 
 
 
-class ZoneVentilation(ObjectAbstract):
+class zoneventilation(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Zone Name","","","ZoneNames"))
@@ -7549,7 +7549,7 @@ class ZoneVentilation(ObjectAbstract):
 
 
 
-class ZoneMixing(ObjectAbstract):
+class zonemixing(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Zone Name","","","ZoneNames"))
@@ -7581,7 +7581,7 @@ class ZoneMixing(ObjectAbstract):
 
 
 
-class ZoneCrossMixing(ObjectAbstract):
+class zonecrossmixing(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Zone Name","","","ZoneNames"))
@@ -7613,7 +7613,7 @@ class ZoneCrossMixing(ObjectAbstract):
 
 
 
-class ZoneEarthtube(ObjectAbstract):
+class zoneearthtube(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldObjectlist(self,"Zone Name","","","ZoneNames"))
         self.InsertField(FieldObjectlist(self,"Schedule Name","","","ScheduleNames"))
@@ -7651,7 +7651,7 @@ class ZoneEarthtube(ObjectAbstract):
 
 
 
-class ZoneCoolTower_Shower(ObjectAbstract):
+class zonecooltower_shower(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Availability Schedule Name","","","ScheduleNames"))
@@ -7680,7 +7680,7 @@ class ZoneCoolTower_Shower(ObjectAbstract):
 
 
 
-class ZoneThermalChimney(ObjectAbstract):
+class zonethermalchimney(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Zone Name","",("Name of zone that is the thermal chimney","",),"ZoneNames"))
@@ -7781,7 +7781,7 @@ class ZoneThermalChimney(ObjectAbstract):
 
 
 
-class AirflowNetwork_SimulationControl(ObjectAbstract):
+class airflownetwork_simulationcontrol(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",("Enter a unique name for this object.","",)))
         self.InsertField(FieldChoice(self,"AirflowNetwork Control","NoMultizoneOrDistribution",("NoMultizoneOrDistribution: Only perform Simple calculations (objects ZoneInfiltration,","ZoneVentilation, ZoneMixing and ZoneCrossMixing);","MultizoneWithoutDistribution: Use AirflowNetwork objects to simulate multizone","Airflows driven by wind during simulation time,","and objects of ZoneInfiltration, ZoneVentilation, ZoneMixing and ZoneCrossMixing are ignored;","MultizoneWithDistributionOnlyDuringFanOperation: Perform distribution system","calculations during system fan on time","and Simple calculations during system Fan off time;","MultizoneWithDistribution: Perform distribution system calculations during system","fan on time and multizone Airflow driven by wind during system fan off time.","",),["MultizoneWithDistribution","MultizoneWithoutDistribution","MultizoneWithDistributionOnlyDuringFanOperation","NoMultizoneOrDistribution",]))
@@ -7810,7 +7810,7 @@ class AirflowNetwork_SimulationControl(ObjectAbstract):
 
 
 
-class AirflowNetwork_MultiZone_Zone(ObjectAbstract):
+class airflownetwork_multizone_zone(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldObjectlist(self,"Zone Name","",("Enter the zone name where ventilation control is required.","",),"ZoneNames"))
         self.InsertField(FieldChoice(self,"Ventilation Control Mode","NoVent",("When Ventilation Control Mode = Temperature or Enthalpy, the following","fields are used to modulate the Ventilation Open Factor for all","window and door openings in the zone according to the zone's","indoor-outdoor temperature or enthalpy difference.","Constant: controlled by field Venting Schedule Name.","NoVent: control will not open window or door during simulation (Ventilation Open Factor = 0).","",),["Temperature","Enthalpy","Constant","NoVent",]))
@@ -7835,7 +7835,7 @@ class AirflowNetwork_MultiZone_Zone(ObjectAbstract):
 
 
 
-class AirflowNetwork_MultiZone_Surface(ObjectAbstract):
+class airflownetwork_multizone_surface(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldObjectlist(self,"Surface Name","",("Enter the name of a heat transfer surface.","",),"SurfAndSubSurfNames"))
         self.InsertField(FieldObjectlist(self,"Leakage Component Name","",("Enter the name of an Airflow Network leakage component. A leakage component is","one of the following AirflowNetwork:Multizone objects: AirflowNetwork:MultiZone:Component:DetailedOpening,","AirflowNetwork:MultiZone:Component:SimpleOpening, AirflowNetwork:MultiZone:Surface:Crack,","AirflowNetwork:MultiZone:Surface:EffectiveLeakageArea, or","AirflowNetwork:MultiZone:Component:ZoneExhaustFan.","When the zone exhaust fan name is entered, any surface control fields below A3 are","ignored when the zone exhaust fan turns on.","",),"SurfaceAirflowLeakageNames"))
@@ -7863,7 +7863,7 @@ class AirflowNetwork_MultiZone_Surface(ObjectAbstract):
 
 
 
-class AirflowNetwork_MultiZone_ReferenceCrackConditions(ObjectAbstract):
+class airflownetwork_multizone_referencecrackconditions(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",("Enter a unique name for this object.","",)))
         self.InsertField(FieldReal(self,"Reference Temperature","20",("Enter the reference temperature under which the surface crack data were obtained.","Units: C",),"","","",""))
@@ -7884,7 +7884,7 @@ class AirflowNetwork_MultiZone_ReferenceCrackConditions(ObjectAbstract):
 
 
 
-class AirflowNetwork_MultiZone_Surface_Crack(ObjectAbstract):
+class airflownetwork_multizone_surface_crack(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",("Enter a unique name for this object.","",)))
         self.InsertField(FieldReal(self,"Air Mass Flow Coefficient at Reference Conditions",0,("Enter the air mass flow coefficient at the conditions defined","in the Reference Crack Conditions object.","Defined at 1 Pa pressure difference across this crack.","Units: kg/s",),"","",0,""))
@@ -7905,7 +7905,7 @@ class AirflowNetwork_MultiZone_Surface_Crack(ObjectAbstract):
 
 
 
-class AirflowNetwork_MultiZone_Surface_EffectiveLeakageArea(ObjectAbstract):
+class airflownetwork_multizone_surface_effectiveleakagearea(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",("Enter a unique name for this object.","",)))
         self.InsertField(FieldReal(self,"Effective Leakage Area",0,("Enter the effective leakage area.","Units: m2",),"","",0,""))
@@ -7927,7 +7927,7 @@ class AirflowNetwork_MultiZone_Surface_EffectiveLeakageArea(ObjectAbstract):
 
 
 
-class AirflowNetwork_MultiZone_Component_DetailedOpening(ObjectAbstract):
+class airflownetwork_multizone_component_detailedopening(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",("Enter a unique name for this object.","",)))
         self.InsertField(FieldReal(self,"Air Mass Flow Coefficient When Opening is Closed",0,("Defined at 1 Pa per meter of crack length. Enter the coefficient used in the following","equation:","Mass Flow Rate = Air Mass Flow Coefficient * (dP)^Air Mass Flow Exponent.","Used only when opening (window or door) is closed.","Units: kg/s-m",),"","",0,""))
@@ -7970,7 +7970,7 @@ class AirflowNetwork_MultiZone_Component_DetailedOpening(ObjectAbstract):
 
 
 
-class AirflowNetwork_MultiZone_Component_SimpleOpening(ObjectAbstract):
+class airflownetwork_multizone_component_simpleopening(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",("Enter a unique name for this object.","",)))
         self.InsertField(FieldReal(self,"Air Mass Flow Coefficient When Opening is Closed",0,("Defined at 1 Pa pressure difference. Enter the coefficient used in the following equation:","Mass Flow Rate = Air Mass Flow Coefficient * (dP)^Air Mass Flow Exponent.","Used only when opening (window or door) is closed.","Units: kg/s-m",),"","",0,""))
@@ -7992,7 +7992,7 @@ class AirflowNetwork_MultiZone_Component_SimpleOpening(ObjectAbstract):
 
 
 
-class AirflowNetwork_MultiZone_Component_ZoneExhaustFan(ObjectAbstract):
+class airflownetwork_multizone_component_zoneexhaustfan(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",("Enter the name of the zone exhaust fan.","",)))
         self.InsertField(FieldReal(self,"Air Mass Flow Coefficient When the Zone Exhaust Fan is Off at Reference Conditions",0,("Enter the air mass flow coefficient at the conditions defined","in the Reference Crack Conditions object.","Defined at 1 Pa pressure difference. Enter the coefficient used in the following","equation:","Mass Flow Rate = Air Mass Flow Coefficient * (dP)^Air Mass Flow Exponent.","Used only when the fan is off.","Units: kg/s",),"","",0,""))
@@ -8013,7 +8013,7 @@ class AirflowNetwork_MultiZone_Component_ZoneExhaustFan(ObjectAbstract):
 
 
 
-class AirflowNetwork_MultiZone_ExternalNode(ObjectAbstract):
+class airflownetwork_multizone_externalnode(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",("Enter a unique name for this object.","This node name will be referenced by a particular building facade.","",)))
         self.InsertField(FieldReal(self,"External Node Height","0.0",("Designates the reference height used to calculate relative pressure.","Units: m",),"","","",""))
@@ -8033,7 +8033,7 @@ class AirflowNetwork_MultiZone_ExternalNode(ObjectAbstract):
 
 
 
-class AirflowNetwork_MultiZone_WindPressureCoefficientArray(ObjectAbstract):
+class airflownetwork_multizone_windpressurecoefficientarray(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",("Enter a unique name for the object.","",)))
         self.InsertField(FieldReal(self,"Wind Direction 1",0,("Enter the wind direction corresponding to the 1st WPC Array value.","Units: deg",),0.0,360.0,"",""))
@@ -8087,7 +8087,7 @@ class AirflowNetwork_MultiZone_WindPressureCoefficientArray(ObjectAbstract):
 
 
 
-class AirflowNetwork_MultiZone_WindPressureCoefficientValues(ObjectAbstract):
+class airflownetwork_multizone_windpressurecoefficientvalues(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldObjectlist(self,"Name","",("Enter a unique name for this object.","",),""))
         self.InsertField(FieldObjectlist(self,"AirflowNetwork:MultiZone:WindPressureCoefficientArray Name","",("Enter the name of the AirflowNetwork:Multizone:WindPressureCoefficientArray object.","",),"WPCSetNames"))
@@ -8142,7 +8142,7 @@ class AirflowNetwork_MultiZone_WindPressureCoefficientValues(ObjectAbstract):
 
 
 
-class AirflowNetwork_Distribution_Node(ObjectAbstract):
+class airflownetwork_distribution_node(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",("Enter a unique name for this object.","",)))
         self.InsertField(FieldText(self,"Component Name or Node Name","",("Designates node names defined in another object. The node name may occur in air branches.","Enter a node name to represent a node already defined in an air loop.","Leave this field blank if the Node or Object Type field below is entered as","AirLoopHVAC:ZoneMixer, AirLoopHVAC:ZoneSplitter, AirLoopHVAC:OutdoorAirSystem, or Other.","",)))
@@ -8163,7 +8163,7 @@ class AirflowNetwork_Distribution_Node(ObjectAbstract):
 
 
 
-class AirflowNetwork_Distribution_Component_Leak(ObjectAbstract):
+class airflownetwork_distribution_component_leak(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",("Enter a unique name for this object.","",)))
         self.InsertField(FieldReal(self,"Air Mass Flow Coefficient",0,("Defined at 1 Pa pressure difference across this component.","Enter the coefficient used in the following equation:","Mass Flow Rate = Air Mass Flow Coefficient * (dP)^Air Mass Flow Exponent","Units: kg/s",),"","",0,""))
@@ -8183,7 +8183,7 @@ class AirflowNetwork_Distribution_Component_Leak(ObjectAbstract):
 
 
 
-class AirflowNetwork_Distribution_Component_LeakageRatio(ObjectAbstract):
+class airflownetwork_distribution_component_leakageratio(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",("Enter a unique name for this object.","",)))
         self.InsertField(FieldReal(self,"Effective Leakage Ratio",0,("Defined as a ratio of leak flow rate to the maximum flow rate.","Units: dimensionless",),"",1.0,0.0,""))
@@ -8205,7 +8205,7 @@ class AirflowNetwork_Distribution_Component_LeakageRatio(ObjectAbstract):
 
 
 
-class AirflowNetwork_Distribution_Component_Duct(ObjectAbstract):
+class airflownetwork_distribution_component_duct(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",("Enter a unique name for this object.","",)))
         self.InsertField(FieldReal(self,"Duct Length",0,("Enter the length of the duct.","Units: m",),"","",0.0,""))
@@ -8230,7 +8230,7 @@ class AirflowNetwork_Distribution_Component_Duct(ObjectAbstract):
 
 
 
-class AirflowNetwork_Distribution_Component_ConstantVolumeFan(ObjectAbstract):
+class airflownetwork_distribution_component_constantvolumefan(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Fan Name","",("Enter the name of the constant volume fan in the primary air loop.","",)))
         self.InsertField(FieldChoice(self,"Supply Fan Object Type","Fan:ConstantVolume","",["Fan:OnOff","Fan:ConstantVolume",]))
@@ -8249,7 +8249,7 @@ class AirflowNetwork_Distribution_Component_ConstantVolumeFan(ObjectAbstract):
 
 
 
-class AirflowNetwork_Distribution_Component_Coil(ObjectAbstract):
+class airflownetwork_distribution_component_coil(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Coil Name","",("Enter the name of a cooling or heating coil in the primary Air loop.","",)))
         self.InsertField(FieldChoice(self,"Coil Object Type","",("Select the type of coil corresponding to the name entered in the field above.","",),["Coil:Cooling:DX:SingleSpeed","Coil:Heating:Gas","Coil:Heating:Electric","Coil:Heating:DX:SingleSpeed","Coil:Cooling:Water","Coil:Heating:Water","Coil:Cooling:Water:DetailedGeometry","Coil:Cooling:DX:TwoStageWithHumidityControlMode","Coil:Cooling:DX:MultiSpeed","Coil:Heating:DX:MultiSpeed","Coil:Heating:Desuperheater",]))
@@ -8270,7 +8270,7 @@ class AirflowNetwork_Distribution_Component_Coil(ObjectAbstract):
 
 
 
-class AirflowNetwork_Distribution_Component_HeatExchanger(ObjectAbstract):
+class airflownetwork_distribution_component_heatexchanger(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"HeatExchanger Name","",("Enter the name of an air-to-air heat exchanger in the primary Air loop.","",)))
         self.InsertField(FieldChoice(self,"HeatExchanger Object Type","",("Select the type of heat exchanger corresponding to the name entered in the field above.","",),["HeatExchanger:AirToAir:FlatPlate","HeatExchanger:AirToAir:SensibleAndLatent","HeatExchanger:Desiccant:BalancedFlow",]))
@@ -8291,7 +8291,7 @@ class AirflowNetwork_Distribution_Component_HeatExchanger(ObjectAbstract):
 
 
 
-class AirflowNetwork_Distribution_Component_TerminalUnit(ObjectAbstract):
+class airflownetwork_distribution_component_terminalunit(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Terminal Unit Name","",("Enter the name of a terminal unit in the AirLoopHVAC.","",)))
         self.InsertField(FieldChoice(self,"Terminal Unit Object Type","",("Select the type of terminal unit corresponding to the name entered in the field above.","",),["AirTerminal:SingleDuct:ConstantVolume:Reheat",]))
@@ -8312,7 +8312,7 @@ class AirflowNetwork_Distribution_Component_TerminalUnit(ObjectAbstract):
 
 
 
-class AirflowNetwork_Distribution_Component_ConstantPressureDrop(ObjectAbstract):
+class airflownetwork_distribution_component_constantpressuredrop(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",("Enter a unique name for this object.","",)))
         self.InsertField(FieldReal(self,"Pressure Difference Across the Component",0,("Enter the pressure drop across this component.","Units: Pa",),"","",0.0,""))
@@ -8331,7 +8331,7 @@ class AirflowNetwork_Distribution_Component_ConstantPressureDrop(ObjectAbstract)
 
 
 
-class AirflowNetwork_Distribution_Linkage(ObjectAbstract):
+class airflownetwork_distribution_linkage(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",("Enter a unique name for this object.","",)))
         self.InsertField(FieldText(self,"Node 1 Name","",("Enter the name of zone or AirflowNetwork Node.","",)))
@@ -8353,7 +8353,7 @@ class AirflowNetwork_Distribution_Linkage(ObjectAbstract):
 
 
 
-class Exterior_Lights(ObjectAbstract):
+class exterior_lights(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Schedule Name","",("units in schedule should be fraction applied to capacity of the exterior lights equipment, generally (0.0 - 1.0)","",),"ScheduleNames"))
@@ -8375,7 +8375,7 @@ class Exterior_Lights(ObjectAbstract):
 
 
 
-class Exterior_FuelEquipment(ObjectAbstract):
+class exterior_fuelequipment(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldChoice(self,"Fuel Use Type","","",["Electricity","NaturalGas","PropaneGas","FuelOil#1","FuelOil#2","Diesel","Gasoline","Coal","Steam","DistrictHeating","DistrictCooling",]))
@@ -8397,7 +8397,7 @@ class Exterior_FuelEquipment(ObjectAbstract):
 
 
 
-class Exterior_WaterEquipment(ObjectAbstract):
+class exterior_waterequipment(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldChoice(self,"Fuel Use Type","Water","",["Water",]))
@@ -8419,7 +8419,7 @@ class Exterior_WaterEquipment(ObjectAbstract):
 
 
 
-class HVACTemplate_Thermostat(ObjectAbstract):
+class hvactemplate_thermostat(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",("This name is referenced by HVACTemplate:Zone:* objects","",)))
         self.InsertField(FieldObjectlist(self,"Heating Setpoint Schedule Name","",(" Leave blank if constant setpoint specified below, must enter schedule or constant setpoint","",),"ScheduleNames"))
@@ -8440,7 +8440,7 @@ class HVACTemplate_Thermostat(ObjectAbstract):
 
 
 
-class HVACTemplate_Zone_IdealLoadsAirSystem(ObjectAbstract):
+class hvactemplate_zone_idealloadsairsystem(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldObjectlist(self,"Zone Name","",("Zone name must match a building zone name","",),"ZoneNames"))
         self.InsertField(FieldObjectlist(self,"Template Thermostat Name","",("Enter the name of a HVACTemplate:Thermostat object.","If blank, then it is assumed that standard thermostat objects","have been defined for this zone.","",),"CompactHVACThermostats"))
@@ -8457,7 +8457,7 @@ class HVACTemplate_Zone_IdealLoadsAirSystem(ObjectAbstract):
 
 
 
-class HVACTemplate_Zone_FanCoil(ObjectAbstract):
+class hvactemplate_zone_fancoil(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldObjectlist(self,"Zone Name","",("Zone name must match a building zone name","",),"ZoneNames"))
         self.InsertField(FieldObjectlist(self,"Template Thermostat Name","",("Enter the name of a HVACTemplate:Thermostat object.","If blank, then it is assumed that standard thermostat objects","have been defined for this zone.","",),"CompactHVACThermostats"))
@@ -8491,7 +8491,7 @@ class HVACTemplate_Zone_FanCoil(ObjectAbstract):
 
 
 
-class HVACTemplate_Zone_PTAC(ObjectAbstract):
+class hvactemplate_zone_ptac(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldObjectlist(self,"Zone Name","",("Zone name must match a building zone name","",),"ZoneNames"))
         self.InsertField(FieldObjectlist(self,"Template Thermostat Name","",("Enter the name of a HVACTemplate:Thermostat object.","If blank, then it is assumed that standard thermostat objects","have been defined for this zone.","",),"CompactHVACThermostats"))
@@ -8532,7 +8532,7 @@ class HVACTemplate_Zone_PTAC(ObjectAbstract):
 
 
 
-class HVACTemplate_Zone_PTHP(ObjectAbstract):
+class hvactemplate_zone_pthp(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldObjectlist(self,"Zone Name","",("Zone name must match a building zone name","",),"ZoneNames"))
         self.InsertField(FieldObjectlist(self,"Template Thermostat Name","",("Enter the name of a HVACTemplate:Thermostat object.","If blank, then it is assumed that standard thermostat objects","have been defined for this zone.","",),"CompactHVACThermostats"))
@@ -8583,7 +8583,7 @@ class HVACTemplate_Zone_PTHP(ObjectAbstract):
 
 
 
-class HVACTemplate_Zone_Unitary(ObjectAbstract):
+class hvactemplate_zone_unitary(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldObjectlist(self,"Zone Name","",("Zone name must match a building zone name","",),"ZoneNames"))
         self.InsertField(FieldObjectlist(self,"Template Unitary System Name","",("Enter the name of a HVACTemplate:System:Unitary object serving this zone","",),"CompactHVACSystemUnitary"))
@@ -8612,7 +8612,7 @@ class HVACTemplate_Zone_Unitary(ObjectAbstract):
 
 
 
-class HVACTemplate_Zone_VAV(ObjectAbstract):
+class hvactemplate_zone_vav(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldObjectlist(self,"Zone Name","",("Zone name must match a building zone name","",),"ZoneNames"))
         self.InsertField(FieldObjectlist(self,"Template VAV System Name","",("Name of a HVACTemplate:System:VAV object serving this zone","",),"CompactHVACSystemVAV"))
@@ -8645,7 +8645,7 @@ class HVACTemplate_Zone_VAV(ObjectAbstract):
 
 
 
-class HVACTemplate_Zone_VAV_FanPowered(ObjectAbstract):
+class hvactemplate_zone_vav_fanpowered(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldObjectlist(self,"Zone Name","",("Zone Name must match a building zone name","",),"ZoneNames"))
         self.InsertField(FieldObjectlist(self,"Template VAV System Name","",("Enter then name of a HVACTemplate:System:VAV object serving this zone.","",),"CompactHVACSystemVAV"))
@@ -8683,7 +8683,7 @@ class HVACTemplate_Zone_VAV_FanPowered(ObjectAbstract):
 
 
 
-class HVACTemplate_System_Unitary(ObjectAbstract):
+class hvactemplate_system_unitary(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"System Availability Schedule Name","",("If blank, always on; Unitary System always on.  Schedule is used in availability manager","and fan scheduling.","Also see *Night Cycle Control* field.","",),"ScheduleNames"))
@@ -8743,7 +8743,7 @@ class HVACTemplate_System_Unitary(ObjectAbstract):
 
 
 
-class HVACTemplate_System_UnitaryHeatPump_AirToAir(ObjectAbstract):
+class hvactemplate_system_unitaryheatpump_airtoair(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"System Availability Schedule Name","",("If blank, always on; Unitary System always on.  Schedule is used in availability manager","and fan scheduling.","Also see *Night Cycle Control* field.","",),"ScheduleNames"))
@@ -8813,7 +8813,7 @@ class HVACTemplate_System_UnitaryHeatPump_AirToAir(ObjectAbstract):
 
 
 
-class HVACTemplate_System_VAV(ObjectAbstract):
+class hvactemplate_system_vav(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"System Availability Schedule Name","",("If blank, always on; VAV System always on.  Schedule is used in availability manager","and fan scheduling.","Also see *Night Cycle Control* field.","",),"ScheduleNames"))
@@ -8882,7 +8882,7 @@ class HVACTemplate_System_VAV(ObjectAbstract):
 
 
 
-class HVACTemplate_System_PackagedVAV(ObjectAbstract):
+class hvactemplate_system_packagedvav(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"System Availability Schedule Name","",("If blank, always on; PVAV System always on.  Schedule is used in availability manager","and fan scheduling.","Also see *Night Cycle Control* field.","",),"ScheduleNames"))
@@ -8950,7 +8950,7 @@ class HVACTemplate_System_PackagedVAV(ObjectAbstract):
 
 
 
-class HVACTemplate_Plant_ChilledWaterLoop(ObjectAbstract):
+class hvactemplate_plant_chilledwaterloop(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Pump Schedule Name","",("If blank, always available","Applies to both chilled water and condenser loop pumps","",),"ScheduleNames"))
@@ -8986,7 +8986,7 @@ class HVACTemplate_Plant_ChilledWaterLoop(ObjectAbstract):
 
 
 
-class HVACTemplate_Plant_Chiller(ObjectAbstract):
+class hvactemplate_plant_chiller(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldChoice(self,"Chiller Type","","",["DistrictChilledWater","ElectricCentrifugalChiller","ElectricReciprocatingChiller",]))
@@ -9007,7 +9007,7 @@ class HVACTemplate_Plant_Chiller(ObjectAbstract):
 
 
 
-class HVACTemplate_Plant_Tower(ObjectAbstract):
+class hvactemplate_plant_tower(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldChoice(self,"Tower Type","","",["SingleSpeed","TwoSpeed",]))
@@ -9030,7 +9030,7 @@ class HVACTemplate_Plant_Tower(ObjectAbstract):
 
 
 
-class HVACTemplate_Plant_HotWaterLoop(ObjectAbstract):
+class hvactemplate_plant_hotwaterloop(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Pump Schedule Name","",("If blank, always available","",),"ScheduleNames"))
@@ -9059,7 +9059,7 @@ class HVACTemplate_Plant_HotWaterLoop(ObjectAbstract):
 
 
 
-class HVACTemplate_Plant_Boiler(ObjectAbstract):
+class hvactemplate_plant_boiler(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldChoice(self,"Boiler Type","","",["DistrictHotWater","HotWaterBoiler",]))
@@ -9080,7 +9080,7 @@ class HVACTemplate_Plant_Boiler(ObjectAbstract):
 
 
 
-class Sizing_Parameters(ObjectAbstract):
+class sizing_parameters(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldReal(self,"Sizing Factor","1.0","","","",0.0,""))
         self.InsertField(FieldInt(self,"Timesteps in Averaging Window",0,("blank => set the timesteps in averaging window to Number of Timesteps per Hour resulting in a 1 hour averaging window","",),1,"","",""))
@@ -9096,7 +9096,7 @@ class Sizing_Parameters(ObjectAbstract):
 
 
 
-class Sizing_Zone(ObjectAbstract):
+class sizing_zone(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldObjectlist(self,"Zone Name","","","ZoneNames"))
         self.InsertField(FieldReal(self,"Zone Cooling Design Supply Air Temperature",0,"","","","",""))
@@ -9131,7 +9131,7 @@ class Sizing_Zone(ObjectAbstract):
 
 
 
-class Sizing_System(ObjectAbstract):
+class sizing_system(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldObjectlist(self,"AirLoop Name","","","AirPrimaryLoops"))
         self.InsertField(FieldChoice(self,"Type of Load to Size On","Sensible",("Sensible is the only available option","",),["Sensible","VentilationRequirement","Latent","Total",]))
@@ -9165,7 +9165,7 @@ class Sizing_System(ObjectAbstract):
 
 
 
-class Sizing_Plant(ObjectAbstract):
+class sizing_plant(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldObjectlist(self,"Plant or Condenser Loop Name","",("Enter the name of a PlantLoop or a CondenserLoop object","",),"PlantLoops"))
         self.InsertField(FieldChoice(self,"Loop Type","","",["Heating","Cooling","Condenser","Steam",]))
@@ -9184,7 +9184,7 @@ class Sizing_Plant(ObjectAbstract):
 
 
 
-class OutputControl_Sizing_Style(ObjectAbstract):
+class outputcontrol_sizing_style(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldChoice(self,"Column Separator","","",["Comma","Tab","Fixed",]))
 
@@ -9201,7 +9201,7 @@ class OutputControl_Sizing_Style(ObjectAbstract):
 
 
 
-class ZoneControl_Humidistat(ObjectAbstract):
+class zonecontrol_humidistat(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Zone Name","","","ZoneNames"))
@@ -9220,7 +9220,7 @@ class ZoneControl_Humidistat(ObjectAbstract):
 
 
 
-class ZoneControl_Thermostat(ObjectAbstract):
+class zonecontrol_thermostat(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Zone Name","","","ZoneNames"))
@@ -9247,7 +9247,7 @@ class ZoneControl_Thermostat(ObjectAbstract):
 
 
 
-class ZoneControl_Thermostat_OperativeTemperature(ObjectAbstract):
+class zonecontrol_thermostat_operativetemperature(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldObjectlist(self,"Thermostat Name","",("Enter the name of a ZoneControl:Thermostat object.","This object modifies a ZoneControl:Thermostat object to add a","radiative fraction.","",),"ZoneControlThermostaticNames"))
         self.InsertField(FieldChoice(self,"Radiative Fraction Input Mode","","",["Constant","Scheduled",]))
@@ -9266,7 +9266,7 @@ class ZoneControl_Thermostat_OperativeTemperature(ObjectAbstract):
 
 
 
-class ZoneControl_Thermostat_ThermalComfort(ObjectAbstract):
+class zonecontrol_thermostat_thermalcomfort(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Zone Name","","","ZoneNames"))
@@ -9297,7 +9297,7 @@ class ZoneControl_Thermostat_ThermalComfort(ObjectAbstract):
 
 
 
-class ThermostatSetpoint_SingleHeating(ObjectAbstract):
+class thermostatsetpoint_singleheating(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Setpoint Temperature Schedule Name","","","ScheduleNames"))
@@ -9315,7 +9315,7 @@ class ThermostatSetpoint_SingleHeating(ObjectAbstract):
 
 
 
-class ThermostatSetpoint_SingleCooling(ObjectAbstract):
+class thermostatsetpoint_singlecooling(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Setpoint Temperature Schedule Name","","","ScheduleNames"))
@@ -9333,7 +9333,7 @@ class ThermostatSetpoint_SingleCooling(ObjectAbstract):
 
 
 
-class ThermostatSetpoint_SingleHeatingOrCooling(ObjectAbstract):
+class thermostatsetpoint_singleheatingorcooling(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Setpoint Temperature Schedule Name","","","ScheduleNames"))
@@ -9351,7 +9351,7 @@ class ThermostatSetpoint_SingleHeatingOrCooling(ObjectAbstract):
 
 
 
-class ThermostatSetpoint_DualSetpoint(ObjectAbstract):
+class thermostatsetpoint_dualsetpoint(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Heating Setpoint Temperature Schedule Name","","","ScheduleNames"))
@@ -9370,7 +9370,7 @@ class ThermostatSetpoint_DualSetpoint(ObjectAbstract):
 
 
 
-class ThermostatSetpoint_ThermalComfort_Fanger_SingleHeating(ObjectAbstract):
+class thermostatsetpoint_thermalcomfort_fanger_singleheating(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Fanger Thermal Comfort Schedule Name","",("Schedule values should be Predicted Mean Vote (PMV)","",),"ScheduleNames"))
@@ -9388,7 +9388,7 @@ class ThermostatSetpoint_ThermalComfort_Fanger_SingleHeating(ObjectAbstract):
 
 
 
-class ThermostatSetpoint_ThermalComfort_Fanger_SingleCooling(ObjectAbstract):
+class thermostatsetpoint_thermalcomfort_fanger_singlecooling(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Fanger Thermal Comfort Schedule Name","",("Schedule values should be Predicted Mean Vote (PMV)","",),"ScheduleNames"))
@@ -9406,7 +9406,7 @@ class ThermostatSetpoint_ThermalComfort_Fanger_SingleCooling(ObjectAbstract):
 
 
 
-class ThermostatSetpoint_ThermalComfort_Fanger_SingleHeatingOrCooling(ObjectAbstract):
+class thermostatsetpoint_thermalcomfort_fanger_singleheatingorcooling(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Fanger Thermal Comfort Schedule Name","",("Schedule values should be Predicted Mean Vote (PMV)","",),"ScheduleNames"))
@@ -9424,7 +9424,7 @@ class ThermostatSetpoint_ThermalComfort_Fanger_SingleHeatingOrCooling(ObjectAbst
 
 
 
-class ThermostatSetpoint_ThermalComfort_Fanger_DualSetpoint(ObjectAbstract):
+class thermostatsetpoint_thermalcomfort_fanger_dualsetpoint(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Fanger Thermal Comfort Heating Schedule Name","",("Schedule values should be Predicted Mean Vote (PMV)","",),"ScheduleNames"))
@@ -9443,7 +9443,7 @@ class ThermostatSetpoint_ThermalComfort_Fanger_DualSetpoint(ObjectAbstract):
 
 
 
-class ZoneHVAC_IdealLoadsAirSystem(ObjectAbstract):
+class zonehvac_idealloadsairsystem(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldText(self,"Zone Supply Air Node Name","",""))
@@ -9472,7 +9472,7 @@ class ZoneHVAC_IdealLoadsAirSystem(ObjectAbstract):
 
 
 
-class ZoneHVAC_FourPipeFanCoil(ObjectAbstract):
+class zonehvac_fourpipefancoil(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Availability Schedule Name","","","ScheduleNames"))
@@ -9508,7 +9508,7 @@ class ZoneHVAC_FourPipeFanCoil(ObjectAbstract):
 
 
 
-class ZoneHVAC_WindowAirConditioner(ObjectAbstract):
+class zonehvac_windowairconditioner(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Availability Schedule Name","","","ScheduleNames"))
@@ -9538,7 +9538,7 @@ class ZoneHVAC_WindowAirConditioner(ObjectAbstract):
 
 
 
-class ZoneHVAC_PackagedTerminalAirConditioner(ObjectAbstract):
+class zonehvac_packagedterminalairconditioner(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",("Unique name for this packaged terminal air conditioner object.","",)))
         self.InsertField(FieldObjectlist(self,"Availability Schedule Name","",("Schedule values of 0 denote the unit is off.","",),"ScheduleNames"))
@@ -9572,7 +9572,7 @@ class ZoneHVAC_PackagedTerminalAirConditioner(ObjectAbstract):
 
 
 
-class ZoneHVAC_PackagedTerminalHeatPump(ObjectAbstract):
+class zonehvac_packagedterminalheatpump(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",("Unique name for this packaged terminal heat pump object.","",)))
         self.InsertField(FieldObjectlist(self,"Availability Schedule Name","",("Schedule values of 0 denote the unit is off.","",),"ScheduleNames"))
@@ -9613,7 +9613,7 @@ class ZoneHVAC_PackagedTerminalHeatPump(ObjectAbstract):
 
 
 
-class ZoneHVAC_EnergyRecoveryVentilator(ObjectAbstract):
+class zonehvac_energyrecoveryventilator(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Availability Schedule Name","","","ScheduleNames"))
@@ -9639,7 +9639,7 @@ class ZoneHVAC_EnergyRecoveryVentilator(ObjectAbstract):
 
 
 
-class ZoneHVAC_EnergyRecoveryVentilator_Controller(ObjectAbstract):
+class zonehvac_energyrecoveryventilator_controller(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldReal(self,"Temperature High Limit",0,("Enter the maximum outdoor dry-bulb temperature limit for economizer operation.","No input or blank input means this limit is not operative","Units: C",),"","","",""))
@@ -9669,7 +9669,7 @@ class ZoneHVAC_EnergyRecoveryVentilator_Controller(ObjectAbstract):
 
 
 
-class ZoneHVAC_UnitVentilator(ObjectAbstract):
+class zonehvac_unitventilator(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Availability Schedule Name","","","ScheduleNames"))
@@ -9708,7 +9708,7 @@ class ZoneHVAC_UnitVentilator(ObjectAbstract):
 
 
 
-class ZoneHVAC_UnitHeater(ObjectAbstract):
+class zonehvac_unitheater(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Availability Schedule Name","","","ScheduleNames"))
@@ -9737,7 +9737,7 @@ class ZoneHVAC_UnitHeater(ObjectAbstract):
 
 
 
-class ZoneHVAC_Baseboard_RadiantConvective_Water(ObjectAbstract):
+class zonehvac_baseboard_radiantconvective_water(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Availability Schedule Name","","","ScheduleNames"))
@@ -9803,7 +9803,7 @@ class ZoneHVAC_Baseboard_RadiantConvective_Water(ObjectAbstract):
 
 
 
-class ZoneHVAC_Baseboard_Convective_Water(ObjectAbstract):
+class zonehvac_baseboard_convective_water(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Availability Schedule Name","","","ScheduleNames"))
@@ -9825,7 +9825,7 @@ class ZoneHVAC_Baseboard_Convective_Water(ObjectAbstract):
 
 
 
-class ZoneHVAC_Baseboard_Convective_Electric(ObjectAbstract):
+class zonehvac_baseboard_convective_electric(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Availability Schedule Name","","","ScheduleNames"))
@@ -9844,7 +9844,7 @@ class ZoneHVAC_Baseboard_Convective_Electric(ObjectAbstract):
 
 
 
-class ZoneHVAC_LowTemperatureRadiant_VariableFlow(ObjectAbstract):
+class zonehvac_lowtemperatureradiant_variableflow(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Availability Schedule Name","","","ScheduleNames"))
@@ -9878,7 +9878,7 @@ class ZoneHVAC_LowTemperatureRadiant_VariableFlow(ObjectAbstract):
 
 
 
-class ZoneHVAC_LowTemperatureRadiant_ConstantFlow(ObjectAbstract):
+class zonehvac_lowtemperatureradiant_constantflow(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Availability Schedule Name","","","ScheduleNames"))
@@ -9920,7 +9920,7 @@ class ZoneHVAC_LowTemperatureRadiant_ConstantFlow(ObjectAbstract):
 
 
 
-class ZoneHVAC_LowTemperatureRadiant_Electric(ObjectAbstract):
+class zonehvac_lowtemperatureradiant_electric(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Availability Schedule Name","","","ScheduleNames"))
@@ -9944,7 +9944,7 @@ class ZoneHVAC_LowTemperatureRadiant_Electric(ObjectAbstract):
 
 
 
-class ZoneHVAC_LowTemperatureRadiant_SurfaceGroup(ObjectAbstract):
+class zonehvac_lowtemperatureradiant_surfacegroup(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Surface 1 Name","","","SurfaceNames"))
@@ -9964,7 +9964,7 @@ class ZoneHVAC_LowTemperatureRadiant_SurfaceGroup(ObjectAbstract):
 
 
 
-class ZoneHVAC_HighTemperatureRadiant(ObjectAbstract):
+class zonehvac_hightemperatureradiant(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Availability Schedule Name","","","ScheduleNames"))
@@ -10032,7 +10032,7 @@ class ZoneHVAC_HighTemperatureRadiant(ObjectAbstract):
 
 
 
-class ZoneHVAC_VentilatedSlab(ObjectAbstract):
+class zonehvac_ventilatedslab(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Availability Schedule Name","","","ScheduleNames"))
@@ -10085,7 +10085,7 @@ class ZoneHVAC_VentilatedSlab(ObjectAbstract):
 
 
 
-class ZoneHVAC_VentilatedSlab_SlabGroup(ObjectAbstract):
+class zonehvac_ventilatedslab_slabgroup(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Zone 1 Name","","","ZoneNames"))
@@ -10173,7 +10173,7 @@ class ZoneHVAC_VentilatedSlab_SlabGroup(ObjectAbstract):
 
 
 
-class AirTerminal_SingleDuct_Uncontrolled(ObjectAbstract):
+class airterminal_singleduct_uncontrolled(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Availability Schedule Name","","","ScheduleNames"))
@@ -10192,7 +10192,7 @@ class AirTerminal_SingleDuct_Uncontrolled(ObjectAbstract):
 
 
 
-class AirTerminal_SingleDuct_ConstantVolume_Reheat(ObjectAbstract):
+class airterminal_singleduct_constantvolume_reheat(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Availability Schedule Name","","","ScheduleNames"))
@@ -10218,7 +10218,7 @@ class AirTerminal_SingleDuct_ConstantVolume_Reheat(ObjectAbstract):
 
 
 
-class AirTerminal_SingleDuct_VAV_NoReheat(ObjectAbstract):
+class airterminal_singleduct_vav_noreheat(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Availability Schedule Name","","","ScheduleNames"))
@@ -10239,7 +10239,7 @@ class AirTerminal_SingleDuct_VAV_NoReheat(ObjectAbstract):
 
 
 
-class AirTerminal_SingleDuct_VAV_Reheat(ObjectAbstract):
+class airterminal_singleduct_vav_reheat(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Availability Schedule Name","","","ScheduleNames"))
@@ -10270,7 +10270,7 @@ class AirTerminal_SingleDuct_VAV_Reheat(ObjectAbstract):
 
 
 
-class AirTerminal_SingleDuct_VAV_Reheat_VariableSpeedFan(ObjectAbstract):
+class airterminal_singleduct_vav_reheat_variablespeedfan(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Availability Schedule Name","","","ScheduleNames"))
@@ -10301,7 +10301,7 @@ class AirTerminal_SingleDuct_VAV_Reheat_VariableSpeedFan(ObjectAbstract):
 
 
 
-class AirTerminal_SingleDuct_VAV_HeatAndCool_NoReheat(ObjectAbstract):
+class airterminal_singleduct_vav_heatandcool_noreheat(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Availability Schedule Name","","","ScheduleNames"))
@@ -10322,7 +10322,7 @@ class AirTerminal_SingleDuct_VAV_HeatAndCool_NoReheat(ObjectAbstract):
 
 
 
-class AirTerminal_SingleDuct_VAV_HeatAndCool_Reheat(ObjectAbstract):
+class airterminal_singleduct_vav_heatandcool_reheat(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Availability Schedule Name","","","ScheduleNames"))
@@ -10350,7 +10350,7 @@ class AirTerminal_SingleDuct_VAV_HeatAndCool_Reheat(ObjectAbstract):
 
 
 
-class AirTerminal_SingleDuct_SeriesPIU_Reheat(ObjectAbstract):
+class airterminal_singleduct_seriespiu_reheat(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Availability Schedule Name","","","ScheduleNames"))
@@ -10382,7 +10382,7 @@ class AirTerminal_SingleDuct_SeriesPIU_Reheat(ObjectAbstract):
 
 
 
-class AirTerminal_SingleDuct_ParallelPIU_Reheat(ObjectAbstract):
+class airterminal_singleduct_parallelpiu_reheat(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Availability Schedule Name","","","ScheduleNames"))
@@ -10415,7 +10415,7 @@ class AirTerminal_SingleDuct_ParallelPIU_Reheat(ObjectAbstract):
 
 
 
-class AirTerminal_SingleDuct_ConstantVolume_FourPipeInduction(ObjectAbstract):
+class airterminal_singleduct_constantvolume_fourpipeinduction(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Availability Schedule Name","","","ScheduleNames"))
@@ -10450,7 +10450,7 @@ class AirTerminal_SingleDuct_ConstantVolume_FourPipeInduction(ObjectAbstract):
 
 
 
-class AirTerminal_SingleDuct_ConstantVolume_CooledBeam(ObjectAbstract):
+class airterminal_singleduct_constantvolume_cooledbeam(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Availability Schedule Name","","","ScheduleNames"))
@@ -10488,7 +10488,7 @@ class AirTerminal_SingleDuct_ConstantVolume_CooledBeam(ObjectAbstract):
 
 
 
-class AirTerminal_DualDuct_ConstantVolume(ObjectAbstract):
+class airterminal_dualduct_constantvolume(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Availability Schedule Name","","","ScheduleNames"))
@@ -10509,7 +10509,7 @@ class AirTerminal_DualDuct_ConstantVolume(ObjectAbstract):
 
 
 
-class AirTerminal_DualDuct_VAV(ObjectAbstract):
+class airterminal_dualduct_vav(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Availability Schedule Name","","","ScheduleNames"))
@@ -10531,7 +10531,7 @@ class AirTerminal_DualDuct_VAV(ObjectAbstract):
 
 
 
-class ZoneHVAC_AirDistributionUnit(ObjectAbstract):
+class zonehvac_airdistributionunit(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldText(self,"Air Distribution Unit Outlet Node Name","",""))
@@ -10554,7 +10554,7 @@ class ZoneHVAC_AirDistributionUnit(ObjectAbstract):
 
 
 
-class ZoneHVAC_EquipmentList(ObjectAbstract):
+class zonehvac_equipmentlist(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldChoice(self,"Zone Equipment 1 Object Type","","",["ZoneHVAC:AirDistributionUnit","AirTerminal:SingleDuct:Uncontrolled","ZoneHVAC:WindowAirConditioner","ZoneHVAC:PackagedTerminalHeatPump","ZoneHVAC:PackagedTerminalAirConditioner","ZoneHVAC:FourPipeFanCoil","ZoneHVAC:UnitVentilator","ZoneHVAC:UnitHeater","ZoneHVAC:IdealLoadsAirSystem","ZoneHVAC:Baseboard:RadiantConvective:Water","ZoneHVAC:Baseboard:Convective:Water","ZoneHVAC:Baseboard:Convective:Electric","ZoneHVAC:HighTemperatureRadiant","ZoneHVAC:LowTemperatureRadiant:VariableFlow","ZoneHVAC:LowTemperatureRadiant:ConstantFlow","ZoneHVAC:LowTemperatureRadiant:Electric","ZoneHVAC:VentilatedSlab","Fan:ZoneExhaust","ZoneHVAC:EnergyRecoveryVentilator","WaterHeater:HeatPump",]))
@@ -10576,7 +10576,7 @@ class ZoneHVAC_EquipmentList(ObjectAbstract):
 
 
 
-class ZoneHVAC_EquipmentConnections(ObjectAbstract):
+class zonehvac_equipmentconnections(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldObjectlist(self,"Zone Name","","","ZoneNames"))
         self.InsertField(FieldText(self,"Zone Conditioning Equipment List Name","",("Enter the name of a ZoneHVAC:EquipmentList object.","",)))
@@ -10597,7 +10597,7 @@ class ZoneHVAC_EquipmentConnections(ObjectAbstract):
 
 
 
-class Fan_ConstantVolume(ObjectAbstract):
+class fan_constantvolume(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Availability Schedule Name","","","ScheduleNames"))
@@ -10626,7 +10626,7 @@ class Fan_ConstantVolume(ObjectAbstract):
 
 
 
-class Fan_VariableVolume(ObjectAbstract):
+class fan_variablevolume(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Availability Schedule Name","","","ScheduleNames"))
@@ -10660,7 +10660,7 @@ class Fan_VariableVolume(ObjectAbstract):
 
 
 
-class Fan_OnOff(ObjectAbstract):
+class fan_onoff(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Availability Schedule Name","","","ScheduleNames"))
@@ -10690,7 +10690,7 @@ class Fan_OnOff(ObjectAbstract):
 
 
 
-class Fan_ZoneExhaust(ObjectAbstract):
+class fan_zoneexhaust(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Availability Schedule Name","","","ScheduleNames"))
@@ -10713,7 +10713,7 @@ class Fan_ZoneExhaust(ObjectAbstract):
 
 
 
-class FanPerformance_NightVentilation(ObjectAbstract):
+class fanperformance_nightventilation(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldObjectlist(self,"Fan Name","","","FansCVandVAV"))
         self.InsertField(FieldReal(self,"Fan Efficiency",0,"","",1.0,0.0,""))
@@ -10734,7 +10734,7 @@ class FanPerformance_NightVentilation(ObjectAbstract):
 
 
 
-class Coil_Cooling_Water(ObjectAbstract):
+class coil_cooling_water(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Availability Schedule Name","","","ScheduleNames"))
@@ -10768,7 +10768,7 @@ class Coil_Cooling_Water(ObjectAbstract):
 
 
 
-class Coil_Cooling_Water_DetailedGeometry(ObjectAbstract):
+class coil_cooling_water_detailedgeometry(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Availability Schedule Name","","","ScheduleNames"))
@@ -10809,7 +10809,7 @@ class Coil_Cooling_Water_DetailedGeometry(ObjectAbstract):
 
 
 
-class Coil_Cooling_DX_SingleSpeed(ObjectAbstract):
+class coil_cooling_dx_singlespeed(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Availability Schedule Name","","","ScheduleNames"))
@@ -10855,7 +10855,7 @@ class Coil_Cooling_DX_SingleSpeed(ObjectAbstract):
 
 
 
-class Coil_Cooling_DX_TwoSpeed(ObjectAbstract):
+class coil_cooling_dx_twospeed(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Availability Schedule Name","","","ScheduleNames"))
@@ -10903,7 +10903,7 @@ class Coil_Cooling_DX_TwoSpeed(ObjectAbstract):
 
 
 
-class Coil_Cooling_DX_MultiSpeed(ObjectAbstract):
+class coil_cooling_dx_multispeed(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Availability Schedule Name","","","ScheduleNames"))
@@ -11006,7 +11006,7 @@ class Coil_Cooling_DX_MultiSpeed(ObjectAbstract):
 
 
 
-class Coil_Cooling_DX_TwoStageWithHumidityControlMode(ObjectAbstract):
+class coil_cooling_dx_twostagewithhumiditycontrolmode(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Availability Schedule Name","","","ScheduleNames"))
@@ -11043,7 +11043,7 @@ class Coil_Cooling_DX_TwoStageWithHumidityControlMode(ObjectAbstract):
 
 
 
-class CoilPerformance_DX_Cooling(ObjectAbstract):
+class coilperformance_dx_cooling(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldRealAutocalculate(self,"Rated Total Cooling Capacity",0,("gross capacity excluding supply air fan heat","rating point: air entering the cooling coil at 26.7 C dry-bulb/19.4 C wet-bulb, and","air entering the outdoor condenser coil at 35 C dry-bulb/23.9 C wet-bulb","Units: W",),"","",0.0,""))
@@ -11080,7 +11080,7 @@ class CoilPerformance_DX_Cooling(ObjectAbstract):
 
 
 
-class Coil_Heating_Water(ObjectAbstract):
+class coil_heating_water(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Availability Schedule Name","","","ScheduleNames"))
@@ -11111,7 +11111,7 @@ class Coil_Heating_Water(ObjectAbstract):
 
 
 
-class Coil_Heating_Steam(ObjectAbstract):
+class coil_heating_steam(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Availability Schedule Name","","","ScheduleNames"))
@@ -11138,7 +11138,7 @@ class Coil_Heating_Steam(ObjectAbstract):
 
 
 
-class Coil_Heating_Electric(ObjectAbstract):
+class coil_heating_electric(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Availability Schedule Name","","","ScheduleNames"))
@@ -11163,7 +11163,7 @@ class Coil_Heating_Electric(ObjectAbstract):
 
 
 
-class Coil_Heating_Gas(ObjectAbstract):
+class coil_heating_gas(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Availability Schedule Name","","","ScheduleNames"))
@@ -11191,7 +11191,7 @@ class Coil_Heating_Gas(ObjectAbstract):
 
 
 
-class Coil_Heating_Desuperheater(ObjectAbstract):
+class coil_heating_desuperheater(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Availability Schedule Name","","","ScheduleNames"))
@@ -11217,7 +11217,7 @@ class Coil_Heating_Desuperheater(ObjectAbstract):
 
 
 
-class Coil_Heating_DX_SingleSpeed(ObjectAbstract):
+class coil_heating_dx_singlespeed(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Availability Schedule Name","","","ScheduleNames"))
@@ -11256,7 +11256,7 @@ class Coil_Heating_DX_SingleSpeed(ObjectAbstract):
 
 
 
-class Coil_Heating_DX_MultiSpeed(ObjectAbstract):
+class coil_heating_dx_multispeed(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Availability Schedule Name","","","ScheduleNames"))
@@ -11329,7 +11329,7 @@ class Coil_Heating_DX_MultiSpeed(ObjectAbstract):
 
 
 
-class Coil_Cooling_WaterToAirHeatPump_ParameterEstimation(ObjectAbstract):
+class coil_cooling_watertoairheatpump_parameterestimation(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldChoice(self,"Compressor Type","",("Parameters 1-5 are as named below.","Parameters 6-10 depend on the type of compressor and fluid.","Refer to the InputOutputReference on the parameters required","",),["Reciprocating","Rotary","Scroll",]))
@@ -11369,7 +11369,7 @@ class Coil_Cooling_WaterToAirHeatPump_ParameterEstimation(ObjectAbstract):
 
 
 
-class Coil_Heating_WaterToAirHeatPump_ParameterEstimation(ObjectAbstract):
+class coil_heating_watertoairheatpump_parameterestimation(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldChoice(self,"Compressor Type","",("Parameters 1-4 are as named below.","Parameters 5-9 depend on the type of compressor.","Refer to the InputOutputReference on the parameters required","",),["Reciprocating","Rotary","Scroll",]))
@@ -11406,7 +11406,7 @@ class Coil_Heating_WaterToAirHeatPump_ParameterEstimation(ObjectAbstract):
 
 
 
-class Coil_Cooling_WaterToAirHeatPump_EquationFit(ObjectAbstract):
+class coil_cooling_watertoairheatpump_equationfit(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldText(self,"Water Inlet Node Name","",""))
@@ -11449,7 +11449,7 @@ class Coil_Cooling_WaterToAirHeatPump_EquationFit(ObjectAbstract):
 
 
 
-class Coil_Heating_WaterToAirHeatPump_EquationFit(ObjectAbstract):
+class coil_heating_watertoairheatpump_equationfit(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldText(self,"Water Inlet Node Name","",""))
@@ -11483,7 +11483,7 @@ class Coil_Heating_WaterToAirHeatPump_EquationFit(ObjectAbstract):
 
 
 
-class Coil_WaterHeating_AirToWaterHeatPump(ObjectAbstract):
+class coil_waterheating_airtowaterheatpump(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",("Unique name for this instance of a heat pump water heater DX coil.","",)))
         self.InsertField(FieldReal(self,"Rated Heating Capacity",0,("Heating capacity at the rated inlet air temperatures, rated condenser inlet","water temperature, rated air flow rate, and rated water flow rate.","Can optionally include condenser pump heat.","Units: W",),"","",0,""))
@@ -11527,7 +11527,7 @@ class Coil_WaterHeating_AirToWaterHeatPump(ObjectAbstract):
 
 
 
-class Coil_WaterHeating_Desuperheater(ObjectAbstract):
+class coil_waterheating_desuperheater(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",("Unique name for this instance of a desuperheater water heating coil.","",)))
         self.InsertField(FieldText(self,"Availability Schedule Name","",("Schedule values of 0 denote the desuperheater heating coil is off and the parasitic electric","energy is also off.","",)))
@@ -11563,7 +11563,7 @@ class Coil_WaterHeating_Desuperheater(ObjectAbstract):
 
 
 
-class CoilSystem_Cooling_Water_HeatExchangerAssisted(ObjectAbstract):
+class coilsystem_cooling_water_heatexchangerassisted(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldChoice(self,"Heat Exchanger Object Type","","",["HeatExchanger:AirToAir:FlatPlate","HeatExchanger:AirToAir:SensibleAndLatent",]))
@@ -11584,7 +11584,7 @@ class CoilSystem_Cooling_Water_HeatExchangerAssisted(ObjectAbstract):
 
 
 
-class CoilSystem_Cooling_DX_HeatExchangerAssisted(ObjectAbstract):
+class coilsystem_cooling_dx_heatexchangerassisted(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldChoice(self,"Heat Exchanger Object Type","","",["HeatExchanger:AirToAir:FlatPlate","HeatExchanger:AirToAir:SensibleAndLatent","HeatExchanger:Desiccant:BalancedFlow",]))
@@ -11606,7 +11606,7 @@ class CoilSystem_Cooling_DX_HeatExchangerAssisted(ObjectAbstract):
 
 
 
-class EvaporativeCooler_Direct_CelDekPad(ObjectAbstract):
+class evaporativecooler_direct_celdekpad(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Availability Schedule Name","","","ScheduleNames"))
@@ -11629,7 +11629,7 @@ class EvaporativeCooler_Direct_CelDekPad(ObjectAbstract):
 
 
 
-class EvaporativeCooler_Indirect_CelDekPad(ObjectAbstract):
+class evaporativecooler_indirect_celdekpad(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Availability Schedule Name","","","ScheduleNames"))
@@ -11658,7 +11658,7 @@ class EvaporativeCooler_Indirect_CelDekPad(ObjectAbstract):
 
 
 
-class EvaporativeCooler_Indirect_WetCoil(ObjectAbstract):
+class evaporativecooler_indirect_wetcoil(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Availability Schedule Name","","","ScheduleNames"))
@@ -11685,7 +11685,7 @@ class EvaporativeCooler_Indirect_WetCoil(ObjectAbstract):
 
 
 
-class EvaporativeCooler_Indirect_ResearchSpecial(ObjectAbstract):
+class evaporativecooler_indirect_researchspecial(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Availability Schedule Name","","","ScheduleNames"))
@@ -11717,7 +11717,7 @@ class EvaporativeCooler_Indirect_ResearchSpecial(ObjectAbstract):
 
 
 
-class EvaporativeCooler_Direct_ResearchSpecial(ObjectAbstract):
+class evaporativecooler_direct_researchspecial(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Availability Schedule Name","","","ScheduleNames"))
@@ -11741,7 +11741,7 @@ class EvaporativeCooler_Direct_ResearchSpecial(ObjectAbstract):
 
 
 
-class Humidifier_Steam_Electric(ObjectAbstract):
+class humidifier_steam_electric(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Availability Schedule Name","","","ScheduleNames"))
@@ -11765,7 +11765,7 @@ class Humidifier_Steam_Electric(ObjectAbstract):
 
 
 
-class Dehumidifier_Desiccant_NoFans(ObjectAbstract):
+class dehumidifier_desiccant_nofans(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Availability Schedule Name","","","ScheduleNames"))
@@ -11806,7 +11806,7 @@ class Dehumidifier_Desiccant_NoFans(ObjectAbstract):
 
 
 
-class Dehumidifier_Desiccant_System(ObjectAbstract):
+class dehumidifier_desiccant_system(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldText(self,"Availability Schedule Name","",""))
@@ -11840,7 +11840,7 @@ class Dehumidifier_Desiccant_System(ObjectAbstract):
 
 
 
-class HeatExchanger_AirToAir_FlatPlate(ObjectAbstract):
+class heatexchanger_airtoair_flatplate(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Availability Schedule Name","","","ScheduleNames"))
@@ -11872,7 +11872,7 @@ class HeatExchanger_AirToAir_FlatPlate(ObjectAbstract):
 
 
 
-class HeatExchanger_AirToAir_SensibleAndLatent(ObjectAbstract):
+class heatexchanger_airtoair_sensibleandlatent(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Availability Schedule Name","","","ScheduleNames"))
@@ -11913,7 +11913,7 @@ class HeatExchanger_AirToAir_SensibleAndLatent(ObjectAbstract):
 
 
 
-class HeatExchanger_Desiccant_BalancedFlow(ObjectAbstract):
+class heatexchanger_desiccant_balancedflow(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Availability Schedule Name","","","ScheduleNames"))
@@ -11940,7 +11940,7 @@ class HeatExchanger_Desiccant_BalancedFlow(ObjectAbstract):
 
 
 
-class HeatExchanger_Desiccant_BalancedFlow_PerformanceDataType1(ObjectAbstract):
+class heatexchanger_desiccant_balancedflow_performancedatatype1(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldReal(self,"Nominal Air Flow Rate",0,("Air flow rate at nominal conditions (assumed to be the same for both sides","of the heat exchanger).","Units: m3/s",),"","",0.0,""))
@@ -12009,7 +12009,7 @@ class HeatExchanger_Desiccant_BalancedFlow_PerformanceDataType1(ObjectAbstract):
 
 
 
-class AirLoopHVAC_Unitary_Furnace_HeatOnly(ObjectAbstract):
+class airloophvac_unitary_furnace_heatonly(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Availability Schedule Name","","","ScheduleNames"))
@@ -12039,7 +12039,7 @@ class AirLoopHVAC_Unitary_Furnace_HeatOnly(ObjectAbstract):
 
 
 
-class AirLoopHVAC_Unitary_Furnace_HeatCool(ObjectAbstract):
+class airloophvac_unitary_furnace_heatcool(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Availability Schedule Name","",("A schedule value greater than zero (usually 1 is used) indicates that the unit is","available to operate as needed. A value less than or equal to zero (usually zero","is used) denotes that the unit must be off.","",),"ScheduleNames"))
@@ -12076,7 +12076,7 @@ class AirLoopHVAC_Unitary_Furnace_HeatCool(ObjectAbstract):
 
 
 
-class AirLoopHVAC_UnitaryHeatOnly(ObjectAbstract):
+class airloophvac_unitaryheatonly(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Availability Schedule Name","","","ScheduleNames"))
@@ -12105,7 +12105,7 @@ class AirLoopHVAC_UnitaryHeatOnly(ObjectAbstract):
 
 
 
-class AirLoopHVAC_UnitaryHeatCool(ObjectAbstract):
+class airloophvac_unitaryheatcool(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Availability Schedule Name","","","ScheduleNames"))
@@ -12141,7 +12141,7 @@ class AirLoopHVAC_UnitaryHeatCool(ObjectAbstract):
 
 
 
-class AirLoopHVAC_UnitaryHeatPump_AirToAir(ObjectAbstract):
+class airloophvac_unitaryheatpump_airtoair(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Availability Schedule Name","",("A schedule value greater than zero (usually 1 is used) indicates that the unit is","available to operate as needed. A value less than or equal to zero (usually zero","is used) denotes that the unit must be off.","",),"ScheduleNames"))
@@ -12177,7 +12177,7 @@ class AirLoopHVAC_UnitaryHeatPump_AirToAir(ObjectAbstract):
 
 
 
-class AirLoopHVAC_UnitaryHeatPump_WaterToAir(ObjectAbstract):
+class airloophvac_unitaryheatpump_watertoair(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Availability Schedule Name","","","ScheduleNames"))
@@ -12218,7 +12218,7 @@ class AirLoopHVAC_UnitaryHeatPump_WaterToAir(ObjectAbstract):
 
 
 
-class AirLoopHVAC_UnitaryHeatCool_VAVChangeoverBypass(ObjectAbstract):
+class airloophvac_unitaryheatcool_vavchangeoverbypass(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",("Enter a unique name for this unitary system.","",)))
         self.InsertField(FieldObjectlist(self,"Availability Schedule Name","",("Enter the availability schedule name. Schedule values of zero denote system","is Off. Non-zero schedule values denote system is available to operate.","",),"ScheduleNames"))
@@ -12259,7 +12259,7 @@ class AirLoopHVAC_UnitaryHeatCool_VAVChangeoverBypass(ObjectAbstract):
 
 
 
-class AirLoopHVAC_UnitaryHeatPump_AirToAir_MultiSpeed(ObjectAbstract):
+class airloophvac_unitaryheatpump_airtoair_multispeed(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Availability Schedule Name","","","ScheduleNames"))
@@ -12310,7 +12310,7 @@ class AirLoopHVAC_UnitaryHeatPump_AirToAir_MultiSpeed(ObjectAbstract):
 
 
 
-class AirLoopHVAC_UnitaryCoolOnly(ObjectAbstract):
+class airloophvac_unitarycoolonly(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Availability Schedule Name","","","ScheduleNames"))
@@ -12335,7 +12335,7 @@ class AirLoopHVAC_UnitaryCoolOnly(ObjectAbstract):
 
 
 
-class Controller_WaterCoil(ObjectAbstract):
+class controller_watercoil(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldChoice(self,"Control Variable","",("TemperatureAndHumidityRatio requires a SetpointManager:SingleZone:Humidity:Maximum object","",),["Temperature","HumidityRatio","TemperatureAndHumidityRatio","Flow",]))
@@ -12360,7 +12360,7 @@ class Controller_WaterCoil(ObjectAbstract):
 
 
 
-class Controller_OutdoorAir(ObjectAbstract):
+class controller_outdoorair(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldText(self,"Relief Air Outlet Node Name","",""))
@@ -12401,7 +12401,7 @@ class Controller_OutdoorAir(ObjectAbstract):
 
 
 
-class Controller_MechanicalVentilation(ObjectAbstract):
+class controller_mechanicalventilation(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",("Duplicate groups of Zone name, Ventilation rate per unit floor area, Ventilation rate per occupant,","Zone Air Distribution Effectiveness in cooling mode, Zone Air Distribution Effectiveness","in heating mode, and Zone Air Distribution Effectiveness Schedule to increase allowable number of entries","",)))
         self.InsertField(FieldObjectlist(self,"Availability Schedule Name","",("Schedule values greater than 0 indicate mechanical ventilation is enabled","",),"ScheduleNames"))
@@ -12427,7 +12427,7 @@ class Controller_MechanicalVentilation(ObjectAbstract):
 
 
 
-class AirLoopHVAC_ControllerList(ObjectAbstract):
+class airloophvac_controllerlist(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldChoice(self,"Controller 1 Object Type","","",["Controller:WaterCoil","Controller:OutdoorAir",]))
@@ -12461,7 +12461,7 @@ class AirLoopHVAC_ControllerList(ObjectAbstract):
 
 
 
-class AirLoopHVAC(ObjectAbstract):
+class airloophvac(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Controller List Name","",("Enter the name of an AirLoopHVAC:ControllerList object.","",),"ControllerLists"))
@@ -12488,7 +12488,7 @@ class AirLoopHVAC(ObjectAbstract):
 
 
 
-class AirLoopHVAC_OutdoorAirSystem_EquipmentList(ObjectAbstract):
+class airloophvac_outdoorairsystem_equipmentlist(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldText(self,"Component 1 Object Type","",""))
@@ -12524,7 +12524,7 @@ class AirLoopHVAC_OutdoorAirSystem_EquipmentList(ObjectAbstract):
 
 
 
-class AirLoopHVAC_OutdoorAirSystem(ObjectAbstract):
+class airloophvac_outdoorairsystem(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Controller List Name","",("Enter the name of an AirLoopHVAC:ControllerList object.","",),"ControllerLists"))
@@ -12543,7 +12543,7 @@ class AirLoopHVAC_OutdoorAirSystem(ObjectAbstract):
 
 
 
-class OutdoorAir_Mixer(ObjectAbstract):
+class outdoorair_mixer(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldText(self,"Mixed Air Node Name","",("Name of Mixed Air Node","",)))
@@ -12565,7 +12565,7 @@ class OutdoorAir_Mixer(ObjectAbstract):
 
 
 
-class AirLoopHVAC_ZoneSplitter(ObjectAbstract):
+class airloophvac_zonesplitter(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldText(self,"Inlet Node Name","",""))
@@ -12586,7 +12586,7 @@ class AirLoopHVAC_ZoneSplitter(ObjectAbstract):
 
 
 
-class AirLoopHVAC_SupplyPlenum(ObjectAbstract):
+class airloophvac_supplyplenum(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Zone Name","","","ZoneNames"))
@@ -12609,7 +12609,7 @@ class AirLoopHVAC_SupplyPlenum(ObjectAbstract):
 
 
 
-class AirLoopHVAC_SupplyPath(ObjectAbstract):
+class airloophvac_supplypath(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldText(self,"Supply Air Path Inlet Node Name","",""))
@@ -12630,7 +12630,7 @@ class AirLoopHVAC_SupplyPath(ObjectAbstract):
 
 
 
-class AirLoopHVAC_ZoneMixer(ObjectAbstract):
+class airloophvac_zonemixer(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldText(self,"Outlet Node Name","",""))
@@ -12651,7 +12651,7 @@ class AirLoopHVAC_ZoneMixer(ObjectAbstract):
 
 
 
-class AirLoopHVAC_ReturnPlenum(ObjectAbstract):
+class airloophvac_returnplenum(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Zone Name","","","ZoneNames"))
@@ -12673,7 +12673,7 @@ class AirLoopHVAC_ReturnPlenum(ObjectAbstract):
 
 
 
-class AirLoopHVAC_ReturnPath(ObjectAbstract):
+class airloophvac_returnpath(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldText(self,"Return Air Path Outlet Node Name","",""))
@@ -12694,7 +12694,7 @@ class AirLoopHVAC_ReturnPath(ObjectAbstract):
 
 
 
-class Duct(ObjectAbstract):
+class duct(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldText(self,"Inlet Node Name","",""))
@@ -12713,7 +12713,7 @@ class Duct(ObjectAbstract):
 
 
 
-class Branch(ObjectAbstract):
+class branch(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldRealAutocalculate(self,"Maximum Flow Rate","0","",0,"","",""))
@@ -12737,7 +12737,7 @@ class Branch(ObjectAbstract):
 
 
 
-class BranchList(ObjectAbstract):
+class branchlist(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Branch 1 Name","","","Branches"))
@@ -12756,7 +12756,7 @@ class BranchList(ObjectAbstract):
 
 
 
-class Connector_Splitter(ObjectAbstract):
+class connector_splitter(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Inlet Branch Name","","","Branches"))
@@ -12775,7 +12775,7 @@ class Connector_Splitter(ObjectAbstract):
 
 
 
-class Connector_Mixer(ObjectAbstract):
+class connector_mixer(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Outlet Branch Name","","","Branches"))
@@ -12794,7 +12794,7 @@ class Connector_Mixer(ObjectAbstract):
 
 
 
-class ConnectorList(ObjectAbstract):
+class connectorlist(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldChoice(self,"Connector 1 Object Type","","",["Connector:Splitter","Connector:Mixer",]))
@@ -12816,7 +12816,7 @@ class ConnectorList(ObjectAbstract):
 
 
 
-class NodeList(ObjectAbstract):
+class nodelist(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldText(self,"Node 1 Name","",""))
@@ -12859,7 +12859,7 @@ class NodeList(ObjectAbstract):
 
 
 
-class OutdoorAir_Node(ObjectAbstract):
+class outdoorair_node(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldReal(self,"Height Above Ground","-1.0",("A value less than zero indicates that the height will be ignored and the weather file conditions will be used.","Units: m",),"","","",""))
@@ -12877,7 +12877,7 @@ class OutdoorAir_Node(ObjectAbstract):
 
 
 
-class OutdoorAir_NodeList(ObjectAbstract):
+class outdoorair_nodelist(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Node or NodeList Name 1","",""))
         self.InsertField(FieldText(self,"Node or NodeList Name 2","",""))
@@ -12918,7 +12918,7 @@ class OutdoorAir_NodeList(ObjectAbstract):
 
 
 
-class Pump_VariableSpeed(ObjectAbstract):
+class pump_variablespeed(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldText(self,"Inlet Node Name","",""))
@@ -12949,7 +12949,7 @@ class Pump_VariableSpeed(ObjectAbstract):
 
 
 
-class Pump_ConstantSpeed(ObjectAbstract):
+class pump_constantspeed(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldText(self,"Inlet Node Name","",""))
@@ -12975,7 +12975,7 @@ class Pump_ConstantSpeed(ObjectAbstract):
 
 
 
-class Pump_VariableSpeed_Condensate(ObjectAbstract):
+class pump_variablespeed_condensate(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldText(self,"Inlet Node Name","",""))
@@ -13004,7 +13004,7 @@ class Pump_VariableSpeed_Condensate(ObjectAbstract):
 
 
 
-class HeaderedPumps_VariableSpeed(ObjectAbstract):
+class headeredpumps_variablespeed(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldText(self,"Inlet Node Name","",""))
@@ -13037,7 +13037,7 @@ class HeaderedPumps_VariableSpeed(ObjectAbstract):
 
 
 
-class HeaderedPumps_ConstantSpeed(ObjectAbstract):
+class headeredpumps_constantspeed(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldText(self,"Inlet Node Name","",""))
@@ -13065,7 +13065,7 @@ class HeaderedPumps_ConstantSpeed(ObjectAbstract):
 
 
 
-class TemperingValve(ObjectAbstract):
+class temperingvalve(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldText(self,"Inlet Node Name","",("Name of a Node","",)))
@@ -13086,7 +13086,7 @@ class TemperingValve(ObjectAbstract):
 
 
 
-class LoadProfile_Plant(ObjectAbstract):
+class loadprofile_plant(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldText(self,"Inlet Node Name","",""))
@@ -13107,7 +13107,7 @@ class LoadProfile_Plant(ObjectAbstract):
 
 
 
-class SolarCollectorPerformance_FlatPlate(ObjectAbstract):
+class solarcollectorperformance_flatplate(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldReal(self,"Gross Area",0,"","","",0,""))
@@ -13133,7 +13133,7 @@ class SolarCollectorPerformance_FlatPlate(ObjectAbstract):
 
 
 
-class SolarCollector_FlatPlate_Water(ObjectAbstract):
+class solarcollector_flatplate_water(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"SolarCollectorPerformance Name","","","FlatPlateSolarCollectorParameters"))
@@ -13155,7 +13155,7 @@ class SolarCollector_FlatPlate_Water(ObjectAbstract):
 
 
 
-class SolarCollector_FlatPlate_PhotovoltaicThermal(ObjectAbstract):
+class solarcollector_flatplate_photovoltaicthermal(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Surface Name","","","AllShadingAndHTSurfNames"))
@@ -13180,7 +13180,7 @@ class SolarCollector_FlatPlate_PhotovoltaicThermal(ObjectAbstract):
 
 
 
-class SolarCollectorPerformance_PhotovoltaicThermal_Simple(ObjectAbstract):
+class solarcollectorperformance_photovoltaicthermal_simple(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldReal(self,"Fraction of Surface Area with Active Thermal Collector",0,"","",1.0,0.0,""))
@@ -13202,7 +13202,7 @@ class SolarCollectorPerformance_PhotovoltaicThermal_Simple(ObjectAbstract):
 
 
 
-class SolarCollector_UnglazedTranspired(ObjectAbstract):
+class solarcollector_unglazedtranspired(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Boundary Conditions Model Name","",("Enter the name of a SurfaceProperty:OtherSideConditionsModel object","",),"OSCMNames"))
@@ -13241,7 +13241,7 @@ class SolarCollector_UnglazedTranspired(ObjectAbstract):
 
 
 
-class SolarCollector_UnglazedTranspired_Multisystem(ObjectAbstract):
+class solarcollector_unglazedtranspired_multisystem(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldObjectlist(self,"Solar Collector Name","",("quad-tuples of inlet, outlet, control, and zone nodes","for multiple different outdoor air systems attached to same collector","Enter the name of a SolarCollector:UnglazedTranspired object.","",),"UTSCNames"))
         self.InsertField(FieldText(self,"Outdoor Air System 1 Collector Inlet Node","",""))
@@ -13261,7 +13261,7 @@ class SolarCollector_UnglazedTranspired_Multisystem(ObjectAbstract):
 
 
 
-class Boiler_HotWater(ObjectAbstract):
+class boiler_hotwater(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldChoice(self,"Fuel Type","","",["Electricity","NaturalGas","PropaneGas","FuelOil#1","FuelOil#2","Coal","Diesel","Gasoline",]))
@@ -13293,7 +13293,7 @@ class Boiler_HotWater(ObjectAbstract):
 
 
 
-class Boiler_Steam(ObjectAbstract):
+class boiler_steam(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldChoice(self,"Fuel Type","","",["Electricity","NaturalGas","PropaneGas","FuelOil#1","FuelOil#2","Coal","Diesel","Gasoline",]))
@@ -13324,7 +13324,7 @@ class Boiler_Steam(ObjectAbstract):
 
 
 
-class Boiler_HotWater_SPARK(ObjectAbstract):
+class boiler_hotwater_spark(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldChoice(self,"Fuel Type","","",["Electricity","NaturalGas","PropaneGas","FuelOil#1","FuelOil#2","Coal","Diesel","Gasoline",]))
@@ -13358,7 +13358,7 @@ class Boiler_HotWater_SPARK(ObjectAbstract):
 
 
 
-class Chiller_Electric_EIR(ObjectAbstract):
+class chiller_electric_eir(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldRealAutocalculate(self,"Reference Capacity",0,"","","",0.0,""))
@@ -13401,7 +13401,7 @@ class Chiller_Electric_EIR(ObjectAbstract):
 
 
 
-class Chiller_Electric_ReformulatedEIR(ObjectAbstract):
+class chiller_electric_reformulatedeir(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldRealAutocalculate(self,"Reference Capacity",0,"","","",0.0,""))
@@ -13442,7 +13442,7 @@ class Chiller_Electric_ReformulatedEIR(ObjectAbstract):
 
 
 
-class Chiller_Electric(ObjectAbstract):
+class chiller_electric(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldChoice(self,"Condenser Type","AirCooled","",["AirCooled","WaterCooled","EvaporativelyCooled",]))
@@ -13489,7 +13489,7 @@ class Chiller_Electric(ObjectAbstract):
 
 
 
-class Chiller_Electric_SPARK(ObjectAbstract):
+class chiller_electric_spark(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldChoice(self,"Condenser Type","AirCooled","",["AirCooled","WaterCooled","EvaporativelyCooled",]))
@@ -13524,7 +13524,7 @@ class Chiller_Electric_SPARK(ObjectAbstract):
 
 
 
-class Chiller_Absorption_Indirect(ObjectAbstract):
+class chiller_absorption_indirect(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldRealAutocalculate(self,"Nominal Capacity",0,"","","",0.0,""))
@@ -13571,7 +13571,7 @@ class Chiller_Absorption_Indirect(ObjectAbstract):
 
 
 
-class Chiller_Absorption(ObjectAbstract):
+class chiller_absorption(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldRealAutocalculate(self,"Nominal Capacity",0,"","","",0.0,""))
@@ -13614,7 +13614,7 @@ class Chiller_Absorption(ObjectAbstract):
 
 
 
-class Chiller_ConstantCOP(ObjectAbstract):
+class chiller_constantcop(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldRealAutocalculate(self,"Nominal Capacity",0,"",0.0,"","",""))
@@ -13642,7 +13642,7 @@ class Chiller_ConstantCOP(ObjectAbstract):
 
 
 
-class Chiller_EngineDriven(ObjectAbstract):
+class chiller_enginedriven(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldChoice(self,"Condenser Type","AirCooled","",["AirCooled","WaterCooled","EvaporativelyCooled",]))
@@ -13701,7 +13701,7 @@ class Chiller_EngineDriven(ObjectAbstract):
 
 
 
-class Chiller_CombustionTurbine(ObjectAbstract):
+class chiller_combustionturbine(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldChoice(self,"Condenser Type","AirCooled","",["AirCooled","WaterCooled","EvaporativelyCooled",]))
@@ -13774,7 +13774,7 @@ class Chiller_CombustionTurbine(ObjectAbstract):
 
 
 
-class ChillerHeater_Absorption_DirectFired(ObjectAbstract):
+class chillerheater_absorption_directfired(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldRealAutocalculate(self,"Nominal Cooling Capacity","Autosize","","","","",""))
@@ -13825,7 +13825,7 @@ class ChillerHeater_Absorption_DirectFired(ObjectAbstract):
 
 
 
-class HeatPump_WaterToWater_EquationFit_Heating(ObjectAbstract):
+class heatpump_watertowater_equationfit_heating(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldText(self,"Source Side Inlet Node Name","",""))
@@ -13861,7 +13861,7 @@ class HeatPump_WaterToWater_EquationFit_Heating(ObjectAbstract):
 
 
 
-class HeatPump_WaterToWater_EquationFit_Cooling(ObjectAbstract):
+class heatpump_watertowater_equationfit_cooling(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldText(self,"Source Side Inlet Node Name","",""))
@@ -13897,7 +13897,7 @@ class HeatPump_WaterToWater_EquationFit_Cooling(ObjectAbstract):
 
 
 
-class HeatPump_WaterToWater_ParameterEstimation_Cooling(ObjectAbstract):
+class heatpump_watertowater_parameterestimation_cooling(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldText(self,"Source Side Inlet Node Name","",""))
@@ -13936,7 +13936,7 @@ class HeatPump_WaterToWater_ParameterEstimation_Cooling(ObjectAbstract):
 
 
 
-class HeatPump_WaterToWater_ParameterEstimation_Heating(ObjectAbstract):
+class heatpump_watertowater_parameterestimation_heating(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldText(self,"Source Side Inlet Node Name","",""))
@@ -13975,7 +13975,7 @@ class HeatPump_WaterToWater_ParameterEstimation_Heating(ObjectAbstract):
 
 
 
-class DistrictCooling(ObjectAbstract):
+class districtcooling(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldText(self,"Chilled Water Inlet Node Name","",""))
@@ -13994,7 +13994,7 @@ class DistrictCooling(ObjectAbstract):
 
 
 
-class DistrictHeating(ObjectAbstract):
+class districtheating(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldText(self,"Hot Water Inlet Node Name","",""))
@@ -14013,7 +14013,7 @@ class DistrictHeating(ObjectAbstract):
 
 
 
-class CoolingTower_SingleSpeed(ObjectAbstract):
+class coolingtower_singlespeed(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",("Tower Name","",)))
         self.InsertField(FieldText(self,"Water Inlet Node Name","",("Name of tower water inlet node","",)))
@@ -14051,7 +14051,7 @@ class CoolingTower_SingleSpeed(ObjectAbstract):
 
 
 
-class CoolingTower_TwoSpeed(ObjectAbstract):
+class coolingtower_twospeed(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",("Tower Name","",)))
         self.InsertField(FieldText(self,"Water Inlet Node Name","",("Name of tower Water Inlet Node","",)))
@@ -14092,7 +14092,7 @@ class CoolingTower_TwoSpeed(ObjectAbstract):
 
 
 
-class CoolingTower_VariableSpeed(ObjectAbstract):
+class coolingtower_variablespeed(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",("Tower Name","",)))
         self.InsertField(FieldText(self,"Water Inlet Node Name","",("Name of tower water inlet node","",)))
@@ -14134,7 +14134,7 @@ class CoolingTower_VariableSpeed(ObjectAbstract):
 
 
 
-class CoolingTowerPerformance_CoolTools(ObjectAbstract):
+class coolingtowerperformance_cooltools(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldReal(self,"Minimum Inlet Air Wet-Bulb Temperature",0,("Minimum valid inlet air wet-bulb temperature for this approach","temperature correlation.","Units: C",),"","","",""))
@@ -14195,7 +14195,7 @@ class CoolingTowerPerformance_CoolTools(ObjectAbstract):
 
 
 
-class CoolingTowerPerformance_YorkCalc(ObjectAbstract):
+class coolingtowerperformance_yorkcalc(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldReal(self,"Minimum Inlet Air Wet-Bulb Temperature",0,("Minimum valid inlet air wet-bulb temperature for this approach","temperature correlation.","Units: C",),"","","",""))
@@ -14249,7 +14249,7 @@ class CoolingTowerPerformance_YorkCalc(ObjectAbstract):
 
 
 
-class FluidCooler_SingleSpeed(ObjectAbstract):
+class fluidcooler_singlespeed(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",("fluid cooler name","",)))
         self.InsertField(FieldText(self,"Water Inlet Node Name","",("Name of fluid cooler water inlet node","",)))
@@ -14280,7 +14280,7 @@ class FluidCooler_SingleSpeed(ObjectAbstract):
 
 
 
-class FluidCooler_TwoSpeed(ObjectAbstract):
+class fluidcooler_twospeed(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",("fluid cooler name","",)))
         self.InsertField(FieldText(self,"Water Inlet Node Name","",("Name of fluid cooler water inlet node","",)))
@@ -14315,7 +14315,7 @@ class FluidCooler_TwoSpeed(ObjectAbstract):
 
 
 
-class GroundHeatExchanger_Vertical(ObjectAbstract):
+class groundheatexchanger_vertical(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldText(self,"Inlet Node Name","",""))
@@ -14553,7 +14553,7 @@ class GroundHeatExchanger_Vertical(ObjectAbstract):
 
 
 
-class GroundHeatExchanger_Pond(ObjectAbstract):
+class groundheatexchanger_pond(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldText(self,"Fluid Inlet Node Name","",""))
@@ -14582,7 +14582,7 @@ class GroundHeatExchanger_Pond(ObjectAbstract):
 
 
 
-class GroundHeatExchanger_Surface(ObjectAbstract):
+class groundheatexchanger_surface(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Construction Name","","","ConstructionNames"))
@@ -14609,7 +14609,7 @@ class GroundHeatExchanger_Surface(ObjectAbstract):
 
 
 
-class HeatExchanger_Hydronic(ObjectAbstract):
+class heatexchanger_hydronic(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldText(self,"Controlled Component Name","",""))
@@ -14645,7 +14645,7 @@ class HeatExchanger_Hydronic(ObjectAbstract):
 
 
 
-class HeatExchanger_Plate(ObjectAbstract):
+class heatexchanger_plate(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldText(self,"Controlled Component Name","",""))
@@ -14674,7 +14674,7 @@ class HeatExchanger_Plate(ObjectAbstract):
 
 
 
-class HeatExchanger_WatersideEconomizer(ObjectAbstract):
+class heatexchanger_watersideeconomizer(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldChoice(self,"Heat Exchanger Type","","",["PlateFrame","CounterFlow","ParallelFlow","Ideal",]))
@@ -14703,7 +14703,7 @@ class HeatExchanger_WatersideEconomizer(ObjectAbstract):
 
 
 
-class WaterHeater_Mixed(ObjectAbstract):
+class waterheater_mixed(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldRealAutocalculate(self,"Tank Volume","0.0","",0.0,"","",""))
@@ -14758,7 +14758,7 @@ class WaterHeater_Mixed(ObjectAbstract):
 
 
 
-class WaterHeater_Stratified(ObjectAbstract):
+class waterheater_stratified(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldText(self,"End-Use Subcategory","General",""))
@@ -14837,7 +14837,7 @@ class WaterHeater_Stratified(ObjectAbstract):
 
 
 
-class WaterHeater_Sizing(ObjectAbstract):
+class waterheater_sizing(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldObjectlist(self,"WaterHeater Name","","","WaterHeaterNames"))
         self.InsertField(FieldChoice(self,"Design Mode","","",["PeakDraw","ResidentialHUD-FHAMinimum","PerPerson","PerFloorArea","PerUnit","PerSolarCollectorArea",]))
@@ -14869,7 +14869,7 @@ class WaterHeater_Sizing(ObjectAbstract):
 
 
 
-class WaterHeater_HeatPump(ObjectAbstract):
+class waterheater_heatpump(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",("Unique name for this instance of a heat pump water heater.","",)))
         self.InsertField(FieldObjectlist(self,"Availability Schedule Name","",("Schedule values of 0 denote the heat pump compressor is off and the parasitic electric","energy is also off.","",),"ScheduleNames"))
@@ -14919,7 +14919,7 @@ class WaterHeater_HeatPump(ObjectAbstract):
 
 
 
-class ThermalStorage_Ice_Simple(ObjectAbstract):
+class thermalstorage_ice_simple(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldChoice(self,"Ice Storage Type","",("IceOnCoilInternal = Ice-on-Coil, internal melt","IceOnCoilExternal = Ice-on-Coil, external melt","",),["IceOnCoilInternal","IceOnCoilExternal",]))
@@ -14940,7 +14940,7 @@ class ThermalStorage_Ice_Simple(ObjectAbstract):
 
 
 
-class ThermalStorage_Ice_Detailed(ObjectAbstract):
+class thermalstorage_ice_detailed(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldText(self,"Availability Schedule Name","",""))
@@ -14970,7 +14970,7 @@ class ThermalStorage_Ice_Detailed(ObjectAbstract):
 
 
 
-class ThermalStorage_ChilledWater_Mixed(ObjectAbstract):
+class thermalstorage_chilledwater_mixed(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldReal(self,"Tank Volume","0.1","","","",0.0,""))
@@ -15008,7 +15008,7 @@ class ThermalStorage_ChilledWater_Mixed(ObjectAbstract):
 
 
 
-class ThermalStorage_ChilledWater_Stratified(ObjectAbstract):
+class thermalstorage_chilledwater_stratified(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldReal(self,"Tank Volume",0,"","","",0.0,""))
@@ -15067,7 +15067,7 @@ class ThermalStorage_ChilledWater_Stratified(ObjectAbstract):
 
 
 
-class PlantLoop(ObjectAbstract):
+class plantloop(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldChoice(self,"Fluid Type","Water","",["Water","Steam",]))
@@ -15104,7 +15104,7 @@ class PlantLoop(ObjectAbstract):
 
 
 
-class CondenserLoop(ObjectAbstract):
+class condenserloop(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldChoice(self,"Fluid Type","Water","",["Water",]))
@@ -15138,7 +15138,7 @@ class CondenserLoop(ObjectAbstract):
 
 
 
-class Pipe_Adiabatic(ObjectAbstract):
+class pipe_adiabatic(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldText(self,"Inlet Node Name","",""))
@@ -15157,7 +15157,7 @@ class Pipe_Adiabatic(ObjectAbstract):
 
 
 
-class Pipe_Adiabatic_Steam(ObjectAbstract):
+class pipe_adiabatic_steam(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldText(self,"Inlet Node Name","",""))
@@ -15176,7 +15176,7 @@ class Pipe_Adiabatic_Steam(ObjectAbstract):
 
 
 
-class Pipe_Indoor(ObjectAbstract):
+class pipe_indoor(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Construction Name","","","ConstructionNames"))
@@ -15203,7 +15203,7 @@ class Pipe_Indoor(ObjectAbstract):
 
 
 
-class Pipe_Outdoor(ObjectAbstract):
+class pipe_outdoor(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Construction Name","","","ConstructionNames"))
@@ -15227,7 +15227,7 @@ class Pipe_Outdoor(ObjectAbstract):
 
 
 
-class Pipe_Underground(ObjectAbstract):
+class pipe_underground(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Construction Name","","","ConstructionNames"))
@@ -15255,7 +15255,7 @@ class Pipe_Underground(ObjectAbstract):
 
 
 
-class PlantLoopConnection(ObjectAbstract):
+class plantloopconnection(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldText(self,"Primary Side Inlet Node Name","",""))
@@ -15280,7 +15280,7 @@ class PlantLoopConnection(ObjectAbstract):
 
 
 
-class PlantLoopConnection_Controlled(ObjectAbstract):
+class plantloopconnection_controlled(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldText(self,"Primary Side Inlet Node Name","",""))
@@ -15304,7 +15304,7 @@ class PlantLoopConnection_Controlled(ObjectAbstract):
 
 
 
-class PlantEquipmentList(ObjectAbstract):
+class plantequipmentlist(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldText(self,"Equipment 1 Object Type","",""))
@@ -15343,7 +15343,7 @@ class PlantEquipmentList(ObjectAbstract):
 
 
 
-class CondenserEquipmentList(ObjectAbstract):
+class condenserequipmentlist(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldText(self,"Equipment 1 Object Type","",""))
@@ -15382,7 +15382,7 @@ class CondenserEquipmentList(ObjectAbstract):
 
 
 
-class PlantEquipmentOperation_Uncontrolled(ObjectAbstract):
+class plantequipmentoperation_uncontrolled(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Equipment List Name","","","PlantAndCondenserEquipmentLists"))
@@ -15400,7 +15400,7 @@ class PlantEquipmentOperation_Uncontrolled(ObjectAbstract):
 
 
 
-class PlantEquipmentOperation_CoolingLoad(ObjectAbstract):
+class plantequipmentoperation_coolingload(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldReal(self,"Load Range 1 Lower Limit",0,"",0.0,"","",""))
@@ -15447,7 +15447,7 @@ class PlantEquipmentOperation_CoolingLoad(ObjectAbstract):
 
 
 
-class PlantEquipmentOperation_HeatingLoad(ObjectAbstract):
+class plantequipmentoperation_heatingload(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldReal(self,"Load Range 1 Lower Limit",0,"",0.0,"","",""))
@@ -15494,7 +15494,7 @@ class PlantEquipmentOperation_HeatingLoad(ObjectAbstract):
 
 
 
-class PlantEquipmentOperation_OutdoorDryBulb(ObjectAbstract):
+class plantequipmentoperation_outdoordrybulb(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldReal(self,"Dry-bulb Temperature Range 1 Lower Limit",0,"",-70,70,"",""))
@@ -15541,7 +15541,7 @@ class PlantEquipmentOperation_OutdoorDryBulb(ObjectAbstract):
 
 
 
-class PlantEquipmentOperation_OutdoorWetBulb(ObjectAbstract):
+class plantequipmentoperation_outdoorwetbulb(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldReal(self,"Wet-Bulb Temperature Range 1 Lower Limit",0,"",-70,70,"",""))
@@ -15588,7 +15588,7 @@ class PlantEquipmentOperation_OutdoorWetBulb(ObjectAbstract):
 
 
 
-class PlantEquipmentOperation_OutdoorRelativeHumidity(ObjectAbstract):
+class plantequipmentoperation_outdoorrelativehumidity(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldReal(self,"Relative Humidity Range 1 Lower Limit",0,"",0.0,100.0,"",""))
@@ -15635,7 +15635,7 @@ class PlantEquipmentOperation_OutdoorRelativeHumidity(ObjectAbstract):
 
 
 
-class PlantEquipmentOperation_ComponentSetpoint(ObjectAbstract):
+class plantequipmentoperation_componentsetpoint(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldText(self,"Equipment 1 Object Type","",""))
@@ -15712,7 +15712,7 @@ class PlantEquipmentOperation_ComponentSetpoint(ObjectAbstract):
 
 
 
-class PlantEquipmentOperation_OutdoorDryBulbDifference(ObjectAbstract):
+class plantequipmentoperation_outdoordrybulbdifference(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldText(self,"Reference Temperature Node Name","",""))
@@ -15770,7 +15770,7 @@ class PlantEquipmentOperation_OutdoorDryBulbDifference(ObjectAbstract):
 
 
 
-class PlantEquipmentOperation_OutdoorWetBulbDifference(ObjectAbstract):
+class plantequipmentoperation_outdoorwetbulbdifference(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldText(self,"Reference Temperature Node Name","",""))
@@ -15828,7 +15828,7 @@ class PlantEquipmentOperation_OutdoorWetBulbDifference(ObjectAbstract):
 
 
 
-class PlantEquipmentOperation_OutdoorDewpoint(ObjectAbstract):
+class plantequipmentoperation_outdoordewpoint(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldReal(self,"Dewpoint Temperature Range 1 Lower Limit",0,"",-70,70,"",""))
@@ -15875,7 +15875,7 @@ class PlantEquipmentOperation_OutdoorDewpoint(ObjectAbstract):
 
 
 
-class PlantEquipmentOperation_OutdoorDewpointDifference(ObjectAbstract):
+class plantequipmentoperation_outdoordewpointdifference(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldText(self,"Reference Temperature Node Name","",""))
@@ -15933,7 +15933,7 @@ class PlantEquipmentOperation_OutdoorDewpointDifference(ObjectAbstract):
 
 
 
-class PlantEquipmentOperationSchemes(ObjectAbstract):
+class plantequipmentoperationschemes(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldChoice(self,"Control Scheme 1 Object Type","","",["PlantEquipmentOperation:CoolingLoad","PlantEquipmentOperation:HeatingLoad","PlantEquipmentOperation:Uncontrolled","PlantEquipmentOperation:ComponentSetpoint",]))
@@ -15975,7 +15975,7 @@ class PlantEquipmentOperationSchemes(ObjectAbstract):
 
 
 
-class CondenserEquipmentOperationSchemes(ObjectAbstract):
+class condenserequipmentoperationschemes(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldChoice(self,"Control Scheme 1 Object Type","","",["PlantEquipmentOperation:Uncontrolled","PlantEquipmentOperation:CoolingLoad","PlantEquipmentOperation:HeatingLoad","PlantEquipmentOperation:OutdoorDryBulb","PlantEquipmentOperation:OutdoorWetBulb","PlantEquipmentOperation:OutdoorRelativeHumidity","PlantEquipmentOperation:OutdoorDewpoint","PlantEquipmentOperation:OutdoorDryBulbDifference","PlantEquipmentOperation:OutdoorWetBulbDifference","PlantEquipmentOperation:OutdoorDewpointDifference",]))
@@ -16017,7 +16017,7 @@ class CondenserEquipmentOperationSchemes(ObjectAbstract):
 
 
 
-class AvailabilityManager_Scheduled(ObjectAbstract):
+class availabilitymanager_scheduled(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Schedule Name","","","ScheduleNames"))
@@ -16036,7 +16036,7 @@ class AvailabilityManager_Scheduled(ObjectAbstract):
 
 
 
-class AvailabilityManager_ScheduledOn(ObjectAbstract):
+class availabilitymanager_scheduledon(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Schedule Name","","","ScheduleNames"))
@@ -16055,7 +16055,7 @@ class AvailabilityManager_ScheduledOn(ObjectAbstract):
 
 
 
-class AvailabilityManager_ScheduledOff(ObjectAbstract):
+class availabilitymanager_scheduledoff(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Schedule Name","","","ScheduleNames"))
@@ -16074,7 +16074,7 @@ class AvailabilityManager_ScheduledOff(ObjectAbstract):
 
 
 
-class AvailabilityManager_NightCycle(ObjectAbstract):
+class availabilitymanager_nightcycle(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Applicability Schedule Name","","","ScheduleNames"))
@@ -16098,7 +16098,7 @@ class AvailabilityManager_NightCycle(ObjectAbstract):
 
 
 
-class AvailabilityManager_DifferentialThermostat(ObjectAbstract):
+class availabilitymanager_differentialthermostat(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldText(self,"Hot Node Name","",""))
@@ -16120,7 +16120,7 @@ class AvailabilityManager_DifferentialThermostat(ObjectAbstract):
 
 
 
-class AvailabilityManager_HighTemperatureTurnOff(ObjectAbstract):
+class availabilitymanager_hightemperatureturnoff(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldText(self,"Sensor Node Name","",""))
@@ -16140,7 +16140,7 @@ class AvailabilityManager_HighTemperatureTurnOff(ObjectAbstract):
 
 
 
-class AvailabilityManager_HighTemperatureTurnOn(ObjectAbstract):
+class availabilitymanager_hightemperatureturnon(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldText(self,"Sensor Node Name","",""))
@@ -16160,7 +16160,7 @@ class AvailabilityManager_HighTemperatureTurnOn(ObjectAbstract):
 
 
 
-class AvailabilityManager_LowTemperatureTurnOff(ObjectAbstract):
+class availabilitymanager_lowtemperatureturnoff(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldText(self,"Sensor Node Name","",""))
@@ -16181,7 +16181,7 @@ class AvailabilityManager_LowTemperatureTurnOff(ObjectAbstract):
 
 
 
-class AvailabilityManager_LowTemperatureTurnOn(ObjectAbstract):
+class availabilitymanager_lowtemperatureturnon(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldText(self,"Sensor Node Name","",""))
@@ -16201,7 +16201,7 @@ class AvailabilityManager_LowTemperatureTurnOn(ObjectAbstract):
 
 
 
-class AvailabilityManager_NightVentilation(ObjectAbstract):
+class availabilitymanager_nightventilation(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Applicability Schedule Name","","","ScheduleNames"))
@@ -16226,7 +16226,7 @@ class AvailabilityManager_NightVentilation(ObjectAbstract):
 
 
 
-class AvailabilityManager_HybridVentilation(ObjectAbstract):
+class availabilitymanager_hybridventilation(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"HVAC Air Loop Name","",("Enter the name of an AirLoopHVAC object.","",),"AirPrimaryLoops"))
@@ -16260,7 +16260,7 @@ class AvailabilityManager_HybridVentilation(ObjectAbstract):
 
 
 
-class AvailabilityManagerAssignmentList(ObjectAbstract):
+class availabilitymanagerassignmentlist(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldChoice(self,"Availability Manager 1 Object Type","","",["AvailabilityManager:Scheduled","AvailabilityManager:ScheduledOn","AvailabilityManager:ScheduledOff","AvailabilityManager:NightCycle","AvailabilityManager:DifferentialThermostat","AvailabilityManager:HighTemperatureTurnOff","AvailabilityManager:HighTemperatureTurnOn","AvailabilityManager:LowTemperatureTurnOff","AvailabilityManager:LowTemperatureTurnOn","AvailabilityManager:NightVentilation",]))
@@ -16279,7 +16279,7 @@ class AvailabilityManagerAssignmentList(ObjectAbstract):
 
 
 
-class SetpointManager_Scheduled(ObjectAbstract):
+class setpointmanager_scheduled(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldChoice(self,"Control Variable","","",["Temperature","MaximumTemperature","MinimumTemperature","HumidityRatio","MaximumHumidityRatio","MinimumHumidityRatio","MassFlowRate","MaximumMassFlowRate","MinimumMassFlowRate",]))
@@ -16299,7 +16299,7 @@ class SetpointManager_Scheduled(ObjectAbstract):
 
 
 
-class SetpointManager_Scheduled_DualSetpoint(ObjectAbstract):
+class setpointmanager_scheduled_dualsetpoint(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldChoice(self,"Control Variable","Temperature","",["Temperature",]))
@@ -16320,7 +16320,7 @@ class SetpointManager_Scheduled_DualSetpoint(ObjectAbstract):
 
 
 
-class SetpointManager_OutdoorAirReset(ObjectAbstract):
+class setpointmanager_outdoorairreset(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldChoice(self,"Control Variable","Temperature","",["Temperature",]))
@@ -16348,7 +16348,7 @@ class SetpointManager_OutdoorAirReset(ObjectAbstract):
 
 
 
-class SetpointManager_SingleZone_Reheat(ObjectAbstract):
+class setpointmanager_singlezone_reheat(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldChoice(self,"Control Variable","Temperature","",["Temperature",]))
@@ -16372,7 +16372,7 @@ class SetpointManager_SingleZone_Reheat(ObjectAbstract):
 
 
 
-class SetpointManager_SingleZone_Heating(ObjectAbstract):
+class setpointmanager_singlezone_heating(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldChoice(self,"Control Variable","Temperature","",["Temperature",]))
@@ -16396,7 +16396,7 @@ class SetpointManager_SingleZone_Heating(ObjectAbstract):
 
 
 
-class SetpointManager_SingleZone_Cooling(ObjectAbstract):
+class setpointmanager_singlezone_cooling(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldChoice(self,"Control Variable","Temperature","",["Temperature",]))
@@ -16420,7 +16420,7 @@ class SetpointManager_SingleZone_Cooling(ObjectAbstract):
 
 
 
-class SetpointManager_SingleZone_Humidity_Minimum(ObjectAbstract):
+class setpointmanager_singlezone_humidity_minimum(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldText(self,"Control Variable","",("Deprecated Field.  This field is not used","",)))
@@ -16441,7 +16441,7 @@ class SetpointManager_SingleZone_Humidity_Minimum(ObjectAbstract):
 
 
 
-class SetpointManager_SingleZone_Humidity_Maximum(ObjectAbstract):
+class setpointmanager_singlezone_humidity_maximum(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldText(self,"Control Variable","",("Deprecated Field.  This field is not used","",)))
@@ -16462,7 +16462,7 @@ class SetpointManager_SingleZone_Humidity_Maximum(ObjectAbstract):
 
 
 
-class SetpointManager_MixedAir(ObjectAbstract):
+class setpointmanager_mixedair(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldChoice(self,"Control Variable","Temperature","",["Temperature",]))
@@ -16484,7 +16484,7 @@ class SetpointManager_MixedAir(ObjectAbstract):
 
 
 
-class SetpointManager_OutdoorAirPretreat(ObjectAbstract):
+class setpointmanager_outdoorairpretreat(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldChoice(self,"Control Variable","","",["Temperature","HumidityRatio","MaximumHumidityRatio","MinimumHumidityRatio",]))
@@ -16512,7 +16512,7 @@ class SetpointManager_OutdoorAirPretreat(ObjectAbstract):
 
 
 
-class SetpointManager_Warmest(ObjectAbstract):
+class setpointmanager_warmest(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldChoice(self,"Control Variable","Temperature","",["Temperature",]))
@@ -16535,7 +16535,7 @@ class SetpointManager_Warmest(ObjectAbstract):
 
 
 
-class SetpointManager_Coldest(ObjectAbstract):
+class setpointmanager_coldest(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldChoice(self,"Control Variable","Temperature","",["Temperature",]))
@@ -16558,7 +16558,7 @@ class SetpointManager_Coldest(ObjectAbstract):
 
 
 
-class SetpointManager_ReturnAirBypassFlow(ObjectAbstract):
+class setpointmanager_returnairbypassflow(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldChoice(self,"Control Variable","Flow","",["Flow",]))
@@ -16579,7 +16579,7 @@ class SetpointManager_ReturnAirBypassFlow(ObjectAbstract):
 
 
 
-class SetpointManager_WarmestTemperatureFlow(ObjectAbstract):
+class setpointmanager_warmesttemperatureflow(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldChoice(self,"Control Variable","","",["Temperature",]))
@@ -16603,7 +16603,7 @@ class SetpointManager_WarmestTemperatureFlow(ObjectAbstract):
 
 
 
-class Refrigeration_Case(ObjectAbstract):
+class refrigeration_case(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Availability Schedule Name","","","ScheduleNames"))
@@ -16653,7 +16653,7 @@ class Refrigeration_Case(ObjectAbstract):
 
 
 
-class Refrigeration_CompressorRack(ObjectAbstract):
+class refrigeration_compressorrack(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldChoice(self,"Heat Rejection Location","Outdoors","",["Outdoors","Zone",]))
@@ -16695,7 +16695,7 @@ class Refrigeration_CompressorRack(ObjectAbstract):
 
 
 
-class Refrigeration_CaseList(ObjectAbstract):
+class refrigeration_caselist(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Refrigerated Case List Name","",""))
         self.InsertField(FieldObjectlist(self,"Case 1 Name","",("Enter the name of a Refrigeration:Case object.","",),"RefrigerationCaseNames"))
@@ -16713,7 +16713,7 @@ class Refrigeration_CaseList(ObjectAbstract):
 
 
 
-class Refrigeration_Condenser_AirCooled(ObjectAbstract):
+class refrigeration_condenser_aircooled(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Rated Effective Total Heat Rejection Rate Curve Name","",("Rating as per ARI 460","Be sure the rating corresponds to the correct refrigerant","HeatRejection(W)=C1 +C2(Condensing Temp - Entering Air Temp, deg C)","Will be adjusted for elevation automatically","",),"LinearCurves"))
@@ -16740,7 +16740,7 @@ class Refrigeration_Condenser_AirCooled(ObjectAbstract):
 
 
 
-class Refrigeration_Condenser_EvaporativeCooled(ObjectAbstract):
+class refrigeration_condenser_evaporativecooled(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldReal(self,"Rated Effective Total Heat Rejection Rate",0,("Rating as per ARI 490","Be sure the rating corresponds to the correct refrigerant","Units: W",),0.0,"","",""))
@@ -16778,7 +16778,7 @@ class Refrigeration_Condenser_EvaporativeCooled(ObjectAbstract):
 
 
 
-class Refrigeration_Condenser_WaterCooled(ObjectAbstract):
+class refrigeration_condenser_watercooled(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldReal(self,"Rated Effective Total Heat Rejection Rate",0,("Rating as per ARI 450","Be sure the rating corresponds to the correct refrigerant","not used in calculations, only for identification and output","Units: W",),0.0,"","",""))
@@ -16811,7 +16811,7 @@ class Refrigeration_Condenser_WaterCooled(ObjectAbstract):
 
 
 
-class Refrigeration_Subcooler(ObjectAbstract):
+class refrigeration_subcooler(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldChoice(self,"Subcooler Type","LiquidSuction",("plan to add ambient subcoolers at future time","",),["Mechanical","LiquidSuction",]))
@@ -16834,7 +16834,7 @@ class Refrigeration_Subcooler(ObjectAbstract):
 
 
 
-class Refrigeration_Compressor(ObjectAbstract):
+class refrigeration_compressor(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Refrigeration Compressor Power Curve Name","",("the input order for the Curve:Bicubic does not","match the ARI 540-2004 Eq. 1 coefficient order","N1 is ARI_C1, N2 is ARI_C2, N3 is ARI_C4, N4 is ARI_C3,","N5 is ARI_C6, N6 is ARI_C5, N7 is ARI_C7, N8 is ARI_C10,","N9 is ARI_C8, N10 is ARI_C9,","N11 is Minimum Suction dewpoint temperature,","N12 is Maximum Suction dewpoint temperature,","N13 is Minimum Discharge dewpoint temperature,","N14 is Maximum Discharge dewpoint temperature","",),"BiCubicCurves"))
@@ -16858,7 +16858,7 @@ class Refrigeration_Compressor(ObjectAbstract):
 
 
 
-class Refrigeration_CompressorList(ObjectAbstract):
+class refrigeration_compressorlist(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Refrigeration Compressor 1 Name","",("Enter the name of a Refrigeration:Compressor object.","",),"RefrigerationCompressorNames"))
@@ -16877,7 +16877,7 @@ class Refrigeration_CompressorList(ObjectAbstract):
 
 
 
-class Refrigeration_System(ObjectAbstract):
+class refrigeration_system(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Refrigerated Case or CaseList Name","","","RefrigerationCaseNames"))
@@ -16905,7 +16905,7 @@ class Refrigeration_System(ObjectAbstract):
 
 
 
-class DemandManager_ExteriorLights(ObjectAbstract):
+class demandmanager_exteriorlights(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Availability Schedule Name","",("If blank, defaults to always on","",),"ScheduleNames"))
@@ -16930,7 +16930,7 @@ class DemandManager_ExteriorLights(ObjectAbstract):
 
 
 
-class DemandManager_Lights(ObjectAbstract):
+class demandmanager_lights(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Availability Schedule Name","",("If blank, defaults to always on","",),"ScheduleNames"))
@@ -16955,7 +16955,7 @@ class DemandManager_Lights(ObjectAbstract):
 
 
 
-class DemandManager_ElectricEquipment(ObjectAbstract):
+class demandmanager_electricequipment(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Availability Schedule Name","",("If blank, defaults to always on","",),"ScheduleNames"))
@@ -16980,7 +16980,7 @@ class DemandManager_ElectricEquipment(ObjectAbstract):
 
 
 
-class DemandManager_Thermostats(ObjectAbstract):
+class demandmanager_thermostats(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Availability Schedule Name","",("If blank, defaults to always on","",),"ScheduleNames"))
@@ -17006,7 +17006,7 @@ class DemandManager_Thermostats(ObjectAbstract):
 
 
 
-class DemandManagerAssignmentList(ObjectAbstract):
+class demandmanagerassignmentlist(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldText(self,"Meter Name","",""))
@@ -17031,7 +17031,7 @@ class DemandManagerAssignmentList(ObjectAbstract):
 
 
 
-class Generator_InternalCombustionEngine(ObjectAbstract):
+class generator_internalcombustionengine(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldReal(self,"Rated Power Output",0,"","","","",""))
@@ -17069,7 +17069,7 @@ class Generator_InternalCombustionEngine(ObjectAbstract):
 
 
 
-class Generator_CombustionTurbine(ObjectAbstract):
+class generator_combustionturbine(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldReal(self,"Rated Power Output",0,"","","","",""))
@@ -17110,7 +17110,7 @@ class Generator_CombustionTurbine(ObjectAbstract):
 
 
 
-class Generator_MicroTurbine(ObjectAbstract):
+class generator_microturbine(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldReal(self,"Reference Electrical Power Output",0,"","","",0.0,""))
@@ -17165,7 +17165,7 @@ class Generator_MicroTurbine(ObjectAbstract):
 
 
 
-class Generator_Photovoltaic(ObjectAbstract):
+class generator_photovoltaic(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Surface Name","","","AllShadingAndHTSurfNames"))
@@ -17189,7 +17189,7 @@ class Generator_Photovoltaic(ObjectAbstract):
 
 
 
-class PhotovoltaicPerformance_Simple(ObjectAbstract):
+class photovoltaicperformance_simple(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldReal(self,"Fraction of Surface Area with Active Solar Cells",0,"",0.0,1.0,"",""))
@@ -17210,7 +17210,7 @@ class PhotovoltaicPerformance_Simple(ObjectAbstract):
 
 
 
-class PhotovoltaicPerformance_EquivalentOne_Diode(ObjectAbstract):
+class photovoltaicperformance_equivalentone_diode(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldChoice(self,"Cell type","","",["CrystallineSilicon","AmorphousSilicon",]))
@@ -17245,7 +17245,7 @@ class PhotovoltaicPerformance_EquivalentOne_Diode(ObjectAbstract):
 
 
 
-class PhotovoltaicPerformance_Sandia(ObjectAbstract):
+class photovoltaicperformance_sandia(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldReal(self,"Active Area","1.0",("(m2, single module)","Units: m2",),0.0,"","",""))
@@ -17300,7 +17300,7 @@ class PhotovoltaicPerformance_Sandia(ObjectAbstract):
 
 
 
-class Generator_FuelCell(ObjectAbstract):
+class generator_fuelcell(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldText(self,"Power Module Name","",("Enter then name of a Generator:FuelCell:PowerModule object.","",)))
@@ -17327,7 +17327,7 @@ class Generator_FuelCell(ObjectAbstract):
 
 
 
-class Generator_FuelCell_PowerModule(ObjectAbstract):
+class generator_fuelcell_powermodule(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldChoice(self,"Efficiency Curve Mode","","",["Annex42","Normalized",]))
@@ -17376,7 +17376,7 @@ class Generator_FuelCell_PowerModule(ObjectAbstract):
 
 
 
-class Generator_FuelCell_AirSupply(ObjectAbstract):
+class generator_fuelcell_airsupply(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldText(self,"Air Inlet Node Name","",""))
@@ -17406,7 +17406,7 @@ class Generator_FuelCell_AirSupply(ObjectAbstract):
 
 
 
-class Generator_FuelCell_WaterSupply(ObjectAbstract):
+class generator_fuelcell_watersupply(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Reformer Water Flow Rate Function of Fuel Rate Curve Name","","","QuadraticCurves"))
@@ -17429,7 +17429,7 @@ class Generator_FuelCell_WaterSupply(ObjectAbstract):
 
 
 
-class Generator_FuelCell_AuxiliaryHeater(ObjectAbstract):
+class generator_fuelcell_auxiliaryheater(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldReal(self,"Excess Air Ratio",0,"","","","",""))
@@ -17457,7 +17457,7 @@ class Generator_FuelCell_AuxiliaryHeater(ObjectAbstract):
 
 
 
-class Generator_FuelCell_ExhaustGasToWaterHeatExchanger(ObjectAbstract):
+class generator_fuelcell_exhaustgastowaterheatexchanger(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldText(self,"Heat Recovery Water Inlet Node Name","",""))
@@ -17497,7 +17497,7 @@ class Generator_FuelCell_ExhaustGasToWaterHeatExchanger(ObjectAbstract):
 
 
 
-class Generator_FuelCell_ElectricalStorage(ObjectAbstract):
+class generator_fuelcell_electricalstorage(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldChoice(self,"Choice of Model","","",["SimpleEfficiencyWithConstraints",]))
@@ -17521,7 +17521,7 @@ class Generator_FuelCell_ElectricalStorage(ObjectAbstract):
 
 
 
-class Generator_FuelCell_Inverter(ObjectAbstract):
+class generator_fuelcell_inverter(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldChoice(self,"Inverter Efficiency Calculation Mode","","",["Quadratic","Constant",]))
@@ -17541,7 +17541,7 @@ class Generator_FuelCell_Inverter(ObjectAbstract):
 
 
 
-class  Generator_FuelCell_StackCooler(ObjectAbstract):
+class  generator_fuelcell_stackcooler(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldText(self,"Heat Recovery Water Inlet Node Name","",""))
@@ -17578,7 +17578,7 @@ class  Generator_FuelCell_StackCooler(ObjectAbstract):
 
 
 
-class Generator_MicroCHP(ObjectAbstract):
+class generator_microchp(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldText(self,"Performance Parameters Name","",("Enter the name of a Generator:MicroCHP:NonNormalizedParameters object.","",)))
@@ -17602,7 +17602,7 @@ class Generator_MicroCHP(ObjectAbstract):
 
 
 
-class Generator_MicroCHP_NonNormalizedParameters(ObjectAbstract):
+class generator_microchp_nonnormalizedparameters(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldReal(self,"Maximum Electric Power",0,"","","","",""))
@@ -17644,7 +17644,7 @@ class Generator_MicroCHP_NonNormalizedParameters(ObjectAbstract):
 
 
 
-class Generator_FuelSupply(ObjectAbstract):
+class generator_fuelsupply(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldChoice(self,"Fuel Temperature Modeling Mode","","",["TemperatureFromAirNode","Scheduled",]))
@@ -17697,7 +17697,7 @@ class Generator_FuelSupply(ObjectAbstract):
 
 
 
-class ElectricLoadCenter_Generators(ObjectAbstract):
+class electricloadcenter_generators(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Generator 1 Name","","","GeneratorNames"))
@@ -17719,7 +17719,7 @@ class ElectricLoadCenter_Generators(ObjectAbstract):
 
 
 
-class ElectricLoadCenter_Inverter_Simple(ObjectAbstract):
+class electricloadcenter_inverter_simple(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldText(self,"Availability Schedule Name","",""))
@@ -17739,7 +17739,7 @@ class ElectricLoadCenter_Inverter_Simple(ObjectAbstract):
 
 
 
-class ElectricLoadCenter_Inverter_FunctionOfPower(ObjectAbstract):
+class electricloadcenter_inverter_functionofpower(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldText(self,"Availability Schedule Name","",""))
@@ -17765,7 +17765,7 @@ class ElectricLoadCenter_Inverter_FunctionOfPower(ObjectAbstract):
 
 
 
-class ElectricLoadCenter_Inverter_LookUpTable(ObjectAbstract):
+class electricloadcenter_inverter_lookuptable(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldText(self,"Availability Schedule Name","",""))
@@ -17794,7 +17794,7 @@ class ElectricLoadCenter_Inverter_LookUpTable(ObjectAbstract):
 
 
 
-class ElectricLoadCenter_Storage_Simple(ObjectAbstract):
+class electricloadcenter_storage_simple(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldText(self,"Availability Schedule Name","",""))
@@ -17819,7 +17819,7 @@ class ElectricLoadCenter_Storage_Simple(ObjectAbstract):
 
 
 
-class ElectricLoadCenter_Distribution(ObjectAbstract):
+class electricloadcenter_distribution(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Generator List Name","","","GeneratorLists"))
@@ -17843,7 +17843,7 @@ class ElectricLoadCenter_Distribution(ObjectAbstract):
 
 
 
-class WaterUse_Equipment(ObjectAbstract):
+class wateruse_equipment(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldText(self,"End-Use Subcategory","General",""))
@@ -17869,7 +17869,7 @@ class WaterUse_Equipment(ObjectAbstract):
 
 
 
-class WaterUse_Connections(ObjectAbstract):
+class wateruse_connections(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldText(self,"Inlet Node Name","",""))
@@ -17895,7 +17895,7 @@ class WaterUse_Connections(ObjectAbstract):
 
 
 
-class WaterUse_Storage(ObjectAbstract):
+class wateruse_storage(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldText(self,"Water Quality Subcategory","",""))
@@ -17931,7 +17931,7 @@ class WaterUse_Storage(ObjectAbstract):
 
 
 
-class WaterUse_Well(ObjectAbstract):
+class wateruse_well(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Storage Tank Name","","","WaterStorageTankNames"))
@@ -17958,7 +17958,7 @@ class WaterUse_Well(ObjectAbstract):
 
 
 
-class WaterUse_RainCollector(ObjectAbstract):
+class wateruse_raincollector(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldObjectlist(self,"Storage Tank Name","","","WaterStorageTankNames"))
@@ -17980,7 +17980,7 @@ class WaterUse_RainCollector(ObjectAbstract):
 
 
 
-class Curve_Linear(ObjectAbstract):
+class curve_linear(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",("curve = C1 + C2*x","",)))
         self.InsertField(FieldReal(self,"Coefficient1 Constant",0,"","","","",""))
@@ -18004,7 +18004,7 @@ class Curve_Linear(ObjectAbstract):
 
 
 
-class Curve_Quadratic(ObjectAbstract):
+class curve_quadratic(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",("curve = C1 + C2*x + C3*x**2","",)))
         self.InsertField(FieldReal(self,"Coefficient1 Constant",0,"","","","",""))
@@ -18031,7 +18031,7 @@ class Curve_Quadratic(ObjectAbstract):
 
 
 
-class Curve_Cubic(ObjectAbstract):
+class curve_cubic(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",("curve = C1 + C2*x + C3*x**2 + C4*x**3","",)))
         self.InsertField(FieldReal(self,"Coefficient1 Constant",0,"","","","",""))
@@ -18060,7 +18060,7 @@ class Curve_Cubic(ObjectAbstract):
 
 
 
-class Curve_Exponent(ObjectAbstract):
+class curve_exponent(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",("curve = C1 + C2*x**C3","The independent variable x is raised to the C3 power, multiplied by C2, and C1 is added to the result.","",)))
         self.InsertField(FieldReal(self,"Coefficient1 Constant",0,"","","","",""))
@@ -18085,7 +18085,7 @@ class Curve_Exponent(ObjectAbstract):
 
 
 
-class Curve_Biquadratic(ObjectAbstract):
+class curve_biquadratic(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",("curve = C1 + C2*x + C3*x**2 + C4*y + C5*y**2 + C6*x*y","",)))
         self.InsertField(FieldReal(self,"Coefficient1 Constant",0,"","","","",""))
@@ -18118,7 +18118,7 @@ class Curve_Biquadratic(ObjectAbstract):
 
 
 
-class Curve_Bicubic(ObjectAbstract):
+class curve_bicubic(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",("curve = C1 + C2*x + C3*x**2 + C4*y + C5*y**2 + C6*x*y + C7*x**3 + C8*y**3 + C9*x**2*y","+ C10*x*y**2","",)))
         self.InsertField(FieldReal(self,"Coefficient1 Constant",0,"","","","",""))
@@ -18153,7 +18153,7 @@ class Curve_Bicubic(ObjectAbstract):
 
 
 
-class Curve_QuadraticLinear(ObjectAbstract):
+class curve_quadraticlinear(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",("curve = (C1 + C2*x + C3*x**2) + (C4 + C5*x + C6*x**2)*y","",)))
         self.InsertField(FieldReal(self,"Coefficient1 Constant",0,"","","","",""))
@@ -18183,7 +18183,7 @@ class Curve_QuadraticLinear(ObjectAbstract):
 
 
 
-class Curve_Triquadratic(ObjectAbstract):
+class curve_triquadratic(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",("2nd order polynomial in three variable polynomial (all terms)","curve = a0 + a1*x**2 + a2*x + a3*y**2 + a4*y","        + a5*z**2 + a6*z + a7*x**2*y**2 + a8*x*y","        + a9*x*y**2 + a10*x**2*y + a11*x**2*z**2","        + a12*x*z + a13*x*z**2 + a14*x**2*z + a15*y**2*z**2","        + a16*y*z + a17*y*z**2 + a18*y**2*z + a19*x**2*y**2*z**2","        + a20*x**2*y**2*z + a21*x**2*y*z**2 + a22*x*y**2*z**2","        + a23*x**2*y*z + a24*x*y**2*z + a25*x*y*z**2 +a26*x*y*z","",)))
         self.InsertField(FieldReal(self,"Coefficient1 Constant",0,"","","","",""))
@@ -18236,7 +18236,7 @@ class Curve_Triquadratic(ObjectAbstract):
 
 
 
-class FluidProperties_Names(ObjectAbstract):
+class fluidproperties_names(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Fluid 1 Name","",""))
         self.InsertField(FieldChoice(self,"Fluid 1 Type","","",["Refrigerant","Glycol",]))
@@ -18253,7 +18253,7 @@ class FluidProperties_Names(ObjectAbstract):
 
 
 
-class FluidProperties_GlycolConcentrations(ObjectAbstract):
+class fluidproperties_glycolconcentrations(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Fluid 1 Name","",""))
         self.InsertField(FieldChoice(self,"Glycol 1 Name","","",["EthyleneGlycol","PropyleneGlycol",]))
@@ -18299,7 +18299,7 @@ class FluidProperties_GlycolConcentrations(ObjectAbstract):
 
 
 
-class FluidProperties_Temperatures(ObjectFluidProperty):
+class fluidproperties_temperatures(ObjectFluidProperty):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldReal(self,"Temperature 1",0,"","","","",""))
@@ -18565,7 +18565,7 @@ class FluidProperties_Temperatures(ObjectFluidProperty):
 
 
 
-class FluidProperties_Saturated(ObjectFluidProperty):
+class fluidproperties_saturated(ObjectFluidProperty):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldChoice(self,"Fluid Property Type","",("Enthalpy Units are J/kg","Density Units are kg/m3","SpecificHeat Units are J/kg-K","Pressure Units are Pa","",),["Enthalpy     ! Units are J/kg","Density      ! Units are kg/m3","SpecificHeat ! Units are J/kg-K","Pressure     ! Units are Pa",]))
@@ -18836,7 +18836,7 @@ class FluidProperties_Saturated(ObjectFluidProperty):
 
 
 
-class FluidProperties_Superheated(ObjectFluidProperty):
+class fluidproperties_superheated(ObjectFluidProperty):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Fluid Name","",""))
         self.InsertField(FieldChoice(self,"Fluid Property Type","",("Enthalpy Units are J/kg","Density Units are kg/m3","",),["Enthalpy     ! Units are J/kg","Density      ! Units are kg/m3",]))
@@ -19107,7 +19107,7 @@ class FluidProperties_Superheated(ObjectFluidProperty):
 
 
 
-class FluidProperties_Concentration(ObjectFluidProperty):
+class fluidproperties_concentration(ObjectFluidProperty):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Fluid Name","",("should not be any of the defaults (Water, EthyleneGlycol, or PropyleneGlycol)","",)))
         self.InsertField(FieldChoice(self,"Fluid Property Type","",("Density Units are kg/m3","SpecificHeat Units are J/kg-K","Conductivity Units are W/m-K","Viscosity Units are N-s/m2","",),["Density      ! Units are kg/m3","SpecificHeat ! Units are J/kg-K","Conductivity ! Units are W/m-K","Viscosity    ! Units are N-s/m2",]))
@@ -19378,7 +19378,7 @@ class FluidProperties_Concentration(ObjectFluidProperty):
 
 
 
-class CurrencyType(ObjectAbstract):
+class currencytype(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldChoice(self,"Monetary Unit","",("The commonly used three letter currency code for the units of money for the country or region.","Based on ISO 4217 currency codes.  Common currency codes are USD for $ and EUR for Euros.","",),["USD","AFN","ALL","ANG","ARS","AUD","AWG","AZN","BAM","BBD","BGN","BMD","BND","BOB","BRL","BSD","BWP","BYR","BZD","CAD","CHF","CLP","CNY","COP","CRC","CUP","CZK","DKK","DOP","EEK","EGP","EUR","FJD","GBP","GHC","GIP","GTQ","GYD","HKD","HNL","HRK","HUF","IDR","ILS","IMP","INR","IRR","ISK","JEP","JMD","JPY","KGS","KHR","KPW","KRW","KYD","KZT","LAK","LBP","LKR","LRD","LTL","LVL","MKD","MNT","MUR","MXN","MYR","MZN","NAD","NGN","NIO","NOK","NPR","NZD","OMR","PAB","PEN","PHP","PKR","PLN","PYG","QAR","RON","RSD","RUB","SAR","SBD","SCR","SEK","SGD","SHP","SOS","SRD","SVC","SYP","THB","TRL","TRY","TTD","TVD","TWD","UAH","UYU","UZS","VEF","VND","XCD","YER","ZAR","ZWD",]))
 
@@ -19395,7 +19395,7 @@ class CurrencyType(ObjectAbstract):
 
 
 
-class ComponentCost_Adjustments(ObjectAbstract):
+class componentcost_adjustments(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldReal(self,"Miscellaneous Cost per Conditioned Area",0,("based on conditioned floor area","for cost not accounted for in current line item cost model","Units: $/m2",),"","","",""))
         self.InsertField(FieldReal(self,"Design and Engineering Fees",0,"","","","",""))
@@ -19416,7 +19416,7 @@ class ComponentCost_Adjustments(ObjectAbstract):
 
 
 
-class ComponentCost_Reference(ObjectAbstract):
+class componentcost_reference(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldReal(self,"Reference Building Line Item Costs",0,("should be comparable to the components in current line item cost model","Units: $",),"","","",""))
         self.InsertField(FieldReal(self,"Reference Building Miscellaneous Cost per Conditioned Area",0,("based on conditioned floor area","for cost not accounted for in reference line item costs","Units: $/m2",),"","","",""))
@@ -19438,7 +19438,7 @@ class ComponentCost_Reference(ObjectAbstract):
 
 
 
-class ComponentCost_LineItem(ObjectAbstract):
+class componentcost_lineitem(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldText(self,"Type","",""))
@@ -19473,7 +19473,7 @@ class ComponentCost_LineItem(ObjectAbstract):
 
 
 
-class UtilityCost_Tariff(ObjectAbstract):
+class utilitycost_tariff(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",("The name of the tariff. Tariffs are sometimes called rates. The name is used in identifying","the output results and in associating all of the charges and other objects that make up a tariff.","",)))
         self.InsertField(FieldText(self,"Output Meter Name","",("The name of any standard meter or custom meter or but usually set to either Electricity:Facility or Gas:Facility","",)))
@@ -19503,7 +19503,7 @@ class UtilityCost_Tariff(ObjectAbstract):
 
 
 
-class UtilityCost_Qualify(ObjectAbstract):
+class utilitycost_qualify(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",("Displayed in the report if the tariff does not qualify","",)))
         self.InsertField(FieldText(self,"Tariff Name","",("The name of the UtilityCost:Tariff that is associated with this UtilityCost:Qualify.","",)))
@@ -19525,7 +19525,7 @@ class UtilityCost_Qualify(ObjectAbstract):
 
 
 
-class UtilityCost_Charge_Simple(ObjectAbstract):
+class utilitycost_charge_simple(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Charge Variable Name","",("This is the name associated with the UtilityCost:Charge:Simple object and will appear in the report.","In addition the results of the UtilityCost:Charge:Simple calculation are stored in a variable with the","same name.  That way the results may be used for further calculation.  Spaces are not significant in","Charge variable names. They are removed during the utility bill calculation process.","",)))
         self.InsertField(FieldText(self,"Tariff Name","",""))
@@ -19545,7 +19545,7 @@ class UtilityCost_Charge_Simple(ObjectAbstract):
 
 
 
-class UtilityCost_Charge_Block(ObjectAbstract):
+class utilitycost_charge_block(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Charge Variable Name","",("This is the name associated with the UtilityCost:Charge:Block object and will appear in the report.","In addition the results of the UtilityCost:Charge:Block are stored in a variable with the same name.","That way the results may be used for further calculation.","",)))
         self.InsertField(FieldText(self,"Tariff Name","",""))
@@ -19596,7 +19596,7 @@ class UtilityCost_Charge_Block(ObjectAbstract):
 
 
 
-class UtilityCost_Ratchet(ObjectAbstract):
+class utilitycost_ratchet(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Ratchet Variable Name","",("The name of the ratchet and the name of the result of this single ratchet.","",)))
         self.InsertField(FieldText(self,"Tariff Name","",""))
@@ -19618,7 +19618,7 @@ class UtilityCost_Ratchet(ObjectAbstract):
 
 
 
-class UtilityCost_Variable(ObjectAbstract):
+class utilitycost_variable(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldText(self,"Tariff Name","",""))
@@ -19646,7 +19646,7 @@ class UtilityCost_Variable(ObjectAbstract):
 
 
 
-class UtilityCost_Computation(ObjectAbstract):
+class utilitycost_computation(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldText(self,"Tariff Name","",""))
@@ -19692,7 +19692,7 @@ class UtilityCost_Computation(ObjectAbstract):
 
 
 
-class Output_Reports(ObjectSingleLine):
+class output_reports(ObjectSingleLine):
     def CreateFields(self) :
         self.InsertField(FieldChoice(self,"Type of Report","","",["VariableDictionary","Surfaces","Construction","Schedules","Materials",]))
         self.InsertField(FieldChoice(self,"Report Name","",("(DXF,DXF:WireFrame,Lines,Details,Vertices,DetailsWithVertices) applicable to key=Surfaces","(Hourly,Timestep) applicable to key=Schedule Names","(IDF, only for VariableDictionary--will print available variables in IDF style with hourly frequency)","",),["DXF","DXF:WireFrame","VRML","Lines","Details","Vertices","DetailsWithVertices","ViewFactorInfo","Hourly","Timestep","IDF",]))
@@ -19711,7 +19711,7 @@ class Output_Reports(ObjectSingleLine):
 
 
 
-class Output_VariableDictionary(ObjectAbstract):
+class output_variabledictionary(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldChoice(self,"Key Field","","",["IDF","regular",]))
         self.InsertField(FieldChoice(self,"Sort Option","","",["Name","Unsorted",]))
@@ -19728,7 +19728,7 @@ class Output_VariableDictionary(ObjectAbstract):
 
 
 
-class Output_Surfaces_List(ObjectAbstract):
+class output_surfaces_list(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldChoice(self,"Report Type","",("(IDF, only for Surfaces, Lines report -- will print transformed coordinates in IDF style)","",),["Details","Vertices","DetailsWithVertices","ViewFactorInfo","Lines","IDF",]))
 
@@ -19744,7 +19744,7 @@ class Output_Surfaces_List(ObjectAbstract):
 
 
 
-class Output_Surfaces_Drawing(ObjectAbstract):
+class output_surfaces_drawing(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldChoice(self,"Report Type","","",["DXF","DXF:WireFrame","VRML",]))
         self.InsertField(FieldChoice(self,"Report Specifications 1","","",["Triangulate3DFace","ThickPolyline","RegularPolyline","Lines","Polylines",]))
@@ -19762,7 +19762,7 @@ class Output_Surfaces_Drawing(ObjectAbstract):
 
 
 
-class Output_Schedules(ObjectAbstract):
+class output_schedules(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldChoice(self,"Key Field","","",["Hourly","Timestep",]))
 
@@ -19778,7 +19778,7 @@ class Output_Schedules(ObjectAbstract):
 
 
 
-class Output_Constructions(ObjectAbstract):
+class output_constructions(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldChoice(self,"Details Type 1","","",["Constructions","Materials",]))
         self.InsertField(FieldChoice(self,"Details Type 2","","",["Constructions","Materials",]))
@@ -19794,7 +19794,7 @@ class Output_Constructions(ObjectAbstract):
 
 
 
-class OutputControl_SurfaceColorScheme(ObjectAbstract):
+class outputcontrol_surfacecolorscheme(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",("choose a name or use one of the DataSets","",)))
         self.InsertField(FieldChoice(self,"Drawing Element 1 Type","","",["Text","Walls","Windows","GlassDoors","Doors","Roofs","Floors","DetachedBuildingShades","DetachedFixedShades","AttachedBuildingShades","Photovoltaics","TubularDaylightDomes","TubularDaylightDiffusers","DaylightReferencePoint1","DaylightReferencePoint2",]))
@@ -19842,7 +19842,7 @@ class OutputControl_SurfaceColorScheme(ObjectAbstract):
 
 
 
-class Output_Table_SummaryReports(ObjectAbstract):
+class output_table_summaryreports(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldChoice(self,"Report 1 Name","","",["AllSummary","AllMonthly","AllSummaryAndMonthly","AnnualBuildingUtilityPerformanceSummary","InputVerificationandResultsSummary","DemandEndUseComponentsSummary","ClimaticDataSummary","EquipmentSummary","EnvelopeSummary","SurfaceShadowingSummary","ShadingSummary","LightingSummary","HVACSizingSummary","SystemSummary","ComponentSizingSummary","OutdoorAirSummary","ObjectCountSummary","ComponentCostEconomicsSummary","ZoneCoolingSummaryMonthly","ZoneHeatingSummaryMonthly","ZoneElectricSummaryMonthly","SpaceGainsMonthly","PeakSpaceGainsMonthly","SpaceGainComponentsAtCoolingPeakMonthly","EnergyConsumptionElectricityNaturalGasMonthly","EnergyConsumptionElectricityGeneratedPropaneMonthly","EnergyConsumptionDieselFuelOilMonthly","EnergyConsumptionDistrictHeatingCoolingMonthly","EnergyConsumptionCoalGasolineMonthly","EndUseEnergyConsumptionElectricityMonthly","EndUseEnergyConsumptionNaturalGasMonthly","EndUseEnergyConsumptionDieselMonthly","EndUseEnergyConsumptionFuelOilMonthly","EndUseEnergyConsumptionCoalMonthly","EndUseEnergyConsumptionPropaneMonthly","EndUseEnergyConsumptionGasolineMonthly","PeakEnergyEndUseElectricityPart1Monthly","PeakEnergyEndUseElectricityPart2Monthly","ElectricComponentsOfPeakDemandMonthly","PeakEnergyEndUseNaturalGasMonthly","PeakEnergyEndUseDieselMonthly","PeakEnergyEndUseFuelOilMonthly","PeakEnergyEndUseCoalMonthly","PeakEnergyEndUsePropaneMonthly","PeakEnergyEndUseGasolineMonthly","SetpointsNotMetWithTemperaturesMonthly","ComfortReportSimple55Monthly","UnglazedTranspiredSolarCollectorSummaryMonthly","OccupantComfortDataSummaryMonthly","ChillerReportMonthly","TowerReportMonthly","BoilerReportMonthly","DXReportMonthly","WindowReportMonthly","WindowEnergyReportMonthly","WindowZoneSummaryMonthly","WindowEnergyZoneSummaryMonthly","AverageOutdoorConditionsMonthly","OutdoorConditionsMaximumDryBulbMonthly","OutdoorConditionsMinimumDryBulbMonthly","OutdoorConditionsMaximumWetBulbMonthly","OutdoorConditionsMaximumDewPointMonthly","OutdoorGroundConditionsMonthly","WindowACReportMonthly","WaterHeaterReportMonthly","GeneratorReportMonthly","DaylightingReportMonthly","CoilReportMonthly","PlantLoopDemandReportMonthly","FanReportMonthly","PumpReportMonthly","CondLoopDemandReportMonthly","ZoneTemperatureOscillationReportMonthly","AirLoopSystemEnergyAndWaterUseMonthly","AirLoopSystemComponentLoadsMonthly","AirLoopSystemComponentEnergyUseMonthly","MechanicalVentilationLoadsMonthly",]))
         self.InsertField(FieldChoice(self,"Report 2 Name","","",["AllSummary","AllMonthly","AllSummaryAndMonthly","AnnualBuildingUtilityPerformanceSummary","InputVerificationandResultsSummary","DemandEndUseComponentsSummary","ClimaticDataSummary","EquipmentSummary","EnvelopeSummary","SurfaceShadowingSummary","ShadingSummary","LightingSummary","HVACSizingSummary","SystemSummary","ComponentSizingSummary","OutdoorAirSummary","ObjectCountSummary","ComponentCostEconomicsSummary","ZoneCoolingSummaryMonthly","ZoneHeatingSummaryMonthly","ZoneElectricSummaryMonthly","SpaceGainsMonthly","PeakSpaceGainsMonthly","SpaceGainComponentsAtCoolingPeakMonthly","EnergyConsumptionElectricityNaturalGasMonthly","EnergyConsumptionElectricityGeneratedPropaneMonthly","EnergyConsumptionDieselFuelOilMonthly","EnergyConsumptionDistrictHeatingCoolingMonthly","EnergyConsumptionCoalGasolineMonthly","EndUseEnergyConsumptionElectricityMonthly","EndUseEnergyConsumptionNaturalGasMonthly","EndUseEnergyConsumptionDieselMonthly","EndUseEnergyConsumptionFuelOilMonthly","EndUseEnergyConsumptionCoalMonthly","EndUseEnergyConsumptionPropaneMonthly","EndUseEnergyConsumptionGasolineMonthly","PeakEnergyEndUseElectricityPart1Monthly","PeakEnergyEndUseElectricityPart2Monthly","ElectricComponentsOfPeakDemandMonthly","PeakEnergyEndUseNaturalGasMonthly","PeakEnergyEndUseDieselMonthly","PeakEnergyEndUseFuelOilMonthly","PeakEnergyEndUseCoalMonthly","PeakEnergyEndUsePropaneMonthly","PeakEnergyEndUseGasolineMonthly","SetpointsNotMetWithTemperaturesMonthly","ComfortReportSimple55Monthly","UnglazedTranspiredSolarCollectorSummaryMonthly","OccupantComfortDataSummaryMonthly","ChillerReportMonthly","TowerReportMonthly","BoilerReportMonthly","DXReportMonthly","WindowReportMonthly","WindowEnergyReportMonthly","WindowZoneSummaryMonthly","WindowEnergyZoneSummaryMonthly","AverageOutdoorConditionsMonthly","OutdoorConditionsMaximumDryBulbMonthly","OutdoorConditionsMinimumDryBulbMonthly","OutdoorConditionsMaximumWetBulbMonthly","OutdoorConditionsMaximumDewPointMonthly","OutdoorGroundConditionsMonthly","WindowACReportMonthly","WaterHeaterReportMonthly","GeneratorReportMonthly","DaylightingReportMonthly","CoilReportMonthly","PlantLoopDemandReportMonthly","FanReportMonthly","PumpReportMonthly","CondLoopDemandReportMonthly","ZoneTemperatureOscillationReportMonthly","AirLoopSystemEnergyAndWaterUseMonthly","AirLoopSystemComponentLoadsMonthly","AirLoopSystemComponentEnergyUseMonthly","MechanicalVentilationLoadsMonthly",]))
@@ -19872,7 +19872,7 @@ class Output_Table_SummaryReports(ObjectAbstract):
 
 
 
-class Output_Table_TimeBins(ObjectAbstract):
+class output_table_timebins(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Key Value","*",("use '*' (without quotes) to apply this variable to all keys","",)))
         self.InsertField(FieldObjectlist(self,"Variable Name","","","autoRDDvariableMeter"))
@@ -19893,7 +19893,7 @@ class Output_Table_TimeBins(ObjectAbstract):
 
 
 
-class Output_Table_Monthly(ObjectAbstract):
+class output_table_monthly(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldInt(self,"Digits After Decimal","2","",0,10,"",""))
@@ -19961,7 +19961,7 @@ class Output_Table_Monthly(ObjectAbstract):
 
 
 
-class OutputControl_Table_Style(ObjectAbstract):
+class outputcontrol_table_style(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldChoice(self,"Column Separator","","",["Comma","Tab","Fixed","HTML","CommaAndHTML","TabAndHTML","All",]))
         self.InsertField(FieldChoice(self,"Unit Conversion","","",["None","JtoKWH","JtoMJ","JtoGJ","InchPound",]))
@@ -19978,7 +19978,7 @@ class OutputControl_Table_Style(ObjectAbstract):
 
 
 
-class Output_Variable(ObjectSingleLine):
+class output_variable(ObjectSingleLine):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Key Value","*",("use '*' (without quotes) to apply this variable to all keys","",)))
         self.InsertField(FieldObjectlist(self,"Variable Name","","","autoRDDvariable"))
@@ -19998,7 +19998,7 @@ class Output_Variable(ObjectSingleLine):
 
 
 
-class Output_Meter(ObjectSingleLine):
+class output_meter(ObjectSingleLine):
     def CreateFields(self) :
         self.InsertField(FieldObjectlist(self,"Name","",("Form is EnergyUseType:..., e.g. Electricity:* for all Electricity meters","or EndUse:..., e.g. GeneralLights:* for all General Lights","Report Meter puts results on both the eplusout.mtr and eplusout.eso files","",),"autoRDDmeter"))
         self.InsertField(FieldChoice(self,"Reporting Frequency","",("Timestep refers to the zone Timestep/Number of Timesteps in hour value","RunPeriod, Environment, and Annual are the same","RunPeriod, Environment, and Annual are synonymous","",),["Timestep","Hourly","Daily","Monthly","RunPeriod","Environment","Annual",]))
@@ -20016,7 +20016,7 @@ class Output_Meter(ObjectSingleLine):
 
 
 
-class Output_Meter_MeterFileOnly(ObjectSingleLine):
+class output_meter_meterfileonly(ObjectSingleLine):
     def CreateFields(self) :
         self.InsertField(FieldObjectlist(self,"Name","",("Form is EnergyUseType:..., e.g. Electricity:* for all Electricity meters","or EndUse:..., e.g. GeneralLights:* for all General Lights","Report MeterFileOnly puts results on the eplusout.mtr file only","",),"autoRDDmeter"))
         self.InsertField(FieldChoice(self,"Reporting Frequency","",("Timestep refers to the zone Timestep/Number of Timesteps in hour value","RunPeriod, Environment, and Annual are the same","RunPeriod, Environment, and Annual are synonymous","",),["Timestep","Hourly","Daily","Monthly","RunPeriod","Environment","Annual",]))
@@ -20034,7 +20034,7 @@ class Output_Meter_MeterFileOnly(ObjectSingleLine):
 
 
 
-class Output_Meter_Cumulative(ObjectSingleLine):
+class output_meter_cumulative(ObjectSingleLine):
     def CreateFields(self) :
         self.InsertField(FieldObjectlist(self,"Name","",("Form is EnergyUseType:..., e.g. Electricity:* for all Electricity meters","or EndUse:..., e.g. GeneralLights:* for all General Lights","Report Meter puts results on both the eplusout.mtr and eplusout.eso files","",),"autoRDDmeter"))
         self.InsertField(FieldChoice(self,"Reporting Frequency","",("Timestep refers to the zone Timestep/Number of Timesteps in hour value","RunPeriod, Environment, and Annual are the same","RunPeriod, Environment, and Annual are synonymous","",),["Timestep","Hourly","Daily","Monthly","RunPeriod","Environment","Annual",]))
@@ -20052,7 +20052,7 @@ class Output_Meter_Cumulative(ObjectSingleLine):
 
 
 
-class Output_Meter_Cumulative_MeterFileOnly(ObjectSingleLine):
+class output_meter_cumulative_meterfileonly(ObjectSingleLine):
     def CreateFields(self) :
         self.InsertField(FieldObjectlist(self,"Name","",("Form is EnergyUseType:..., e.g. Electricity:* for all Electricity meters","or EndUse:..., e.g. GeneralLights:* for all General Lights","Report MeterFileOnly puts results on the eplusout.mtr file only","",),"autoRDDmeter"))
         self.InsertField(FieldChoice(self,"Reporting Frequency","",("Timestep refers to the zone Timestep/Number of Timesteps in hour value","RunPeriod, Environment, and Annual are the same","RunPeriod, Environment, and Annual are synonymous","",),["Timestep","Hourly","Daily","Monthly","RunPeriod","Environment","Annual",]))
@@ -20070,7 +20070,7 @@ class Output_Meter_Cumulative_MeterFileOnly(ObjectSingleLine):
 
 
 
-class Meter_Custom(ObjectAbstract):
+class meter_custom(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldChoice(self,"Fuel Type","","",["Electricity","NaturalGas","PropaneGas","FuelOil#1","FuelOil#2","Coal","Diesel","Gasoline","Water","Generic",]))
@@ -20091,7 +20091,7 @@ class Meter_Custom(ObjectAbstract):
 
 
 
-class Meter_CustomDecrement(ObjectAbstract):
+class meter_customdecrement(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Name","",""))
         self.InsertField(FieldChoice(self,"Fuel Type","","",["Electricity","NaturalGas","PropaneGas","FuelOil#1","FuelOil#2","Coal","Diesel","Gasoline","Water","Generic",]))
@@ -20113,7 +20113,7 @@ class Meter_CustomDecrement(ObjectAbstract):
 
 
 
-class Output_SQLite(ObjectAbstract):
+class output_sqlite(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldChoice(self,"Option Type","Simple","",["Simple",]))
 
@@ -20128,7 +20128,7 @@ class Output_SQLite(ObjectAbstract):
 
 
 
-class Output_EnvironmentalImpactFactors(ObjectAbstract):
+class output_environmentalimpactfactors(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldChoice(self,"Reporting Frequency","","",["Timestep","Hourly","Daily","Monthly","RunPeriod",]))
 
@@ -20144,7 +20144,7 @@ class Output_EnvironmentalImpactFactors(ObjectAbstract):
 
 
 
-class EnvironmentalImpactFactors(ObjectAbstract):
+class environmentalimpactfactors(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldReal(self,"District Heating Efficiency","0.3",("District heating efficiency used when converted to natural gas","",),"",1.0,0.0,""))
         self.InsertField(FieldReal(self,"District Cooling COP","3.0",("District cooling COP used when converted to electricity","",),"","",0.0,""))
@@ -20165,7 +20165,7 @@ class EnvironmentalImpactFactors(ObjectAbstract):
 
 
 
-class FuelFactors(ObjectAbstract):
+class fuelfactors(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldChoice(self,"Existing Fuel Resource Name","","",["Electricity","NaturalGas","FuelOil#1","FuelOil#2","Coal","Gasoline","Propane","Diesel",]))
         self.InsertField(FieldText(self,"Units of Measure","",""))
@@ -20217,7 +20217,7 @@ class FuelFactors(ObjectAbstract):
 
 
 
-class Output_Diagnostics(ObjectAbstract):
+class output_diagnostics(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldChoice(self,"Key 1","","",["DisplayAllWarnings","DisplayExtraWarnings","DisplayUnusedSchedules","DisplayUnusedObjects","DisplayAdvancedReportVariables","DisplayZoneAirHeatBalanceOffBalance","DoNotMirrorDetachedShading","DisplayWeatherMissingDataWarnings",]))
         self.InsertField(FieldChoice(self,"Key 2","","",["DisplayAllWarnings","DisplayExtraWarnings","DisplayUnusedSchedules","DisplayUnusedObjects","DisplayAdvancedReportVariables","DisplayZoneAirHeatBalanceOffBalance","DoNotMirrorDetachedShading","DisplayWeatherMissingDataWarnings",]))
@@ -20234,7 +20234,7 @@ class Output_Diagnostics(ObjectAbstract):
 
 
 
-class Output_DebuggingData(ObjectSingleLine):
+class output_debuggingdata(ObjectSingleLine):
     def CreateFields(self) :
         self.InsertField(FieldReal(self,"Report Debugging Data",0,("value=1 then yes all others no","",),"","","",""))
         self.InsertField(FieldReal(self,"Report During Warmup",0,("value=1 then always even during warmup  all others no","",),"","","",""))
@@ -20251,7 +20251,7 @@ class Output_DebuggingData(ObjectSingleLine):
 
 
 
-class Output_PreprocessorMessage(ObjectAbstract):
+class output_preprocessormessage(ObjectAbstract):
     def CreateFields(self) :
         self.InsertField(FieldText(self,"Preprocessor Name","",""))
         self.InsertField(FieldChoice(self,"Error Severity","",("Depending on type, InputProcessor may terminate the program.","",),["Information","Warning","Severe","Fatal",]))

@@ -135,6 +135,7 @@ class idfData(QtCore.QObject):
 
     def insertRecordByClassname(self,classname):
         evalstr = 'iddclass.'+ re.sub(r'[:-]','_',str(classname)) +'()'
+        evalstr = evalstr.lower()
         classinstance = eval (evalstr)
         self.insertRecord(classinstance)
 
