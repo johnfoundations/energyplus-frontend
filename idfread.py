@@ -114,7 +114,11 @@ class idfRead :
 
     def createInstances(self):
         res = True
+
         for params in self.rawclasses:
+            if len(params) == 1:
+                print 'not valid class',params[0]
+                continue
             if params[0] == 'Version':
                 if params[1].find('3.1') == -1:
                     print 'wrong version number'

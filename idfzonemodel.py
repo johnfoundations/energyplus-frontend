@@ -31,7 +31,6 @@ import objectclass
 class idfZoneModel(QtCore.QAbstractItemModel):
     def __init__(self,scene,idf,parent = None):
         print 'init'
-        self.zone = zoneclass
         self.scene = scene
         self.idf = idf
         self.parentmodel = parent
@@ -44,12 +43,28 @@ class idfZoneModel(QtCore.QAbstractItemModel):
     def reset(self):
         self.createZoneTree()
         self.populateScene()
+        self.assignScene(0,0,0)
         QtCore.QAbstractItemModel.reset(self)
     
     def populateScene(self):
-        for z in self.zoneroot:
-            
+        #inserts graphicsitems into scene
+        self.scene.clear()
+        for z in self.zoneroot.childItems:
+            if z.data.idfclass.getName() == 'Undefined':
+                continue
 
+            for s in z.childItems:
+                self.scene.addItem(s.data.graphicitem)
+            
+    def assignScene(self,x,y,z):
+        #degrees rotation around axes
+        for z in self.zoneroot.childItems:
+            if z.data.idfclass.getName() == 'Undefined':
+                continue
+
+            for s in z.childItems:
+                s.data.setPolygon(x,y,z)
+        
 
     def createZoneTree(self):
         buildingclass = None
@@ -102,7 +117,7 @@ class idfZoneModel(QtCore.QAbstractItemModel):
             #create treeitem
 #            if l[0] == None:
 #                continue
-            print k,l
+#            print k,l
             if k == 'Undefined':
                 zti = undefnode
             else:
@@ -135,11 +150,11 @@ class idfZoneModel(QtCore.QAbstractItemModel):
     def getZone(self,zname):
         for z in self.zoneroot.childItems:
             if z.data.idfclass.getClassnameIDD() == 'Zone' and z.data.idfclass.getName() == zname:
-                return z.data.idfclass
+                return z,z.data.idfclass
 
-        return None
+        return None,None
 
-
+    
 
 
 

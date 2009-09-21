@@ -32,6 +32,7 @@ class idfmodeltest(QtGui.QMainWindow):
         QtGui.QMainWindow.__init__(self)
         self.tabs = QtGui.QTabWidget()
         self.idfmodel = None
+        self.zoom = 10
 
         self.createActions()
         self.createMenus()
@@ -96,6 +97,34 @@ class idfmodeltest(QtGui.QMainWindow):
         self.delobj.setStatusTip('Delete Selected Object')
         self.connect(self.delobj, QtCore.SIGNAL('triggered()'), self.delobject)
 
+        self.zoomin = QtGui.QAction('Zoom In', self)
+        self.zoomin.setShortcut('Ctrl+I')
+        self.zoomin.setStatusTip('Zoom In')
+        self.connect(self.zoomin, QtCore.SIGNAL('triggered()'), self.zoominslot)
+
+        self.zoomout = QtGui.QAction('Zoom Out', self)
+        self.zoomout.setShortcut('Ctrl+T')
+        self.zoomout.setStatusTip('Zoom Out')
+        self.connect(self.zoomout, QtCore.SIGNAL('triggered()'), self.zoomoutslot)
+
+        def zoominslot(self):
+            print 'zoominslot'
+            self.zoom = self.zoom + 0.5
+            self.rescale()
+
+        def zoomoutslot(self):
+            print 'zoomoutslot'
+            self.zoom = self.zoom - 0.5
+            self.rescale()
+
+        def rescale(self):
+            print 'rescale'
+            print self.zoom
+            oldMatrix = self.view.matrix();
+            self.view.resetMatrix();
+            self.view.translate(oldMatrix.dx(), oldMatrix.dy())
+            self.view.scale(self.zoom,self.zoom);
+
 
     def createMenus(self):
         menubar = self.menuBar()
@@ -108,6 +137,8 @@ class idfmodeltest(QtGui.QMainWindow):
 #        objm.addAction(self.newobj)
 #        objm.addAction(self.loadobj)
 #        objm.addAction(self.delobj)
+        filem.addAction(self.zoomin)
+        filem.addAction(self.zoomout)
 
 
     def sizeTree(self):
@@ -145,6 +176,7 @@ class idfmodeltest(QtGui.QMainWindow):
         self.fileName = QtGui.QFileDialog.getOpenFileName(self,"Open IDF File", ".", "*.idf *.IDF");
         self.idf.openIdf(self.fileName)
         self.model.reset()
+        self.rescale()
 
 
     def newobject(self):
@@ -204,6 +236,23 @@ class idfmodeltest(QtGui.QMainWindow):
 
         self.model.sort(column,self.sortorderlist[column])
 
+    def zoominslot(self):
+        print 'zoominslot'
+        self.zoom = self.zoom + 10
+        self.rescale()
+
+    def zoomoutslot(self):
+        print 'zoomoutslot'
+        self.zoom = self.zoom - 10
+        self.rescale()
+
+    def rescale(self):
+        print 'rescale'
+        print self.zoom
+        oldMatrix = self.verticeview.matrix();
+        self.verticeview.resetMatrix();
+        self.verticeview.translate(oldMatrix.dx(), oldMatrix.dy())
+        self.verticeview.scale(self.zoom,self.zoom);
 
 
 

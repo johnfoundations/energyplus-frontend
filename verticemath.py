@@ -23,6 +23,7 @@ import math
 import iddclass
 import numpy
 
+
 verticeclasses = "BuildingSurface:Detailed","Wall:Detailed","RoofCeiling:Detailed","Floor:Detailed","FenestrationSurface:Detailed",\
                  "Shading:Zone:Detailed","Shading:Site:Detailed","Shading:Building:Detailed"
         #all have vertices
@@ -32,10 +33,12 @@ zoneclasses = ("Zone",)
 surfaceelementclasses = "GlazedDoor:Interzone","GlazedDoor","Door","Door:Interzone","Window:Interzone","Window"
         #multiplier,xy,length,height
 
-azimuthtiltclasses = "Ceiling:Adiabatic","Ceiling:Interzone","Floor:GroundContact","Floor:Adiabatic","Floor:Interzone",\
-                     "Roof","Wall:Exterior","Wall:Adiabatic","Wall:Underground","Wall:Interzone","Shading:Site",\
+azimuthwallclasses = "Wall:Exterior","Wall:Adiabatic","Wall:Underground","Wall:Interzone","Shading:Site",\
                      "Shading:Building"
         #azimuth,tilt,xyz,length,width
+
+azimuthflatclasses = "Ceiling:Adiabatic","Ceiling:Interzone","Floor:GroundContact","Floor:Adiabatic","Floor:Interzone",\
+                     "Roof"
 
 
 class shape():
@@ -49,8 +52,11 @@ class shape():
         if self.idfclass.getClassnameIDD() in surfaceelementclasses:
             self.buildSurfaceElementPolygons()
 
-        if self.idfclass.getClassnameIDD() in azimuthtiltclasses:
-            self.buildSimplePolygons()
+        if self.idfclass.getClassnameIDD() in azimuthwallclasses:
+            self.buildWallPolygons()
+
+#        if self.idfclass.getClassnameIDD() in azimuthflatclasses:
+#            self.buildFlatPolygons()
 
         if self.idfclass.getClassnameIDD() in zoneclasses:
             self.buildZonePolygons()
@@ -126,11 +132,11 @@ class shape():
                     dindex = c
 
             #resort vertices
-            print 'resort',dindex,vertices
+ #           print 'resort',dindex,vertices
             if dindex > 0:
                 vertices = vertices[dindex:len(vertices)] + vertices[0:dindex]
-            print vertices
-            self.vertices = vertices
+ #           print vertices
+            self.verticelist = vertices
 
         
 
@@ -138,92 +144,121 @@ class shape():
         pass
 
     def buildZonePolygons(self):
+        
         pass
 
-    def buildSimplePolygons(self):
-#        print self.idfclass.getName(), self.idfclass.getClassnameIDD()
-        vertices = [[0,0,0],[0,0,0],[0,0,0],[0,0,0]]
-#        print 'azimuth', self.idfclass.getFieldDataByName('Azimuth Angle')
+    def buildWallPolygons(self):
         azimuth = self.azimuthtoccw(self.idfclass.getFieldDataByName('Azimuth Angle'))
         if azimuth > 360:
             azimuth = azimuth - 360
 #        print azimuth
         azimuth = math.radians(azimuth)
+        print azimuth, 'radians'
+        tilt = math.radians(float(self.idfclass.getFieldDataByName('Tilt Angle')))
+#        print tilt, 'radians'
+        sorigin     = numpy.array([float(self.idfclass.getFieldDataByName('Starting X Coordinate')), \
+                                   float(self.idfclass.getFieldDataByName('Starting Y Coordinate')), \
+                                   float(self.idfclass.getFieldDataByName('Starting Z Coordinate'))])
+
+        length = float(self.idfclass.getFieldDataByName('Length'))
+        height = float(self.idfclass.getFieldDataByName('Height'))
+        self.calculateVertices(sorigin,azimuth,tilt,length,height)
+
+
+    def buildFlatPolygons(self):
+        azimuth = math.radians(0)
 #        print azimuth, 'radians'
         tilt = math.radians(float(self.idfclass.getFieldDataByName('Tilt Angle')))
 #        print tilt, 'radians'
-        sorigin     = [float(self.idfclass.getFieldDataByName('Starting X Coordinate')), \
-                       float(self.idfclass.getFieldDataByName('Starting Y Coordinate')), \
-                       float(self.idfclass.getFieldDataByName('Starting Z Coordinate'))]
+        sorigin     = numpy.array([float(self.idfclass.getFieldDataByName('Starting X Coordinate')), \
+                                   float(self.idfclass.getFieldDataByName('Starting Y Coordinate')), \
+                                   float(self.idfclass.getFieldDataByName('Starting Z Coordinate'))])
 
-        vertices[0] = sorigin
         length = float(self.idfclass.getFieldDataByName('Length'))
-        height = self.idfclass.getFieldDataByName('Width')
-        if height == None:
-            height = self.idfclass.getFieldDataByName('Height')
-        height = float(height)
+        width = float(self.idfclass.getFieldDataByName('Width'))
+        self.calculateVertices(sorigin,azimuth,tilt,length,width)
+
+
+    def calculateVertices(self,scoords,azimuth,tilt,length,height):
         #origin lower left. clockwise
-        #calculate lower right
-        vertices[3][0] = (math.cos(azimuth)*length)
-        vertices[3][1] = (math.sin(azimuth)*length)
-        vertices[3][2] = 0.0
-        #tilt. 0 faces up, 180 faces down
-        vertices[1][0] = (-vertices[3][1] * height / length) * math.cos(tilt)
-        vertices[1][1] = (vertices[3][0] * height / length) * math.cos(tilt)
-        vertices[1][2] = math.sin(tilt) * height
-        #3rd
-        vertices[2][0] = vertices[3][0]
-        vertices[2][1] = vertices[3][1]
-        vertices[2][2] = vertices[1][2]
+        vertices = numpy.array([[0.0,0.0,0.0],[0.0,0.0,0.0],[0.0,0.0,0.0],[0.0,0.0,0.0]])
+        vertices[1][0] = vertices[0][0]
+        vertices[1][1] = vertices[0][1] + height
+        vertices[1][2] = vertices[0][2]
 
+        vertices[2][0] = vertices[0][0] + length
+        vertices[2][1] = vertices[0][1] + height
+        vertices[2][2] = vertices[0][2]
 
+        vertices[3][0] = vertices[0][0] + length
+        vertices[3][1] = vertices[0][1]
+        vertices[3][2] = vertices[0][2]
+
+        print 'vertices 1'
+        self.printVerticeList(vertices)
+        print
         #relative vertice
         if self.surfaceitem.getGeometryRules()["Rectangular Surface Coordinate System"] == "Relative":
             origin = self.getZoneOrigin()
-        else: origin = [0,0,0]
+        else:
+            origin = [0,0,0]
 
+        vertices = self.rotateVerticeList(vertices,tilt,0.0,azimuth)
+
+        print 'rotated matrix'
+#        self.printVerticeList(vertices)
+        print vertices
+
+        for v in vertices:
+            self.verticelist.append(self.matrixAsVertice(v))
+
+        self.printVerticeList(self.verticelist)
+
+
+        self.verticelist[0][0] = origin[0] + scoords[0]
+        self.verticelist[0][1] = origin[1] + scoords[1]
+        self.verticelist[0][2] = origin[2] + scoords[2]
+        
+        self.verticelist[1][0] = self.verticelist[1][0] + origin[0] + scoords[0]
+        self.verticelist[1][1] = self.verticelist[1][1] + origin[1] + scoords[1]
+        self.verticelist[1][2] = self.verticelist[1][2] + origin[2] + scoords[2]
+        
+        self.verticelist[2][0] = self.verticelist[2][0] + origin[0] + scoords[0]
+        self.verticelist[2][1] = self.verticelist[2][1] + origin[1] + scoords[1]
+        self.verticelist[2][2] = self.verticelist[2][2] + origin[2] + scoords[2]
+        
+        self.verticelist[3][0] = self.verticelist[3][0] + origin[0] + scoords[0]
+        self.verticelist[3][1] = self.verticelist[3][1] + origin[1] + scoords[1]
+        self.verticelist[3][2] = self.verticelist[3][2] + origin[2] + scoords[2]
+        
         print self.idfclass.getClassnameIDD(),self.idfclass.getName()
-        print origin
-        print '%f,%f,%f' % (origin[0],origin[1],origin[2])
-        print '%f,%f,%f' % (vertices[0][0],vertices[0][1],vertices[0][2])
-        print '%f,%f,%f' % (vertices[1][0],vertices[1][1],vertices[1][2])
-        print '%f,%f,%f' % (vertices[2][0],vertices[2][1],vertices[2][2])
-        print '%f,%f,%f' % (vertices[3][0],vertices[3][1],vertices[3][2])
-
-
-        vertices[0][0] = origin[0] + sorigin[0]
-        vertices[0][1] = origin[1] + sorigin[1]
-        vertices[0][2] = origin[2] + sorigin[2]
-        
-        vertices[1][0] = vertices[1][0] + origin[0] + sorigin[0]
-        vertices[1][1] = vertices[1][1] + origin[1] + sorigin[1]
-        vertices[1][2] = vertices[1][2] + origin[2] + sorigin[2]
-        
-        vertices[2][0] = vertices[2][0] + origin[0] + sorigin[0]
-        vertices[2][1] = vertices[2][1] + origin[1] + sorigin[1]
-        vertices[2][2] = vertices[2][2] + origin[2] + sorigin[2]
-        
-        vertices[3][0] = vertices[3][0] + origin[0] + sorigin[0]
-        vertices[3][1] = vertices[3][1] + origin[1] + sorigin[1]
-        vertices[3][2] = vertices[3][2] + origin[2] + sorigin[2]
-
-        print '%f,%f,%f' % (vertices[0][0],vertices[0][1],vertices[0][2])
-        print '%f,%f,%f' % (vertices[1][0],vertices[1][1],vertices[1][2])
-        print '%f,%f,%f' % (vertices[2][0],vertices[2][1],vertices[2][2])
-        print '%f,%f,%f' % (vertices[3][0],vertices[3][1],vertices[3][2])
-
-        self.verticelist = vertices
-
-        
-
+        print 'length',length, 'height',height,'tilt', tilt,'azimuth', azimuth
+        self.printVertice(origin)
+        self.printVertice(scoords)
+        print
+        self.printVerticeList(self.verticelist)
+        print
+        print
 
     def getZoneOrigin(self):
         zone = self.surfaceitem.getZone(self.idfclass.getFieldDataByName('Zone Name'))
-        x = float(zone.getFieldDataByName('X Origin'))
-        y = float(zone.getFieldDataByName('Y Origin'))
-        z = float(zone.getFieldDataByName('Z Origin'))
+        if zone[1] == None:
+            return [0.0,0.0,0.0]
+        x = float(zone[1].getFieldDataByName('X Origin'))
+        y = float(zone[1].getFieldDataByName('Y Origin'))
+        z = float(zone[1].getFieldDataByName('Z Origin'))
         return [x,y,x]
 
+    def printVerticeList(self,v):
+        for vv in v:
+            print '%f,%f,%f' % (vv[0],vv[1],vv[2])
+
+    def printVertice(self,vv):
+            print '%f,%f,%f' % (vv[0],vv[1],vv[2])
+            
+    def printMatrix(self,m):
+        for mm in m:
+            print '%f,%f,%f,%f' % (mm[0],mm[1],mm[2],mm[3])
 
 
     def azimuthtoccw(self,azimuth):
@@ -233,38 +268,109 @@ class shape():
         else:
             return a
 
+    def identityMatrix(self):
+        m = numpy.asmatrix(numpy.array([[1,0,0,0],[0,1,0,0],[0,0,1,0],[0,0,0,1]]))
+        return m
 
-    def transform(self,v1,v2):
-        res = [0,0,0]
-        res[0] = v2[0] - v1[0]
-        res[1] = v2[1] - v1[1]
-        res[2] = v2[2] - v1[2]
-        return res
+    def rotationMatrix(self,x,y,z):
+        m = numpy.array([[math.cos(z)*math.cos(y)+math.sin(z)*math.sin(x)*math.sin(y), \
+                          math.sin(z)*math.cos(y)-math.sin(x)*math.sin(y),            \
+                          math.cos(x)*math.sin(z),                                    \
+                          0],                                                          \
+                         [-math.sin(z)*math.cos(x),                                    \
+                          math.sin(z)*math.cos(x),                                     \
+                          math.sin(x),                                                 \
+                          0],                                                          \
+                         [math.sin(z)*math.sin(x)*math.cos(y)-math.cos(z)*math.sin(y), \
+                          -math.cos(z)*math.sin(x)*math.cos(y)-math.sin(z)*math.sin(y),\
+                          math.cos(x)*math.cos(y),                                     \
+                          0],                                                          \
+                         [0,0,0,1]])
+        return m
 
-    def add(self,v1,v2)  :
-        res = [0,0,0]
-        res[0] = v2[0] + v1[0]
-        res[1] = v2[1] + v1[1]
-        res[2] = v2[2] + v1[2]
-        return res
+    def xmatrix(self,x):
+        m = numpy.array([[1.0,0.0,0.0,0.0], \
+                         [0.0,math.cos(x),-math.sin(x),0.0], \
+                         [0.0,math.sin(x),math.cos(x),0.0],  \
+                         [0.0,0.0,0.0,1.0]])
 
-    def mult(self,v1,m):
-        res = [0,0,0]
-        res[0] = v1[0] *m
-        res[1] = v1[1] *m
-        res[2] = v1[2] *m
-        return res
+        return m
+
+    def ymatrix(self,):
+        m = numpy.array([[math.cos(y),0.0,math.sin(y),0.0], \
+                         [0.0,1.0,0.0,0.0], \
+                         [-math.sin(y),0.0,math.cos(y),0.0],  \
+                         [0.0,0.0,0.0,1.0]])
+
+        return m
+
+    def zmatrix(self,z):
+        m = numpy.array([[math.cos(z),-math.sin(z),0.0,0.0], \
+                         [math.sin(z),math.cos(z),0.0,0.0], \
+                         [0.0,0.0,1.0,0.0],  \
+                         [0.0,0.0,0.0,1.0]])
+
+        return m
+
+    def identity(self):
+        return numpy.array([[1.0,0.0,0.0,0.0],[0.0,1.0,0.0,0.0],[0.0,0.0,1.0,0.0],[0.0,0.0,0.0,1.0]])
 
 
-    def getVertices(self,viewpoint):
-        return self.vertices
+            
+    def rotateVerticeList(self,vlist,x,y,z):
+        if x != 0:
+            xm = self.xmatrix(x)
+
+        if y != 0:
+            ym = self.ymatrix(y)
+
+        if z != 0:
+            zm = self.zmatrix(z)
+
+        rlist = []
+        for v in vlist:
+            vm = self.verticeAsMatrix(v)
+            if x != 0:
+                vm = numpy.multiply(vm,xm)
+            if y != 0:
+                vm = numpy.muliply(vm,ym)
+            if z != 0:
+                vm = numpy.multiply(vm,xm)
+            rlist.append(vm)
+
+        return rlist
+            
+            
+                
+        
+        
+    def verticeAsMatrix(self,xyz):
+        m = numpy.array([xyz[0],xyz[1],xyz[2],1.0])
+#        m = numpy.asmatrix(m)
+        return m
+
+    def matrixAsVertice(self,m):
+        return  [m[0][0],m[1][1],m[2][2]]
+        
+
+    def getVertices(self,xrot,yrot,zrot):
+        xylist = []
+        for xyz in self.verticelist:
+            print xyz
+            xy = [xyz[0],xyz[1]]
+            if xy not in xylist:
+                xylist.append(xy)
+#        print 'getVertices',self.idfclass.getName(),self.idfclass.getClassnameIDD()
+#        self.printVerticeList(self.verticelist)
+#        print xylist
+        return xylist
     
 
 if __name__ == "__main__":
     wall = iddclass.Wall_Exterior()
-    walldata = ["Wall:Exterior","test","Construction","Zone",90,90,0,0,0,10,20]
+    walldata = ["Wall:Exterior","test","Construction","Zone",90,90,0,0,0,20,10]
     wall.setData(walldata)
     print wall
-    s = shape(wall,None)
+    s = shape(None,wall)
     
     
