@@ -28,15 +28,16 @@ class surfaceItem():
         self.idfclass = idfclass
         self.surfacemodel = surfacemodel
         self.shape = verticemath.shape(self,self.idfclass)
-        self.graphicitems = graphicitems.surfacePolygonItem()
+        self.graphicitem = graphicitems.surfacePolygonItem()
+        
 
     def getGeometryRules(self):
         return self.surfacemodel.getGeometryRules()
 
 
     def getZone(self,zname):
-        if self.idfclass.getClassnameIDD() == 'Zone' and self.idfclass.getName() == zname:
-            return self.idfclass
-        else:
-            return self.surfacemodel.getZone(zname)
-            
+        return self.surfacemodel.getZone(zname)
+
+    def setPolygon(self,x,y,z):
+        self.graphicitem.setToolTip(self.idfclass.getClassnameIDD() + self.idfclass.getName())
+        self.graphicitem.setPolygon(self.shape.getVertices(x,y,z))

@@ -37,10 +37,12 @@ class surfacePolygonItem(QtGui.QGraphicsPolygonItem):
 
     def setPolygon(self,polygon):
         #reverse y in array
+        p = QtGui.QPolygonF()
         for e in polygon:
             e[1] = e[1] * -1
+            p.append(QtCore.QPointF(e[0],e[1]))
 
-        QtGui.QGraphicsPolygonItem.setPolygon(QtGui.QPolygonF(polygon))
+        QtGui.QGraphicsPolygonItem.setPolygon(self,p)
 
 
 
