@@ -194,25 +194,26 @@ class shape():
         vertices[3][1] = vertices[0][1]
         vertices[3][2] = vertices[0][2]
 
-        print 'vertices 1'
-        self.printVerticeList(vertices)
-        print
+#        print 'vertices 1'
+#        self.printVerticeList(vertices)
+#        print
         #relative vertice
         if self.surfaceitem.getGeometryRules()["Rectangular Surface Coordinate System"] == "Relative":
             origin = self.getZoneOrigin()
         else:
             origin = [0,0,0]
-
+            
+        print self.idfclass.getClassnameIDD(),self.idfclass.getName()
         vertices = self.rotateVerticeList(vertices,tilt,0.0,azimuth)
 
-        print 'rotated matrix'
+#        print 'rotated matrix'
 #        self.printVerticeList(vertices)
-        print vertices
+#        print vertices
 
         for v in vertices:
             self.verticelist.append(self.matrixAsVertice(v))
 
-        self.printVerticeList(self.verticelist)
+#        self.printVerticeList(self.verticelist)
 
 
         self.verticelist[0][0] = origin[0] + scoords[0]
@@ -231,14 +232,14 @@ class shape():
         self.verticelist[3][1] = self.verticelist[3][1] + origin[1] + scoords[1]
         self.verticelist[3][2] = self.verticelist[3][2] + origin[2] + scoords[2]
         
-        print self.idfclass.getClassnameIDD(),self.idfclass.getName()
-        print 'length',length, 'height',height,'tilt', tilt,'azimuth', azimuth
-        self.printVertice(origin)
-        self.printVertice(scoords)
-        print
-        self.printVerticeList(self.verticelist)
-        print
-        print
+#        print self.idfclass.getClassnameIDD(),self.idfclass.getName()
+#        print 'length',length, 'height',height,'tilt', tilt,'azimuth', azimuth
+#        self.printVertice(origin)
+#        self.printVertice(scoords)
+#        print
+#        self.printVerticeList(self.verticelist)
+#        print
+#        print
 
     def getZoneOrigin(self):
         zone = self.surfaceitem.getZone(self.idfclass.getFieldDataByName('Zone Name'))
@@ -318,6 +319,8 @@ class shape():
 
             
     def rotateVerticeList(self,vlist,x,y,z):
+        print 'rotateVerticeList ',x,y,z
+        self.printVerticeList(vlist)
         if x != 0:
             xm = self.xmatrix(x)
 
@@ -330,13 +333,24 @@ class shape():
         rlist = []
         for v in vlist:
             vm = self.verticeAsMatrix(v)
+            print 'as matrix',vm
             if x != 0:
                 vm = numpy.multiply(vm,xm)
+                print '*xm',xm
+                self.printMatrix(vm)
             if y != 0:
                 vm = numpy.muliply(vm,ym)
+                print '*ym',ym
+                self.printMatrix(vm)
             if z != 0:
-                vm = numpy.multiply(vm,xm)
-            rlist.append(vm)
+                vm = numpy.multiply(vm,zm)
+                print '*zm',zm
+                self.printMatrix(vm)
+
+            s = numpy.array([vm[0][0]+vm[0][1]+vm[0][2]+vm[0][3]],   \
+                            [vm[1][0]+vm[1][1]+vm[1][2]+vm[1][3]],   \
+                            [vm[2][0]+vm[2][1]+vm[2][2]+vm[2][3]])
+            rlist.append(s)
 
         return rlist
             
@@ -356,7 +370,6 @@ class shape():
     def getVertices(self,xrot,yrot,zrot):
         xylist = []
         for xyz in self.verticelist:
-            print xyz
             xy = [xyz[0],xyz[1]]
             if xy not in xylist:
                 xylist.append(xy)
