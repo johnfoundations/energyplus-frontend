@@ -55,8 +55,8 @@ class shape():
         if self.idfclass.getClassnameIDD() in azimuthwallclasses:
             self.buildWallPolygons()
 
-#        if self.idfclass.getClassnameIDD() in azimuthflatclasses:
-#            self.buildFlatPolygons()
+        if self.idfclass.getClassnameIDD() in azimuthflatclasses:
+            self.buildFlatPolygons()
 
         if self.idfclass.getClassnameIDD() in zoneclasses:
             self.buildZonePolygons()
@@ -84,17 +84,20 @@ class shape():
                 ei = ei + 1
                 
 
-#        print self.idfclass.getName(),vertices
+        print self.idfclass.getName()
+        print vertices
 
         if self.surfaceitem.getGeometryRules()["Vertex Entry Direction"] == "Counterclockwise":
             vertices.reverse()
             first = vertices.pop()
             vertices.insert(0,first)
 
-            
+        print 'direction corrected',
+        self.printVerticeList(vertices)
         
         rules = self.surfaceitem.getGeometryRules()["Starting Vertex Position"]
         if rules == "UpperLeftCorner" or "UpperRightCorner" or "LowerRightCorner":
+            print rules
             v1 = numpy.subtract(vertices[1],vertices[0])
             v2 = numpy.subtract(vertices[-1],vertices[0])
             v3 = numpy.cross(v1,v2)
@@ -135,8 +138,20 @@ class shape():
  #           print 'resort',dindex,vertices
             if dindex > 0:
                 vertices = vertices[dindex:len(vertices)] + vertices[0:dindex]
- #           print vertices
-            self.verticelist = vertices
+            self. printVerticeList(vertices)
+
+        if self.surfaceitem.getGeometryRules()["Coordinate System"] == "Relative" or "World":
+            origin = self.getZoneOrigin()
+        else:
+            origin = [0.0,0.0,0.0]
+
+        for v in vertices:
+            print v,origin
+            v[0] = v[0] + origin[0]
+            v[1] = v[1] + origin[1]
+            v[2] = v[2] + origin[2]
+        
+        self.verticelist = vertices
 
         
 
@@ -204,14 +219,15 @@ class shape():
             origin = [0,0,0]
             
         print self.idfclass.getClassnameIDD(),self.idfclass.getName()
-        vertices = self.rotateVerticeList(vertices,tilt,0.0,azimuth)
+        self.verticelist = self.rotateVerticeList(vertices,tilt,0.0,azimuth)
 
+        print self.verticelist
 #        print 'rotated matrix'
 #        self.printVerticeList(vertices)
 #        print vertices
 
-        for v in vertices:
-            self.verticelist.append(self.matrixAsVertice(v))
+#        for v in vertices:
+#            self.verticelist.append(self.matrixAsVertice(v))
 
 #        self.printVerticeList(self.verticelist)
 
@@ -248,6 +264,7 @@ class shape():
         x = float(zone[1].getFieldDataByName('X Origin'))
         y = float(zone[1].getFieldDataByName('Y Origin'))
         z = float(zone[1].getFieldDataByName('Z Origin'))
+        print 'getZoneOrigin',x,y,z
         return [x,y,x]
 
     def printVerticeList(self,v):
@@ -258,8 +275,9 @@ class shape():
             print '%f,%f,%f' % (vv[0],vv[1],vv[2])
             
     def printMatrix(self,m):
-        for mm in m:
-            print '%f,%f,%f,%f' % (mm[0],mm[1],mm[2],mm[3])
+        pass
+#        for mm in m:
+#            print '%f,%f,%f,%f' % (mm[0],mm[1],mm[2],mm[3])
 
 
     def azimuthtoccw(self,azimuth):
@@ -290,31 +308,31 @@ class shape():
         return m
 
     def xmatrix(self,x):
-        m = numpy.array([[1.0,0.0,0.0,0.0], \
-                         [0.0,math.cos(x),-math.sin(x),0.0], \
-                         [0.0,math.sin(x),math.cos(x),0.0],  \
+        m = numpy.matrix([[1.0,0.0,0.0,0.0], \
+                         [0.0,math.cos(x),math.sin(x),0.0], \
+                         [0.0,-math.sin(x),math.cos(x),0.0],  \
                          [0.0,0.0,0.0,1.0]])
 
         return m
 
     def ymatrix(self,):
-        m = numpy.array([[math.cos(y),0.0,math.sin(y),0.0], \
+        m = numpy.matrix([[math.cos(y),0.0,-math.sin(y),0.0], \
                          [0.0,1.0,0.0,0.0], \
-                         [-math.sin(y),0.0,math.cos(y),0.0],  \
+                         [math.sin(y),0.0,math.cos(y),0.0],  \
                          [0.0,0.0,0.0,1.0]])
 
         return m
 
     def zmatrix(self,z):
-        m = numpy.array([[math.cos(z),-math.sin(z),0.0,0.0], \
-                         [math.sin(z),math.cos(z),0.0,0.0], \
+        m = numpy.matrix([[math.cos(z),math.sin(z),0.0,0.0], \
+                         [-math.sin(z),math.cos(z),0.0,0.0], \
                          [0.0,0.0,1.0,0.0],  \
                          [0.0,0.0,0.0,1.0]])
 
         return m
 
     def identity(self):
-        return numpy.array([[1.0,0.0,0.0,0.0],[0.0,1.0,0.0,0.0],[0.0,0.0,1.0,0.0],[0.0,0.0,0.0,1.0]])
+        return numpy.matrix([[1.0,0.0,0.0,0.0],[0.0,1.0,0.0,0.0],[0.0,0.0,1.0,0.0],[0.0,0.0,0.0,1.0]])
 
 
             
@@ -335,31 +353,29 @@ class shape():
             vm = self.verticeAsMatrix(v)
             print 'as matrix',vm
             if x != 0:
-                vm = numpy.multiply(vm,xm)
+                vm = numpy.dot(vm,xm)
                 print '*xm',xm
                 self.printMatrix(vm)
             if y != 0:
-                vm = numpy.muliply(vm,ym)
+                vm = numpy.dot(vm,ym)
                 print '*ym',ym
                 self.printMatrix(vm)
             if z != 0:
-                vm = numpy.multiply(vm,zm)
+                vm = numpy.dot(vm,zm)
                 print '*zm',zm
                 self.printMatrix(vm)
 
-            s = numpy.array([vm[0][0]+vm[0][1]+vm[0][2]+vm[0][3]],   \
-                            [vm[1][0]+vm[1][1]+vm[1][2]+vm[1][3]],   \
-                            [vm[2][0]+vm[2][1]+vm[2][2]+vm[2][3]])
-            rlist.append(s)
+            print vm
+            a = vm.tolist()
+            rlist.append(a[0])
 
         return rlist
-            
-            
-                
+
+
         
         
     def verticeAsMatrix(self,xyz):
-        m = numpy.array([xyz[0],xyz[1],xyz[2],1.0])
+        m = numpy.matrix([xyz[0],xyz[1],xyz[2],1.0])
 #        m = numpy.asmatrix(m)
         return m
 
