@@ -23,12 +23,16 @@ import graphicitems
 import verticemath
 import idfdata
 
+
+#data in treeItem points to a surfaceItem
 class surfaceItem():
     def __init__(self,idfclass,surfacemodel):
         self.idfclass = idfclass
         self.surfacemodel = surfacemodel
-        self.shape = verticemath.shape(self,self.idfclass)
-        self.graphicitem = graphicitems.surfacePolygonItem()
+        if self.idfclass.getClassnameIDD() == 'Zone':
+            self.graphicitem = graphicitems.zoneItem(self,surfacemodel.math)
+        else:
+            self.graphicitem = graphicitems.surfacePolygonItem(self,surfacemodel.math)
         
 
     def getGeometryRules(self):
@@ -38,6 +42,10 @@ class surfaceItem():
     def getZone(self,zname):
         return self.surfacemodel.getZone(zname)
 
-    def setPolygon(self,x,y,z):
+    def setPolygon(self,x,y,z,zorder):
         self.graphicitem.setToolTip(self.idfclass.getClassnameIDD() + self.idfclass.getName())
-        self.graphicitem.setPolygon(self.shape.getVertices(x,y,z))
+        
+        self.graphicitem.rotate3d(x,y,z)
+
+    def getZ(self):
+        
