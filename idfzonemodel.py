@@ -33,10 +33,12 @@ class idfZoneModel(QtCore.QAbstractItemModel):
         print 'init'
         self.scene = scene
         self.idf = idf
+        self.zorder = []
         self.parentmodel = parent
         self.zoneroot = None
         self.geometryrules = dict()
         #self.createZoneTree()
+        self.math = verticemath.verticeMath()
         QtCore.QAbstractItemModel.__init__(self, parent)
 
 
@@ -58,12 +60,17 @@ class idfZoneModel(QtCore.QAbstractItemModel):
             
     def assignScene(self,x,y,z):
         #degrees rotation around axes
+        z
         for z in self.zoneroot.childItems:
             if z.data.idfclass.getName() == 'Undefined':
                 continue
+            z.data.setPolygon(x,y,z)
+            self.insertZ(z.data.getZ())
 
-            for s in z.childItems:
-                s.data.setPolygon(x,y,z)
+
+    def show(self,z):
+        
+        
         
 
     def createZoneTree(self):
