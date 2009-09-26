@@ -48,4 +48,4 @@ class surfaceItem():
         self.graphicitem.rotate3d(x,y,z)
 
     def getZ(self):
-        
+        return self.graphicitem.zorder.layer()

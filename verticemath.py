@@ -127,20 +127,20 @@ class verticeMath():
     def eq(self,v1,v2):
         #checks whether the vertices are close enough to be equal
         if len(v1) != len(v2):
-            return false
+            return False
 
-        res = true
+        res = True
         for c,d in enumerate(v1):
             if abs(v1[c] - v2[c]) > 0.0001:
-                res = false
+                res = False
         return res
 
     def fin(self,v,l):
         #checks whether v is eq() any items in l
-        res = false
+        res = False
         for i in l:
             if self.eq(v,i):
-                res = true
+                res = True
 
         return res
         
