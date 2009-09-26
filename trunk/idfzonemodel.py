@@ -67,6 +67,9 @@ class idfZoneModel(QtCore.QAbstractItemModel):
             z.data.setPolygon(x,y,z)
             self.insertZ(z.data.getZ())
 
+    def setScene(self,scene):
+        self.scene =  scene
+
 
     def show(self,z):
         

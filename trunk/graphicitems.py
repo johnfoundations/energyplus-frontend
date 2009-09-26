@@ -46,6 +46,7 @@ class abstractItem(QtGui.QGraphicsPolygonItem):
         self.math = math
         #x,y, z coordinates of points in object. Based on +x -> east, +y -> north, +z up.
         self.verticelist = []
+        self.zorder = zlayers.zLayers(None)
 
 
     def rotate3d(self,x,y,z):
@@ -56,15 +57,15 @@ class abstractItem(QtGui.QGraphicsPolygonItem):
 class zoneItem(abstractItem):
     def __init__(self,treeParent,math,parent=None):
         abstractItem.__init__ (self,treeParent,math,parent)
-        self.zorder = []
+        
         
     def rotate3d(self,x,y,z):
         #rotate children and build z order
+        z = []
         for t in self.treeparent.childItems:
             t.data.setPolygon(x,y,z)
-            z = t.data.getZ()
-            if not fin(z,self.zorder):
-                self.zorder.append(z)
+            z.append(t.data.getZ())
+        self.zorder.setLayers(z)
             
 
 class surfacePolygonItem(QtGui.QGraphicsPolygonItem):

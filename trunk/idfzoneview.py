@@ -20,33 +20,53 @@
 ***************************************************************************"""
 
 from PyQt4 import QtCore, QtGui
+import zlayers
 
-
-class zLayers():
-    def __init__(self,model):
-        self.model = model
-        self.model.setZLayerHandler(self)
-        #list of ranges that denote zones, in [[0][9] meaning z starting at zero to nine, etc.
-        #the view only knows of floor levels. Details within zones, roof, ceiling, walls, floor is handled by the zone
-        zlist = []
-
-    def layers(self):
-        #returns the number of layers within the zlist
-        l = 0
-        if len(zlist) == 0:
-            return l
-        b = zlist[0][0]
-        for l in zlist:
+                
+            
             
 
-class idfZoneView(QtGui.QGraphicsView):
-    def __init__(self,scene,parent = None):
-        QtGui.QGraphicsView.__init__ (self,scene, parent )
-        self.setLayer()
+class idfZoneView(QtGui.QWidget):
+    def __init__(self,parent = None):
+        QtGui.QWidget.__init__ (self, parent )
+        self.scene = None
+        self.model = None
+        self.layerhandler =  zlayers.zLayers(self.model)
+        #viewpoint is unit vertice defining a point from which the scene is viewed in x = east, y = north, z = up
+        self.viewpoint = [0.0,0.0,1.0]
+        self.layer = 0.0
+        self.buildView()
 
-    def setLayer(self):
-        #
+
+    def buildView(self):
+        #lays out widget
+        self.view = QtGui.QGraphicsView()
+        self.scene = QtGui.QGraphicsScene()
+        self.view.setScene(self.scene)
+
+        hlayout = QtGui.QHBoxLayout(self)
+        self.tools = QtGui.QToolBar()
+        self.tools.setOrientation(Qt)
+        hlayout.addWidget(self.tools)
+        vl = QtGui.QVBoxLayout()
+        vl.addWidget(self.view)
+        self.commandedit = QtGui.QLineEdit()
+        vl.addWidget(self.commandedit)
+        hlayout.addLayout(vl)
+        self.orient = QtGui.QToolBar()
+        hlayout.addWidget(self.orient)
+
+    def createActions(self):
         pass
+        
+
+
+
+    def setModel(self,model):
+        self.model =  model
+        self.layerhandler.setModel(self.model)
+        self.model.reset()
+    
 
 
     #logic for viewing.
