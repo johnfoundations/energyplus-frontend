@@ -90,8 +90,8 @@ class verticeMath():
 
             
     def rotateVerticeList(self,vlist,x,y,z):
-        print 'rotateVerticeList ',x,y,z
-        self.printVerticeList(vlist)
+#        print 'rotateVerticeList ',x,y,z
+#        self.printVerticeList(vlist)
         if x != 0:
             xm = self.xmatrix(x)
 
@@ -104,21 +104,21 @@ class verticeMath():
         rlist = []
         for v in vlist:
             vm = self.verticeAsMatrix(v)
-            print 'as matrix',vm
+#            print 'as matrix',vm
             if x != 0:
                 vm = numpy.dot(vm,xm)
-                print '*xm',xm
-                self.printMatrix(vm)
+#                print '*xm',xm
+#                self.printMatrix(vm)
             if y != 0:
                 vm = numpy.dot(vm,ym)
-                print '*ym',ym
-                self.printMatrix(vm)
+#                print '*ym',ym
+#                self.printMatrix(vm)
             if z != 0:
                 vm = numpy.dot(vm,zm)
-                print '*zm',zm
-                self.printMatrix(vm)
+#                print '*zm',zm
+#                self.printMatrix(vm)
 
-            print vm
+#            print vm
             a = vm.tolist()
             rlist.append(a[0])
 

@@ -25,6 +25,7 @@ import idfdata
 import iddclass
 import surfaceitem
 import objectclass
+import verticemath
 
 
 
@@ -34,22 +35,29 @@ class idfZoneModel(QtCore.QAbstractItemModel):
         self.scene = scene
         self.idf = idf
         self.zorder = []
+        self.zhandler = None
         self.parentmodel = parent
         self.zoneroot = None
         self.geometryrules = dict()
         #self.createZoneTree()
         self.math = verticemath.verticeMath()
         QtCore.QAbstractItemModel.__init__(self, parent)
+        self.currentz = 0
+        self.currentrotation =  []
 
 
     def reset(self):
+        print 'zonemodel reset'
         self.createZoneTree()
         self.populateScene()
-        self.assignScene(0,0,0)
+        self.assignScene([0.0,0.0,0.0])
         QtCore.QAbstractItemModel.reset(self)
     
     def populateScene(self):
+        print 'zonemodel populatescene'
         #inserts graphicsitems into scene
+        if self.zoneroot == None:
+            return
         self.scene.clear()
         for z in self.zoneroot.childItems:
             if z.data.idfclass.getName() == 'Undefined':
@@ -58,29 +66,59 @@ class idfZoneModel(QtCore.QAbstractItemModel):
             for s in z.childItems:
                 self.scene.addItem(s.data.graphicitem)
             
-    def assignScene(self,x,y,z):
+    def assignScene(self,xyz):
+        print 'zonemodel assignscene'
         #degrees rotation around axes
-        z
-        for z in self.zoneroot.childItems:
-            if z.data.idfclass.getName() == 'Undefined':
+        if xyz == self.currentrotation:
+            return
+        else:
+            self.currentrotation = xyz
+        if self.zoneroot == None:
+            return
+        self.zorder = []
+        for ch in self.zoneroot.childItems:
+            if ch.data.idfclass.getName() == 'Undefined':
                 continue
-            z.data.setPolygon(x,y,z)
-            self.insertZ(z.data.getZ())
+            ch.data.setPolygon(xyz)
+            self.zorder.append(ch.data.getZ())
+
+        self.insertZ()
 
     def setScene(self,scene):
+        print 'zonemodel setscene'
         self.scene =  scene
 
 
-    def show(self,z):
+    def showZ(self,z):
+        print 'showZ',z,self.currentz
+        if z == self.currentz:
+            return
+        else:
+            self.currentz = z
+        for ch in self.zoneroot.childItems:
+            ch.graphicitem.setZVisible([z,z])
+            for s in ch.childItems:
+                s.graphicitem.setZVisible([z,z])
         
         
+    def insertZ(self):
+        if self.zhandler != None:
+            self.zhandler.setLayers(self.zorder)
+            
+    def setZLayerHandler(self,handler):
+        self.zhandler = handler
+        if len(self.zorder) > 0:
+            self.zhandler.setLayers(self.zorder)
+
         
 
     def createZoneTree(self):
+        print 'zonemodel createZoneTree'
         buildingclass = None
         zonelist = dict()
         surfacelist = []
-
+        if len(self.idf.idflist) == 0:
+            return
         for c in self.idf.idflist:
             if c.getClassnameIDD() == 'Building':
                 buildingclass = c
@@ -97,7 +135,7 @@ class idfZoneModel(QtCore.QAbstractItemModel):
               
 
         if buildingclass == None:
-            buildingclass = iddclass.Building()
+            buildingclass = iddclass.building()
             self.idf.insertRecord(buildingclass)
             
         self.zoneroot = idfdata.treeItem(None,surfaceitem.surfaceItem(buildingclass,self))
@@ -163,6 +201,7 @@ class idfZoneModel(QtCore.QAbstractItemModel):
                 return z,z.data.idfclass
 
         return None,None
+        #treeitem,idd class instance
 
     
 
@@ -178,10 +217,10 @@ class idfZoneModel(QtCore.QAbstractItemModel):
         
     def columnCount (self, parent):
         return 1
-        if parent.isValid():
-            return parent.internalPointer().childCount()
-        else:
-            return self.zoneroot.childCount()
+#        if parent.isValid():
+#            return parent.internalPointer().childCount()
+#        else:
+#            return self.zoneroot.childCount()
 
     def flags(self, index):
         if not index.isValid():

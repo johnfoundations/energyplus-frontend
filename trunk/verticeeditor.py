@@ -26,6 +26,7 @@ import idfdata
 import idfabstractmodel
 import idfmodeldelegate
 import idfzonemodel
+import idfzoneview
 
 class idfmodeltest(QtGui.QMainWindow):
     def __init__(self):
@@ -40,25 +41,37 @@ class idfmodeltest(QtGui.QMainWindow):
         self.tabs.addTab(self.verticePage(),'IDF Surface Editor')
 
         self.setCentralWidget(self.tabs)
+        self.sizeTree()
 
 
 
 
 
     def verticePage(self):
-        widget = QtGui.QWidget()
+        self.tvwidget = QtGui.QWidget()
+        splitter = QtGui.QSplitter()
         self.idf = idfdata.idfData()
-        self.verticescene = QtGui.QGraphicsScene()
-        self.model = idfzonemodel.idfZoneModel(self.verticescene,self.idf)
+        self.model = idfzonemodel.idfZoneModel(None,self.idf)
 
-        vl = QtGui.QHBoxLayout(widget)
+        vl = QtGui.QHBoxLayout(self.tvwidget)
         self.zonelist = QtGui.QTreeView()
         self.zonelist.setModel(self.model)
         vl.addWidget(self.zonelist)
+        splitter.addWidget(self.tvwidget)
         
-        self.verticeview = QtGui.QGraphicsView(self.verticescene)
-        vl.addWidget(self.verticeview)
-        return widget
+        
+        self.verticeview = idfzoneview.idfZoneView()
+        self.verticeview.setModel(self.model)
+        splitter.addWidget(self.verticeview)
+        return splitter
+
+    def sizeTree(self):
+        width = self.zonelist.sizeHintForColumn(0) + self.zonelist.sizeHintForColumn(1)
+        if width < 200:
+            width = 200
+        print width
+        self.tvwidget.setMaximumWidth(width)
+
 
 
     def createActions(self):
@@ -141,12 +154,6 @@ class idfmodeltest(QtGui.QMainWindow):
         filem.addAction(self.zoomout)
 
 
-    def sizeTree(self):
-        width = self.view.sizeHintForColumn(0) + self.view.sizeHintForColumn(1)
-        if width < 200:
-            width = 200
-        print width
-        self.viewwidget.setMaximumWidth(width)
 
 
     def querybuttonclicked(self):
@@ -249,10 +256,10 @@ class idfmodeltest(QtGui.QMainWindow):
     def rescale(self):
         print 'rescale'
         print self.zoom
-        oldMatrix = self.verticeview.matrix();
-        self.verticeview.resetMatrix();
-        self.verticeview.translate(oldMatrix.dx(), oldMatrix.dy())
-        self.verticeview.scale(self.zoom,self.zoom);
+        oldMatrix = self.verticeview.view.matrix();
+        self.verticeview.view.resetMatrix();
+        self.verticeview.view.translate(oldMatrix.dx(), oldMatrix.dy())
+        self.verticeview.view.scale(self.zoom,self.zoom);
 
 
 
