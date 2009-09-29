@@ -19,10 +19,14 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************"""
 
+from PyQt4 import QtCore
 
+class zLayers(QtCore.QObject):
 
-class zLayers():
+    layerchange = QtCore.pyqtSignal()
+
     def __init__(self,model):
+        QtCore.QObject.__init__(self,None)
         self.model = model
         if model != None:
             self.model.setZLayerHandler(self)
@@ -63,6 +67,8 @@ class zLayers():
 
             #starts at third
             self.zlist.append([b[c-1],b[c]])
+
+        self.trigger.emit()
 
     def fin(self,item,lst):
         #in, but close not equal

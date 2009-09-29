@@ -20,7 +20,9 @@
 ***************************************************************************"""
 
 from PyQt4 import QtGui, QtCore
+import math
 import numpy
+import zlayers
 
 verticeclasses = "BuildingSurface:Detailed","Wall:Detailed","RoofCeiling:Detailed","Floor:Detailed","FenestrationSurface:Detailed",\
                  "Shading:Zone:Detailed","Shading:Site:Detailed","Shading:Building:Detailed"
@@ -40,19 +42,46 @@ azimuthflatclasses = "Ceiling:Adiabatic","Ceiling:Interzone","Floor:GroundContac
 
 
 class abstractItem(QtGui.QGraphicsPolygonItem):
-     def __init__(self,treeParent,math,parent=None):
+    def __init__(self,treeParent,math,parent=None):
         QtGui.QGraphicsPolygonItem.__init__ (self,parent)
         self.treeparent = treeParent
         self.math = math
         #x,y, z coordinates of points in object. Based on +x -> east, +y -> north, +z up.
         self.verticelist = []
+        self.rotatedverticelist = []
         self.zorder = zlayers.zLayers(None)
 
 
     def rotate3d(self,x,y,z):
         pass
 
-    
+    def setPolygon(self,polygon):
+        #reverse y in array
+        p = QtGui.QPolygonF()
+        for e in polygon:
+            e[1] = e[1] * -1
+            p.append(QtCore.QPointF(e[0],e[1]))
+
+    def getZPoints(self,zrange):
+        #z is a number, any points at z are returned
+        #above is boolean. if true then any points = and above, or higher are returned.
+        #if false, any points equal and below
+        zpts = []
+        for v in self.rotatedverticelist:
+            if zrange[0] >= v[2] or zrange[1] <= v[2]:
+                zpts.append(v)
+
+        return zpts
+
+    def setZVisible(self,zrange):
+        visible = False
+        for v in self.rotatedverticelist:
+            if v[2] < zrange[1]:
+                visible = True
+        print 'setZVisible', zrange,visible,self.rotatedverticelist
+        self.setVisible(visible)
+        self.setZValue(zrange[1])
+
 
 class zoneItem(abstractItem):
     def __init__(self,treeParent,math,parent=None):
@@ -61,16 +90,34 @@ class zoneItem(abstractItem):
         
     def rotate3d(self,x,y,z):
         #rotate children and build z order
-        z = []
-        for t in self.treeparent.childItems:
+        zo = []
+        ztree = self.treeparent.getZone(self.treeparent.idfclass.getName())
+        for t in ztree[0].childItems:
             t.data.setPolygon(x,y,z)
-            z.append(t.data.getZ())
-        self.zorder.setLayers(z)
+            zo.append(t.data.getZ())
+            for ch in t.childItems:
+                ch.data.setPolygon(x,y,z)
+                zo.append(ch.data.getZ())
+        self.zorder.setLayers(zo)
+        # now build polygon
+        top = self.zorder.layer()[1]
+        self.rotatedverticelist = []
+        for t in ztree[0].childItems:
+            self.rotatedverticelist = self.rotatedverticelist + t.graphicitem.getZPoints([top,top])
+            for ch in t.childItems:
+                self.rotatedverticelist = self.rotatedverticelist + ch.graphicitem.getZPoints([top,top])
+
+        self.setPolygon(self.rotatedverticelist)
+
+        
             
 
-class surfacePolygonItem(QtGui.QGraphicsPolygonItem):
+        
+            
+
+class surfacePolygonItem(abstractItem):
     def __init__(self,treeParent,math,parent=None):
-        abstractItem.__init__ (self,treeParent,math,parent)
+        abstractItem.__init__(self,treeParent,math,parent)
         
 
         #x,y,z coordinates after rotation or any transformation
@@ -90,15 +137,6 @@ class surfacePolygonItem(QtGui.QGraphicsPolygonItem):
         if self.treeparent.idfclass.getClassnameIDD() in zoneclasses:
             self.buildZonePolygons()
       
-
-    def setPolygon(self,polygon):
-        #reverse y in array
-        p = QtGui.QPolygonF()
-        for e in polygon:
-            e[1] = e[1] * -1
-            p.append(QtCore.QPointF(e[0],e[1]))
-
-        QtGui.QGraphicsPolygonItem.setPolygon(self,p)
 
 
     def buildVerticePolygons(self):
@@ -124,20 +162,20 @@ class surfacePolygonItem(QtGui.QGraphicsPolygonItem):
                 ei = ei + 1
 
 
-        print self.idfclass.getName()
-        print vertices
+#        print self.idfclass.getName()
+#        print vertices
 
         if self.surfaceitem.getGeometryRules()["Vertex Entry Direction"] == "Counterclockwise":
             vertices.reverse()
             first = vertices.pop()
             vertices.insert(0,first)
 
-        print 'direction corrected',
-        self.printVerticeList(vertices)
+#        print 'direction corrected',
+#        self.printVerticeList(vertices)
 
         rules = self.surfaceitem.getGeometryRules()["Starting Vertex Position"]
         if rules == "UpperLeftCorner" or "UpperRightCorner" or "LowerRightCorner":
-            print rules
+#            print rules
             v1 = numpy.subtract(vertices[1],vertices[0])
             v2 = numpy.subtract(vertices[-1],vertices[0])
             v3 = numpy.cross(v1,v2)
@@ -178,7 +216,7 @@ class surfacePolygonItem(QtGui.QGraphicsPolygonItem):
  #           print 'resort',dindex,vertices
             if dindex > 0:
                 vertices = vertices[dindex:len(vertices)] + vertices[0:dindex]
-            self. printVerticeList(vertices)
+#            self. printVerticeList(vertices)
 
         if self.surfaceitem.getGeometryRules()["Coordinate System"] == "Relative" or "World":
             origin = self.getZoneOrigin()
@@ -208,7 +246,7 @@ class surfacePolygonItem(QtGui.QGraphicsPolygonItem):
             azimuth = azimuth - 360
 #        print azimuth
         azimuth = math.radians(azimuth)
-        print azimuth, 'radians'
+#        print azimuth, 'radians'
         tilt = math.radians(float(self.treeparent.idfclass.getFieldDataByName('Tilt Angle')))
 #        print tilt, 'radians'
         sorigin     = numpy.array([float(self.treeparent.idfclass.getFieldDataByName('Starting X Coordinate')), \
@@ -250,15 +288,12 @@ class surfacePolygonItem(QtGui.QGraphicsPolygonItem):
         vertices[3][2] = vertices[0][2]
 
         #relative vertice
-        if self.surfaceitem.getGeometryRules()["Rectangular Surface Coordinate System"] == "Relative":
+        if self.treeparent.getGeometryRules()["Rectangular Surface Coordinate System"] == "Relative":
             origin = self.getZoneOrigin()
         else:
             origin = [0,0,0]
 
-        print self.idfclass.getClassnameIDD(),self.idfclass.getName()
-        self.verticelist = self.rotateVerticeList(vertices,tilt,0.0,azimuth)
-
-        print self.verticelist
+        self.verticelist = self.math.rotateVerticeList(vertices,tilt,0.0,azimuth)
 
         self.verticelist[0][0] = origin[0] + scoords[0]
         self.verticelist[0][1] = origin[1] + scoords[1]
@@ -278,13 +313,13 @@ class surfacePolygonItem(QtGui.QGraphicsPolygonItem):
 
 
     def getZoneOrigin(self):
-        zone = self.surfaceitem.getZone(self.idfclass.getFieldDataByName('Zone Name'))
+        zone = self.treeparent.getZone(self.treeparent.idfclass.getFieldDataByName('Zone Name'))
         if zone[1] == None:
             return [0.0,0.0,0.0]
         x = float(zone[1].getFieldDataByName('X Origin'))
         y = float(zone[1].getFieldDataByName('Y Origin'))
         z = float(zone[1].getFieldDataByName('Z Origin'))
-        print 'getZoneOrigin',x,y,z
+#        print 'getZoneOrigin',x,y,z
         return [x,y,x]
 
     def azimuthtoccw(self,azimuth):
@@ -296,8 +331,6 @@ class surfacePolygonItem(QtGui.QGraphicsPolygonItem):
 
     def rotate3d(self,x,y,z):
         self.rotatedverticelist = self.math.rotateVerticeList(self.verticelist,x,y,z)
-
-    def show(self):
         self.setPolygon(self.rotatedverticelist)
 
     def getZ(self):

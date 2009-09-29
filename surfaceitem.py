@@ -42,10 +42,15 @@ class surfaceItem():
     def getZone(self,zname):
         return self.surfacemodel.getZone(zname)
 
-    def setPolygon(self,x,y,z,zorder):
+    def setPolygon(self,xyz):
         self.graphicitem.setToolTip(self.idfclass.getClassnameIDD() + self.idfclass.getName())
         
-        self.graphicitem.rotate3d(x,y,z)
+        self.graphicitem.rotate3d(xyz[0],xyz[1],xyz[2])
 
     def getZ(self):
         return self.graphicitem.zorder.layer()
+
+         
+                
+
+        
