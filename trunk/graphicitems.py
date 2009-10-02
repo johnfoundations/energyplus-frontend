@@ -41,26 +41,82 @@ azimuthflatclasses = "Ceiling:Adiabatic","Ceiling:Interzone","Floor:GroundContac
                      "Roof"
 
 
-class abstractItem(QtGui.QGraphicsPolygonItem):
-    def __init__(self,treeParent,math,parent=None):
+
+
+
+
+
+
+class zoneItem(QtGui.QGraphicsPolygonItem):
+    def __init__(self,parent=None):
         QtGui.QGraphicsPolygonItem.__init__ (self,parent)
-        self.treeparent = treeParent
-        self.math = math
-        #x,y, z coordinates of points in object. Based on +x -> east, +y -> north, +z up.
+        self.delegate = None
+
+
+    def setDelegate(self,delegate):
+        self.delegate = delegate
+        self.delegate.setItem(self)
+
+    def setZVisible(self,z):
+        #if above z, set invisible, otherwise visible
+        if self.delegate != None:
+            self.setVisible(self.delegate.checkZ(z))
+
+    def.setViewpoint(self,viewpoint):
+        if self.delegate:
+            self.delegate.setViewpoint(viewpoint)
+
+class zoneAbstractDelegate(QtCore.QObject):
+    def __init__(self,index,parent = None)
+        QtCore.QObject.__init__(self,parent)
+        self.item = None
+        self.math = None
         self.verticelist = []
         self.rotatedverticelist = []
-        self.zorder = zlayers.zLayers(None)
+        if index.isValid():
+            self.model = index.model()
+            self.math = self.model.getMath()
+            self.verticelist = self.createVerticeList()
+            self.idfclass = index.internalPointer().data
+            self.index = QtCore.QPersistentModelIndex(index)
+
+        else:
+            self.model = None
+            self.idfclass = None
+            self.index = QtCore.QPersistentModelIndex()
+
+    def setItem(self,item):
+        #link to qgraphicsitem
+        self.item = item
+
+    def createVerticeList(self):
+        return self.model.data(index,idfzonemodel.IdfVerticeRole
 
 
-    def rotate3d(self,x,y,z):
-        pass
+    def.checkZ(self,z):
+        #returns true if equal or less than z
+        res = False
+        for v in self.rotatedverticelist:
+            if v[2] <= z:
+                res = True
 
+        return res
+        
+    def setViewpoint(self,viewpoint):
+        
     def setPolygon(self,polygon):
         #reverse y in array
         p = QtGui.QPolygonF()
         for e in polygon:
             e[1] = e[1] * -1
             p.append(QtCore.QPointF(e[0],e[1]))
+
+        self.item.setPolygon(p)
+
+
+    def rotate3d(self,x,y,z):
+        pass
+
 
     def getZPoints(self,zrange):
         #z is a number, any points at z are returned
@@ -83,20 +139,19 @@ class abstractItem(QtGui.QGraphicsPolygonItem):
         self.setZValue(zrange[1])
 
 
-class zoneItem(abstractItem):
-    def __init__(self,treeParent,math,parent=None):
-        abstractItem.__init__ (self,treeParent,math,parent)
+class zoneDelegate(zoneAbstractDelegate):
         
         
     def rotate3d(self,x,y,z):
+        print 'zoneitem rotate3d',x,y,z
         #rotate children and build z order
         zo = []
         ztree = self.treeparent.getZone(self.treeparent.idfclass.getName())
         for t in ztree[0].childItems:
-            t.data.setPolygon(x,y,z)
+            t.data.setPolygon([x,y,z])
             zo.append(t.data.getZ())
             for ch in t.childItems:
-                ch.data.setPolygon(x,y,z)
+                ch.data.setPolygon([x,y,z])
                 zo.append(ch.data.getZ())
         self.zorder.setLayers(zo)
         # now build polygon
