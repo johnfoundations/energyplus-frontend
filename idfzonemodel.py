@@ -27,7 +27,7 @@ import surfaceitem
 import objectclass
 import verticemath
 
-
+IdfVerticeRole = 45
 
 class idfZoneModel(QtCore.QAbstractItemModel):
     def __init__(self,scene,idf,parent = None):
@@ -69,10 +69,10 @@ class idfZoneModel(QtCore.QAbstractItemModel):
     def assignScene(self,xyz):
         print 'zonemodel assignscene'
         #degrees rotation around axes
-        if xyz == self.currentrotation:
-            return
-        else:
-            self.currentrotation = xyz
+#        if xyz == self.currentrotation:
+#            return
+#        else:
+        self.currentrotation = xyz
         if self.zoneroot == None:
             return
         self.zorder = []
@@ -91,10 +91,10 @@ class idfZoneModel(QtCore.QAbstractItemModel):
 
     def showZ(self,z):
         print 'showZ',z,self.currentz
-        if z == self.currentz:
-            return
-        else:
-            self.currentz = z
+#        if z == self.currentz:
+#            return
+#        else:
+        self.currentz = z
         for ch in self.zoneroot.childItems:
             ch.graphicitem.setZVisible([z,z])
             for s in ch.childItems:
@@ -258,7 +258,7 @@ class idfZoneModel(QtCore.QAbstractItemModel):
 
         return self.createIndex(parentItem.row(), 0, parentItem)
 
-    def rowCount(self, parent):
+    def rowCount(self, parent=QtCore.QModelIndex()):
         if parent.column() > 0:
             return 0
 
@@ -289,7 +289,7 @@ class idfZoneModel(QtCore.QAbstractItemModel):
         return QtCore.QVariant()
 
 
-    def index(self, row, column, parent):
+    def index(self, row, column, parent=QtCore.QModelIndex()):
         if row < 0 or column < 0 or row >= self.rowCount(parent) or column >= self.columnCount(parent):
             print 'index data out of range'
             return QtCore.QModelIndex()
