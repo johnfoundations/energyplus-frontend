@@ -27,18 +27,18 @@ class zLayers(QtCore.QObject):
 
     def __init__(self,model):
         QtCore.QObject.__init__(self,None)
-        self.model = model
-        if model != None:
-            self.model.setZLayerHandler(self)
         #list of ranges that denote zones, in [[0][9] meaning z starting at zero to nine, etc.
         #the view only knows of floor levels. Details within zones, roof, ceiling, walls, floor is handled by the zone
         self.zlist = []
+        self.tempzlist = []
 
-    def setModel(self,model):
-        self.model = model
-        self.model.setZLayerHandler(self)
+    def insertZ(self,z):
+        self.tempzlist.append(z)
 
+    def setLayersFromTemp(self):
+        self.setLayers(self.tempzlist)
 
+  
     def setLayers(self,zlist):
         print zlist
         self.zlist = []

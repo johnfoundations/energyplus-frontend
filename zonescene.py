@@ -21,6 +21,7 @@
 
 from PyQt4 import QtCore, QtGui
 import zlayers
+import graphicitems
 
 
 class zoneScene(QtGui.QGraphicsScene):
@@ -45,19 +46,26 @@ class zoneScene(QtGui.QGraphicsScene):
     def setModel(self,model):
         print 'zoneScene.setModel',model
         self.model = model
+        self.connect(self.model, QtCore.SIGNAL('modelreset()'), self.initializeItems)
 
 
-    def drawItems(self,painter,numItems, items, options,widget = None ):
-        print 'drawItems',self.model
-
-        for i in items:
+    def drawItems(self, painter, items, options, widget = None):
+        print 'scene drawItems',items
+        for i in items.childItems():
             i.setViewpoint(self.viewpoint)
-            i.setZVisible(self.z)
+            
+#        for i in items.childItems():
+#            i.setZVisible(self.z)
 
-        QtGui.QGraphicsScene.drawItems(self,painter,numItems,items,options,widget)
+        QtGui.QGraphicsScene.drawItems(self,painter,items,options,widget)
 
     def createZoneDelegate(self,index):
         #returns delegate of the right type
+        if index.internalPointer().data.idfclass.getClassnameIDD() == 'Zone':
+            return graphicitems.zoneDelegate(index)
+            
+        else:
+            return graphicitems.surfacePolygonItem(index)
         
 
 
@@ -68,12 +76,16 @@ class zoneScene(QtGui.QGraphicsScene):
 
         for r in range(self.model.rowCount(parentindex)):
             index = self.model.index(r,0,parentindex)
-            zitem = graphicitems.zoneitem(parent)
+            zitem = graphicitems.zoneItem(parent,self)
             #zoneitem is a graphicsitem. delegate is what handles all the model and data, and sets the graphicitem information
-            zitem.setDelegate(createZoneDelegate(index))
+            zitem.setDelegate(self.createZoneDelegate(index))
             self.createItems(zitem,index)
 
     def initializeItems(self):
+        print 'scene initializeItems'
+        self.clear()
         self.createItems(self.rootgroup,QtCore.QModelIndex())
+        self.invalidate(self.sceneRect())
+        
             
         
