@@ -150,7 +150,7 @@ class idfZoneView(QtGui.QWidget):
     def setModel(self,model):
         print 'verticeview set model'
         self.model =  model
-        self.layerhandler.setModel(self.model)
+        self.model.zhandler = self.layerhandler
         self.scene.setModel(self.model)
         self.model.reset()
     

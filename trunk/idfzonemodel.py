@@ -30,85 +30,32 @@ import verticemath
 IdfVerticeRole = 45
 
 class idfZoneModel(QtCore.QAbstractItemModel):
+    modelreset = QtCore.pyqtSignal()
+    
     def __init__(self,scene,idf,parent = None):
         print 'init'
-        self.scene = scene
         self.idf = idf
-        self.zorder = []
-        self.zhandler = None
         self.parentmodel = parent
         self.zoneroot = None
         self.geometryrules = dict()
+        self.zhandler = None
         #self.createZoneTree()
         self.math = verticemath.verticeMath()
         QtCore.QAbstractItemModel.__init__(self, parent)
-        self.currentz = 0
-        self.currentrotation =  []
 
 
     def reset(self):
         print 'zonemodel reset'
         self.createZoneTree()
-        self.populateScene()
-        self.assignScene([0.0,0.0,0.0])
         QtCore.QAbstractItemModel.reset(self)
+        self.modelreset.emit()
     
-    def populateScene(self):
-        print 'zonemodel populatescene'
-        #inserts graphicsitems into scene
-        if self.zoneroot == None:
-            return
-        self.scene.clear()
-        for z in self.zoneroot.childItems:
-            if z.data.idfclass.getName() == 'Undefined':
-                continue
-
-            for s in z.childItems:
-                self.scene.addItem(s.data.graphicitem)
             
-    def assignScene(self,xyz):
-        print 'zonemodel assignscene'
-        #degrees rotation around axes
-#        if xyz == self.currentrotation:
-#            return
-#        else:
-        self.currentrotation = xyz
-        if self.zoneroot == None:
-            return
-        self.zorder = []
-        for ch in self.zoneroot.childItems:
-            if ch.data.idfclass.getName() == 'Undefined':
-                continue
-            ch.data.setPolygon(xyz)
-            self.zorder.append(ch.data.getZ())
-
-        self.insertZ()
 
     def setScene(self,scene):
         print 'zonemodel setscene'
         self.scene =  scene
 
-
-    def showZ(self,z):
-        print 'showZ',z,self.currentz
-#        if z == self.currentz:
-#            return
-#        else:
-        self.currentz = z
-        for ch in self.zoneroot.childItems:
-            ch.graphicitem.setZVisible([z,z])
-            for s in ch.childItems:
-                s.graphicitem.setZVisible([z,z])
-        
-        
-    def insertZ(self):
-        if self.zhandler != None:
-            self.zhandler.setLayers(self.zorder)
-            
-    def setZLayerHandler(self,handler):
-        self.zhandler = handler
-        if len(self.zorder) > 0:
-            self.zhandler.setLayers(self.zorder)
 
         
 
@@ -203,19 +150,9 @@ class idfZoneModel(QtCore.QAbstractItemModel):
         return None,None
         #treeitem,idd class instance
 
-    
-
-
-
-
-    def setZoneClass(self,zoneclass):
-        self.zone = zoneclass
-        if zoneclass == None:
-            self.zoneroot = idfdata.treeItem(None,None)
-        else:
-            self.zoneroot = self.idf.createZoneTree(zoneclass,zoneclass.getGroup())
         
     def columnCount (self, parent):
+        
         return 1
 #        if parent.isValid():
 #            return parent.internalPointer().childCount()
@@ -278,13 +215,16 @@ class idfZoneModel(QtCore.QAbstractItemModel):
 
     def data(self,modelindex,role):
         #retrieve class from idfsource
-        idf = modelindex.internalPointer()
+        titem = modelindex.internalPointer()
 
         if role == QtCore.Qt.ToolTipRole:
-            return QtCore.QVariant(idf.data.idfclass.getMemo())
+            return QtCore.QVariant(titem.data.idfclass.getMemo())
 
         if role == QtCore.Qt.DisplayRole:
-            return QtCore.QVariant(idf.data.idfclass.getName() + ' -- ' + idf.data.idfclass.getClassnameIDD())
+            return QtCore.QVariant(titem.data.idfclass.getName() + ' -- ' + titem.data.idfclass.getClassnameIDD())
+
+        if role == IdfVerticeRole:
+            return titem.data.verticelist
 
         return QtCore.QVariant()
 
