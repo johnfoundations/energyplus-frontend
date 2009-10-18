@@ -425,7 +425,7 @@ class IddObject :
 
 class IddClassGen :
     def __init__(self) :
-        self.fh = open('V3-1-0-Energy+.idd', 'r')
+        self.fh = open('V4-0-0-Energy+.idd', 'r')
         self.type = ''
         self.unit = ''
         self.min = ''
