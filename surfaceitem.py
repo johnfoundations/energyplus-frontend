@@ -30,7 +30,7 @@ verticeclasses = "BuildingSurface:Detailed","Wall:Detailed","RoofCeiling:Detaile
                  "Shading:Zone:Detailed","Shading:Site:Detailed","Shading:Building:Detailed"
         #all have vertices
 
-zoneclasses = ("Zone",)
+zoneclasses = ("Zone","Building")
 
 surfaceelementclasses = "GlazedDoor:Interzone","GlazedDoor","Door","Door:Interzone","Window:Interzone","Window"
         #multiplier,xy,length,height
@@ -61,6 +61,9 @@ class surfaceItem():
 
         if self.idfclass.getClassnameIDD() in azimuthflatclasses:
             self.buildFlatPolygons()
+
+        if self.idfclass.getClassnameIDD() in zoneclasses:
+            self.buildzonePolygons()
 
 
     def getGeometryRules(self):
@@ -237,7 +240,8 @@ class surfaceItem():
             return a
 
 
-
+    def buildzonePolygons(self):
+        self.verticelist = [[0.0,1.0,0.0],[1.0,-1.0,0.0],[-1.0,1.0,0.0],[1.0,1.0,0.0],[-1.0,-1.0,0.0]]
 
 
 

@@ -100,9 +100,10 @@ class verticeMath():
 
         if z != 0:
             zm = self.zmatrix(z)
-
+#        print 'xyz matrices built'
         rlist = []
         for v in vlist:
+#            print 'iterate vlist',v
             vm = self.verticeAsMatrix(v)
 #            print 'as matrix',vm
             if x != 0:
@@ -121,7 +122,8 @@ class verticeMath():
 #            print vm
             a = vm.tolist()
             rlist.append(a[0])
-
+            
+#        print 'rotateverticelist, about to return',rlist
         return rlist
 
     def eq(self,v1,v2):
@@ -145,8 +147,8 @@ class verticeMath():
         return res
         
     def verticeAsMatrix(self,xyz):
+#        print 'verticeAsMatrix'
         m = numpy.matrix([xyz[0],xyz[1],xyz[2],1.0])
-#        m = numpy.asmatrix(m)
         return m
 
     def matrixAsVertice(self,m):

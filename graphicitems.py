@@ -35,8 +35,9 @@ import idfzonemodel
 
 class zoneItem(QtGui.QGraphicsPolygonItem):
     def __init__(self,parent=None,scene=None):
-        QtGui.QGraphicsPolygonItem.__init__(parent,scene)
+        QtGui.QGraphicsPolygonItem.__init__(self,parent,scene)
         self.delegate = None
+        print self.type()
 
 
     def setDelegate(self,delegate):
@@ -44,6 +45,7 @@ class zoneItem(QtGui.QGraphicsPolygonItem):
         self.delegate.setItem(self)
 
     def setZVisible(self,z):
+        return
         #if above z, set invisible, otherwise visible
         print 'setZVisible',z
         if self.delegate != None:
@@ -52,13 +54,21 @@ class zoneItem(QtGui.QGraphicsPolygonItem):
             for c in self.children():
                 c.setVisible(c.delegate.checkZ(z))
 
-    def setViewpoint(self,viewpoint):
+    def setRotation(self,viewpoint):
         if self.delegate:
-            print 'setViewpoint',viewpoint
+            print 'setViewpoint',self,viewpoint
             for c in self.children():
-                c.delegate.setViewpoint(viewpoint)
-            self.delegate.setViewpoint(viewpoint)
+                c.setRotation(viewpoint)
+            self.delegate.setRotation(viewpoint)
 
+    def doPolygon(self):
+        if self.delegate:
+            print self.type()
+            l = self.childItems()
+            print 'doPolygon',l
+            for c in self.childItems():
+                c.doPolygon()
+            self.delegate.setPolygon(self.delegate.rotatedverticelist)
 
 
 class zoneAbstractDelegate(QtCore.QObject):
@@ -69,11 +79,13 @@ class zoneAbstractDelegate(QtCore.QObject):
         self.verticelist = []
         self.rotatedverticelist = []
         self.zorder = zlayers.zLayers(None)
+        self.lastrotate = []
         if index.isValid():
             self.model = index.model()
             self.math = self.model.math
             self.index = QtCore.QPersistentModelIndex(index)
             self.verticelist = self.createVerticeList()
+            print 'verticelist',self.verticelist
             self.idfclass = index.internalPointer().data
         else:
             self.model = None
@@ -83,10 +95,11 @@ class zoneAbstractDelegate(QtCore.QObject):
     def setItem(self,item):
         #link to qgraphicsitem
         self.item = item
+        self.setPolygon(self.verticelist)
 
 
     def createVerticeList(self):
-        return self.index.data(idfzonemodel.IdfVerticeRole)
+        return self.index.data(idfzonemodel.IdfVerticeRole).toPyObject()
 
 
     def checkZ(self,z):
@@ -98,10 +111,10 @@ class zoneAbstractDelegate(QtCore.QObject):
 
         return res
         
-    def setViewpoint(self,viewpoint):
-        print 'delegate setViewpoint',viewpoint
+    def setRotation(self,viewpoint):
+        print 'delegate setViewpoint',viewpoint,self
         self.rotate3d(viewpoint)
-        self.setPolygon(self.rotatedverticelist)
+#        self.setPolygon(self.rotatedverticelist)
         
 
 
@@ -112,11 +125,12 @@ class zoneAbstractDelegate(QtCore.QObject):
             e[1] = e[1] * -1
             p.append(QtCore.QPointF(e[0],e[1]))
 
+        print 'setPolygon',p,polygon
         self.item.setPolygon(p)
 
 
     def rotate3d(self,xyz):
-        pass
+        print 'rotate3d to be subclassed'
 
 
     def getZPoints(self,zrange):
@@ -137,6 +151,9 @@ class zoneDelegate(zoneAbstractDelegate):
         
     def rotate3d(self,xyz):
         print 'zonedelegate rotate3d',xyz
+        if self.lastrotate == xyz:
+            print 'lastrotate',xyz,self.lastrotate
+            return
         #rotate children and build z order
         zo = []
         ztree = self.item
@@ -146,8 +163,11 @@ class zoneDelegate(zoneAbstractDelegate):
             for ch in t.childItems:
                 ch.data.rotate3d(xyz)
                 zo.append(ch.delegate.getZ())
+                
+        print 'zonedelegate about to setLayers'
         self.zorder.setLayers(zo)
         # now build polygon
+        print 'zonedelegate about to cycle through childitems'
         top = self.zorder.layer()[1]
         self.rotatedverticelist = []
         for t in ztree[0].childItems:
@@ -155,19 +175,29 @@ class zoneDelegate(zoneAbstractDelegate):
             for ch in t.childItems:
                 self.rotatedverticelist = self.rotatedverticelist + ch.item.delegate.getZPoints([top,top])
 
-        self.setPolygon(self.rotatedverticelist)
+        print 'zonedelegate about to setPolygon'
+#        self.setPolygon(self.rotatedverticelist)
         self.model.zhandler.insertZ(self.zorder.layer())
 
         
-            
+class buildingDelegate(zoneAbstractDelegate):
+    
+    def rotate3d(self,xzy):
+        print 'buildingDelegate rotate3d'
+    
+    
 
         
             
 
-class surfacePolygonItem(zoneAbstractDelegate):
+class surfacePolygonDelegate(zoneAbstractDelegate):
 
-    def rotate3d(self,x,y,z):
-        self.rotatedverticelist = self.math.rotateVerticeList(self.verticelist,x,y,z)
+    def rotate3d(self,xyz):
+        print 'surfacePolygonItem rotate3d'
+        if self.lastrotate == xyz:
+            print 'lastrotate',xyz,self.lastrotate
+            return
+        self.rotatedverticelist = self.math.rotateVerticeList(self.verticelist,xyz[0],xyz[1],xyz[2])
         self.setPolygon(self.rotatedverticelist)
 
         

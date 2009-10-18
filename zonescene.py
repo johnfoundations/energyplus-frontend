@@ -29,14 +29,16 @@ class zoneScene(QtGui.QGraphicsScene):
         QtGui.QGraphicsScene.__init__(self,parent)
         self.model = None
         #rotation around axis' set by view
-        self.viewpoint = [0.0,0.0,0.0]
+        self.rotation = [0.0,0.0,0.0]
         #set by view
         self.z = 0
 
-        self.rootgroup = self.createItemGroup([])
+        self.rootgroup = None
+        
 
-    def setViewPoint(self,x,y,z):
-        self.viewpoint = [x,y,z]
+
+    def setRotation(self,xyz):
+        self.rotation = [xyz[0],xyz[1],xyz[2]]
         
 
     def setZView(self,z):
@@ -49,15 +51,15 @@ class zoneScene(QtGui.QGraphicsScene):
         self.connect(self.model, QtCore.SIGNAL('modelreset()'), self.initializeItems)
 
 
-    def drawItems(self, painter, items, options, widget = None):
-        print 'scene drawItems',items
-        for i in items.childItems():
-            i.setViewpoint(self.viewpoint)
+#    def drawItems(self, painter, items, options, widget = None):
+#        print 'scene drawItems'
+#        for i in items:
+#            i.setViewpoint(self.viewpoint)
             
 #        for i in items.childItems():
 #            i.setZVisible(self.z)
-
-        QtGui.QGraphicsScene.drawItems(self,painter,items,options,widget)
+#        print 'drawItems qgraphicsscene.................................................'
+#        QtGui.QGraphicsScene.drawItems(self,painter,items,options,widget)
 
     def createZoneDelegate(self,index):
         #returns delegate of the right type
@@ -65,7 +67,7 @@ class zoneScene(QtGui.QGraphicsScene):
             return graphicitems.zoneDelegate(index)
             
         else:
-            return graphicitems.surfacePolygonItem(index)
+            return graphicitems.surfacePolygonDelegate(index)
         
 
 
@@ -73,19 +75,32 @@ class zoneScene(QtGui.QGraphicsScene):
         #recursive
         if self.model == None:
             return
-
+        
         for r in range(self.model.rowCount(parentindex)):
+            print 'createItems iteration', r
             index = self.model.index(r,0,parentindex)
+            print 'create zoneItem'
             zitem = graphicitems.zoneItem(parent,self)
-            #zoneitem is a graphicsitem. delegate is what handles all the model and data, and sets the graphicitem information
+            print 'create setDelegate'
             zitem.setDelegate(self.createZoneDelegate(index))
+            print 'recursive createItems call'
             self.createItems(zitem,index)
+
 
     def initializeItems(self):
         print 'scene initializeItems'
         self.clear()
+        self.rootgroup = graphicitems.zoneItem(None,self)
+        self.rootgroup.setDelegate(graphicitems.buildingDelegate(QtCore.QModelIndex()))
         self.createItems(self.rootgroup,QtCore.QModelIndex())
-        self.invalidate(self.sceneRect())
+        self.setViewPoint(self.rotation,self.z)
+
         
-            
+    def setViewPoint(self,rotation,z):
+        self.rootgroup.delegate.setRotation(rotation)
+        self.setRotation(rotation)
+        self.rootgroup.setZVisible(z)
+        self.setZView(z)
+        self.rootgroup.doPolygon()
+        
         
