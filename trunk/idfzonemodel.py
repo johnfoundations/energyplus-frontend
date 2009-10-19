@@ -224,6 +224,7 @@ class idfZoneModel(QtCore.QAbstractItemModel):
             return QtCore.QVariant(titem.data.idfclass.getName() + ' -- ' + titem.data.idfclass.getClassnameIDD())
 
         if role == IdfVerticeRole:
+            print 'data', titem.data.verticelist
             return QtCore.QVariant(titem.data.verticelist)
 
         return QtCore.QVariant()
