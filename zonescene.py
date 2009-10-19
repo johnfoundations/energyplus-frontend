@@ -81,10 +81,10 @@ class zoneScene(QtGui.QGraphicsScene):
             index = self.model.index(r,0,parentindex)
             print 'create zoneItem'
             zitem = graphicitems.zoneItem(parent,self)
-            print 'create setDelegate'
-            zitem.setDelegate(self.createZoneDelegate(index))
             print 'recursive createItems call'
             self.createItems(zitem,index)
+            print 'create setDelegate'
+            zitem.setDelegate(self.createZoneDelegate(index))
 
 
     def initializeItems(self):

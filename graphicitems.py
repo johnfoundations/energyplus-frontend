@@ -63,9 +63,6 @@ class zoneItem(QtGui.QGraphicsPolygonItem):
 
     def doPolygon(self):
         if self.delegate:
-            print self.type()
-            l = self.childItems()
-            print 'doPolygon',l
             for c in self.childItems():
                 c.doPolygon()
             self.delegate.setPolygon(self.delegate.rotatedverticelist)
@@ -85,7 +82,7 @@ class zoneAbstractDelegate(QtCore.QObject):
             self.math = self.model.math
             self.index = QtCore.QPersistentModelIndex(index)
             self.verticelist = self.createVerticeList()
-            print 'verticelist',self.verticelist
+            self.rotatedverticelist = self.verticelist[:]
             self.idfclass = index.internalPointer().data
         else:
             self.model = None
@@ -114,18 +111,19 @@ class zoneAbstractDelegate(QtCore.QObject):
     def setRotation(self,viewpoint):
         print 'delegate setViewpoint',viewpoint,self
         self.rotate3d(viewpoint)
-#        self.setPolygon(self.rotatedverticelist)
         
 
 
     def setPolygon(self,polygon):
         #reverse y in array
+        print 'Polygon',polygon
         p = QtGui.QPolygonF()
+        d = [0,0]
         for e in polygon:
-            e[1] = e[1] * -1
-            p.append(QtCore.QPointF(e[0],e[1]))
+            d[1] = e[1] * -1
+            d[0] = e[0]
+            p.append(QtCore.QPointF(d[0],d[1]))
 
-        print 'setPolygon',p,polygon
         self.item.setPolygon(p)
 
 
@@ -147,6 +145,25 @@ class zoneAbstractDelegate(QtCore.QObject):
 
 
 class zoneDelegate(zoneAbstractDelegate):
+        
+        
+    def setItem(self,item):
+        self.item = item
+        self.buildZoneOutline()
+        self.setPolygon(self.verticelist)
+        
+        
+    def buildZoneOutline(self):
+        self.rotatedverticelist = []
+        
+        
+        
+        
+        for t in ztree[0].childItems:
+            self.rotatedverticelist = self.rotatedverticelist + t.item.delegate.getZPoints([top,top])
+            for ch in t.childItems:
+                self.rotatedverticelist = self.rotatedverticelist + ch.item.delegate.getZPoints([top,top])
+
         
         
     def rotate3d(self,xyz):
