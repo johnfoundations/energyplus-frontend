@@ -35,6 +35,7 @@ class idfRead :
 
         self.filename = filename
         self.rawclasses = []
+        self.getIddVersion()
         
         try:
             self.fh = open(filename, 'r')
@@ -46,6 +47,22 @@ class idfRead :
         else:
             self.success = False
 
+    def getIddVersion(self):
+        vclass = iddclass.version()
+        vstr = vclass.fieldlist[0].getValue()
+        print 'getIddVersion',vstr
+        v = re.match(r"^([0-9]\.[0-9])\.*",vstr)
+        if v:
+            self.iddversion = v.group(1)
+            
+        else:
+            self.iddversion = ''
+            print 'getIddVersion no match'
+            
+           
+            
+        
+        
 
     def getActiveList(self):
         return self.active
@@ -120,9 +137,9 @@ class idfRead :
                 print 'not valid class',params[0]
                 continue
             if params[0] == 'Version':
-                if params[1].find('3.1') == -1:
+                if params[1].find(self.iddversion) == -1:
                     print 'wrong version number'
-                    self.errormsg = 'Version ' + params[1] + ' Looking for 3.1.0'
+                    self.errormsg = 'Version ' + params[1] + ' Looking for ' + self.iddversion
                     return False
             
             evalstr = 'iddclass.'+ re.sub(r'[:-]','_',params[0]) +'()'
