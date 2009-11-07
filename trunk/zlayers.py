@@ -42,7 +42,7 @@ class zLayers(QtCore.QObject):
     def setLayers(self,zlist):
         print zlist
         self.zlist = []
-        #returns the number of layers within the zlist
+
         l = 0
         if len(zlist) == 0:
             return

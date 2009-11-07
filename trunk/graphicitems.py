@@ -32,7 +32,6 @@ import idfzonemodel
 
 
 
-
 class zoneItem(QtGui.QGraphicsPolygonItem):
     def __init__(self,parent=None,scene=None):
         QtGui.QGraphicsPolygonItem.__init__(self,parent,scene)
@@ -45,23 +44,26 @@ class zoneItem(QtGui.QGraphicsPolygonItem):
         self.delegate.setItem(self)
 
     def setZVisible(self,z):
+#        print 'zoneItem setZVisible'
         return
         #if above z, set invisible, otherwise visible
-        print 'setZVisible',z
+#        print 'setZVisible',z
         if self.delegate != None:
-            print 'setZVisible '
+#            print 'setZVisible '
             self.setVisible(self.delegate.checkZ(z))
             for c in self.children():
                 c.setVisible(c.delegate.checkZ(z))
 
     def setRotation(self,viewpoint):
+#        print 'zoneItem setRotation'
         if self.delegate:
-            print 'setViewpoint',self,viewpoint
+#            print 'setViewpoint',self,viewpoint
             for c in self.children():
                 c.setRotation(viewpoint)
             self.delegate.setRotation(viewpoint)
 
     def doPolygon(self):
+#        print 'zoneItem doPolygon'
         if self.delegate:
             for c in self.childItems():
                 c.doPolygon()
@@ -83,7 +85,7 @@ class zoneAbstractDelegate(QtCore.QObject):
             self.index = QtCore.QPersistentModelIndex(index)
             self.verticelist = self.createVerticeList()
             self.rotatedverticelist = self.verticelist[:]
-            self.idfclass = index.internalPointer().data
+            self.idfclass = index.internalPointer().data.idfclass
         else:
             self.model = None
             self.idfclass = None
@@ -91,6 +93,7 @@ class zoneAbstractDelegate(QtCore.QObject):
 
     def setItem(self,item):
         #link to qgraphicsitem
+#        print 'zoneAbstractDelegate setItem'
         self.item = item
         self.setPolygon(self.verticelist)
 
@@ -109,22 +112,23 @@ class zoneAbstractDelegate(QtCore.QObject):
         return res
         
     def setRotation(self,viewpoint):
-        print 'delegate setViewpoint',viewpoint,self
+#        print 'delegate setViewpoint',viewpoint,self
         self.rotate3d(viewpoint)
         
 
 
     def setPolygon(self,polygon):
         #reverse y in array
-        print 'Polygon',polygon
         p = QtGui.QPolygonF()
         d = [0,0]
         for e in polygon:
             d[1] = e[1] * -1
             d[0] = e[0]
+            print 'setPolygon',d,self.idfclass.getName()
             p.append(QtCore.QPointF(d[0],d[1]))
 
         self.item.setPolygon(p)
+
 
 
     def rotate3d(self,xyz):
@@ -132,9 +136,11 @@ class zoneAbstractDelegate(QtCore.QObject):
 
 
     def getZPoints(self,zrange):
-        #z is a number, any points at z are returned
-        #above is boolean. if true then any points = and above, or higher are returned.
-        #if false, any points equal and below
+        #zrange is a array
+        #if array is empty, all points returned
+        #otherwise points within and equal to either values
+        if len(zrange) == 0:
+            return self.rotatedverticelist
         zpts = []
         for v in self.rotatedverticelist:
             if zrange[0] >= v[2] or zrange[1] <= v[2]:
@@ -148,23 +154,87 @@ class zoneDelegate(zoneAbstractDelegate):
         
         
     def setItem(self,item):
+        print 'zoneDelegate setItem'
         self.item = item
         self.buildZoneOutline()
         self.setPolygon(self.verticelist)
         
         
     def buildZoneOutline(self):
-        self.rotatedverticelist = []
-        
-        
-        
-        
-        for t in ztree[0].childItems:
-            self.rotatedverticelist = self.rotatedverticelist + t.item.delegate.getZPoints([top,top])
-            for ch in t.childItems:
-                self.rotatedverticelist = self.rotatedverticelist + ch.item.delegate.getZPoints([top,top])
+        print self.idfclass.getName()
+#        QtCore.pyqtRemoveInputHook() 
+#        import pdb 
+#        pdb.set_trace() 
+        self.verticelist = self.getOutline(self.item)
 
+    def getOutline(self,item):
+        vlist = []
+        nonfit = []
+        for t in item.childItems():
+            
+            clist = t.delegate.getZPoints([])
+            clean = self.removeDups(clist)
+            
+            if len(clean) > 2:
+                #is it floor or ceiling, slanted wall, what?
+                continue
+                
+                    
+            if len(vlist) == 0:
+                vlist.append(clean[0])
+                vlist.append(clean[1])
+                continue
+            
+#            print 'getOutline',vlist,clean
+            if self.compareXY(vlist[len(vlist)-1],clean[0]):
+                vlist.append(clean[1])
+                continue
+            
+            if self.compareXY(vlist[len(vlist)-1], clean[1]):
+                vlist.append(clean[0])
+                continue
+            
+            nonfit.append(clean)
+            
+        while len(nonfit) > 0:
+            for i in nonfit:
+                if self.compareXY(vlist[len(vlist)-1],i[0]):
+                    vlist.append(i[1])
+                    nonfit.remove(i)
+                    break
+            
+                if self.compareXY(vlist[len(vlist)-1],i[1]):
+                    vlist.append(i[0])
+                    nonfit.remove(i)
+                    break
+                    
+        return vlist
         
+    def removeDups(self,vlist):
+        llist = [vlist[0]]
+        exists = False
+        for v in vlist:
+            #print 'removeDups',v
+            for l in llist:
+#                print l
+                if (abs(l[0] - v[0]) < 0.001) and (abs(l[1]-v[1]) < 0.001):
+                    exists = True
+
+            #print 'exists',exists
+            if exists == False:
+                llist.append(v)
+                
+            exists = False
+            
+        return llist
+                    
+        
+    def compareXY(self,v1, v2):
+        
+        if (abs(v1[0]-v2[0]) < 0.001) and (abs(v1[1]-v2[1]) < 0.001):
+            return True
+        else:
+            return False
         
     def rotate3d(self,xyz):
         print 'zonedelegate rotate3d',xyz
@@ -217,7 +287,13 @@ class surfacePolygonDelegate(zoneAbstractDelegate):
         self.rotatedverticelist = self.math.rotateVerticeList(self.verticelist,xyz[0],xyz[1],xyz[2])
         self.setPolygon(self.rotatedverticelist)
 
-        
+    def setItem(self,item):
+        #link to qgraphicsitem
+        print 'surfacePolygonDelegate setItem'
+        self.item = item
+        self.setPolygon(self.verticelist)
+        self.item.setVisible(False)
+ 
 
 
         

@@ -67,7 +67,7 @@ class surfaceItem():
 
 
     def getGeometryRules(self):
-        return self.surfacemodel.getGeometryRules()
+        return self.model.getGeometryRules()
 
 
     def buildVerticePolygons(self):
@@ -76,7 +76,7 @@ class surfaceItem():
         vindex = 0
         vertices = []
         v = []
-        for c,f in enumerate(self.treeparent.idfclass.fieldlist):
+        for c,f in enumerate(self.idfclass.fieldlist):
             if f.getFieldName() == 'Number of Vertices':
                 vindex = c + 1
                 ei = 0
@@ -92,12 +92,12 @@ class surfaceItem():
                     continue
                 ei = ei + 1
 
-        if self.surfaceitem.getGeometryRules()["Vertex Entry Direction"] == "Counterclockwise":
+        if self.getGeometryRules()["Vertex Entry Direction"] == "Counterclockwise":
             vertices.reverse()
             first = vertices.pop()
             vertices.insert(0,first)
 
-        rules = self.surfaceitem.getGeometryRules()["Starting Vertex Position"]
+        rules = self.getGeometryRules()["Starting Vertex Position"]
         if rules == "UpperLeftCorner" or "UpperRightCorner" or "LowerRightCorner":
             v1 = numpy.subtract(vertices[1],vertices[0])
             v2 = numpy.subtract(vertices[-1],vertices[0])
@@ -138,7 +138,7 @@ class surfaceItem():
             if dindex > 0:
                 vertices = vertices[dindex:len(vertices)] + vertices[0:dindex]
 
-        if self.surfaceitem.getGeometryRules()["Coordinate System"] == "Relative" or "World":
+        if self.getGeometryRules()["Coordinate System"] == "Relative" or "World":
             origin = self.getZoneOrigin()
         else:
             origin = [0.0,0.0,0.0]
