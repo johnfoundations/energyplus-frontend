@@ -93,7 +93,7 @@ class zoneScene(QtGui.QGraphicsScene):
         self.rootgroup = graphicitems.zoneItem(None,self)
         self.rootgroup.setDelegate(graphicitems.buildingDelegate(QtCore.QModelIndex()))
         self.createItems(self.rootgroup,QtCore.QModelIndex())
-        self.setViewPoint(self.rotation,self.z)
+        #self.setViewPoint(self.rotation,self.z)
 
         
     def setViewPoint(self,rotation,z):
