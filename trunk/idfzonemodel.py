@@ -38,6 +38,7 @@ class idfZoneModel(QtCore.QAbstractItemModel):
         self.parentmodel = parent
         self.zoneroot = None
         self.geometryrules = dict()
+        self.itemdict = dict()
         self.zhandler = None
         #self.createZoneTree()
         self.math = verticemath.verticeMath()
@@ -110,17 +111,16 @@ class idfZoneModel(QtCore.QAbstractItemModel):
         undefnode = idfdata.treeItem(self.zoneroot,surfaceitem.surfaceItem(undefclass,self))
         for k,l in zonelist.iteritems():
             #create treeitem
-#            if l[0] == None:
-#                continue
-#            print k,l
             if k == 'Undefined':
                 zti = undefnode
             else:
                 zti = idfdata.treeItem(self.zoneroot,surfaceitem.surfaceItem(l.pop(0),self))
+                self.itemdict[k] = zti
 
             self.zoneroot.appendChild(zti)
             for c in l:
                 sti = idfdata.treeItem(zti,surfaceitem.surfaceItem(c,self))
+                self.itemdict[c.getName()] = sti
                 if c.getName() in surfacedict:
                     for cl in surfacedict[c.getName()]:
                         sti.appendChild(idfdata.treeItem(sti,surfaceitem.surfaceItem(cl,self)))
@@ -149,6 +149,11 @@ class idfZoneModel(QtCore.QAbstractItemModel):
 
         return None,None
         #treeitem,idd class instance
+
+    def getSurface(self,surfacename):
+        if surfacename in self.itemdict:
+            return self.itemdict[surfacename].data
+        
 
         
     def columnCount (self, parent):

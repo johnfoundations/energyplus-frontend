@@ -28,6 +28,7 @@ class zoneScene(QtGui.QGraphicsScene):
     def __init__(self,parent = None):
         QtGui.QGraphicsScene.__init__(self,parent)
         self.model = None
+        self.itemwithfocus = None
         #rotation around axis' set by view
         self.rotation = [0.0,0.0,0.0]
         #set by view
@@ -103,4 +104,6 @@ class zoneScene(QtGui.QGraphicsScene):
         self.setZView(z)
         self.rootgroup.doPolygon()
         
-        
+    def focusInEvent(self,event):
+        print 'zoneScene focusInEvent'
+        QtGui.QGraphicsScene.focusInEvent(self,event)

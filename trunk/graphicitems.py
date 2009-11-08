@@ -36,7 +36,23 @@ class zoneItem(QtGui.QGraphicsPolygonItem):
     def __init__(self,parent=None,scene=None):
         QtGui.QGraphicsPolygonItem.__init__(self,parent,scene)
         self.delegate = None
+        self.setFlag(QtGui.QGraphicsItem.ItemIsFocusable)
         print self.type()
+
+    def focusInEvent (self, event):
+        print 'zoneItem focusInEvent'
+        if self.scene().itemwithfocus != None:
+            self.scene().itemwithfocus.showItems(False)
+            self.scene().itemwithfocus.setVisible(True)
+        self.scene().itemwithfocus = self
+        self.showItems(True)
+        self.setVisible(False)
+    
+
+    def showItems(self,show):
+        self.setVisible(show)
+        for c in self.children():
+            c.showItems(show)
 
 
     def setDelegate(self,delegate):
@@ -91,6 +107,14 @@ class zoneAbstractDelegate(QtCore.QObject):
             self.idfclass = None
             self.index = QtCore.QPersistentModelIndex()
 
+
+    def setStyle(self):
+        pen = self.item.pen()
+        pen.setColor(QtCore.Qt.black)
+        pen.setWidthF(0.1)
+        self.item.setPen(pen)
+
+
     def setItem(self,item):
         #link to qgraphicsitem
 #        print 'zoneAbstractDelegate setItem'
@@ -119,12 +143,14 @@ class zoneAbstractDelegate(QtCore.QObject):
 
     def setPolygon(self,polygon):
         #reverse y in array
+
+        self.setStyle()
         p = QtGui.QPolygonF()
         d = [0,0]
         for e in polygon:
             d[1] = e[1] * -1
             d[0] = e[0]
-            print 'setPolygon',d,self.idfclass.getName()
+#            print 'setPolygon',d,self.idfclass.getName()
             p.append(QtCore.QPointF(d[0],d[1]))
 
         self.item.setPolygon(p)
@@ -152,6 +178,12 @@ class zoneAbstractDelegate(QtCore.QObject):
 
 class zoneDelegate(zoneAbstractDelegate):
         
+        
+    def setStyle(self):
+        pen = self.item.pen()
+        pen.setColor(QtCore.Qt.black)
+        pen.setWidthF(0.1)
+        self.item.setPen(pen)
         
     def setItem(self,item):
         print 'zoneDelegate setItem'
@@ -279,6 +311,14 @@ class buildingDelegate(zoneAbstractDelegate):
 
 class surfacePolygonDelegate(zoneAbstractDelegate):
 
+    def setStyle(self):
+        pen = self.item.pen()
+        pen.setColor(QtCore.Qt.darkGray)
+        pen.setWidthF(0.3)
+        self.item.setPen(pen)
+    
+
+
     def rotate3d(self,xyz):
         print 'surfacePolygonItem rotate3d'
         if self.lastrotate == xyz:
@@ -292,7 +332,7 @@ class surfacePolygonDelegate(zoneAbstractDelegate):
         print 'surfacePolygonDelegate setItem'
         self.item = item
         self.setPolygon(self.verticelist)
-        self.item.setVisible(False)
+#        self.item.setVisible(False)
  
 
 
