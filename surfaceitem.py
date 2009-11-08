@@ -26,18 +26,23 @@ import math
 import numpy
 
 
-verticeclasses = "BuildingSurface:Detailed","Wall:Detailed","RoofCeiling:Detailed","Floor:Detailed","FenestrationSurface:Detailed",\
-                 "Shading:Zone:Detailed","Shading:Site:Detailed","Shading:Building:Detailed"
+verticeclasses = "BuildingSurface:Detailed","Wall:Detailed","RoofCeiling:Detailed","Floor:Detailed"
+                 
+verticesurfaceelementclasses = "FenestrationSurface:Detailed"
         #all have vertices
+
+verticeshadingclasses = "Shading:Zone:Detailed","Shading:Site:Detailed","Shading:Building:Detailed"
+
 
 zoneclasses = ("Zone","Building")
 
 surfaceelementclasses = "GlazedDoor:Interzone","GlazedDoor","Door","Door:Interzone","Window:Interzone","Window"
         #multiplier,xy,length,height
 
-azimuthwallclasses = "Wall:Exterior","Wall:Adiabatic","Wall:Underground","Wall:Interzone","Shading:Site",\
-                     "Shading:Building"
+azimuthwallclasses = "Wall:Exterior","Wall:Adiabatic","Wall:Underground","Wall:Interzone",
         #azimuth,tilt,xyz,length,width
+        
+azimuthshadingclasses = "Shading:Site","Shading:Building"
 
 azimuthflatclasses = "Ceiling:Adiabatic","Ceiling:Interzone","Floor:GroundContact","Floor:Adiabatic","Floor:Interzone",\
                      "Roof"
@@ -50,6 +55,7 @@ class surfaceItem():
         self.model = surfacemodel
         self.math = self.model.math
         self.verticelist = []
+        self.surfaceorigin = []
         if self.idfclass.getClassnameIDD() in verticeclasses:
             self.buildVerticePolygons()
 
@@ -150,11 +156,34 @@ class surfaceItem():
             v[2] = v[2] + origin[2]
 
         self.verticelist = vertices
-
+        self.surfaceorigin = self.verticelist[0][:]
 
 
     def buildSurfaceElementPolygons(self):
-        pass
+
+        surface = self.model.getSurface(self.idfclass.getFieldDataByName('Building Surface Name'))
+        print surface
+        origin = surface.surfaceorigin
+        
+        azimuth = self.azimuthtoccw(surface.idfclass.getFieldDataByName('Azimuth Angle'))
+        if azimuth > 360:
+            azimuth = azimuth - 360
+        azimuth = math.radians(azimuth)
+       
+        tilt = math.radians(float(surface.idfclass.getFieldDataByName('Tilt Angle')))
+
+
+        origin[0] = origin[0] + float(self.idfclass.getFieldDataByName('Starting X Coordinate'))
+        origin[2] = origin[2] + float(self.idfclass.getFieldDataByName('Starting Z Coordinate'))
+        
+        length = float(self.idfclass.getFieldDataByName('Length'))
+        height = float(self.idfclass.getFieldDataByName('Height'))
+
+        self.calculateVertices(origin,azimuth,tilt,length,height)
+
+
+
+
 
     def buildWallPolygons(self):
         azimuth = self.azimuthtoccw(self.idfclass.getFieldDataByName('Azimuth Angle'))
@@ -210,6 +239,8 @@ class surfaceItem():
         self.verticelist[0][1] = origin[1] + scoords[1]
         self.verticelist[0][2] = origin[2] + scoords[2]
 
+        self.surfaceorigin = self.verticelist[0][:]
+
         self.verticelist[1][0] = self.verticelist[1][0] + origin[0] + scoords[0]
         self.verticelist[1][1] = self.verticelist[1][1] + origin[1] + scoords[1]
         self.verticelist[1][2] = self.verticelist[1][2] + origin[2] + scoords[2]
@@ -231,6 +262,10 @@ class surfaceItem():
         y = float(zone[1].getFieldDataByName('Y Origin'))
         z = float(zone[1].getFieldDataByName('Z Origin'))
         return [x,y,x]
+        
+    def getSurfaceOrigin(self):
+        surface = self.model.getSurface(self.idfclass.getFieldDataByName('Building Surface Name'))
+        return surface.surfaceorigin
 
     def azimuthtoccw(self,azimuth):
         a = 180 - float(azimuth)
@@ -242,6 +277,11 @@ class surfaceItem():
 
     def buildzonePolygons(self):
         self.verticelist = [[0.0,1.0,0.0],[1.0,-1.0,0.0],[-1.0,1.0,0.0],[1.0,1.0,0.0],[-1.0,-1.0,0.0]]
+#        x = float(self.idfclass.getFieldDataByName('X Origin'))
+#        y = float(self.idfclass.getFieldDataByName('Y Origin'))
+#        z = float(self.idfclass.getFieldDataByName('Z Origin'))
+#        self.surfaceorigin = [x,y,z]
+
 
 
 
