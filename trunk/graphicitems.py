@@ -352,6 +352,7 @@ class wallDelegate(surfacePolygonDelegate):
         pen.setColor(QtCore.Qt.darkBlue)
         pen.setWidthF(0.3)
         pen.setJoinStyle(QtCore.Qt.MiterJoin)
+        pen.setMiterLimit(1)
         self.item.setPen(pen)
     
 
@@ -378,7 +379,7 @@ class ceilingDelegate(surfacePolygonDelegate):
     
     def setStyle(self):
         pen = self.item.pen()
-        pen.setColor(QtCore.Qt.transparent)
+        pen.setColor(QtCore.Qt.darkGreen)
         pen.setWidthF(0.3)
         pen.setJoinStyle(QtCore.Qt.MiterJoin)
         self.item.setPen(pen)
