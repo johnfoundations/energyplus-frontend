@@ -40,18 +40,24 @@ class zoneItem(QtGui.QGraphicsPolygonItem):
         print self.type()
 
     def focusInEvent (self, event):
-        print 'zoneItem focusInEvent'
+        print 'zoneItem focusInEvent',self.delegate
         if self.scene().itemwithfocus != None:
             self.scene().itemwithfocus.showItems(False)
             self.scene().itemwithfocus.setVisible(True)
         self.scene().itemwithfocus = self
         self.showItems(True)
-        self.setVisible(False)
+       # self.setVisible(False)
     
 
     def showItems(self,show):
+#        QtCore.pyqtRemoveInputHook() 
+#        import pdb 
+#        pdb.set_trace() 
+
+        print 'showItems',show,self,self.delegate
         self.setVisible(show)
         for c in self.children():
+            print c,c.delegate
             c.showItems(show)
 
 
@@ -112,6 +118,7 @@ class zoneAbstractDelegate(QtCore.QObject):
         pen = self.item.pen()
         pen.setColor(QtCore.Qt.black)
         pen.setWidthF(0.1)
+        pen.setJoinStyle(QtCore.Qt.MiterJoin)
         self.item.setPen(pen)
 
 
@@ -147,13 +154,18 @@ class zoneAbstractDelegate(QtCore.QObject):
         self.setStyle()
         p = QtGui.QPolygonF()
         d = [0,0]
+        za = 0
         for e in polygon:
             d[1] = e[1] * -1
             d[0] = e[0]
 #            print 'setPolygon',d,self.idfclass.getName()
             p.append(QtCore.QPointF(d[0],d[1]))
+            za = za + e[2]
 
         self.item.setPolygon(p)
+        if len(polygon) > 0:
+            a = za / len(polygon)
+            self.item.setZValue(a)
 
 
 
@@ -183,6 +195,7 @@ class zoneDelegate(zoneAbstractDelegate):
         pen = self.item.pen()
         pen.setColor(QtCore.Qt.black)
         pen.setWidthF(0.1)
+        pen.setJoinStyle(QtCore.Qt.MiterJoin)
         self.item.setPen(pen)
         
     def setItem(self,item):
@@ -194,9 +207,6 @@ class zoneDelegate(zoneAbstractDelegate):
         
     def buildZoneOutline(self):
         print self.idfclass.getName()
-#        QtCore.pyqtRemoveInputHook() 
-#        import pdb 
-#        pdb.set_trace() 
         self.verticelist = self.getOutline(self.item)
 
     def getOutline(self,item):
@@ -311,12 +321,13 @@ class buildingDelegate(zoneAbstractDelegate):
 
 class surfacePolygonDelegate(zoneAbstractDelegate):
 
+    
     def setStyle(self):
         pen = self.item.pen()
         pen.setColor(QtCore.Qt.darkGray)
-        pen.setWidthF(0.3)
+        pen.setWidthF(0.2)
+        pen.setJoinStyle(QtCore.Qt.MiterJoin)
         self.item.setPen(pen)
-    
 
 
     def rotate3d(self,xyz):
@@ -332,9 +343,57 @@ class surfacePolygonDelegate(zoneAbstractDelegate):
         print 'surfacePolygonDelegate setItem'
         self.item = item
         self.setPolygon(self.verticelist)
-#        self.item.setVisible(False)
+        self.item.setVisible(False)
  
+class wallDelegate(surfacePolygonDelegate):
+    
+    def setStyle(self):
+        pen = self.item.pen()
+        pen.setColor(QtCore.Qt.darkBlue)
+        pen.setWidthF(0.3)
+        pen.setJoinStyle(QtCore.Qt.MiterJoin)
+        self.item.setPen(pen)
+    
 
-
-        
+    
+class windowDelegate(surfacePolygonDelegate):
+    
+    def setStyle(self):
+        pen = self.item.pen()
+        pen.setColor(QtCore.Qt.yellow)
+        pen.setWidthF(0.3)
+        pen.setJoinStyle(QtCore.Qt.MiterJoin)
+        self.item.setPen(pen)
+    
+class doorDelegate(surfacePolygonDelegate):
+    
+    def setStyle(self):
+        pen = self.item.pen()
+        pen.setColor(QtCore.Qt.darkMagenta)
+        pen.setWidthF(0.3)
+        pen.setJoinStyle(QtCore.Qt.MiterJoin)
+        self.item.setPen(pen)
+    
+class ceilingDelegate(surfacePolygonDelegate):
+    
+    def setStyle(self):
+        pen = self.item.pen()
+        pen.setColor(QtCore.Qt.transparent)
+        pen.setWidthF(0.3)
+        pen.setJoinStyle(QtCore.Qt.MiterJoin)
+        self.item.setPen(pen)
+    
+class floorDelegate(surfacePolygonDelegate):
+    
+    def setStyle(self):
+        pen = self.item.pen()
+        pen.setColor(QtCore.Qt.green)
+        pen.setWidthF(0.3)
+        pen.setJoinStyle(QtCore.Qt.MiterJoin)
+        self.item.setPen(pen)
+        brush = self.item.brush()
+        brush.setColor(QtCore.Qt.gray)
+        self.item.setBrush(brush)
+    
+ 
     

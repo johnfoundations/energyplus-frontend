@@ -24,28 +24,8 @@ import verticemath
 import idfdata
 import math
 import numpy
+from classinfo import *
 
-
-verticeclasses = "BuildingSurface:Detailed","Wall:Detailed","RoofCeiling:Detailed","Floor:Detailed"
-                 
-verticesurfaceelementclasses = "FenestrationSurface:Detailed"
-        #all have vertices
-
-verticeshadingclasses = "Shading:Zone:Detailed","Shading:Site:Detailed","Shading:Building:Detailed"
-
-
-zoneclasses = ("Zone","Building")
-
-surfaceelementclasses = "GlazedDoor:Interzone","GlazedDoor","Door","Door:Interzone","Window:Interzone","Window"
-        #multiplier,xy,length,height
-
-azimuthwallclasses = "Wall:Exterior","Wall:Adiabatic","Wall:Underground","Wall:Interzone",
-        #azimuth,tilt,xyz,length,width
-        
-azimuthshadingclasses = "Shading:Site","Shading:Building"
-
-azimuthflatclasses = "Ceiling:Adiabatic","Ceiling:Interzone","Floor:GroundContact","Floor:Adiabatic","Floor:Interzone",\
-                     "Roof"
 
 
 #data in treeItem points to a surfaceItem
