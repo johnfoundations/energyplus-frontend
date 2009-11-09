@@ -22,7 +22,7 @@
 from PyQt4 import QtCore, QtGui
 import zlayers
 import graphicitems
-
+import classinfo
 
 class zoneScene(QtGui.QGraphicsScene):
     def __init__(self,parent = None):
@@ -64,11 +64,27 @@ class zoneScene(QtGui.QGraphicsScene):
 
     def createZoneDelegate(self,index):
         #returns delegate of the right type
-        if index.internalPointer().data.idfclass.getClassnameIDD() == 'Zone':
+        t = classinfo.constructionType(index.internalPointer().data.idfclass)
+        
+        if t == 'Zone':
             return graphicitems.zoneDelegate(index)
             
-        else:
-            return graphicitems.surfacePolygonDelegate(index)
+        if t == 'Wall':
+            return graphicitems.wallDelegate(index)
+        
+        if t == 'Floor':
+            return graphicitems.floorDelegate(index)
+        
+        if t == 'Window':
+            return graphicitems.windowDelegate(index)
+        
+        if t == 'Door':
+            return graphicitems.doorDelegate(index)
+        
+        if t == 'RoofCeiling':
+            return graphicitems.ceilingDelegate(index)
+        
+        return graphicitems.surfacePolygonDelegate(index)
         
 
 
