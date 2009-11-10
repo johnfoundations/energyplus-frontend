@@ -94,18 +94,13 @@ class zoneScene(QtGui.QGraphicsScene):
             return
         
         for r in range(self.model.rowCount(parentindex)):
-            print 'createItems iteration', r
             index = self.model.index(r,0,parentindex)
-            print 'create zoneItem'
             zitem = graphicitems.zoneItem(parent,self)
-            print 'recursive createItems call'
             self.createItems(zitem,index)
-            print 'create setDelegate'
             zitem.setDelegate(self.createZoneDelegate(index))
 
 
     def initializeItems(self):
-        print 'scene initializeItems'
         self.clear()
         self.rootgroup = graphicitems.zoneItem(None,self)
         self.rootgroup.setDelegate(graphicitems.buildingDelegate(QtCore.QModelIndex()))
@@ -123,3 +118,6 @@ class zoneScene(QtGui.QGraphicsScene):
     def focusInEvent(self,event):
         print 'zoneScene focusInEvent'
         QtGui.QGraphicsScene.focusInEvent(self,event)
+
+
+
