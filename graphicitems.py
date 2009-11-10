@@ -40,7 +40,7 @@ class zoneItem(QtGui.QGraphicsPolygonItem):
         print self.type()
 
     def focusInEvent (self, event):
-        print 'zoneItem focusInEvent',self.delegate
+        print 'zoneItem focusInEvent',self.zValue(),self.delegate
         if self.scene().itemwithfocus != None:
             self.scene().itemwithfocus.showItems(False)
             self.scene().itemwithfocus.setVisible(True)
@@ -54,10 +54,10 @@ class zoneItem(QtGui.QGraphicsPolygonItem):
 #        import pdb 
 #        pdb.set_trace() 
 
-        print 'showItems',show,self,self.delegate
+#        print 'showItems',show,self,self.delegate
         self.setVisible(show)
         for c in self.children():
-            print c,c.delegate
+            print c,c.zValue(),c.delegate
             c.showItems(show)
 
 
@@ -99,7 +99,7 @@ class zoneAbstractDelegate(QtCore.QObject):
         self.math = None
         self.verticelist = []
         self.rotatedverticelist = []
-        self.zorder = zlayers.zLayers(None)
+        self.zorder = zlayers.zLayers()
         self.lastrotate = []
         if index.isValid():
             self.model = index.model()
@@ -208,6 +208,15 @@ class zoneDelegate(zoneAbstractDelegate):
     def buildZoneOutline(self):
         print self.idfclass.getName()
         self.verticelist = self.getOutline(self.item)
+        #find lowest z
+        lz = 3000
+        for v in self.verticelist:
+            if v[2] < lz:
+                lz = v[2]
+                
+        #now set all z values to lz
+        for v in self.verticelist:
+            v[2] = lz
 
     def getOutline(self,item):
         vlist = []
@@ -324,7 +333,7 @@ class surfacePolygonDelegate(zoneAbstractDelegate):
     
     def setStyle(self):
         pen = self.item.pen()
-        pen.setColor(QtCore.Qt.darkGray)
+        pen.setColor(QtCore.Qt.gray)
         pen.setWidthF(0.2)
         pen.setJoinStyle(QtCore.Qt.MiterJoin)
         self.item.setPen(pen)
@@ -351,8 +360,8 @@ class wallDelegate(surfacePolygonDelegate):
         pen = self.item.pen()
         pen.setColor(QtCore.Qt.darkBlue)
         pen.setWidthF(0.3)
-        pen.setJoinStyle(QtCore.Qt.MiterJoin)
-        pen.setMiterLimit(1)
+   #     pen.setJoinStyle(QtCore.Qt.MiterJoin)
+   #     pen.setMiterLimit(1)
         self.item.setPen(pen)
     
 
@@ -380,20 +389,26 @@ class ceilingDelegate(surfacePolygonDelegate):
     def setStyle(self):
         pen = self.item.pen()
         pen.setColor(QtCore.Qt.darkGreen)
-        pen.setWidthF(0.3)
+        pen.setWidthF(0.1)
         pen.setJoinStyle(QtCore.Qt.MiterJoin)
         self.item.setPen(pen)
+        brush = self.item.brush()
+        brush.setColor(QtCore.Qt.green)
+        brush.setStyle(QtCore.Qt.SolidPattern)
+        self.item.setBrush(brush)
+    
     
 class floorDelegate(surfacePolygonDelegate):
     
     def setStyle(self):
         pen = self.item.pen()
-        pen.setColor(QtCore.Qt.green)
-        pen.setWidthF(0.3)
+        pen.setColor(QtCore.Qt.darkGray)
+        pen.setWidthF(0.1)
         pen.setJoinStyle(QtCore.Qt.MiterJoin)
         self.item.setPen(pen)
         brush = self.item.brush()
         brush.setColor(QtCore.Qt.gray)
+        brush.setStyle(QtCore.Qt.SolidPattern)
         self.item.setBrush(brush)
     
  

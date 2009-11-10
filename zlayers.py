@@ -25,72 +25,33 @@ class zLayers(QtCore.QObject):
 
     layerchange = QtCore.pyqtSignal()
 
-    def __init__(self,model):
+    def __init__(self):
         QtCore.QObject.__init__(self,None)
-        #list of ranges that denote zones, in [[0][9] meaning z starting at zero to nine, etc.
-        #the view only knows of floor levels. Details within zones, roof, ceiling, walls, floor is handled by the zone
+        #list of z values
         self.zlist = []
-        self.tempzlist = []
+        self.current = 0 #contains index to current layer
 
     def insertZ(self,z):
-        self.tempzlist.append(z)
+        if z not in self.zlist:
+            self.zlist.append(z)
+            self.zlist = sorted(self.zlist)
+            self.current = len(self.zlist)-1
 
-    def setLayersFromTemp(self):
-        self.setLayers(self.tempzlist)
-
-  
-    def setLayers(self,zlist):
-        print zlist
-        self.zlist = []
-
-        l = 0
-        if len(zlist) == 0:
-            return
-        b = []
-        for l in zlist:
-            if not self.fin(l[0],b):
-                b.append(l[0])
-            if not self.fin(l[1],b):
-                b.append(l[1])
-                
-        b = sorted(b)
-
-
-        if len(b) == 2:
-            self.zlist.append([b[0],b[1]])
-            return
-
-        for c,i in enumerate(b):
-            print c,i
-            if c < 1:
-                continue
-
-            #starts at third
-            self.zlist.append([b[c-1],b[c]])
-
-        self.trigger.emit()
-
-    def fin(self,item,lst):
-        #in, but close not equal
-        for i in lst:
-            if abs(item - i) < 0.001:
-                return True
-
-        return False
 
     def layerCount(self):
         return len(self.zlist)
 
-    def layer(self):
-        if len(self.zlist) == 0:
-            return [0.0,0.0]
-        return [self.zlist[0][0],self.zlist[len(self.zlist)-1][1]]
-    
+    def inc(self):
+        if self.current != len(self.zlist)-1:
+            self.current = self.current + 1
+            
+        return self.zlist[self.current]
+            
+    def dec(self):
+        if self.current != 0:
+            self.current = self.current - 1
+            
+        return self.zlist[self.current]
 
-
-if __name__ == "__main__":
-    z = zLayers(None)
-    z.setLayers([[0,18],[0,9],[9,18],[18,27]])
-    print z.zlist
-    print z.layers()
-
+    def current(self):
+        return self.zlist[self.current]
