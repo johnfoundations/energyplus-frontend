@@ -32,8 +32,6 @@ class idfZoneView(QtGui.QWidget):
         QtGui.QWidget.__init__ (self, parent )
         self.scene = None
         self.model = None
-        self.layerhandler =  zlayers.zLayers(self.model)
-        self.connect(self.layerhandler, QtCore.SIGNAL('layerchange()'), self.buildingLayerChange)
         #viewpoint is unit vertice defining a point from which the scene is viewed in x = east, y = north, z = up
         self.viewpoint = [0.0,0.0,0.0]
         self.layer = 0.0
@@ -163,7 +161,6 @@ class idfZoneView(QtGui.QWidget):
     def setModel(self,model):
         print 'verticeview set model'
         self.model =  model
-        self.model.zhandler = self.layerhandler
         self.scene.setModel(self.model)
         self.model.reset()
     
@@ -208,10 +205,11 @@ class idfZoneView(QtGui.QWidget):
         pass
 
     def viewDrillIn(self):
-        pass
+        self.scene.setZView(False)
+        
 
     def viewDrillOut(self):
-        pass
+        self.scene.setZView(True)
 
 
 

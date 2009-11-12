@@ -40,14 +40,15 @@ class zoneItem(QtGui.QGraphicsPolygonItem):
         print self.type()
 
     def focusInEvent (self, event):
-        print 'zoneItem focusInEvent',self.zValue(),self.delegate
-        if self.scene().itemwithfocus != None:
-            self.scene().itemwithfocus.showItems(False)
-            self.scene().itemwithfocus.setVisible(True)
-        self.scene().itemwithfocus = self
-        self.showItems(True)
-       # self.setVisible(False)
+        print 'zoneItem focusInEvent'
+        if self.delegate:
+            self.delegate.focusIn()
     
+    def focusOutEvent (self,event):
+        print 'zoneItem focusOutEvent'
+        if self.delegate:
+            self.delegate.focusOut()
+        
 
     def showItems(self,show):
 #        QtCore.pyqtRemoveInputHook() 
@@ -57,7 +58,7 @@ class zoneItem(QtGui.QGraphicsPolygonItem):
 #        print 'showItems',show,self,self.delegate
         self.setVisible(show)
         for c in self.children():
-            print c,c.zValue(),c.delegate
+#            print c,c.zValue(),c.delegate
             c.showItems(show)
 
 
@@ -65,16 +66,10 @@ class zoneItem(QtGui.QGraphicsPolygonItem):
         self.delegate = delegate
         self.delegate.setItem(self)
 
-    def setZVisible(self,z):
-#        print 'zoneItem setZVisible'
-        return
-        #if above z, set invisible, otherwise visible
-#        print 'setZVisible',z
+    def setZVisible(self,inc):
         if self.delegate != None:
-#            print 'setZVisible '
-            self.setVisible(self.delegate.checkZ(z))
-            for c in self.children():
-                c.setVisible(c.delegate.checkZ(z))
+            self.delegate.setZ(inc)
+
 
     def setRotation(self,viewpoint):
 #        print 'zoneItem setRotation'
@@ -113,6 +108,12 @@ class zoneAbstractDelegate(QtCore.QObject):
             self.idfclass = None
             self.index = QtCore.QPersistentModelIndex()
 
+    def focusIn(self):
+        pass
+    
+    def focusOut(self):
+        pass
+
 
     def setStyle(self):
         pen = self.item.pen()
@@ -121,6 +122,24 @@ class zoneAbstractDelegate(QtCore.QObject):
         pen.setJoinStyle(QtCore.Qt.MiterJoin)
         self.item.setPen(pen)
 
+    def setZ(self,inc):
+#        print 'setZ',inc,self
+        if inc:
+            value = self.zorder.inc()
+        else:
+            value = self.zorder.dec()
+            
+        for i in self.item.childItems():
+#            print i.delegate,i.delegate.getZAvg()
+            i.setVisible(i.delegate.getZAvg() > value)
+
+        
+    def getZAvg(self):
+        za = 0.0
+        for v in self.rotatedverticelist:
+            za = za + v[2]
+            
+        return za/len(self.rotatedverticelist)
 
     def setItem(self,item):
         #link to qgraphicsitem
@@ -190,7 +209,8 @@ class zoneAbstractDelegate(QtCore.QObject):
 
 class zoneDelegate(zoneAbstractDelegate):
         
-        
+
+
     def setStyle(self):
         pen = self.item.pen()
         pen.setColor(QtCore.Qt.black)
@@ -224,6 +244,13 @@ class zoneDelegate(zoneAbstractDelegate):
         for t in item.childItems():
             
             clist = t.delegate.getZPoints([])
+            za = 0.0
+            for c in clist:
+                za = za + c[2]
+                
+            self.zorder.insertZ(za/len(clist))
+                
+            
             clean = self.removeDups(clist)
             
             if len(clean) > 2:
@@ -317,13 +344,33 @@ class zoneDelegate(zoneAbstractDelegate):
 #        self.setPolygon(self.rotatedverticelist)
         self.model.zhandler.insertZ(self.zorder.layer())
 
+    def focusIn(self):
+#        if self.item.scene().itemwithfocus != None:
+#            self.item.scene().itemwithfocus.focusOut()
+           
+        self.item.scene().itemwithfocus = self
+        self.item.showItems(True)
+
+    def focusOut(self):
+         self.item.showItems(False)
+         self.item.setVisible(True)
+
+
+
         
 class buildingDelegate(zoneAbstractDelegate):
     
     def rotate3d(self,xzy):
         print 'buildingDelegate rotate3d'
     
-    
+    def buildZ(self):
+        for i in self.item.childItems():
+            za = 0.0
+            for v in i.delegate.rotatedverticelist:
+                za = za + v[2]
+            
+            if len(i.delegate.rotatedverticelist) > 0:
+                self.zorder.insertZ(za/len(i.delegate.rotatedverticelist))
 
         
             
