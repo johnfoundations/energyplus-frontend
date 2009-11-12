@@ -42,8 +42,14 @@ class zoneScene(QtGui.QGraphicsScene):
         self.rotation = [xyz[0],xyz[1],xyz[2]]
         
 
-    def setZView(self,z):
-        self.z = z
+    def setZView(self,inc):
+        if self.itemwithfocus != None:
+            self.itemwithfocus.item.setZVisible(inc)
+            
+        else:
+            self.rootgroup.item.setZVisible(inc)
+            
+
 
 
     def setModel(self,model):
@@ -105,8 +111,8 @@ class zoneScene(QtGui.QGraphicsScene):
         self.rootgroup = graphicitems.zoneItem(None,self)
         self.rootgroup.setDelegate(graphicitems.buildingDelegate(QtCore.QModelIndex()))
         self.createItems(self.rootgroup,QtCore.QModelIndex())
-        #self.setViewPoint(self.rotation,self.z)
-
+        self.rootgroup.delegate.buildZ()
+        
         
     def setViewPoint(self,rotation,z):
         self.rootgroup.delegate.setRotation(rotation)
@@ -118,6 +124,5 @@ class zoneScene(QtGui.QGraphicsScene):
     def focusInEvent(self,event):
         print 'zoneScene focusInEvent'
         QtGui.QGraphicsScene.focusInEvent(self,event)
-
 
 
