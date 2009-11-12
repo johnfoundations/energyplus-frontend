@@ -32,6 +32,7 @@ class idfZoneView(QtGui.QWidget):
         QtGui.QWidget.__init__ (self, parent )
         self.scene = None
         self.model = None
+        self.statusbar = None
         #viewpoint is unit vertice defining a point from which the scene is viewed in x = east, y = north, z = up
         self.viewpoint = [0.0,0.0,0.0]
         self.layer = 0.0
@@ -164,6 +165,10 @@ class idfZoneView(QtGui.QWidget):
         self.scene.setModel(self.model)
         self.model.reset()
     
+    def setStatusBar(self,bar):
+        self.statusbar = bar
+        self.scene.statusbar = self.statusbar
+
 
     def buildingLayerChange(self):
         print 'buildingLayerChange'

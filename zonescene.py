@@ -29,6 +29,7 @@ class zoneScene(QtGui.QGraphicsScene):
         QtGui.QGraphicsScene.__init__(self,parent)
         self.model = None
         self.itemwithfocus = None
+        self.statusbar = None
         #rotation around axis' set by view
         self.rotation = [0.0,0.0,0.0]
         #set by view
