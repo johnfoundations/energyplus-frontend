@@ -35,6 +35,8 @@ class idfmodeltest(QtGui.QMainWindow):
         self.idfmodel = None
         self.zoom = 10
 
+        self.sbar = QtGui.QStatusBar()
+        self.setStatusBar(self.sbar)
         self.createActions()
         self.createMenus()
 
@@ -62,6 +64,7 @@ class idfmodeltest(QtGui.QMainWindow):
         
         self.verticeview = idfzoneview.idfZoneView()
         self.verticeview.setModel(self.model)
+        self.verticeview.setStatusBar(self.sbar)
         splitter.addWidget(self.verticeview)
         return splitter
 

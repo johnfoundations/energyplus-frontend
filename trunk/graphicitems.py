@@ -27,27 +27,25 @@ import idfzonemodel
 
 
 
-
-
-
-
-
 class zoneItem(QtGui.QGraphicsPolygonItem):
     def __init__(self,parent=None,scene=None):
         QtGui.QGraphicsPolygonItem.__init__(self,parent,scene)
         self.delegate = None
         self.setFlag(QtGui.QGraphicsItem.ItemIsFocusable)
-        print self.type()
+        self.setAcceptHoverEvents(True)
 
     def focusInEvent (self, event):
-        print 'zoneItem focusInEvent'
         if self.delegate:
             self.delegate.focusIn()
     
     def focusOutEvent (self,event):
-        print 'zoneItem focusOutEvent'
         if self.delegate:
             self.delegate.focusOut()
+        
+    def hoverEnterEvent (self,event):
+        self.scene().statusbar.showMessage('%s %s'% (self.delegate.idfclass.getClassnameIDD(),self.delegate.idfclass.getName()))
+            
+#    def hoverLeaveEvent (self,event):  
         
 
     def showItems(self,show):
