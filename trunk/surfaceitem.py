@@ -19,6 +19,7 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************"""
 
+from PyQt4 import QtCore
 import graphicitems
 import verticemath
 import idfdata
@@ -140,26 +141,60 @@ class surfaceItem():
 
 
     def buildSurfaceElementPolygons(self):
+#        QtCore.pyqtRemoveInputHook() 
+#        import pdb 
+#        pdb.set_trace() 
+
+
 
         surface = self.model.getSurface(self.idfclass.getFieldDataByName('Building Surface Name'))
         print surface
+
         origin = surface.surfaceorigin
-        
-        azimuth = self.azimuthtoccw(surface.idfclass.getFieldDataByName('Azimuth Angle'))
-        if azimuth > 360:
-            azimuth = azimuth - 360
-        azimuth = math.radians(azimuth)
-       
-        tilt = math.radians(float(surface.idfclass.getFieldDataByName('Tilt Angle')))
-
-
-        origin[0] = origin[0] + float(self.idfclass.getFieldDataByName('Starting X Coordinate'))
-        origin[2] = origin[2] + float(self.idfclass.getFieldDataByName('Starting Z Coordinate'))
+        x = float(self.idfclass.getFieldDataByName('Starting X Coordinate'))
+        z = float(self.idfclass.getFieldDataByName('Starting Z Coordinate'))
         
         length = float(self.idfclass.getFieldDataByName('Length'))
         height = float(self.idfclass.getFieldDataByName('Height'))
+        
+        self.verticelist = [[0.0,0.0,0.0],[0.0,0.0,0.0],[0.0,0.0,0.0],[0.0,0.0,0.0]]
+        
+        #normalize bottom vector
+        basevector = self.math.transform(surface.verticelist[0],surface.verticelist[3])
+        
+        #normalize vertical vector
+        vertvector = self.math.transform(surface.verticelist[0],surface.verticelist[1])
+        
+        b1 = self.math.mult(basevector,x/self.math.dist(basevector))
+        b2 = self.math.mult(basevector,(length+x)/self.math.dist(basevector))
+        
+        t1 = self.math.transform(b1,self.math.add(b1,vertvector))
+        t2 = self.math.transform(b2,self.math.add(b2,vertvector))
+        
+        self.verticelist[0] = self.math.mult(t1,z/self.math.dist(vertvector))
+        self.verticelist[1] = self.math.mult(t1,(z+height)/self.math.dist(vertvector))
+        
+        self.verticelist[3] = self.math.mult(t2,z/self.math.dist(vertvector))
+        self.verticelist[2] = self.math.mult(t2,(z+height)/self.math.dist(vertvector))
+        
+        #denormalize
+        self.verticelist[0] = self.math.add(self.verticelist[0],b1)
+        self.verticelist[0] = self.math.add(self.verticelist[0],origin)
+        
+        self.verticelist[1] = self.math.add(self.verticelist[1],b1)
+        self.verticelist[1] = self.math.add(self.verticelist[1],origin)
+        
+        self.verticelist[3] = self.math.add(self.verticelist[3],b2)
+        self.verticelist[3] = self.math.add(self.verticelist[3],origin)
+        
+        self.verticelist[2] = self.math.add(self.verticelist[2],b2)
+        self.verticelist[2] = self.math.add(self.verticelist[2],origin)
+        self.surfaceorigin = self.verticelist[0][:]
 
-        self.calculateVertices(origin,azimuth,tilt,length,height)
+
+        
+        
+
 
 
 
@@ -181,8 +216,13 @@ class surfaceItem():
 
 
     def buildFlatPolygons(self):
+#        QtCore.pyqtRemoveInputHook() 
+#        import pdb 
+#        pdb.set_trace() 
+
         azimuth = math.radians(0)
-        tilt = math.radians(float(self.idfclass.getFieldDataByName('Tilt Angle')))
+        tilt = math.radians(0)
+        #tilt = math.radians(float(self.idfclass.getFieldDataByName('Tilt Angle')))
         sorigin     = numpy.array([float(self.idfclass.getFieldDataByName('Starting X Coordinate')), \
                                    float(self.idfclass.getFieldDataByName('Starting Y Coordinate')), \
                                    float(self.idfclass.getFieldDataByName('Starting Z Coordinate'))])
