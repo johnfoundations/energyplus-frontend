@@ -121,9 +121,10 @@ class verticeMath():
 
 #            print vm
             a = vm.tolist()
-            rlist.append(a[0])
             
-#        print 'rotateverticelist, about to return',rlist
+            rlist.append(a[0][0:3])
+            
+        print 'rotateverticelist',rlist
         return rlist
 
     def eq(self,v1,v2):
@@ -153,6 +154,36 @@ class verticeMath():
 
     def matrixAsVertice(self,m):
         return  [m[0][0],m[1][1],m[2][2]]
+        
+        
+        
+    def dist(self,v):
+        return math.sqrt(math.pow(v[0],2) + math.pow(v[1],2) + math.pow(v[2],2))
+                                  
+
+                                    
+    def transform(self,v1,v2):
+        #v1 is origin
+        res = [0,0,0]
+        res[0] = v2[0] - v1[0]
+        res[1] = v2[1] - v1[1]
+        res[2] = v2[2] - v1[2]
+        return res
+        
+    def add(self,v1,v2)  :
+        res = [0,0,0]
+        res[0] = v2[0] + v1[0]
+        res[1] = v2[1] + v1[1]
+        res[2] = v2[2] + v1[2]
+        return res
+
+    def mult(self,v1,m):
+        res = [0,0,0]
+        res[0] = v1[0] *m
+        res[1] = v1[1] *m
+        res[2] = v1[2] *m
+        return res
+        
         
 
     def getVertices(self,xrot,yrot,zrot):

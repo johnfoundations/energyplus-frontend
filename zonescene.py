@@ -54,7 +54,7 @@ class zoneScene(QtGui.QGraphicsScene):
 
 
     def setModel(self,model):
-        print 'zoneScene.setModel',model
+#        print 'zoneScene.setModel',model
         self.model = model
         self.connect(self.model, QtCore.SIGNAL('modelreset()'), self.initializeItems)
 

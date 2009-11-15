@@ -44,12 +44,16 @@ class zLayers(QtCore.QObject):
     def inc(self):
         if self.current != len(self.zlist)-1:
             self.current = self.current + 1
+        else:
+            return self.zlist[self.current] + 1
             
         return self.zlist[self.current]
             
     def dec(self):
         if self.current != 0:
             self.current = self.current - 1
+        else:
+            return self.zlist[self.current] - 1
             
         return self.zlist[self.current]
 
