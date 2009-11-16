@@ -45,10 +45,12 @@ class zoneScene(QtGui.QGraphicsScene):
 
     def setZView(self,inc):
         if self.itemwithfocus != None:
+            print 'setZView focus'
             self.itemwithfocus.item.setZVisible(inc)
             
         else:
-            self.rootgroup.item.setZVisible(inc)
+            print 'setZView no focus'
+            self.rootgroup.setZVisible(inc)
             
 
 
@@ -73,24 +75,25 @@ class zoneScene(QtGui.QGraphicsScene):
         #returns delegate of the right type
         t = classinfo.constructionType(index.internalPointer().data.idfclass)
         
-        if t == 'Zone':
+        if t.lower() == 'zone':
             return graphicitems.zoneDelegate(index)
             
-        if t == 'Wall':
+        if t.lower() == 'wall':
             return graphicitems.wallDelegate(index)
         
-        if t == 'Floor':
+        if t.lower() == 'floor':
             return graphicitems.floorDelegate(index)
         
-        if t == 'Window':
+        if t.lower() == 'window':
             return graphicitems.windowDelegate(index)
         
-        if t == 'Door':
+        if t.lower() == 'door' or 'glassdoor':
             return graphicitems.doorDelegate(index)
         
-        if t == 'RoofCeiling':
+        if t.lower() == 'roofceiling' or 'ceiling' or 'roof':
             return graphicitems.ceilingDelegate(index)
         
+        print 'createZoneDelegate',t
         return graphicitems.surfacePolygonDelegate(index)
         
 
@@ -125,5 +128,9 @@ class zoneScene(QtGui.QGraphicsScene):
     def focusInEvent(self,event):
         print 'zoneScene focusInEvent'
         QtGui.QGraphicsScene.focusInEvent(self,event)
+        
+    def focusOutEvent(self,event):
+        print 'zoneScene focusOutEvent'
+        #QtGui.QGraphicsScene.focusOutEvent(self,event)
 
 

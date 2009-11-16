@@ -60,6 +60,7 @@ class surfaceItem():
     def buildVerticePolygons(self):
         #translate into lower left, clockwise
         #first get vertices
+        print 'buildVerticePolygons',self.idfclass.getFieldDataByName('Surface Type')
         vindex = 0
         vertices = []
         v = []
@@ -131,7 +132,7 @@ class surfaceItem():
             origin = [0.0,0.0,0.0]
 
         for v in vertices:
-            print v,origin
+#            print v,origin
             v[0] = v[0] + origin[0]
             v[1] = v[1] + origin[1]
             v[2] = v[2] + origin[2]
@@ -148,7 +149,7 @@ class surfaceItem():
 
 
         surface = self.model.getSurface(self.idfclass.getFieldDataByName('Building Surface Name'))
-        print surface
+#        print surface
 
         origin = surface.surfaceorigin
         x = float(self.idfclass.getFieldDataByName('Starting X Coordinate'))

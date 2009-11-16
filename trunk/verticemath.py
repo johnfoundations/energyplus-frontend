@@ -124,7 +124,7 @@ class verticeMath():
             
             rlist.append(a[0][0:3])
             
-        print 'rotateverticelist',rlist
+#        print 'rotateverticelist',rlist
         return rlist
 
     def eq(self,v1,v2):
