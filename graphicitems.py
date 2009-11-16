@@ -135,10 +135,13 @@ class zoneAbstractDelegate(QtCore.QObject):
         
     def getZAvg(self):
         za = 0.0
+        if len(self.rotatedverticelist) == 0:
+            print 'getZAvg no vertices'
+            return 0
+            
         for v in self.rotatedverticelist:
             za = za + v[2]
-            
-        return za/len(self.rotatedverticelist)
+        return za/len(self.verticelist)
 
     def setItem(self,item):
         #link to qgraphicsitem
@@ -216,6 +219,11 @@ class zoneDelegate(zoneAbstractDelegate):
         pen.setWidthF(0.1)
         pen.setJoinStyle(QtCore.Qt.MiterJoin)
         self.item.setPen(pen)
+        brush = self.item.brush()
+        brush.setColor(QtCore.Qt.white)
+        brush.setStyle(QtCore.Qt.SolidPattern)
+        self.item.setBrush(brush)
+        self.item.setOpacity(1)
         
     def setItem(self,item):
 #        print 'zoneDelegate setItem'
@@ -236,6 +244,8 @@ class zoneDelegate(zoneAbstractDelegate):
         #now set all z values to lz
         for v in self.verticelist:
             v[2] = lz
+        print 'buildZoneOutline',self.idfclass.getName(),lz
+
 
     def getOutline(self,item):
         vlist = []
@@ -247,6 +257,9 @@ class zoneDelegate(zoneAbstractDelegate):
             for c in clist:
                 za = za + c[2]
                 
+            if len(clist) == 0:
+                continue
+            
             self.zorder.insertZ(za/len(clist))
                 
             
@@ -351,6 +364,7 @@ class zoneDelegate(zoneAbstractDelegate):
         self.item.showItems(True)
 
     def focusOut(self):
+         self.item.scene().itemwithfocus = None
          self.item.showItems(False)
          self.item.setVisible(True)
 
