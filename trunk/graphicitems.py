@@ -123,6 +123,10 @@ class zoneAbstractDelegate(QtCore.QObject):
 
     def setZ(self,inc):
 #        print 'setZ',inc,self
+#        QtCore.pyqtRemoveInputHook() 
+#        import pdb 
+#        pdb.set_trace() 
+
         if inc:
             value = self.zorder.inc()
         else:
@@ -244,7 +248,8 @@ class zoneDelegate(zoneAbstractDelegate):
         #now set all z values to lz
         for v in self.verticelist:
             v[2] = lz
-        print 'buildZoneOutline',self.idfclass.getName(),lz
+        print 'buildZoneOutline',self.idfclass.getName(),lz,self.verticelist
+        self.rotatedverticelist = self.verticelist[:]
 
 
     def getOutline(self,item):
@@ -377,6 +382,10 @@ class buildingDelegate(zoneAbstractDelegate):
         print 'buildingDelegate rotate3d'
     
     def buildZ(self):
+#        QtCore.pyqtRemoveInputHook() 
+#        import pdb 
+#        pdb.set_trace() 
+  
         for i in self.item.childItems():
             za = 0.0
             for v in i.delegate.rotatedverticelist:
