@@ -44,9 +44,9 @@ mixedclasses = "BuildingSurface:Detailed","FenestrationSurface:Detailed"
                 
                 
                          
-verticeclasses = "BuildingSurface:Detailed","Wall:Detailed","RoofCeiling:Detailed","Floor:Detailed"
+verticeclasses = "BuildingSurface:Detailed","Wall:Detailed","RoofCeiling:Detailed","Floor:Detailed","FenestrationSurface:Detailed"
                  
-verticesurfaceelementclasses = "FenestrationSurface:Detailed"
+#verticesurfaceelementclasses = 
         #all have vertices
 
 verticeshadingclasses = "Shading:Zone:Detailed","Shading:Site:Detailed","Shading:Building:Detailed"
