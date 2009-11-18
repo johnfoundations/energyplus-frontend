@@ -464,6 +464,20 @@ class ceilingDelegate(surfacePolygonDelegate):
         brush.setStyle(QtCore.Qt.SolidPattern)
         self.item.setBrush(brush)
     
+class roofDelegate(surfacePolygonDelegate):
+    
+    def setStyle(self):
+        pen = self.item.pen()
+        pen.setColor(QtCore.Qt.darkRed)
+        pen.setWidthF(0.1)
+        pen.setJoinStyle(QtCore.Qt.MiterJoin)
+        self.item.setPen(pen)
+        brush = self.item.brush()
+        brush.setColor(QtCore.Qt.darkRed)
+        brush.setStyle(QtCore.Qt.SolidPattern)
+        self.item.setBrush(brush)
+
+    
     
 class floorDelegate(surfacePolygonDelegate):
     

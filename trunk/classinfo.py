@@ -35,11 +35,13 @@ windowclasses = "Window:Interzone","Window"
 
 wallclasses = "Wall:Detailed","Wall:Exterior","Wall:Adiabatic","Wall:Underground","Wall:Interzone"
 
-roofceilingclasses = "Ceiling:Adiabatic","Ceiling:Interzone", "Roof","RoofCeiling:Detailed"
+ceilingclasses = "Ceiling:Adiabatic","Ceiling:Interzone", 
+
+roofclasses = "Roof"
 
 floorclasses = "Floor:Detailed","Floor:GroundContact","Floor:Adiabatic","Floor:Interzone"
 
-mixedclasses = "BuildingSurface:Detailed","FenestrationSurface:Detailed"
+mixedclasses = "BuildingSurface:Detailed","FenestrationSurface:Detailed","RoofCeiling:Detailed"
                 
                 
                 
@@ -82,13 +84,22 @@ def constructionType(iddclass):
     if iddclass.getClassnameIDD() in wallclasses:
         return 'Wall'
     
-    if iddclass.getClassnameIDD() in roofceilingclasses:
-        return 'RoofCeiling'
+    if iddclass.getClassnameIDD() in roofclasses:
+        return 'Roof'
+        
+    if iddclass.getClassnameIDD() in ceilingclasses:
+        return 'Ceiling'
     
     if iddclass.getClassnameIDD() in floorclasses:
         return 'Floor'
     
     if iddclass.getClassnameIDD() in mixedclasses:
+        if iddclass.getClassnameIDD == "RoofCeiling:Detailed":
+            if iddclass.getFieldDataByName('Outside Boundary Condition').lower() == 'outdoors':
+                return 'Roof'
+            else:
+                return 'Ceiling'
+                
         return iddclass.getFieldDataByName('Surface Type')
         
     if iddclass.getClassnameIDD() == "Zone":

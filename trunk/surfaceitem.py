@@ -304,6 +304,25 @@ class surfaceItem():
 #        self.surfaceorigin = [x,y,z]
 
 
+#################################################
 
+    #routines for writing out classes. only geometry. any parent classes required must be in idd already
+    
+    def writeClass(self,iddclass,verticelist):
+        pass
+    
+    def writeVertice(self,idd,v):
+        pass
+    
+    def writeWall(self,idd,v):
+        pass
+    
+    def writeFlat(self,idd,v):
+        pass
+    
+    def writeElement(self,idd,v):
+        pass
+        
+    
 
         
