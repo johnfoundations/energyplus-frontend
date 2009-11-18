@@ -248,7 +248,7 @@ class zoneDelegate(zoneAbstractDelegate):
         #now set all z values to lz
         for v in self.verticelist:
             v[2] = lz
-        print 'buildZoneOutline',self.idfclass.getName(),lz,self.verticelist
+#        print 'buildZoneOutline',self.idfclass.getName(),lz,self.verticelist
         self.rotatedverticelist = self.verticelist[:]
 
 

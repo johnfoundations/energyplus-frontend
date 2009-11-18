@@ -87,10 +87,10 @@ class zoneScene(QtGui.QGraphicsScene):
         if t.lower() == 'window':
             return graphicitems.windowDelegate(index)
         
-        if t.lower() == 'door' or 'glassdoor':
+        if t.lower() == 'door' or t.lower() == 'glassdoor':
             return graphicitems.doorDelegate(index)
         
-        if t.lower() == 'roofceiling' or 'ceiling' or 'roof':
+        if t.lower() == 'roofceiling' or t.lower() == 'ceiling' or t.lower() == 'roof':
             return graphicitems.ceilingDelegate(index)
         
         print 'createZoneDelegate',t
