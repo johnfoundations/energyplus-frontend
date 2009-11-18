@@ -90,8 +90,11 @@ class zoneScene(QtGui.QGraphicsScene):
         if t.lower() == 'door' or t.lower() == 'glassdoor':
             return graphicitems.doorDelegate(index)
         
-        if t.lower() == 'roofceiling' or t.lower() == 'ceiling' or t.lower() == 'roof':
+        if t.lower() == 'ceiling':
             return graphicitems.ceilingDelegate(index)
+        
+        if t.lower() == 'roof':
+            return graphicitems.roofDelegate(index)
         
         print 'createZoneDelegate',t
         return graphicitems.surfacePolygonDelegate(index)
