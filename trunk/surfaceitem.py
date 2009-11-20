@@ -52,6 +52,7 @@ class surfaceItem():
         if self.idfclass.getClassnameIDD() in zoneclasses:
             self.buildzonePolygons()
 
+        self.getFaceAngle(self.verticelist)
 
     def getGeometryRules(self):
         return self.model.getGeometryRules()
@@ -323,6 +324,24 @@ class surfaceItem():
     def writeElement(self,idd,v):
         pass
         
-    
+    def getFaceAngle(self,v):
+        #transform [1] and [2] to [0]
+        if len(v) < 3:
+            return
+        v1 = self.math.transform(v[0],v[1])
+        v2 = self.math.transform(v[0],v[2])
+        c = numpy.cross(v2,v1)
+        #get angle to ground
+        #unit
+        c = self.math.mult(c,1/self.math.dist(c))
+        c1 = c[:]
+        c1[2] = 0.0
+        ground = math.acos(numpy.dot(c,c1))
+        print self.idfclass.getFieldDataByName('Tilt')
+        print 'ground',ground
+        
+        
+        
+        
 
         
