@@ -325,9 +325,15 @@ class surfaceItem():
         pass
         
     def getFaceAngle(self,v):
+        #returns angle to ground in rads, and angle from vector 1,0,0 on flat plane in rads
         #transform [1] and [2] to [0]
         if len(v) < 3:
             return
+        print self.idfclass.getName() ,self.idfclass.getClassnameIDD()
+#        QtCore.pyqtRemoveInputHook() 
+#        import pdb 
+#        pdb.set_trace() 
+         
         v1 = self.math.transform(v[0],v[1])
         v2 = self.math.transform(v[0],v[2])
         c = numpy.cross(v2,v1)
@@ -336,9 +342,27 @@ class surfaceItem():
         c = self.math.mult(c,1/self.math.dist(c))
         c1 = c[:]
         c1[2] = 0.0
-        ground = math.acos(numpy.dot(c,c1))
-        print self.idfclass.getFieldDataByName('Tilt')
+        d = numpy.dot(c,c1)
+        if d > 1:
+            d = 1
+        ground = math.acos(d)
+        print self.idfclass.getFieldDataByName('Tilt Angle'), self.idfclass.getFieldDataByName('View Factor to Ground')
         print 'ground',ground
+        #azimuth, or direction on compass
+        if ground == 1.57079632679:
+            azimuth = ground
+        else:
+            na = [1.0,0.0,0.0]
+            d = numpy.dot(na,c1)
+            azimuth = math.acos(d)
+
+        print 'azimuth',azimuth,self.idfclass.getFieldDataByName('Azimuth Angle')
+        
+        return ground,azimuth
+            
+        
+        
+        
         
         
         
