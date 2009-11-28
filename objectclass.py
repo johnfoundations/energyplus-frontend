@@ -75,6 +75,10 @@ class ObjectAbstract :
     def setData(self,data):
         self.rawdatalist = data
         self.parseRawData()
+        #debug
+        for f in self.fieldlist:
+            if f.units != '':
+                print f.units
 
     def getData(self) :
         d = []
@@ -176,11 +180,14 @@ class ObjectAbstract :
         return newcopy
 
     def copyField(self,orig) :
+#        print 'copyField'
         fcopy = copy.copy(orig)
+#        print 'copyField copy.copy done'
         fcopy.fieldname = orig.fieldname
         fcopy.parent = orig.parent
         fcopy.default = orig.default
         fcopy.notes = orig.notes
+        fcopy.units = orig.units
         return fcopy
 
     def createExtensibleList(self):

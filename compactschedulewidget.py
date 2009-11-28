@@ -89,7 +89,7 @@ class throughSection():
         self.forlist = []
         self.parent = parent
         self.model = None
-        self.throughfield = FieldThrough(self,'Through:','','')
+        self.throughfield = FieldThrough(self,'Through:','','','')
         self.insertField([self.throughfield],len(self.flist))
   #      
 
@@ -168,11 +168,11 @@ class ForSection():
 
         self.fdlist = self.fordatalist[:]
         self.forfieldlist = []
-        self.insertFor(FieldChoice(self,'For:','','',self.fordatalist))
+        self.insertFor(FieldChoice(self,'For:','','','',self.fordatalist))
         self.lastuntilfieldinstance = None
         if self.model:
             self.model.beginInsertRows(QtCore.QModelIndex(),self.lastForField()+1,self.lastForField()+1)
-        self.interpolatefield = FieldYesNo(self,'Interpolate:','','',['No','Yes'])
+        self.interpolatefield = FieldYesNo(self,'Interpolate:','','','',['No','Yes'])
         self.flist.append(self.interpolatefield)
         if self.model:
             self.model.endInsertRows()
@@ -182,7 +182,7 @@ class ForSection():
     
     def forEdit(self,row):
         if row == self.lastForField() -1 and not self.flist[self.lastForField()-1].value == '':
-            self.insertFor(FieldChoice(self,'For:','','',self.fordatalist))
+            self.insertFor(FieldChoice(self,'For:','','','',self.fordatalist))
 
     def untilEdit(self,row):
         if row == self.lastUntilField() -1 and not self.flist[self.lastUntilField()-1].value == '':
@@ -222,11 +222,11 @@ class ForSection():
         if self.model:
             self.model.beginInsertRows(QtCore.QModelIndex(),self.lastUntilField(),self.lastUntilField()+1)
 
-        f = FieldTime(self,'Until:','','')
+        f = FieldTime(self,'Until:','','','')
         t = vals[0].lstrip('Until:')
         f.setValue(t)
         self.flist.insert(self.lastUntilField(),f)
-        d = FieldText(self,'Data:','','')
+        d = FieldText(self,'Data:','','','')
         d.setValue(vals[1])
         self.flist.insert(self.lastUntilField() + 1,d)
         self.lastuntilfieldinstance = d
@@ -262,7 +262,7 @@ class ForSection():
                     index = 0
 
                 if not first:
-                    self.insertFor(FieldChoice(self,'For:','','',self.fordatalist))
+                    self.insertFor(FieldChoice(self,'For:','','','',self.fordatalist))
                 else:
                     first = False
                 self.forfieldlist[-1].setValue(self.fordatalist[index])

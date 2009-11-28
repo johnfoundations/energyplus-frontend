@@ -78,10 +78,13 @@ class IddField :
                     n = re.sub(r'"','*',n)
                     note = note + '"' + n + '",'
                 note = note + '"' + unitstr + '",'
-                self.fieldeditor = self.fieldeditor + note + '))'
+                self.fieldeditor = self.fieldeditor + note + '),'
+            else:
+                self.fieldeditor = self.fieldeditor + '"",'
+            if 'units' in self.Fieldattr:
+                self.fieldeditor = self.fieldeditor + '"' + self.Fieldattr['units'] + '")'
             else:
                 self.fieldeditor = self.fieldeditor + '"")'
-      
       
         
       
@@ -113,6 +116,11 @@ class IddField :
                 self.fieldeditor = self.fieldeditor + note + '),'
             else:
                 self.fieldeditor = self.fieldeditor + '"",'
+            if 'units' in self.Fieldattr:
+                self.fieldeditor = self.fieldeditor + '"' + self.Fieldattr['units'] + '",'
+            else:
+                self.fieldeditor = self.fieldeditor + '"",'
+
 
             if 'minimum' in self.Fieldattr :
                 self.fieldeditor = self.fieldeditor + self.Fieldattr['minimum'] + ','
@@ -150,6 +158,10 @@ class IddField :
                     note = note + '"' + n + '",'
                 note = note + '"' + unitstr + '",'
                 self.fieldeditor = self.fieldeditor + note + '),'
+            else:
+                self.fieldeditor = self.fieldeditor + '"",'
+            if 'units' in self.Fieldattr:
+                self.fieldeditor = self.fieldeditor + '"' + self.Fieldattr['units'] + '",'
             else:
                 self.fieldeditor = self.fieldeditor + '"",'
 
@@ -199,6 +211,12 @@ class IddField :
                 self.fieldeditor = self.fieldeditor + note + '),'
             else:
                 self.fieldeditor = self.fieldeditor + '"",'
+            if 'units' in self.Fieldattr:
+                self.fieldeditor = self.fieldeditor + '"' + self.Fieldattr['units'] + '",'
+            else:
+                self.fieldeditor = self.fieldeditor + '"",'
+
+
             choice = '['
             if 'choices' in self.Fieldattr :
                 for c in self.Fieldattr['choices'] :
@@ -228,6 +246,10 @@ class IddField :
                 self.fieldeditor = self.fieldeditor + note + '),'
             else:
                 self.fieldeditor = self.fieldeditor + '"",'
+            if 'units' in self.Fieldattr:
+                self.fieldeditor = self.fieldeditor + '"' + self.Fieldattr['units'] + '",'
+            else:
+                self.fieldeditor = self.fieldeditor + '"",'
 
             if 'object_list' in self.Fieldattr :
                 self.fieldeditor = self.fieldeditor + '"' +self.Fieldattr['object_list'] + '")'
@@ -250,9 +272,14 @@ class IddField :
                     n = re.sub(r'"','*',n)
                     note = note + '"' + n + '",'
                 note = note + '"' + unitstr + '",'
-                self.fieldeditor = self.fieldeditor + note + '))'
+                self.fieldeditor = self.fieldeditor + note + '),'
+            else:
+                self.fieldeditor = self.fieldeditor + '"",'
+            if 'units' in self.Fieldattr:
+                self.fieldeditor = self.fieldeditor + '"' + self.Fieldattr['units'] + '")'
             else:
                 self.fieldeditor = self.fieldeditor + '"")'
+
 
 
 
