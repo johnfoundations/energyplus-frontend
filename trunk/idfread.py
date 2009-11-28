@@ -25,6 +25,7 @@ import idfglobals
 import string
 import re
 import pdb
+import sys
 
 class idfRead :
     def __init__(self,filename) :
@@ -147,9 +148,9 @@ class idfRead :
             try:
                 classinstance = eval (evalstr)
             except:
-                print 'Error creating class. Possible version mismatch'
-                print params[0]
+                print 'Error creating class ',params[0],' Possible version mismatch',evalstr
                 self.errormsg = self.errormsg + params[0] + '\n'
+                print sys.exc_info()
                 res = False
                 continue
 

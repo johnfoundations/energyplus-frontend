@@ -27,13 +27,14 @@ from verticewidget import *
 
 
 class FieldAbstract :
-    def __init__(self,parent,fieldname,default,notes):
+    def __init__(self,parent,fieldname,default,notes,units):
         self.fieldeditor = 0
         self.fieldname = fieldname
         self.parent = parent
         self.value = default
         self.default = default
         self.notes = notes
+        self.units = units
         self.required = False
         
 
@@ -81,8 +82,8 @@ class FieldAbstract :
         
 
 class FieldReal(FieldAbstract) :
-    def __init__(self,parent,fieldname,default,notes,minv,maxv,mingtv,maxltv) :
-        FieldAbstract.__init__(self,parent,fieldname,default,notes)
+    def __init__(self,parent,fieldname,default,notes,units,minv,maxv,mingtv,maxltv) :
+        FieldAbstract.__init__(self,parent,fieldname,default,notes,units)
         if minv == '':
             self.minv = -20000
         else:
@@ -200,8 +201,8 @@ class FieldRealAutocalculate(FieldReal) :
 
     
 class FieldInt(FieldAbstract) :
-    def __init__(self,parent,fieldname,default,notes,minv,maxv,mingtv,maxltv) :
-        FieldAbstract.__init__(self,parent,fieldname,default,notes)
+    def __init__(self,parent,fieldname,default,notes,units,minv,maxv,mingtv,maxltv) :
+        FieldAbstract.__init__(self,parent,fieldname,default,notes,units)
         if minv == '':
             self.minv = -20000
         else:
@@ -279,8 +280,8 @@ class FieldInt(FieldAbstract) :
 
         
 class FieldText(FieldAbstract) :
-    def __init__(self,parent,fieldname,default,notes):
-        FieldAbstract.__init__(self,parent,fieldname,default,notes)
+    def __init__(self,parent,fieldname,default,notes,units):
+        FieldAbstract.__init__(self,parent,fieldname,default,notes,units)
         self.value = default
 
     def createEditor(self,parent,index) :
@@ -308,8 +309,8 @@ class FieldTime(FieldText):
             
 
 class FieldChoice(FieldAbstract)    :
-    def __init__(self,parent,fieldname,default,notes,choices):
-        FieldAbstract.__init__(self,parent,fieldname,default,notes)
+    def __init__(self,parent,fieldname,default,notes,units,choices):
+        FieldAbstract.__init__(self,parent,fieldname,default,notes,units)
         self.choices = choices
         self.lchoices = []
         for lc in self.choices:
@@ -336,19 +337,19 @@ class FieldChoice(FieldAbstract)    :
 
 
 class FieldOnOff(FieldChoice) :
-    def __init__(self,parent,fieldname,default,notes,choices) :
-        FieldChoice.__init__(self,parent,fieldname,default,notes,choices)
+    def __init__(self,parent,fieldname,default,notes,units,choices) :
+        FieldChoice.__init__(self,parent,fieldname,default,notes,units,choices)
 
 
 class FieldYesNo(FieldChoice):
-    def __init__(self,parent,fieldname,default,notes,choices) :
-        FieldChoice.__init__(self,parent,fieldname,default,notes,choices)
+    def __init__(self,parent,fieldname,default,notes,units,choices) :
+        FieldChoice.__init__(self,parent,fieldname,default,notes,units,choices)
 
                         
 
 class FieldObjectlist(FieldAbstract):
-    def __init__(self,parent,fieldname,default,notes,objectlistname) :
-        FieldAbstract.__init__(self,parent,fieldname,default,notes)
+    def __init__(self,parent,fieldname,default,notes,units,objectlistname) :
+        FieldAbstract.__init__(self,parent,fieldname,default,notes,units)
         self.objectlistname = objectlistname
 
     def createEditor(self,parent,index) :
@@ -413,8 +414,8 @@ class FieldObjectlist(FieldAbstract):
         #editor.setValue(v)
 
 class FieldThrough(FieldAbstract):
-    def __init__(self,parent,fieldname,default,notes):
-        FieldAbstract.__init__(self,parent,fieldname,default,notes)
+    def __init__(self,parent,fieldname,default,notes,units):
+        FieldAbstract.__init__(self,parent,fieldname,default,notes,units)
 
     def createEditor(self,parent,index):
         self.fieldeditor = QtGui.QLineEdit(parent)
