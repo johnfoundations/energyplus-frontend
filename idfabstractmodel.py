@@ -105,7 +105,14 @@ class idfClassModel(QtCore.QAbstractTableModel):
         QtCore.QAbstractTableModel.__init__(self, parent)
         self.idfclass = idfclass
         self.parentmodel = parent
-        self.convert = True
+        self.convert = False
+
+    def toggleUnits(self):
+        if self.convert:
+            self.convert = False
+        else:
+            self.convert = True
+        self.reset()
 
         
     def columnCount (self, parent):
@@ -150,7 +157,11 @@ class idfClassModel(QtCore.QAbstractTableModel):
 
     def headerData(self,section,orientation,role = QtCore.Qt.DisplayRole):
         if orientation == QtCore.Qt.Horizontal and role == QtCore.Qt.DisplayRole:
-             return QtCore.QVariant("Value")
+            if self.convert:
+                units = 'IP'
+            else:
+                units = 'SI'
+            return QtCore.QVariant("Value in  "+units+'    Click toggle units')
 
         if orientation == QtCore.Qt.Vertical and role == QtCore.Qt.DisplayRole:
             return QtCore.QVariant(self.idfclass.fieldlist[section].fieldname + ' ' + self.idfclass.fieldlist[section].getUnits(self.convert))

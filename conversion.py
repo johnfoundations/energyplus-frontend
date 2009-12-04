@@ -19,7 +19,7 @@
 *   Free Software Foundation, Inc.,                                       *
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************"""
-
+from PyQt4 import QtCore
 #!     m                      =>   ft                  3.281
 #!     W                      =>   Btu/h               3.412
 #!     m3/s                   =>   ft3/min             2118.6438
@@ -145,7 +145,6 @@ conversionvalues = {'m':('ft',3.281),\
                      'W':('Btu/h',3.412),\
                      'm3/s':('ft3/min',2118.6438),\
                      'C':('F',1.8,+32),\
-                     'deg':('F',1.8,+32),\
                      'kg/J':('lb/Btu',2325.83774250441),\
                      'Pa':('psi',0.0001450377),\
                      'W/m-K':('Btu-in/h-ft2-F',6.93481276005548),\
@@ -230,7 +229,19 @@ conversionvalues = {'m':('ft',3.281),\
                      'm2/m':('ft2/ft',3.281),\
                      'L/day':('pint/day',2.11337629827348),\
                      'L/kWh':('pint/kWh',2.11337629827348),\
-                     'kg/Pa-s-m2':('lb/psi-s-ft2',1412.00523459398)}
+                     'kg/Pa-s-m2':('lb/psi-s-ft2',1412.00523459398),\
+                     'deg':('deg',1),\
+                     'hr':('hr',1),\
+                     'A':('A',1),\
+                     'dimensionless':('dimensionless',1),\
+                     'V':('V',1),\
+                     'ohms':('ohms',1),\
+                     'A/V':('A/V',1),\
+                     'eV':('eV',1),\
+                     'percent':('percent',1),\
+                     's':('s',1),\
+                     'minutes':('minutes',1) }
+#! *
 #!
 #! Other conversions supported (needs the \ip-units code)
 #!
@@ -254,11 +265,11 @@ def convertTo(unit,value):
         return unit,value
     if unit in conversionvalues:
         if len(conversionvalues[unit]) == 3:
-            val = value / conversionvalues[unit][1] + conversionvalues[unit][2]
+            val = value * conversionvalues[unit][1] + conversionvalues[unit][2]
             return conversionvalues[unit][0],val
             
         else:
-            return conversionvalues[unit][0],value / conversionvalues[unit][1]
+            return conversionvalues[unit][0],value * conversionvalues[unit][1]
             
     else:
         print 'convertTo: invalid unit input',unit
@@ -270,11 +281,11 @@ def convertFrom(unit,value):
     #unit returned is SI and SI converted value
     if unit in conversionvalues:
         if len(conversionvalues[unit]) == 3:
-            val = (value - conversionvalues[unit][2]) * conversionvalues[unit][1] 
+            val = (value - conversionvalues[unit][2]) / conversionvalues[unit][1] 
             return unit,val
             
         else:
-            return unit,value * conversionvalues[unit][1]
+            return unit,value / conversionvalues[unit][1]
             
     else:
         print 'convertFrom: invalid unit input',unit
@@ -282,8 +293,14 @@ def convertFrom(unit,value):
 
 def convertable(value):
     #verify type, whether int, real or a numerical value
-    print 'convertable',type(value)
-    return (type(value) == 'int') or (type(value) == 'real')
+    #print 'convertable',type(value)
+#    QtCore.pyqtRemoveInputHook() 
+#    import pdb 
+#    pdb.set_trace() 
+    print value, type(value)
+    returnv = isinstance(value,int) or isinstance(value,float)
+    print returnv
+    return returnv
     
 
 if __name__ == "__main__":

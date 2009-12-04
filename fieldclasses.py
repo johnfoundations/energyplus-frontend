@@ -67,6 +67,7 @@ class FieldAbstract :
 
     def getValue(self,convert=False):
         if convert and conversion.convertable(self.value):
+            print 'convert', self.value,convert
             r = conversion.convertTo(self.units,self.value)
             return r[1]
         else:

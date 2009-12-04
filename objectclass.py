@@ -76,9 +76,9 @@ class ObjectAbstract :
         self.rawdatalist = data
         self.parseRawData()
         #debug
-        for f in self.fieldlist:
-            if f.units != '':
-                print f.units,f.getValue()
+        #for f in self.fieldlist:
+        #    if f.units != '':
+        #        print f.units,f.getValue()
 
     def getData(self) :
         d = []
