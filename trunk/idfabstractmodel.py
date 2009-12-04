@@ -105,6 +105,7 @@ class idfClassModel(QtCore.QAbstractTableModel):
         QtCore.QAbstractTableModel.__init__(self, parent)
         self.idfclass = idfclass
         self.parentmodel = parent
+        self.convert = True
 
         
     def columnCount (self, parent):
@@ -127,14 +128,14 @@ class idfClassModel(QtCore.QAbstractTableModel):
             return QtCore.QVariant(field.getNotes())
 
         if role == QtCore.Qt.EditRole or role == QtCore.Qt.DisplayRole:
-            return QtCore.QVariant(field.value)
+            return QtCore.QVariant(field.getValue(self.convert))
 
         return QtCore.QVariant()
 
     def setData(self,index,value,role) :
         if role == QtCore.Qt.EditRole :
             idf = index.internalPointer()
-            idf.fieldlist[index.row()].setValue(value)
+            idf.fieldlist[index.row()].setValue(value,self.convert)
             self.idfclass.editSignal(self,index.row())
                
 
@@ -152,7 +153,7 @@ class idfClassModel(QtCore.QAbstractTableModel):
              return QtCore.QVariant("Value")
 
         if orientation == QtCore.Qt.Vertical and role == QtCore.Qt.DisplayRole:
-            return QtCore.QVariant(self.idfclass.fieldlist[section].fieldname)
+            return QtCore.QVariant(self.idfclass.fieldlist[section].fieldname + ' ' + self.idfclass.fieldlist[section].getUnits(self.convert))
             
         return QtCore.QVariant()
 

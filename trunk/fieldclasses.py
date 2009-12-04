@@ -24,6 +24,7 @@ import idfglobals
 import pdb
 from gwidgetclass import *
 from verticewidget import *
+import conversion
 
 
 class FieldAbstract :
@@ -50,10 +51,10 @@ class FieldAbstract :
     def getNotes(self) :
         return '\n'.join(self.notes)
 
-    def setValue(self, value) :
+    def setValue(self, value,convert=False) :
         #pdb.set_trace()
         if self.Validate(value) :
-            self.value = value
+            self.value = self.valueTweak(value,convert)
             if self.fieldname == 'Name':
                 self.parent.setName(self.value)
             return True
@@ -61,12 +62,25 @@ class FieldAbstract :
             print 'erroneous data in ' + self.fieldname
             return False
 
-    def getValue(self):
-        return self.value
+    def valueTweak(self,value,convert=False):
+        return value
+
+    def getValue(self,convert=False):
+        if convert and conversion.convertable(self.value):
+            r = conversion.convertTo(self.units,self.value)
+            return r[1]
+        else:
+            return self.value
 
     def __str__(self):
         return str(self.value)
 
+    def getUnits(self,convert=False):
+        if convert:
+            r = conversion.convertTo(self.units,1)
+            return r[0]
+        else:
+            return self.units
 
     def getFieldDepends(self):
         return ''
@@ -169,6 +183,17 @@ class FieldReal(FieldAbstract) :
                 return False
         return True
             
+    def valueTweak(self,value,convert=False):
+        try:
+            l = float(value)
+        except:
+            return value
+            
+        if convert:
+            res = conversion.convertFrom(self.units,l)
+            return res[1]
+        else:
+            return l
         
 class FieldRealAutocalculate(FieldReal) :
 
@@ -198,7 +223,18 @@ class FieldRealAutocalculate(FieldReal) :
     def setEditorValue(self,editor):
         editor.setValue(self.value)
 
-
+    def valueTweak(self,value,convert=False):
+        try:
+            l = float(value)
+        except:
+            return value
+            
+        if convert:
+            res = conversion.convertFrom(self.units,l)
+            return res[1]
+        else:
+            return l
+       
     
 class FieldInt(FieldAbstract) :
     def __init__(self,parent,fieldname,default,notes,units,minv,maxv,mingtv,maxltv) :
@@ -277,7 +313,18 @@ class FieldInt(FieldAbstract) :
                 return False
         return True
 
-
+    def valueTweak(self,value,convert=False):
+        try:
+            l = int(value)
+        except:
+            return value
+            
+        if convert:
+            res = conversion.convertFrom(self.units,l)
+            return res[1]
+        else:
+            return l
+       
         
 class FieldText(FieldAbstract) :
     def __init__(self,parent,fieldname,default,notes,units):
