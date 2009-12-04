@@ -78,7 +78,7 @@ class ObjectAbstract :
         #debug
         for f in self.fieldlist:
             if f.units != '':
-                print f.units
+                print f.units,f.getValue()
 
     def getData(self) :
         d = []
