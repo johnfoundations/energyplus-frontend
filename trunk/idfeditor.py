@@ -85,7 +85,8 @@ class idfmodeltest(QtGui.QMainWindow):
         self.classview.setItemDelegate(self.delegate)
         self.classview.setEditTriggers(QtGui.QAbstractItemView.AllEditTriggers)
         self.classview.horizontalHeader().setStretchLastSection(True)
-        
+        self.classview.horizontalHeader().setClickable(True)
+        self.classview.setSelectionMode(QtGui.QAbstractItemView.NoSelection)
         classvbox.addWidget(self.classviewname)
         classvbox.addWidget(self.classview)
         mainhbox.addLayout(classvbox)
@@ -94,6 +95,7 @@ class idfmodeltest(QtGui.QMainWindow):
         
         self.connect(self.querybutton, QtCore.SIGNAL('clicked ( bool)'),self.querybuttonclicked)
         self.connect(self.view.header(),QtCore.SIGNAL('sectionClicked ( int )'),self.viewlistsort)
+        self.connect(self.classview.horizontalHeader(),QtCore.SIGNAL('sectionClicked ( int )'),self.changeunits)
 
         return splitter
         
@@ -251,7 +253,11 @@ class idfmodeltest(QtGui.QMainWindow):
 
         self.model.sort(column,self.sortorderlist[column])
     
-
+    def changeunits(self,column):
+        print 'changeunits',column
+        if column == 0:
+            if self.idfmodel != None:
+                self.idfmodel.toggleUnits()
 
 
 if __name__ == "__main__":
