@@ -45,8 +45,8 @@ class FieldAbstract :
     def getEditorValue(self,editor) :
         return editor.Value()
 
-    def setEditorValue(self,editor):
-        editor.setValue(self.value)
+    def setEditorValue(self,editor,data):
+        editor.setValue(data)
     
     def getNotes(self) :
         return '\n'.join(self.notes)
@@ -67,7 +67,7 @@ class FieldAbstract :
 
     def getValue(self,convert=False):
         if convert and conversion.convertable(self.value):
-            print 'convert', self.value,convert
+#            print 'convert', self.value,convert
             r = conversion.convertTo(self.units,self.value)
             return r[1]
         else:
@@ -131,21 +131,22 @@ class FieldReal(FieldAbstract) :
         else:
             return editor.value()
 
-    def setEditorValue(self,editor):
-        try:
-            v = float(self.value)
-        except:
-            try:
-                v = int(self.value)
-                v = float(v)
-            except:
-                if self.value == None:
-                    vtxt = 'None'
-                else:
-                    vtxt = self.value
-                print 'setEditorValue float conversion failed ' + self.fieldname + ' ' +vtxt
-                v = float(self.default)
-        editor.setValue(v)
+    def setEditorValue(self,editor,data):
+        editor.setValue(data)
+        #try:
+            #v = float(self.value)
+        #except:
+            #try:
+                #v = int(self.value)
+                #v = float(v)
+            #except:
+                #if self.value == None:
+                    #vtxt = 'None'
+                #else:
+                    #vtxt = self.value
+                #print 'setEditorValue float conversion failed ' + self.fieldname + ' ' +vtxt
+                #v = float(self.default)
+        #editor.setValue(v)
     
 
     def Validate(self,val):
@@ -221,8 +222,8 @@ class FieldRealAutocalculate(FieldReal) :
             self.fieldeditor.setValue(self.default)
         return self.fieldeditor
 
-    def setEditorValue(self,editor):
-        editor.setValue(self.value)
+    def setEditorValue(self,editor,data):
+        editor.setValue(data)
 
     def valueTweak(self,value,convert=False):
         try:
@@ -269,16 +270,17 @@ class FieldInt(FieldAbstract) :
     def getEditorValue(self,editor) :
         return editor.value()
 
-    def setEditorValue(self,editor):
-        try:
-            v = int(self.value)
-        except:
-            try:
-                v = float(self.value)
-                v = int(v)
-            except:
-                print 'value wront for int'
-        editor.setValue(v)
+    def setEditorValue(self,editor,data):
+        editor.setValue(data)
+        #try:
+            #v = int(self.value)
+        #except:
+            #try:
+                #v = float(self.value)
+                #v = int(v)
+            #except:
+                #print 'value wront for int'
+        #editor.setValue(v)
 
 
     def Validate(self,val):
@@ -342,8 +344,8 @@ class FieldText(FieldAbstract) :
     def getEditorValue(self,editor) :
         return editor.text()
 
-    def setEditorValue(self,editor):
-        editor.setText(self.value)
+    def setEditorValue(self,editor,data):
+        editor.setText(data)
             
 class FieldTime(FieldText):
 
@@ -376,9 +378,9 @@ class FieldChoice(FieldAbstract)    :
                 
         return self.fieldeditor
 
-    def setEditorValue(self,editor):
-        if not self.value == '':
-            editor.setCurrentIndex(self.lchoices.index(self.value.lower()))
+    def setEditorValue(self,editor,data):
+        if not data == '':
+            editor.setCurrentIndex(self.lchoices.index(data.lower()))
     
     def getEditorValue(self,editor):
         return str(editor.currentText())
@@ -410,9 +412,9 @@ class FieldObjectlist(FieldAbstract):
         self.fieldeditor.addItems(self.choices)
         return self.fieldeditor
 
-    def setEditorValue(self,editor):
+    def setEditorValue(self,editor,data):
         try:
-            editor.setCurrentIndex(self.choices.index(self.value) + 1)
+            editor.setCurrentIndex(self.choices.index(data) + 1)
         except:
             editor.setCurrentIndex(0)
     
@@ -476,8 +478,8 @@ class FieldThrough(FieldAbstract):
         else:
             self.value = value
 
-    def setEditorValue(self,editor):
-        editor.setText(self.value)
+    def setEditorValue(self,editor,data):
+        editor.setText(data)
 
     def getEditorValue(self,editor):
         return editor.text()
