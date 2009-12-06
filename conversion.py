@@ -297,9 +297,9 @@ def convertable(value):
 #    QtCore.pyqtRemoveInputHook() 
 #    import pdb 
 #    pdb.set_trace() 
-    print value, type(value)
+#    print value, type(value)
     returnv = isinstance(value,int) or isinstance(value,float)
-    print returnv
+#    print returnv
     return returnv
     
 

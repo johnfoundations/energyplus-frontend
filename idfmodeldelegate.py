@@ -34,7 +34,8 @@ class idfClassDelegate(QtGui.QItemDelegate):
 
     def setEditorData(self,editor,index):
         data = index.data(QtCore.Qt.EditRole)
-        index.internalPointer().fieldlist[index.row()].setEditorValue(editor)
+        print 'setEditorData',data.toPyObject()
+        index.internalPointer().fieldlist[index.row()].setEditorValue(editor,data.toPyObject())
      
     def setModelData(self,editor,model,index):
         value = index.internalPointer().fieldlist[index.row()].getEditorValue(editor)
