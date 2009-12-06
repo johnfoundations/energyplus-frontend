@@ -35,7 +35,7 @@ class idfmodeltest(QtGui.QMainWindow):
         self.idfmodel = None
         self.sortorderlist = [-1,-1]
         self.filename = ''
-        
+        self.readSettings()
         self.createActions()
         self.createMenus()
         
@@ -44,6 +44,19 @@ class idfmodeltest(QtGui.QMainWindow):
         self.setCentralWidget(self.tabs)
 
 
+    def readSettings(self):
+        settings = QtCore.QSettings("EPlus", "IDF Editor")
+        size = settings.value("size", QtCore.QSize(1000, 600)).toSize()
+        self.resize(size)
+
+    def writeSettings(self):
+        settings = QtCore.QSettings("EPlus", "IDF Editor");
+        settings.setValue("size", self.size());
+ 
+    def closeEvent(self,event):
+        print 'mainwindow closeEvent'
+        self.writeSettings()
+        event.accept()
 
     def classPage(self):
         self.idf = idfdata.idfData()
