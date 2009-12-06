@@ -304,6 +304,8 @@ class surfaceItem():
 #        z = float(self.idfclass.getFieldDataByName('Z Origin'))
 #        self.surfaceorigin = [x,y,z]
 
+        
+
 
 #################################################
 
