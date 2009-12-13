@@ -37,8 +37,8 @@ class zoneCreate():
     def isAdjacent(self,orig,new):
         #checks if zones are adjacent, returns series of points that are adjacent
 #        pdb.set_trace()
-        print 'orig',orig
-        print 'new',new
+#        print 'orig',orig
+#        print 'new',new
         reslist = []
         for c,i in enumerate(orig):
             if c == len(orig) - 1:
@@ -84,18 +84,28 @@ class zoneCreate():
                     #[1] is new line.
                     olinearray = []
                     nlinearray = [] 
+                    ostate = [] #0 for interior, 1 for exterior. an entry for each line
+                    nstate = []
                     olinearray.append(oline[0])
                     if self.vmath.dist(self.vmath.transform(oline[0],nline[0])) == 0:
                         nlinearray.append(nline[0])
+                        ostate.append(0)
+                        nstate.append(0)
                     
                     else:
                         if numpy.dot(numpy.array(self.vmath.transform(oline[0],nline[0])),numpy.array(self.vmath.transform(oline[0],oline[1]))) < 0:
                             #opposite directions
                             nlinearray.append(oline[0])
                             nlinearray.append(nline[0])
+                            nstate.append(1)
+                            nstate.append(0)
+                            ostate.append(0)
                         else:
                             olinearray.append(nline[0])
                             nlinearray.append(nline[0])
+                            ostate.append(1)
+                            ostate.append(0)
+                            nstate.append(0)
                     
                     if self.vmath.dist(self.vmath.transform(oline[1],nline[1])) == 0:
                         olinearray.append(oline[1])
@@ -107,16 +117,19 @@ class zoneCreate():
                             olinearray.append(nline[1])
                             olinearray.append(oline[1])
                             nlinearray.append(nline[1])
+                            ostate.append(1)
                             
                         else:
                             nlinearray.append(oline[1])
                             nlinearray.append(nline[1])
                             olinearray.append(oline[1])
+                            nstate.append(1)
                     
                     #print olinearray,nlinearray
                     if turned:
                         nlinearray.reverse()
-                    reslist.append([olinearray,nlinearray])
+                        nstate.reverse()
+                    reslist.append([olinearray,nlinearray,ostate,nstate])
 
 
         return reslist
