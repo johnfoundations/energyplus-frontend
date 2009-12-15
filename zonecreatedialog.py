@@ -41,7 +41,7 @@ class zoneCreateDialog(QtGui.QDialog):
         self.zoneheight = QtGui.QLineEdit()
         zl.addWidget(self.zoneheight,2,1)
         mainlayout.addLayout(zl)
-        buttongroup = QtGui.QButtonGroup()
+        self.buttongroup = QtGui.QButtonGroup()
         self.bywidthlength = QtGui.QRadioButton('By Width and Length')
         self.widthlengthgroupbox = QtGui.QGroupBox()
         lwl = QtGui.QHBoxLayout()
@@ -56,8 +56,8 @@ class zoneCreateDialog(QtGui.QDialog):
         mainlayout.addWidget(self.widthlengthgroupbox)
         self.bypoints = QtGui.QRadioButton('By Points, Start at bottom left, clockwise. x,y,z')
         mainlayout.addWidget(self.bypoints)
-        buttongroup.addButton(self.bywidthlength)
-        buttongroup.addButton(self.bypoints)
+        self.buttongroup.addButton(self.bywidthlength,0)
+        self.buttongroup.addButton(self.bypoints,1)
         self.bypointsgroupbox = QtGui.QGroupBox()
         ptl = QtGui.QHBoxLayout()
         ptlc = QtGui.QVBoxLayout()
@@ -77,7 +77,19 @@ class zoneCreateDialog(QtGui.QDialog):
         ptl.addWidget(self.pointlist)
         self.bypointsgroupbox.setLayout(ptl)
         mainlayout.addWidget(self.bypointsgroupbox)
+        self.connect(self.buttongroup, QtCore.SIGNAL('buttonClicked ( int)'),self.bybuttonclicked)
+        self.bywidthlength.click()
+
         
+        
+    def bybuttonclicked(self,i):
+        print 'bybuttonclicked',i
+        if i == 0:
+            self.bypointsgroupbox.setEnabled(False)
+            self.widthlengthgroupbox.setEnabled(True)
+        else:
+            self.bypointsgroupbox.setEnabled(True)
+            self.widthlengthgroupbox.setEnabled(False)
         
         
 if __name__ == "__main__":
