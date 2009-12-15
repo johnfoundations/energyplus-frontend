@@ -33,6 +33,9 @@ class zoneCreate():
         self.vertices = []
         self.vmath = verticemath.verticeMath()
     
+    def nameCreate(self,zonename,verticelist):
+        pass
+        
     
     def isAdjacent(self,orig,new):
         #checks if zones are adjacent, returns series of points that are adjacent
