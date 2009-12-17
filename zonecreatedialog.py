@@ -63,12 +63,17 @@ class zoneCreateDialog(QtGui.QDialog):
         ptlc = QtGui.QVBoxLayout()
         ptlc.addWidget(QtGui.QLabel('Point coordinates:'))
         self.pcoord = QtGui.QLineEdit()
+        rx = QtCore.QRegExp("[0-9]*,[0-9]*,[0-9]*");
+        validator = QtGui.QRegExpValidator(rx, None);
+        self.pcoord.setValidator(validator)
         ptlc.addWidget(self.pcoord)
         ptlc.addStretch()
         ptl.addLayout(ptlc)
         ptlbutt = QtGui.QVBoxLayout()
-        self.addbutton = QtGui.QPushButton('Add Point')
+        self.addbutton = QtGui.QPushButton('&Add Point')
         self.delbutton = QtGui.QPushButton('Delete Point')
+        self.delbutton.setEnabled(False)
+        self.addbutton.setEnabled(False)
         ptlbutt.addWidget(self.addbutton)
         ptlbutt.addWidget(self.delbutton)
         ptlbutt.addStretch()
@@ -78,6 +83,15 @@ class zoneCreateDialog(QtGui.QDialog):
         self.bypointsgroupbox.setLayout(ptl)
         mainlayout.addWidget(self.bypointsgroupbox)
         self.connect(self.buttongroup, QtCore.SIGNAL('buttonClicked ( int)'),self.bybuttonclicked)
+        self.connect(self.addbutton, QtCore.SIGNAL('clicked(bool)'), self.addbuttonclicked)
+        self.connect(self.delbutton, QtCore.SIGNAL('clicked(bool)'), self.delbuttonclicked)
+        self.connect(self.pcoord,QtCore.SIGNAL('textChanged (QString)'),self.editchanged)
+        self.connect(self.pointlist,QtCore.SIGNAL('itemSelectionChanged ()'),self.pointlistselected)
+        self.buttonBox = QtGui.QDialogButtonBox(QtGui.QDialogButtonBox.Ok | QtGui.QDialogButtonBox.Cancel)
+
+        self.connect(self.buttonBox, QtCore.SIGNAL('accepted()'),self.accept)
+        self.connect(self.buttonBox, QtCore.SIGNAL('rejected()'),self.reject)
+        mainlayout.addWidget(self.buttonBox)
         self.bywidthlength.click()
 
         
@@ -91,7 +105,22 @@ class zoneCreateDialog(QtGui.QDialog):
             self.bypointsgroupbox.setEnabled(True)
             self.widthlengthgroupbox.setEnabled(False)
         
+    def addbuttonclicked(self):
+        self.pointlist.addItem(self.pcoord.text())
+        self.pcoord.setText("")
         
+    def pointlistselected(self):    
+        self.delbutton.setEnabled(True)
+    
+    def delbuttonclicked(self):
+        item = self.pointlist.takeItem(self.pointlist.currentRow())
+        item = None
+        
+    def editchanged(self):
+        self.addbutton.setEnabled(True)
+
+    
+
 if __name__ == "__main__":
     import sys
     from PyQt4 import QtGui
