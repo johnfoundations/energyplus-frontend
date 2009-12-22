@@ -23,8 +23,9 @@ from PyQt4 import QtCore,QtGui
 import graphicitems
 
 class zoneCreateDialog(QtGui.QDialog):
-    def __init__ (self, parent = None):
+    def __init__ (self, model,parent = None):
         QtGui.QDialog.__init__(self,parent)
+        self.model = model
         mainlayout = QtGui.QVBoxLayout(self)
         zl = QtGui.QGridLayout()
         self.zonename = QtGui.QLineEdit()
@@ -36,6 +37,9 @@ class zoneCreateDialog(QtGui.QDialog):
         zl.addWidget(self.units,0,3)
         zl.addWidget(QtGui.QLabel('Zone Origin x,y,z'),1,0)
         self.origin = QtGui.QLineEdit()
+        orx = QtCore.QRegExp("[0-9]*,[0-9]*,[0-9]*");
+        ovalidator = QtGui.QRegExpValidator(orx, None);
+        self.origin.setValidator(ovalidator)
         zl.addWidget(self.origin,1,1)
         zl.addWidget(QtGui.QLabel('Zone Height Z axis'),2,0)
         self.zoneheight = QtGui.QLineEdit()
@@ -89,7 +93,7 @@ class zoneCreateDialog(QtGui.QDialog):
         self.connect(self.pointlist,QtCore.SIGNAL('itemSelectionChanged ()'),self.pointlistselected)
         self.buttonBox = QtGui.QDialogButtonBox(QtGui.QDialogButtonBox.Ok | QtGui.QDialogButtonBox.Cancel)
 
-        self.connect(self.buttonBox, QtCore.SIGNAL('accepted()'),self.accept)
+        self.connect(self.buttonBox, QtCore.SIGNAL('accepted()'),self.accepttest)
         self.connect(self.buttonBox, QtCore.SIGNAL('rejected()'),self.reject)
         mainlayout.addWidget(self.buttonBox)
         self.bywidthlength.click()
@@ -119,14 +123,79 @@ class zoneCreateDialog(QtGui.QDialog):
     def editchanged(self):
         self.addbutton.setEnabled(True)
 
-    
+    def createVList(self):
+        #get stuff from dialog and create a list of 3d points defining outside perimeter of zone
+        vlist = []
+        o = self.origin.text()
+        os = o.split(',')
+        ol = []
+        #convert to float
+        try:
+            ol.append(float(os[0]))
+            ol.append(float(os[1]))
+            ol.append(float(os[2]))
+        except:
+            print 'float failed. origin',ol
+            return False
+            
+        vlist.append(ol)
+        
+        if self.bywidthlength.isChecked():
+            try:
+                w = float(self.widthlengthwidth.text())
+                l = float(self.widthlengthlength.text())
+            except:
+                print 'float failed, width, length',w,l
+                return False
+                
+            o = []
+            o.append(vlist[0][0])
+            o.append(vlist[0][1] + l)
+            o.append(vlist[0][2])
+            vlist.append(o)
+            o = []
+            o.append(vlist[0][0] + w)
+            o.append(vlist[0][1] + l)
+            o.append(vlist[0][2])
+            vlist.append(o)
+            o = []
+            o.append(vlist[0][0] + w)
+            o.append(vlist[0][1])
+            o.append(vlist[0][2])
+            vlist.append(o)
+        
+        else:
+            for i in self.pointlist.items():
+                o = i.data().toPyObject()
+                ol = o.split(',')
+                #convert to float
+                try:
+                    ol[0] = float(ol[0])
+                    ol[1] = float(ol[1])
+                    ol[2] = float(ol[2])
+                except:
+                    print 'float failed, pointlist',ol
+                    return False
+                vlist.append(ol)
+                
+        return vlist
+        
+
+    def accepttest(self):
+        vlist = self.createVList()
+        print vlist
+        if vlist == False:
+            return
+        zc = zonecreate.zoneCreate(self.model,vlist,zonename)
+        self.accept()
+        
 
 if __name__ == "__main__":
     import sys
     from PyQt4 import QtGui
 
     app = QtGui.QApplication(sys.argv)
-    view = zoneCreateDialog()
+    view = zoneCreateDialog(None)
     view.show()
     sys.exit(app.exec_())
         

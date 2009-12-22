@@ -29,7 +29,7 @@ from classinfo import *
 import pdb
 
 class zoneCreate():
-    def __init__(self):
+    def __init__(self,model):
         self.vertices = []
         self.vmath = verticemath.verticeMath()
     

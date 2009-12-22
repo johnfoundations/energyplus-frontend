@@ -1912,6 +1912,7 @@ class construction_cfactorundergroundwall(ObjectAbstract):
 
         self.setRequiredFields([0, 1, 2])
         self.insertMemo(("Alternate method of describing underground wall constructions",))
+	self.addReference("ConstructionNames")
         self.setRequired(False)
         self.setMinfields(0)
         self.setGroup("Surface Construction Elements") 
@@ -1932,6 +1933,7 @@ class construction_ffactorgroundfloor(ObjectAbstract):
 
         self.setRequiredFields([0, 1, 2, 3])
         self.insertMemo(("Alternate method of describing slab-on-grade or underground floor constructions",))
+	self.addReference("ConstructionNames")
         self.setRequired(False)
         self.setMinfields(0)
         self.setGroup("Surface Construction Elements") 
