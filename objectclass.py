@@ -129,7 +129,7 @@ class ObjectAbstract :
         lines.append(self.getClassnameIDD() + ',')
         tmplines = []
         for c, field in enumerate(self.fieldlist):
-            if c >= self.minfields and field.value == None or '':
+            if c >= self.minfields and ((field.value == 'None') or (field.value == '') or (field.value == ' ')):
                 tmplines.append('    , !- %s' % field.fieldname)
             else:
                 lines.extend(tmplines)
