@@ -21,6 +21,8 @@
 
 from PyQt4 import QtCore,QtGui
 import graphicitems
+import zonecreate
+import conversion
 
 class zoneCreateDialog(QtGui.QDialog):
     def __init__ (self, model,parent = None):
@@ -37,12 +39,13 @@ class zoneCreateDialog(QtGui.QDialog):
         zl.addWidget(self.units,0,3)
         zl.addWidget(QtGui.QLabel('Zone Origin x,y,z'),1,0)
         self.origin = QtGui.QLineEdit()
-        orx = QtCore.QRegExp("[0-9]*,[0-9]*,[0-9]*");
+        orx = QtCore.QRegExp("[0-9]*(\\.[0-9]*)?,[0-9]*(\\.[0-9]*)?,[0-9]*(\\.[0-9]*)?");
         ovalidator = QtGui.QRegExpValidator(orx, None);
         self.origin.setValidator(ovalidator)
         zl.addWidget(self.origin,1,1)
         zl.addWidget(QtGui.QLabel('Zone Height Z axis'),2,0)
         self.zoneheight = QtGui.QLineEdit()
+        self.zoneheight.setValidator(QtGui.QDoubleValidator(None))
         zl.addWidget(self.zoneheight,2,1)
         mainlayout.addLayout(zl)
         self.buttongroup = QtGui.QButtonGroup()
@@ -51,14 +54,16 @@ class zoneCreateDialog(QtGui.QDialog):
         lwl = QtGui.QHBoxLayout()
         lwl.addWidget(QtGui.QLabel('Width, X axis'))
         self.widthlengthwidth = QtGui.QLineEdit()
+        self.widthlengthwidth.setValidator(QtGui.QDoubleValidator(None))
         lwl.addWidget(self.widthlengthwidth)
         lwl.addWidget(QtGui.QLabel('Length, Y axis'))
         self.widthlengthlength = QtGui.QLineEdit()
+        self.widthlengthlength.setValidator(QtGui.QDoubleValidator(None))
         lwl.addWidget(self.widthlengthlength)
         self.widthlengthgroupbox.setLayout(lwl)
         mainlayout.addWidget(self.bywidthlength)
         mainlayout.addWidget(self.widthlengthgroupbox)
-        self.bypoints = QtGui.QRadioButton('By Points, Start at bottom left, clockwise. x,y,z')
+        self.bypoints = QtGui.QRadioButton('By Points, Start at bottom left, clockwise. x,y,z from origin')
         mainlayout.addWidget(self.bypoints)
         self.buttongroup.addButton(self.bywidthlength,0)
         self.buttongroup.addButton(self.bypoints,1)
@@ -68,7 +73,7 @@ class zoneCreateDialog(QtGui.QDialog):
         ptlc.addWidget(QtGui.QLabel('Point coordinates:'))
         self.pcoord = QtGui.QLineEdit()
         rx = QtCore.QRegExp("[0-9]*,[0-9]*,[0-9]*");
-        validator = QtGui.QRegExpValidator(rx, None);
+        validator = QtGui.QRegExpValidator(orx, None);
         self.pcoord.setValidator(validator)
         ptlc.addWidget(self.pcoord)
         ptlc.addStretch()
@@ -96,7 +101,16 @@ class zoneCreateDialog(QtGui.QDialog):
         self.connect(self.buttonBox, QtCore.SIGNAL('accepted()'),self.accepttest)
         self.connect(self.buttonBox, QtCore.SIGNAL('rejected()'),self.reject)
         mainlayout.addWidget(self.buttonBox)
+        self.color = self.pcoord.palette().color(QtGui.QPalette.Base)
+        
+        self.connect(self.origin,QtCore.SIGNAL('editingFinished ()'),self.originedited)
+        self.connect(self.widthlengthwidth,QtCore.SIGNAL('editingFinished ()'),self.widthedited)
+        self.connect(self.widthlengthlength,QtCore.SIGNAL('editingFinished ()'),self.lengthedited)
+#        self.connect(self.pointlist,QtCore.SIGNAL('editingFinished ()'),self.pointlistselected)
+#        self.connect(self.pointlist,QtCore.SIGNAL('editingFinished ()'),self.pointlistselected)
+        
         self.bywidthlength.click()
+        
 
         
         
@@ -108,6 +122,13 @@ class zoneCreateDialog(QtGui.QDialog):
         else:
             self.bypointsgroupbox.setEnabled(True)
             self.widthlengthgroupbox.setEnabled(False)
+            #check if list has any elements
+            if self.pointlist.count() == 0:
+                self.pointlist.addItem('0,0,0')
+
+#                if (self.origin.text() != ''):
+#                    if self.origin.validator().validate(self.origin.text(),len(self.origin.text()))[0] == 2:
+#                        self.pointlist.addItem(self.origin.text())
         
     def addbuttonclicked(self):
         self.pointlist.addItem(self.pcoord.text())
@@ -120,32 +141,60 @@ class zoneCreateDialog(QtGui.QDialog):
         item = self.pointlist.takeItem(self.pointlist.currentRow())
         item = None
         
+    def lineEditRed(self,lineedit,setred):
+        if setred:
+            p = lineedit.palette()
+            p.setColor(QtGui.QPalette.Base, QtGui.QColor(255,62,62))
+            lineedit.setPalette(p)
+        else:
+            p = lineedit.palette()
+            p.setColor(QtGui.QPalette.Base, self.color)
+            lineedit.setPalette(p)
+        
     def editchanged(self):
         self.addbutton.setEnabled(True)
+
+    def originedited(self):
+        self.lineEditRed(self.origin,False)
+    
+    def widthedited(self):
+        self.lineEditRed(self.widthlengthwidth,False)
+
+    def lengthedited(self):
+        self.lineEditRed(self.widthlengthlength,False)
+
 
     def createVList(self):
         #get stuff from dialog and create a list of 3d points defining outside perimeter of zone
         vlist = []
-        o = self.origin.text()
-        os = o.split(',')
-        ol = []
-        #convert to float
-        try:
+        if self.origin.validator().validate(self.origin.text(),len(self.origin.text()))[0] == 2:
+            o = self.origin.text()
+            os = o.split(',')
+            ol = []
+            #convert to float
             ol.append(float(os[0]))
             ol.append(float(os[1]))
             ol.append(float(os[2]))
-        except:
-            print 'float failed. origin',ol
+        else:
+            print 'float failed. origin'
+            self.lineEditRed(self.origin,True)
             return False
             
         vlist.append(ol)
         
         if self.bywidthlength.isChecked():
-            try:
+            if self.widthlengthwidth.validator().validate(self.widthlengthwidth.text(),len(self.widthlengthwidth.text()))[0] == 2:
                 w = float(self.widthlengthwidth.text())
+            else:
+                print 'float failed, width'
+                self.lineEditRed(self.widthlengthwidth)
+                return False
+                
+            if self.widthlengthlength.validator().validate(self.widthlengthlength.text(),len(self.widthlengthlength.text()))[0] == 2:
                 l = float(self.widthlengthlength.text())
-            except:
-                print 'float failed, width, length',w,l
+            else:
+                print 'float failed, length'
+                self.lineEditRed(self.widthlengthlength)
                 return False
                 
             o = []
@@ -177,8 +226,19 @@ class zoneCreateDialog(QtGui.QDialog):
                     print 'float failed, pointlist',ol
                     return False
                 vlist.append(ol)
-                
-        return vlist
+        
+        if self.units.currentIndex() == 1:
+            #ip units
+            iplist = []
+            for v in vlist:
+                ipitem = []
+                ipitem.append(conversion.convertFrom('m',v[0])[1])
+                ipitem.append(conversion.convertFrom('m',v[1])[1])
+                ipitem.append(conversion.convertFrom('m',v[2])[1])
+                iplist.append(ipitem)
+            return iplist
+        else:
+            return vlist
         
 
     def accepttest(self):
@@ -186,7 +246,15 @@ class zoneCreateDialog(QtGui.QDialog):
         print vlist
         if vlist == False:
             return
-        zc = zonecreate.zoneCreate(self.model,vlist,zonename)
+        
+        if self.zoneheight.validator().validate(self.zoneheight.text(),len(self.zoneheight.text()))[0] == 2:
+            zh = float(self.zoneheight.text())
+        else:
+            print 'float failed, length'
+            self.lineEditRed(self.zoneheight)
+            return
+
+        zc = zonecreate.zoneCreate(self.model,vlist,zh,self.zonename.text())
         self.accept()
         
 
