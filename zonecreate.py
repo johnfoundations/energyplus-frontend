@@ -29,8 +29,10 @@ from classinfo import *
 import pdb
 
 class zoneCreate():
-    def __init__(self,model):
-        self.vertices = []
+    def __init__(self,model,vertices,height,name):
+        self.vertices = vertices
+        self.height = height
+        self.name = name
         self.vmath = verticemath.verticeMath()
     
     def nameCreate(self,zonename,verticelist):
