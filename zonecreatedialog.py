@@ -23,6 +23,7 @@ from PyQt4 import QtCore,QtGui
 import graphicitems
 import zonecreate
 import conversion
+import verticemath
 
 class zoneCreateDialog(QtGui.QDialog):
     def __init__ (self, model,parent = None):
@@ -63,13 +64,16 @@ class zoneCreateDialog(QtGui.QDialog):
         self.widthlengthgroupbox.setLayout(lwl)
         mainlayout.addWidget(self.bywidthlength)
         mainlayout.addWidget(self.widthlengthgroupbox)
-        self.bypoints = QtGui.QRadioButton('By Points, Start at bottom left, clockwise. x,y,z from origin')
+        self.bypoints = QtGui.QRadioButton('By Points, Start at bottom left, clockwise. x,y,z')
         mainlayout.addWidget(self.bypoints)
         self.buttongroup.addButton(self.bywidthlength,0)
         self.buttongroup.addButton(self.bypoints,1)
         self.bypointsgroupbox = QtGui.QGroupBox()
         ptl = QtGui.QHBoxLayout()
         ptlc = QtGui.QVBoxLayout()
+        self.fromorigin = QtGui.QCheckBox('Relative to origin')
+        self.fromorigin.setChecked(True)
+        ptlc.addWidget(self.fromorigin)
         ptlc.addWidget(QtGui.QLabel('Point coordinates:'))
         self.pcoord = QtGui.QLineEdit()
         rx = QtCore.QRegExp("[0-9]*,[0-9]*,[0-9]*");
@@ -106,7 +110,7 @@ class zoneCreateDialog(QtGui.QDialog):
         self.connect(self.origin,QtCore.SIGNAL('editingFinished ()'),self.originedited)
         self.connect(self.widthlengthwidth,QtCore.SIGNAL('editingFinished ()'),self.widthedited)
         self.connect(self.widthlengthlength,QtCore.SIGNAL('editingFinished ()'),self.lengthedited)
-#        self.connect(self.pointlist,QtCore.SIGNAL('editingFinished ()'),self.pointlistselected)
+        self.connect(self.zoneheight,QtCore.SIGNAL('editingFinished ()'),self.zoneheightedited)
 #        self.connect(self.pointlist,QtCore.SIGNAL('editingFinished ()'),self.pointlistselected)
         
         self.bywidthlength.click()
@@ -163,7 +167,10 @@ class zoneCreateDialog(QtGui.QDialog):
     def lengthedited(self):
         self.lineEditRed(self.widthlengthlength,False)
 
-
+    def zoneheightedited(self):
+        self.lineEditRed(self.zoneheight,False)
+    
+    
     def createVList(self):
         #get stuff from dialog and create a list of 3d points defining outside perimeter of zone
         vlist = []
@@ -214,6 +221,7 @@ class zoneCreateDialog(QtGui.QDialog):
             vlist.append(o)
         
         else:
+            pvlist = []
             for i in self.pointlist.items():
                 o = i.data().toPyObject()
                 ol = o.split(',')
@@ -225,7 +233,18 @@ class zoneCreateDialog(QtGui.QDialog):
                 except:
                     print 'float failed, pointlist',ol
                     return False
-                vlist.append(ol)
+                pvlist.append(ol)
+                
+            if self.fromorigin.checkState() == 2:
+                for v in pvlist:
+                    vlist.append([[verticemath.add(v[0],vlist[0][0])],
+                                  [verticemath.add(v[1],vlist[0][1])],
+                                  [verticemath.add(v[2],vlist[0][2])]])
+                                  
+            else:
+                for v in pvlist:
+                    vlist.append(v)
+            
         
         if self.units.currentIndex() == 1:
             #ip units

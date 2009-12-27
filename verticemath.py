@@ -157,33 +157,6 @@ class verticeMath():
         
         
         
-    def dist(self,v):
-        return math.sqrt(math.pow(v[0],2) + math.pow(v[1],2) + math.pow(v[2],2))
-                                  
-
-                                    
-    def transform(self,v1,v2):
-        #v1 is origin
-        res = [0,0,0]
-        res[0] = v2[0] - v1[0]
-        res[1] = v2[1] - v1[1]
-        res[2] = v2[2] - v1[2]
-        return res
-        
-    def add(self,v1,v2)  :
-        res = [0,0,0]
-        res[0] = v2[0] + v1[0]
-        res[1] = v2[1] + v1[1]
-        res[2] = v2[2] + v1[2]
-        return res
-
-    def mult(self,v1,m):
-        res = [0,0,0]
-        res[0] = v1[0] *m
-        res[1] = v1[1] *m
-        res[2] = v1[2] *m
-        return res
-        
         
 
     def getVertices(self,xrot,yrot,zrot):
@@ -197,7 +170,34 @@ class verticeMath():
 #        print xylist
         return xylist
     
+def dist(v):
+    return math.sqrt(math.pow(v[0],2) + math.pow(v[1],2) + math.pow(v[2],2))
+                                  
 
+                                    
+def transform(v1,v2):
+    #v1 is origin
+    res = [0,0,0]
+    res[0] = v2[0] - v1[0]
+    res[1] = v2[1] - v1[1]
+    res[2] = v2[2] - v1[2]
+    return res
+    
+def add(v1,v2)  :
+    res = [0,0,0]
+    res[0] = v2[0] + v1[0]
+    res[1] = v2[1] + v1[1]
+    res[2] = v2[2] + v1[2]
+    return res
+
+def mult(v1,m):
+    res = [0,0,0]
+    res[0] = v1[0] *m
+    res[1] = v1[1] *m
+    res[2] = v1[2] *m
+    return res
+        
+   
 if __name__ == "__main__":
     wall = iddclass.Wall_Exterior()
     walldata = ["Wall:Exterior","test","Construction","Zone",90,90,0,0,0,20,10]
