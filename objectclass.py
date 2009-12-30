@@ -108,6 +108,13 @@ class ObjectAbstract :
 
         return None
 
+    def setFieldDataByName(self,name,value):
+        for f in self.fieldlist:
+            if f.getFieldName() == name:
+                f.setValue(value)
+                return
+
+
     def CreateFields(self) :
         print 'to be subclassed'
 

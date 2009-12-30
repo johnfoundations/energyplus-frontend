@@ -145,7 +145,98 @@ def surfaceEditInteriorToExteriorWall(iddclass):
         #self.InsertField(FieldReal(self,"Length",0,"","m","","","",""))
         #self.InsertField(FieldReal(self,"Height",0,"","m","","","",""))
 
-def surfaceEditWallSizeChange(iddclass,origin,width,height):
+def surfaceEditWallSizeChange(iclass,origin,length,height):
+    iclass.setFieldDataByName('Starting X Coordinate',origin[0])
+    iclass.setFieldDataByName('Starting Y Coordinate',origin[1])
+    iclass.setFieldDataByName('Starting Z Coordinate',origin[2])
+    iclass.setFieldDataByName('Length',length)
+    iclass.setFieldDataByName('Height',height)
     
     
+def surfaceEditGetFaceAngle(v):
+    #returns angle to ground in rads, and angle from vector 1,0,0 on flat plane in rads
+    #transform [1] and [2] to [0]
+    if len(v) < 3:
+        return
+    print self.idfclass.getName() ,self.idfclass.getClassnameIDD()
+#        QtCore.pyqtRemoveInputHook() 
+#        import pdb 
+#        pdb.set_trace() 
+        
+    v1 = self.math.transform(v[0],v[1])
+    v2 = self.math.transform(v[0],v[2])
+    c = numpy.cross(v2,v1)
+    #get angle to ground
+    #unit
+    c = self.math.mult(c,1/self.math.dist(c))
+    c1 = c[:]
+    c1[2] = 0.0
+    d = numpy.dot(c,c1)
+    if d > 1:
+        d = 1
+    ground = math.acos(d)
+    print self.idfclass.getFieldDataByName('Tilt Angle'), self.idfclass.getFieldDataByName('View Factor to Ground')
+    print 'ground',ground
+    #azimuth, or direction on compass
+    if ground == 1.57079632679:
+        azimuth = ground
+    else:
+        na = [1.0,0.0,0.0]
+        d = numpy.dot(na,c1)
+        azimuth = math.acos(d)
+
+    print 'azimuth',azimuth,self.idfclass.getFieldDataByName('Azimuth Angle')
     
+    return ground,azimuth
+        
+def surfaceEditCreateWall(v1,v2,height,exterior,name,zonename):
+    #v1 is bottom left corner. v2 is bottom right
+    #exterior is boolean
+    #assumes v1 and v2 are relative to whatever is in globalgeometryrules
+    #only for vertical surfaces
+    if exterior:
+        iclass = iddclass.wall_exterior()
+    else:
+        iclass = iddclass.wall_interzone()
+     
+    verticelist = [] 
+    verticelist.append(v1)
+    verticelist.append(verticemath.add(v1,[0,0,height])
+    verticelist.append(verticemath.add(v2,[0,0,height])
+    verticelist.append(v2)
+    
+    res = surfaceEditGetFaceAngle(verticelist)
+    
+     
+    iclass.setFieldDataByName('Name',name) 
+    iclass.setFieldDataByName('Zone Name',zonename)
+    iclass.setFieldDataByName('Starting X Coordinate',v1[0])
+    iclass.setFieldDataByName('Starting Y Coordinate',v1[1])
+    iclass.setFieldDataByName('Starting Z Coordinate',v1[2])
+    iclass.setFieldDataByName('Length',verticemath.dist(v1,v2)
+    iclass.setFieldDataByName('Height',height)
+    iclass.setFieldDataByName("Azimuth Angle",res[1])
+    iclass.setFieldDataByName('Tilt Angle',res[0])
+    
+    return iclass
+     
+def surfaceEditCreateFloor(vlist,slab,name,zonename):
+    #vlist is same as zone vertice list
+    #slab is boolean
+    if slab:
+        if len(vlist) == 4:
+            #rectangular floor
+            iclass = iddclass.floor_groundcontact()
+            constructionclass = iclass.construction_ffactorgroundfloor()
+            constructionclass.fieldlist[0].setValue(name() + "_ffactorgroundfloor")
+            l = verticemath.dist(vlist[0],vlist[1])
+            w = verticemath.dist(vlist[0],vlist[3])
+            area = l*w
+            perimeter = (l+w)*2
+            constructionclass.fieldlist[2].setValue(area)
+            constructionclass.fieldlist[3].setValue(perimeter)
+            iclass.setFieldDataByName('Construction Name',constructionclass.getName())
+            
+        else:
+            #floor detailed
+            iclass = iddclass.surface_detailed
