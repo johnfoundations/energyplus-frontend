@@ -196,13 +196,28 @@ def mult(v1,m):
     res[1] = v1[1] *m
     res[2] = v1[2] *m
     return res
+
+def polygonArea(vlist):
+    area = 0;
+    l = vlist[:]
+    if l[0] != l[len(l)-1]:
+        print 'closing polygon'
+        l.append(vlist[0])
         
-   
+    
+    for i in range(1,len(vlist)-1):
+        area += vlist[i][0] * (vlist[i+1][1] - vlist[i-1][1])
+    
+    return abs(area / 2.0)
+    
+
+    
 if __name__ == "__main__":
-    wall = iddclass.Wall_Exterior()
-    walldata = ["Wall:Exterior","test","Construction","Zone",90,90,0,0,0,20,10]
-    wall.setData(walldata)
-    print wall
-    s = shape(None,wall)
+    print polygonArea([[0,0,0],[0,36,0],[24,36,0],[24,24,0],[14,24,0],[14,0,0],[0,0,0]])
+    #wall = iddclass.Wall_Exterior()
+    #walldata = ["Wall:Exterior","test","Construction","Zone",90,90,0,0,0,20,10]
+    #wall.setData(walldata)
+    #print wall
+    #s = shape(None,wall)
     
     

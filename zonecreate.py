@@ -33,7 +33,7 @@ class zoneCreate():
         self.vertices = vertices
         self.height = height
         self.name = name
-        self.vmath = verticemath.verticeMath()
+        #self.vmath = verticemath.verticeMath()
         
     
     def nameCreate(self,zonename,verticelist):
@@ -52,25 +52,25 @@ class zoneCreate():
             else:
                 p2 = orig[c+1]
             
-            uvect = self.vmath.transform(i,p2)
+            uvect = verticemath.transform(i,p2)
             lres = []
             for ni in new:
-                iuvect = self.vmath.transform(i,ni)
+                iuvect = verticemath.transform(i,ni)
                 if numpy.cross(numpy.array(uvect),numpy.array(iuvect)).tolist() == [0,0,0]:
                     #lines are parallel.
                     lres.append(ni)
            
             if len(lres) > 0:
                 #should have two points
-                olen = self.vmath.dist(self.vmath.transform(i,p2))
-                nlen = self.vmath.dist(self.vmath.transform(lres[0],lres[1]))
+                olen = verticemath.dist(verticemath.transform(i,p2))
+                nlen = verticemath.dist(verticemath.transform(lres[0],lres[1]))
                 vect = []
                 longest = 0
                 for lr in lres:
-                    d1 = self.vmath.dist(self.vmath.transform(i,lr))
+                    d1 = verticemath.dist(verticemath.transform(i,lr))
                     if d1 > longest:
                         longest = d1
-                    d2 = self.vmath.dist(self.vmath.transform(p2,lr))
+                    d2 = verticemath.dist(verticemath.transform(p2,lr))
                     if d2 > longest:
                         longest = d2
 #                print olen,nlen,longest
@@ -79,7 +79,7 @@ class zoneCreate():
                     oline = [i,p2]
                     #align both vectors the same direction
                     turned = False
-                    if numpy.dot(numpy.array(self.vmath.transform(oline[0],oline[1])),numpy.array(self.vmath.transform(lres[0],lres[1]))) < 0:
+                    if numpy.dot(numpy.array(verticemath.transform(oline[0],oline[1])),numpy.array(verticemath.transform(lres[0],lres[1]))) < 0:
                         nline = [lres[1],lres[0]]
                         turned = True
                     else:
@@ -93,13 +93,13 @@ class zoneCreate():
                     ostate = [] #0 for interior, 1 for exterior. an entry for each line
                     nstate = []
                     olinearray.append(oline[0])
-                    if self.vmath.dist(self.vmath.transform(oline[0],nline[0])) == 0:
+                    if verticemath.dist(verticemath.transform(oline[0],nline[0])) == 0:
                         nlinearray.append(nline[0])
                         ostate.append(0)
                         nstate.append(0)
                     
                     else:
-                        if numpy.dot(numpy.array(self.vmath.transform(oline[0],nline[0])),numpy.array(self.vmath.transform(oline[0],oline[1]))) < 0:
+                        if numpy.dot(numpy.array(verticemath.transform(oline[0],nline[0])),numpy.array(verticemath.transform(oline[0],oline[1]))) < 0:
                             #opposite directions
                             nlinearray.append(oline[0])
                             nlinearray.append(nline[0])
@@ -113,12 +113,12 @@ class zoneCreate():
                             ostate.append(0)
                             nstate.append(0)
                     
-                    if self.vmath.dist(self.vmath.transform(oline[1],nline[1])) == 0:
+                    if verticemath.dist(verticemath.transform(oline[1],nline[1])) == 0:
                         olinearray.append(oline[1])
                         nlinearray.append(nline[1])
                         
                     else:
-                        if numpy.dot(numpy.array(self.vmath.transform(oline[1],nline[1])),numpy.array(self.vmath.transform(oline[0],oline[1]))) < 0:
+                        if numpy.dot(numpy.array(verticemath.transform(oline[1],nline[1])),numpy.array(verticemath.transform(oline[0],oline[1]))) < 0:
                             #opposite direction
                             olinearray.append(nline[1])
                             olinearray.append(oline[1])
@@ -142,7 +142,7 @@ class zoneCreate():
         
         
 if __name__ == "__main__":
-    z = zoneCreate()
+    z = zoneCreate(None,[],1,1)
     a = [[0,0,0],[0,8,0],[10,8,0],[10,0,0]]
     b = [[0,8,0],[0,28,0],[14,28,0],[14,8,0]]
     c = [[14,12,0],[14,28,0],[24,28,0],[24,12,0]]

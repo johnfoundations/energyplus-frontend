@@ -220,15 +220,25 @@ def surfaceEditCreateWall(v1,v2,height,exterior,name,zonename):
     
     return iclass
      
-def surfaceEditCreateFloor(vlist,slab,name,zonename):
+def surfaceEditCreateFFactorGroundFloorClass(vlist,slist,floorname):
+    constructionclass = iclass.construction_ffactorgroundfloor()
+    constructionclass.fieldlist[0].setValue(name() + "_ffactorgroundfloor")
+    area = verticemath.polygonArea(vlist)
+    for i = range(0,len(vlist-1):
+        if slist[i] = 1:
+            
+     
+     
+def surfaceEditCreateFloor(vlist,slist,slab,name,zonename):
     #vlist is same as zone vertice list
+    #slist is boolean outside 1 inside 0
     #slab is boolean
-    if slab:
-        if len(vlist) == 4:
+
+    if len(vlist) == 4:
+        if slab:
             #rectangular floor
             iclass = iddclass.floor_groundcontact()
-            constructionclass = iclass.construction_ffactorgroundfloor()
-            constructionclass.fieldlist[0].setValue(name() + "_ffactorgroundfloor")
+            
             l = verticemath.dist(vlist[0],vlist[1])
             w = verticemath.dist(vlist[0],vlist[3])
             area = l*w
@@ -236,7 +246,49 @@ def surfaceEditCreateFloor(vlist,slab,name,zonename):
             constructionclass.fieldlist[2].setValue(area)
             constructionclass.fieldlist[3].setValue(perimeter)
             iclass.setFieldDataByName('Construction Name',constructionclass.getName())
-            
+        
+    else:
+        #floor detailed
+        iclass = iddclass.buildingsurface_detailed
+        dl = []
+        dl.append(name)
+        dl.append('Floor')
+        if slab:
+            dl.append('')  #slab construction name
+            dl.append(zonename)
+            dl.append('GroundFCfactorMethod')
         else:
-            #floor detailed
-            iclass = iddclass.surface_detailed
+            dl.append('') #default floor
+            dl.append(zonename)
+            dl.append('Zone')
+        dl.append('')  #outside boundary, zone
+        dl.append('NoSun')
+        dl.append('NoWind')
+        dl.append('autocalculate')
+        dl.append('autocalculate')
+        for v in vlist:
+            dl.append(v[0])
+            dl.append(v[1])
+            dl.append(v[2])
+            
+        iclass.setData(dl)
+        
+    return iclass
+        
+        
+        #self.InsertField(FieldText(self,"Name","","",""))
+        #self.InsertField(FieldChoice(self,"Surface Type","","","",["Floor","Wall","Ceiling","Roof",]))
+        #self.InsertField(FieldObjectlist(self,"Construction Name","",("To be matched with a construction in this input file","",),"","ConstructionNames"))
+        #self.InsertField(FieldObjectlist(self,"Zone Name","",("Zone the surface is a part of","",),"","ZoneNames"))
+        #self.InsertField(FieldChoice(self,"Outside Boundary Condition","","","",["Adiabatic","Surface","Zone","Outdoors","Ground","GroundFCfactorMethod","OtherSideCoefficients","OtherSideConditionsModel",]))
+        #self.InsertField(FieldObjectlist(self,"Outside Boundary Condition Object","",("Non-blank only if the field Outside Boundary Condition is Surface,","Zone, OtherSideCoefficients or OtherSideConditionsModel","If Surface, specify name of corresponding surface in adjacent zone or","specify current surface name for internal partition separating like zones","If Zone, specify the name of the corresponding zone and","the program will generate the corresponding interzone surface","If OtherSideCoefficients, specify name of SurfaceProperty:OtherSideCoefficients","If OtherSideConditionsModel, specify name of SurfaceProperty:OtherSideConditionsModel","",),"","OutFaceEnvNames"))
+        #self.InsertField(FieldChoice(self,"Sun Exposure","SunExposed","","",["SunExposed","NoSun",]))
+        #self.InsertField(FieldChoice(self,"Wind Exposure","WindExposed","","",["WindExposed","NoWind",]))
+        #self.InsertField(FieldRealAutocalculate(self,"View Factor to Ground","autocalculate",("From the exterior of the surface","Unused if one uses the *reflections* options in Solar Distribution in Building input","unless a DaylightingDevice:Shelf or DaylightingDevice:Tubular object has been specified.","autocalculate will automatically calculate this value from the tilt of the surface","",),"",0.0,1.0,"",""))
+        #self.InsertField(FieldRealAutocalculate(self,"Number of Vertices","autocalculate",("shown with 120 vertex coordinates -- extensible object"," *extensible* -- duplicate last set of x,y,z coordinates, renumbering please","(and changing z terminator to a comma *,* for all but last one which needs a semi-colon *;*)","vertices are given in GlobalGeometryRules coordinates -- if relative, all surface coordinates","are *relative* to the Zone Origin.  If world, then building and zone origins are used","for some internal calculations, but all coordinates are given in an *absolute* system.","",),"",3,"","",""))
+        #self.InsertField(FieldReal(self,"Vertex 1 X-coordinate",0,"","m","","","",""))
+        #self.InsertField(FieldReal(self,"Vertex 1 Y-coordinate",0,"","m","","","",""))
+        #self.InsertField(FieldReal(self,"Vertex 1 Z-coordinate",0,"","m","","","",""))
+
+
+            
