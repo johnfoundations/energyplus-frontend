@@ -56,7 +56,11 @@ class defaultContruction():
                     dlist[n] = [[[1],[i.getFieldDataByName('Construction Name')]]]
 
             if i.getClassnameIDD() in classinfo.mixedclasses:
-                n = i.getClassnameIDD() + ':' + i.getFieldDataByName('Surface Type')
+                if i.getClassnameIDD() == 'RoofCeiling:Detailed':
+                    n = i.getClassnameIDD() + ':' + i.getFieldDataByName('Outside Boundary Condition')
+                else:
+                    n = i.getClassnameIDD() + ':' + i.getFieldDataByName('Surface Type')
+                    
                 if n in dlist:
                     found = False
                     for dl in dlist[n]:
