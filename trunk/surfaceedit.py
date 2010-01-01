@@ -90,13 +90,13 @@ def surfaceEditFloorToSlab(iclass):
     
     
     
-def surfaceEditExteriorToInteriorWall(iclass,boundaryclass):
+def surfaceEditExteriorToInteriorWall(iclass,boundaryzonename):
 
     intclass = iddclass.wall_interzone()
     intclass.fieldlist[0].setValue(iclass.getName())
-    intclass.fieldlist[1].setValue("")  #interior wall construction
+    intclass.fieldlist[1].setValue(defaultconstruction.getDefault(intclass.getClassnameIDD())  #interior wall construction
     intclass.fieldlist[2].setValue(iclass.getFieldDataByName('Zone Name'))
-    intclass.fieldlist[3].setValue('')  #boundary class
+    intclass.fieldlist[3].setValue(boundaryzonename)  #boundary class
     intclass.fieldlist[4].setValue(iclass.getFieldDataByName('Azimuth Angle')
     intclass.fieldlist[5].setValue(iclass.getFieldDataByName('Tilt Angle')
     intclass.fieldlist[6].setValue(iclass.getFieldDataByName('Starting X Coordinate')
@@ -190,7 +190,7 @@ def surfaceEditGetFaceAngle(v):
     
     return ground,azimuth
         
-def surfaceEditCreateWall(v1,v2,height,exterior,name,zonename):
+def surfaceEditCreateWall(v1,v2,height,exterior,name,zonename,boundaryzonename):
     #v1 is bottom left corner. v2 is bottom right
     #exterior is boolean
     #assumes v1 and v2 are relative to whatever is in globalgeometryrules
@@ -199,6 +199,7 @@ def surfaceEditCreateWall(v1,v2,height,exterior,name,zonename):
         iclass = iddclass.wall_exterior()
     else:
         iclass = iddclass.wall_interzone()
+        iclass.setFieldDataByName('Outside Boundary Condition Object',boundaryzonename)
      
     verticelist = [] 
     verticelist.append(v1)
@@ -237,7 +238,7 @@ def surfaceEditCreateFFactorGroundFloorClass(vlist,slist,floorname):
     return constructionclass
      
      
-def surfaceEditCreateFloor(vlist,slist,slab,name,zonename):
+def surfaceEditCreateFloor(vlist,slist,slab,name,zonename,boundaryzonename):
     #vlist is same as zone vertice list
     #slist is boolean outside 1 inside 0
     #slab is boolean
@@ -255,6 +256,7 @@ def surfaceEditCreateFloor(vlist,slist,slab,name,zonename):
             
         iclass.fieldlist[0].setValue(name)
         iclass.fieldlist[2].setValue(zonename)
+        iclass.fieldlist[3].setValue(boundaryzonename)
         iclass.fieldlist[4].setValue(0)
         iclass.fieldlist[5].setValue(180)
         iclass.fieldlist[6].setValue(vlist[0][0])
@@ -321,7 +323,10 @@ def surfaceEditCreateFloor(vlist,slist,slab,name,zonename):
         
     return iclass,constructionclass
         
-        
+  
+  
+  
+  
         #self.InsertField(FieldText(self,"Name","","",""))
         #self.InsertField(FieldChoice(self,"Surface Type","","","",["Floor","Wall","Ceiling","Roof",]))
         #self.InsertField(FieldObjectlist(self,"Construction Name","",("To be matched with a construction in this input file","",),"","ConstructionNames"))
@@ -336,5 +341,75 @@ def surfaceEditCreateFloor(vlist,slist,slab,name,zonename):
         #self.InsertField(FieldReal(self,"Vertex 1 Y-coordinate",0,"","m","","","",""))
         #self.InsertField(FieldReal(self,"Vertex 1 Z-coordinate",0,"","m","","","",""))
 
+def surfaceEditCreateCeiling(vlist,name,zonename,boundaryzonename):
+    #vlist is same as zone vertice list
+    #slist is boolean outside 1 inside 0
+    if len(vlist) == 4:
+        #simple surface
+        iclass = iddclass.ceiling_interzone()
+        iclass.setFieldDataByName('Construction Name',globaldefault.getDefault(iclass.getClassnameIDD())
+            
+        iclass.fieldlist[0].setValue(name)
+        iclass.fieldlist[2].setValue(zonename)
+        iclass.fieldlist[3].setValue(boundaryzonename)
+        iclass.fieldlist[4].setValue(0)
+        iclass.fieldlist[5].setValue(0)
+        iclass.fieldlist[6].setValue(vlist[0][0])
+        iclass.fieldlist[7].setValue(vlist[0][1])
+        iclass.fieldlist[8].setValue(vlist[0][2])
+        iclass.fieldlist[9].setValue(verticemath.dist(vlist[0],vlist[3])
+        iclass.fieldlist[10].setValue(verticemath.dist(vlist[0],vlist[1])
+        
+
+        #class ceiling_interzone(ObjectAbstract):
+        #self.InsertField(FieldText(self,"Name","","",""))
+        #self.InsertField(FieldObjectlist(self,"Construction Name","",("To be matched with a construction in this input file","",),"","ConstructionNames"))
+        #self.InsertField(FieldObjectlist(self,"Zone Name","",("Zone for the inside of the surface","",),"","ZoneNames"))
+        #self.InsertField(FieldObjectlist(self,"Outside Boundary Condition Object","",("Specify a surface name in an adjacent zone for known interior floors","Specify a zone name of an adjacent zone to automatically generate","the interior floor in the adjacent zone.","",),"","OutFaceEnvNames"))
+        #self.InsertField(FieldReal(self,"Azimuth Angle",0,("Facing direction of outside of wall (S=180,N=0,E=90,W=270)","Units: deg",),"deg",0,360,"",""))
+        #self.InsertField(FieldReal(self,"Tilt Angle","0",("Ceilings are usually tilted 0 degrees","Units: deg",),"deg",0,180,"",""))
+        #self.InsertField(FieldReal(self,"Starting X Coordinate",0,("If not Flat, should be Lower Left Corner (from outside)","Units: m",),"m","","","",""))
+        #self.InsertField(FieldReal(self,"Starting Y Coordinate",0,"","m","","","",""))
+        #self.InsertField(FieldReal(self,"Starting Z Coordinate",0,"","m","","","",""))
+        #self.InsertField(FieldReal(self,"Length",0,("Along X Axis","Units: m",),"m","","","",""))
+        #self.InsertField(FieldReal(self,"Width",0,("Along Y Axis","Units: m",),"m","","","",""))
+
+    else:
+        #ceiling/roof detailed
+        iclass = iddclass.buildingsurface_detailed
+        dl = []
+        dl.append(name)
+        dl.append('Floor')
+        dl.append(globaldefault.getDefault(iclass.getClassnameIDD(),'Zone')) #default ceiling
+        dl.append(zonename)
+        dl.append('Zone')
+        dl.append(boundaryzonename)  #outside boundary, zone
+        dl.append('NoSun')
+        dl.append('NoWind')
+        dl.append('autocalculate')
+        dl.append('autocalculate')
+        for v in vlist:
+            dl.append(v[0])
+            dl.append(v[1])
+            dl.append(v[2])
+            
+        iclass.setData(dl)
+
+        #class roofceiling_detailed(ObjectVertice):
+        #self.InsertField(FieldText(self,"Name","","",""))
+        #self.InsertField(FieldObjectlist(self,"Construction Name","",("To be matched with a construction in this input file","",),"","ConstructionNames"))
+        #self.InsertField(FieldObjectlist(self,"Zone Name","",("Zone the surface is a part of","",),"","ZoneNames"))
+        #self.InsertField(FieldChoice(self,"Outside Boundary Condition","","","",["Adiabatic","Surface","Zone","Outdoors","Ground","OtherSideCoefficients","OtherSideConditionsModel",]))
+        #self.InsertField(FieldObjectlist(self,"Outside Boundary Condition Object","",("Non-blank only if the field Outside Boundary Condition is Surface,","Zone, OtherSideCoefficients or OtherSideConditionsModel","If Surface, specify name of corresponding surface in adjacent zone or","specify current surface name for internal partition separating like zones","If Zone, specify the name of the corresponding zone and","the program will generate the corresponding interzone surface","If OtherSideCoefficients, specify name of SurfaceProperty:OtherSideCoefficients","If OtherSideConditionsModel, specify name of SurfaceProperty:OtherSideConditionsModel","",),"","OutFaceEnvNames"))
+        #self.InsertField(FieldChoice(self,"Sun Exposure","SunExposed","","",["SunExposed","NoSun",]))
+        #self.InsertField(FieldChoice(self,"Wind Exposure","WindExposed","","",["WindExposed","NoWind",]))
+        #self.InsertField(FieldRealAutocalculate(self,"View Factor to Ground","autocalculate",("From the exterior of the surface","Unused if one uses the *reflections* options in Solar Distribution in Building input","unless a DaylightingDevice:Shelf or DaylightingDevice:Tubular object has been specified.","autocalculate will automatically calculate this value from the tilt of the surface","",),"",0.0,1.0,"",""))
+        #self.InsertField(FieldRealAutocalculate(self,"Number of Vertices","autocalculate",("shown with 10 vertex coordinates -- extensible object"," *extensible* -- duplicate last set of x,y,z coordinates, renumbering please","(and changing z terminator to a comma *,* for all but last one which needs a semi-colon *;*)","vertices are given in GlobalGeometryRules coordinates -- if relative, all surface coordinates","are *relative* to the Zone Origin.  If world, then building and zone origins are used","for some internal calculations, but all coordinates are given in an *absolute* system.","",),"",3,"","",""))
+        #self.InsertField(FieldReal(self,"Vertex 1 X-coordinate",0,"","m","","","",""))
+        #self.InsertField(FieldReal(self,"Vertex 1 Y-coordinate",0,"","m","","","",""))
+        #self.InsertField(FieldReal(self,"Vertex 1 Z-coordinate",0,"","m","","","",""))
+
+    return iclass
+        
 
             

@@ -36,8 +36,6 @@ class zoneCreate():
         #self.vmath = verticemath.verticeMath()
         
     
-    def nameCreate(self,zonename,verticelist):
-        pass
         
     
     def isAdjacent(self,orig,new):
