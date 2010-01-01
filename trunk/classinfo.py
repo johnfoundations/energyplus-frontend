@@ -28,7 +28,16 @@ allconstructionclasses = "BuildingSurface:Detailed","Wall:Detailed","RoofCeiling
                          "Shading:Site","Shading:Building",\
                          "Ceiling:Adiabatic","Ceiling:Interzone","Floor:GroundContact","Floor:Adiabatic","Floor:Interzone",\
                          "Roof","Zone"
-                
+
+constructionelements =  "Wall:Detailed","RoofCeiling:Detailed","Floor:Detailed",\
+                         "Shading:Building:Detailed",\
+                         "GlazedDoor:Interzone","GlazedDoor","Door","Door:Interzone","Window:Interzone","Window",\
+                         "Wall:Exterior","Wall:Adiabatic","Wall:Underground","Wall:Interzone",\
+                         "Shading:Site","Shading:Building",\
+                         "Ceiling:Adiabatic","Ceiling:Interzone","Floor:GroundContact","Floor:Adiabatic","Floor:Interzone",\
+                         "Roof"
+
+
 doorclasses = "GlazedDoor:Interzone","GlazedDoor","Door","Door:Interzone"        
 
 windowclasses = "Window:Interzone","Window"

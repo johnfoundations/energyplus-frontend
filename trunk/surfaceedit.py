@@ -19,6 +19,7 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************"""
 
+from defaultconstruction import *
 
 #surface edit routines.
 
@@ -222,30 +223,74 @@ def surfaceEditCreateWall(v1,v2,height,exterior,name,zonename):
      
 def surfaceEditCreateFFactorGroundFloorClass(vlist,slist,floorname):
     constructionclass = iclass.construction_ffactorgroundfloor()
-    constructionclass.fieldlist[0].setValue(name() + "_ffactorgroundfloor")
+    constructionclass.fieldlist[0].setValue(floorname + "_ffactorgroundfloor")
     area = verticemath.polygonArea(vlist)
-    for i = range(0,len(vlist-1):
+    #calculate perimeter
+    perimeter = 0
+    for i = range(0,len(slist-1):
         if slist[i] = 1:
-            
+            #outside
+            perimeter += verticemath.dist(vlist[i],vlist[i+1])
+    
+    constructionclass.fieldlist[2].setValue(area)
+    constructionclass.fieldlist[3].setValue(perimeter)
+    return constructionclass
      
      
 def surfaceEditCreateFloor(vlist,slist,slab,name,zonename):
     #vlist is same as zone vertice list
     #slist is boolean outside 1 inside 0
     #slab is boolean
-
+    constructionclass = None
     if len(vlist) == 4:
+        #simple surface
         if slab:
             #rectangular floor
             iclass = iddclass.floor_groundcontact()
-            
-            l = verticemath.dist(vlist[0],vlist[1])
-            w = verticemath.dist(vlist[0],vlist[3])
-            area = l*w
-            perimeter = (l+w)*2
-            constructionclass.fieldlist[2].setValue(area)
-            constructionclass.fieldlist[3].setValue(perimeter)
+            constructionclass = surfaceEditCreateFFactorGroundFloorClass(vlist,slist,name)
             iclass.setFieldDataByName('Construction Name',constructionclass.getName())
+        else:
+            iclass = iddclass.floor_interzone()
+            iclass.setFieldDataByName('Construction Name',globaldefault.getDefault(iclass.getClassnameIDD())
+            
+        iclass.fieldlist[0].setValue(name)
+        iclass.fieldlist[2].setValue(zonename)
+        iclass.fieldlist[4].setValue(0)
+        iclass.fieldlist[5].setValue(180)
+        iclass.fieldlist[6].setValue(vlist[0][0])
+        iclass.fieldlist[7].setValue(vlist[0][1])
+        iclass.fieldlist[8].setValue(vlist[0][2])
+        iclass.fieldlist[9].setValue(verticemath.dist(vlist[0],vlist[3])
+        iclass.fieldlist[10].setValue(verticemath.dist(vlist[0],vlist[1])
+        
+        
+            
+            
+        #class floor_interzone(ObjectAbstract):
+        #self.InsertField(FieldText(self,"Name","","",""))
+        #self.InsertField(FieldObjectlist(self,"Construction Name","",("To be matched with a construction in this input file","",),"","ConstructionNames"))
+        #self.InsertField(FieldObjectlist(self,"Zone Name","",("Zone for the inside of the surface","",),"","ZoneNames"))
+        #self.InsertField(FieldObjectlist(self,"Outside Boundary Condition Object","",("Specify a surface name in an adjacent zone for known interior ceilings.","Specify a zone name of an adjacent zone to automatically generate","the interior ceiling in the adjacent zone.","",),"","OutFaceEnvNames"))
+        #self.InsertField(FieldReal(self,"Azimuth Angle",0,"","deg",0,360,"",""))
+        #self.InsertField(FieldReal(self,"Tilt Angle","180",("Floors are usually tilted 180 degrees","Units: deg",),"deg",0,180,"",""))
+        #self.InsertField(FieldReal(self,"Starting X Coordinate",0,("If not Flat, should be Lower Left Corner (from outside)","Units: m",),"m","","","",""))
+        #self.InsertField(FieldReal(self,"Starting Y Coordinate",0,"","m","","","",""))
+        #self.InsertField(FieldReal(self,"Starting Z Coordinate",0,"","m","","","",""))
+        #self.InsertField(FieldReal(self,"Length",0,("Along X Axis","Units: m",),"m","","","",""))
+        #self.InsertField(FieldReal(self,"Width",0,("Along Y Axis","Units: m",),"m","","","",""))
+
+        #class floor_groundcontact(ObjectAbstract):
+        #self.InsertField(FieldText(self,"Name","","",""))
+        #self.InsertField(FieldObjectlist(self,"Construction Name","",("To be matched with a construction in this input file","If the construction is type *Construction:FfactorGroundFloor*,","then the GroundFCfactorMethod will be used.","",),"","ConstructionNames"))
+        #self.InsertField(FieldObjectlist(self,"Zone Name","",("Zone the surface is a part of","",),"","ZoneNames"))
+        #self.InsertField(FieldReal(self,"Azimuth Angle",0,"","",0,360,"",""))
+        #self.InsertField(FieldReal(self,"Tilt Angle","180",("Floors are usually tilted 180 degrees","",),"",0,180,"",""))
+        #self.InsertField(FieldReal(self,"Starting X Coordinate",0,("if not flat, should be lower left corner (from outside)","Units: m",),"m","","","",""))
+        #self.InsertField(FieldReal(self,"Starting Y Coordinate",0,"","m","","","",""))
+        #self.InsertField(FieldReal(self,"Starting Z Coordinate",0,"","m","","","",""))
+        #self.InsertField(FieldReal(self,"Length",0,("Along X Axis","Units: m",),"m","","","",""))
+        #self.InsertField(FieldReal(self,"Width",0,("Along Y Axis","Units: m",),"m","","","",""))
+    
         
     else:
         #floor detailed
@@ -254,11 +299,12 @@ def surfaceEditCreateFloor(vlist,slist,slab,name,zonename):
         dl.append(name)
         dl.append('Floor')
         if slab:
-            dl.append('')  #slab construction name
+            constructionclass = surfaceEditCreateFFactorGroundFloorClass(vlist,slist,name)
+            dl.append(constructionclass.getName())  #slab construction name
             dl.append(zonename)
             dl.append('GroundFCfactorMethod')
         else:
-            dl.append('') #default floor
+            dl.append(globaldefault.getDefault(iclass.getClassnameIDD(),'Floor')) #default floor
             dl.append(zonename)
             dl.append('Zone')
         dl.append('')  #outside boundary, zone
@@ -273,7 +319,7 @@ def surfaceEditCreateFloor(vlist,slist,slab,name,zonename):
             
         iclass.setData(dl)
         
-    return iclass
+    return iclass,constructionclass
         
         
         #self.InsertField(FieldText(self,"Name","","",""))
