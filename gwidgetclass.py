@@ -123,19 +123,20 @@ class GAutoCalcRealWidget(QtGui.QWidget):
     self.valuechanged = True
 
   def value(self):
-    if self.cb.isChecked():
+    print 'GAutoCalcRealWidget value',self.cb.checkState(),self.edit.value(),self
+    if self.cb.checkState() == 2:
       return 'autocalculate'
     else:
       return self.edit.value()
 
 
   def setValue(self,value):
-#    print value
-    if not value.__class__.__name__ == 'int':
-      v = value.lower()
+    print value,self
+    if not ((value.__class__.__name__ == 'int') or (value == None)):
+      v = str(value).lower()
     else:
       v = value
-    if v == 'autocalculate' or v == 'autosize' :
+    if v == 'autocalculate' or v == 'autosize' or v == '' or v == None:
       self.cb.setChecked(True)
     else:
       self.cb.setChecked(False)

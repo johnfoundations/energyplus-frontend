@@ -22,7 +22,7 @@
 
 
 import idfglobals
-
+import pdb
 import copy
 from PyQt4 import QtGui, QtCore
 from fieldclasses import *
@@ -136,7 +136,9 @@ class ObjectAbstract :
         lines.append(self.getClassnameIDD() + ',')
         tmplines = []
         for c, field in enumerate(self.fieldlist):
-            if c >= self.minfields and ((field.value == 'None') or (field.value == '') or (field.value == ' ')):
+#            QtCore.pyqtRemoveInputHook()
+#            pdb.set_trace()
+            if c >= self.minfields and ((field.value == 'None') or (field.value == '') or (field.value == ' ') or (field.value == None)):
                 tmplines.append('    , !- %s' % field.fieldname)
             else:
                 lines.extend(tmplines)
@@ -357,14 +359,14 @@ class ObjectCompactSchedule(ObjectAbstract) :
                 continue
             
             if self.fieldlist[i].fieldname == 'Through:':
-                if not self.fieldlist[i].value == '':
+                if not ((self.fieldlist[i].value == '') or (self.fieldlist[i].value == None)):
                     lines.append('    %s, ! %s' % ('Through: '+self.fieldlist[i].value, 'Field '+ str(fieldindex)))
                     fieldindex = fieldindex + 1
                 i = i+1
                 continue
 
             if self.fieldlist[i].fieldname == 'Interpolate:':
-                if not self.fieldlist[i].value == '':
+                if not ((self.fieldlist[i].value == '') or (self.fieldlist[i].value == None)):
                     lines.append('    %s, ! %s' % ('Interpolate: '+self.fieldlist[i].value, 'Field '+ str(fieldindex)))
                     fieldindex = fieldindex + 1
                 i=i+1
