@@ -32,7 +32,7 @@ class FieldAbstract :
         self.fieldeditor = 0
         self.fieldname = fieldname
         self.parent = parent
-        self.value = default
+        self.value = None
         self.default = default
         self.notes = notes
         self.units = units
@@ -126,13 +126,15 @@ class FieldReal(FieldAbstract) :
         return self.fieldeditor
 
     def getEditorValue(self,editor) :
+        print 'getEditorValue FieldReal',editor
         if editor.cleanText() == '':
             return None
         else:
             return editor.value()
 
     def setEditorValue(self,editor,data):
-        editor.setValue(data)
+        if data != None:
+            editor.setValue(data)
         #try:
             #v = float(self.value)
         #except:
@@ -202,7 +204,7 @@ class FieldRealAutocalculate(FieldReal) :
     def Validate(self,val):
         if val == None:
             return True
-        v = val.lower()
+        v = str(val).lower()
         if v == 'autocalculate' or v == 'autosize' :
             return True
         else:
@@ -224,6 +226,9 @@ class FieldRealAutocalculate(FieldReal) :
 
     def setEditorValue(self,editor,data):
         editor.setValue(data)
+
+    def getEditorValue(self,editor) :
+        return editor.value()
 
     def valueTweak(self,value,convert=False):
         try:
@@ -379,8 +384,8 @@ class FieldChoice(FieldAbstract)    :
         return self.fieldeditor
 
     def setEditorValue(self,editor,data):
-        if not data == '':
-            editor.setCurrentIndex(self.lchoices.index(data.lower()))
+        if not ((data == '') or (data == None)):
+            editor.setCurrentIndex(self.lchoices.index(str(data).lower()))
     
     def getEditorValue(self,editor):
         return str(editor.currentText())
