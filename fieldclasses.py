@@ -74,6 +74,8 @@ class FieldAbstract :
             return self.value
 
     def __str__(self):
+        if (self.value == None) or (self.value == 'None'):
+            return ''
         return str(self.value)
 
     def getUnits(self,convert=False):
@@ -205,13 +207,14 @@ class FieldRealAutocalculate(FieldReal) :
         if val == None:
             return True
         v = str(val).lower()
-        if v == 'autocalculate' or v == 'autosize' :
+        if v == 'autocalculate' or v == 'autosize' or v == 'auto' :
             return True
         else:
             return FieldReal.Validate(self,val)
 
     def createEditor(self,parent,index)  :
         self.fieldeditor = GAutoCalcRealWidget(parent)
+        self.fieldeditor.setDefaultValue(self.default)
         if self.minv:
             self.fieldeditor.setMinimum(self.minv)
         elif self.mingtv:
@@ -367,6 +370,7 @@ class FieldChoice(FieldAbstract)    :
     def __init__(self,parent,fieldname,default,notes,units,choices):
         FieldAbstract.__init__(self,parent,fieldname,default,notes,units)
         self.choices = choices
+        self.choices.insert(0,'')
         self.lchoices = []
         for lc in self.choices:
             self.lchoices.append(lc.lower())
