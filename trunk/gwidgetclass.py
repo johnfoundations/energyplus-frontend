@@ -28,72 +28,72 @@ import math
 
 
 class GEditWidget(QtGui.QLineEdit):
-  def __init__(self,parent=None):
-    QtGui.QLineEdit.__init__(self,parent)
+    def __init__(self,parent=None):
+        QtGui.QLineEdit.__init__(self,parent)
 
 
-  def getValue(self) :
-    return self.text()
+    def getValue(self) :
+        return self.text()
 
-  def setValue(self,value) :
-    self.setText(value)
+    def setValue(self,value) :
+        self.setText(value)
 
 
 class GTimeWidget(GEditWidget):
 
-  def getEditWidget(self):
-    e = QtGui.QLineEdit()
-    rx = QtCore.QRegExp('[0-9]{2}:[0-6]{2}')
-    e.setValidator(QtGui.QRegExpValidator(rx,e))
-    return e
+    def getEditWidget(self):
+        e = QtGui.QLineEdit()
+        rx = QtCore.QRegExp('[0-9]{2}:[0-6]{2}')
+        e.setValidator(QtGui.QRegExpValidator(rx,e))
+        return e
 
 
 
 class GFloatSpinboxWidget(GEditWidget):
-  def __init__(self,parent = None):
-    QtGui.QWidget.__init__(self,parent)
-    vert = QtGui.QHBoxLayout(self)
-    self.edit = self.getEditWidget()
-    vert.addWidget(self.edit)
-    valuechanged = False
+    def __init__(self,parent = None):
+        QtGui.QWidget.__init__(self,parent)
+        vert = QtGui.QHBoxLayout(self)
+        self.edit = self.getEditWidget()
+        vert.addWidget(self.edit)
+        valuechanged = False
 
-  def getEditWidget(self):
-    return QtGui.QDoubleSpinBox()
+    def getEditWidget(self):
+        return QtGui.QDoubleSpinBox()
 
-  def setMinimum(self,val):
-    self.edit.setMinimum(val)
+    def setMinimum(self,val):
+        self.edit.setMinimum(val)
 
-  def setMaximum(self,val):
-    self.edit.setMaximum(val)
+    def setMaximum(self,val):
+        self.edit.setMaximum(val)
 
-  def setValue(self,value):
-    self.edit.setValue(value)
+    def setValue(self,value):
+        self.edit.setValue(value)
 
-  def value(self) :
-    return self.edit.value()
+    def value(self) :
+        return self.edit.value()
 
 
 class GSpinboxWidget(GFloatSpinboxWidget):
 
-  def getEditWidget(self):
-    return QtGui.QSpinBox()
+    def getEditWidget(self):
+        return QtGui.QSpinBox()
 
 class GComboBox(GFloatSpinboxWidget):
 
-  def getEditWidget(self):
-    return QtGui.QComboBox()
+    def getEditWidget(self):
+        return QtGui.QComboBox()
 
-  def addItems(self,items) :
-    self.edit.addItems(items)
+    def addItems(self,items) :
+        self.edit.addItems(items)
 
-  def addItem(self,item):
-    self.edit.addItem(item)
+    def addItem(self,item):
+        self.edit.addItem(item)
 
-  def setCurrentIndex(self,index):
-    self.edit.setCurrentIndex(index)
+    def setCurrentIndex(self,index):
+        self.edit.setCurrentIndex(index)
 
-  def connectSignal(self):
-    self.connect(self.edit,QtCore.SIGNAL('currentIndexChanged(int)'),self.changed)
+    def connectSignal(self):
+        self.connect(self.edit,QtCore.SIGNAL('currentIndexChanged(int)'),self.changed)
 
 
 
@@ -103,58 +103,65 @@ class GComboBox(GFloatSpinboxWidget):
 
 
 class GAutoCalcRealWidget(QtGui.QWidget):
-  def __init__(self,parent=None):
-    QtGui.QWidget.__init__(self,parent)
-    vert = QtGui.QHBoxLayout(self)
-    vert.setContentsMargins ( 0,0,0,0)
-    self.cb = QtGui.QCheckBox('Auto')
-    self.cb.setChecked(True)
-    vert.addWidget(self.cb)
-    self.edit = QtGui.QDoubleSpinBox()
-    self.edit.setEnabled(False)
-    vert.addWidget(self.edit)
-    self.valuechanged = False
-    self.setAutoFillBackground(True)
-    self.connect(self.cb, QtCore.SIGNAL('stateChanged (int)'),self.boxChanged)
+    def __init__(self,parent=None):
+        QtGui.QWidget.__init__(self,parent)
+        vert = QtGui.QHBoxLayout(self)
+        vert.setContentsMargins ( 0,0,0,0)
+        self.cb = QtGui.QCheckBox('Auto')
+        self.cb.setChecked(True)
+        vert.addWidget(self.cb)
+        self.edit = QtGui.QDoubleSpinBox()
+        self.edit.setEnabled(False)
+        vert.addWidget(self.edit)
+        self.valuechanged = False
+        self.setAutoFillBackground(True)
+        self.connect(self.cb, QtCore.SIGNAL('stateChanged (int)'),self.boxChanged)
 
-    
-  def boxChanged(self,i) :
-    self.edit.setEnabled(not i)
-    self.valuechanged = True
+        
+    def setDefaultValue(self,val):
+        self.default = val
+        
+    def boxChanged(self,i) :
+        self.edit.setEnabled(not i)
+        self.valuechanged = True
 
-  def value(self):
-    print 'GAutoCalcRealWidget value',self.cb.checkState(),self.edit.value(),self
-    if self.cb.checkState() == 2:
-      return 'autocalculate'
-    else:
-      return self.edit.value()
+    def value(self):
+        print 'GAutoCalcRealWidget value',self.cb.checkState(),self.edit.value(),self
+        if self.cb.checkState() == 2:
+            if self.default =='':
+                return 'autocalculate'
+            else:
+                return self.default
+
+        else:
+            return self.edit.value()
 
 
-  def setValue(self,value):
-    print value,self
-    if not ((value.__class__.__name__ == 'int') or (value == None)):
-      v = str(value).lower()
-    else:
-      v = value
-    if v == 'autocalculate' or v == 'autosize' or v == '' or v == None:
-      self.cb.setChecked(True)
-    else:
-      self.cb.setChecked(False)
-      try:
-        v = float(v)
-      except:
-        try:
-          v = int(v)
-          v = float(v)
-        except:
-          print value + 'cannot be converted to float'
-      self.edit.setValue(v)
+    def setValue(self,value):
+        print value,self
+        if not ((value.__class__.__name__ == 'int') or (value == None)):
+            v = str(value).lower()
+        else:
+            v = value
+        if v == 'autocalculate' or v == 'autosize' or v == '' or v == None or v == 'auto':
+            self.cb.setChecked(True)
+        else:
+            self.cb.setChecked(False)
+            try:
+                v = float(v)
+            except:
+                try:
+                    v = int(v)
+                    v = float(v)
+                except:
+                    print value + 'cannot be converted to float'
+        self.edit.setValue(v)
 
-  def setMinimum(self,value):
-    self.edit.setMinimum(value)
-    
-  def setMaximum(self,value):
-    self.edit.setMaximum(value)
+    def setMinimum(self,value):
+        self.edit.setMinimum(value)
+        
+    def setMaximum(self,value):
+        self.edit.setMaximum(value)
 
 
 #class GExtensibleWidget(QtGui.QWidget):
@@ -166,10 +173,10 @@ class GAutoCalcRealWidget(QtGui.QWidget):
 
 
 if __name__ == "__main__":
-  app = QtGui.QApplication(sys.argv)
-  view = GVerticeWidget('Test')
-  view.buildVerticeArray('38.2,44.5,60.0')
-  view.setWindowTitle("Widget test")
-  view.show()
-  sys.exit(app.exec_())
-  
+    app = QtGui.QApplication(sys.argv)
+    view = GVerticeWidget('Test')
+    view.buildVerticeArray('38.2,44.5,60.0')
+    view.setWindowTitle("Widget test")
+    view.show()
+    sys.exit(app.exec_())
+    
