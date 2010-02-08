@@ -101,42 +101,34 @@ class FieldAbstract :
 class FieldReal(FieldAbstract) :
     def __init__(self,parent,fieldname,default,notes,units,minv,maxv,mingtv,maxltv) :
         FieldAbstract.__init__(self,parent,fieldname,default,notes,units)
-        if minv == '':
-            self.minv = -20000
-        else:
-            self.minv = minv
-        if maxv == '':
-            self.maxv = 1000000000000
-        else:
-            self.maxv = maxv
+        self.minv = minv
+        self.maxv = maxv
         self.mingtv = mingtv
         self.maxltv = maxltv
         
     def createEditor(self,parent,index)  :
-        self.fieldeditor = QtGui.QDoubleSpinBox(parent)
-        self.fieldeditor.setDecimals(4)
+        self.fieldeditor = QtGui.QLineEdit(parent)
+        self.fieldeditor.setValidator(QtGui.QDoubleValidator(self.fieldeditor))
+        self.fieldeditor.validator().setDecimals(8)
         if self.minv:
-            self.fieldeditor.setMinimum(self.minv)
+            self.fieldeditor.validator().setBottom(self.minv)
         elif self.mingtv:
-            self.fieldeditor.setMinimum(self.mingtv)
+            self.fieldeditor.validator().setBottom(self.mingtv)
         if self.maxv:  
-            self.fieldeditor.setMaximum(self.maxv)
+            self.fieldeditor.validator().setTop(self.maxv)
         elif self.maxltv:
-            self.fieldeditor.setMaximum(self.maxltv)
+            self.fieldeditor.validator().setTop(self.maxltv)
         if not self.default:
-            self.fieldeditor.setValue(self.default)
+            self.fieldeditor.setText(str(self.default))
         return self.fieldeditor
 
     def getEditorValue(self,editor) :
         print 'getEditorValue FieldReal',editor
-        if editor.cleanText() == '':
-            return None
-        else:
-            return editor.value()
+        return editor.text()
 
     def setEditorValue(self,editor,data):
         if data != None:
-            editor.setValue(data)
+            editor.setText(str(data))
         #try:
             #v = float(self.value)
         #except:
@@ -266,7 +258,7 @@ class FieldInt(FieldAbstract) :
         elif self.maxltv:
             self.fieldeditor.validator().setTop(self.maxltv)
         if not self.default:
-            self.fieldeditor.setText(self.default)
+            self.fieldeditor.setText(str(self.default))
         return self.fieldeditor
 
 
