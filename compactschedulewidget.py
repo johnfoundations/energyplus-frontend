@@ -235,7 +235,7 @@ class ForSection():
 
         
     def setValue(self,v):
-        print 'ForSection', v
+#        print 'ForSection', v
         self.lock = True
         fori = False
         untilar = []
