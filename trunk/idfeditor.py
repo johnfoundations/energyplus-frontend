@@ -99,6 +99,8 @@ class idfmodeltest(QtGui.QMainWindow):
         self.classview.setEditTriggers(QtGui.QAbstractItemView.AllEditTriggers)
         self.classview.horizontalHeader().setStretchLastSection(True)
         self.classview.horizontalHeader().setClickable(True)
+        self.classview.verticalHeader().setResizeMode(QtGui.QHeaderView.Interactive)
+        self.classview.horizontalHeader().setResizeMode(QtGui.QHeaderView.Interactive)
         self.classview.setSelectionMode(QtGui.QAbstractItemView.NoSelection)
         classvbox.addWidget(self.classviewname)
         classvbox.addWidget(self.classview)

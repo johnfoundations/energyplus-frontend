@@ -358,7 +358,8 @@ class FieldChoice(FieldAbstract)    :
     def __init__(self,parent,fieldname,default,notes,units,choices):
         FieldAbstract.__init__(self,parent,fieldname,default,notes,units)
         self.choices = choices
-        self.choices.insert(0,'')
+        if self.choices[0] != '':
+            self.choices.insert(0,'')
         self.lchoices = []
         for lc in self.choices:
             self.lchoices.append(lc.lower())

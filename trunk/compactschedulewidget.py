@@ -162,7 +162,7 @@ class ForSection():
         self.flist = fieldlist
         self.fordatalist = ['','AllDays','Weekdays','Weekends','Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Holidays',\
                             'SummerDesignDay','WinterDesignDay','AllOtherDays']
-        self.lfordatalist =[]
+        self.lfordatalist = []
         for fd in self.fordatalist:
             self.lfordatalist.append(fd.lower())
 
@@ -235,7 +235,7 @@ class ForSection():
 
         
     def setValue(self,v):
-        #print v
+        print 'ForSection', v
         self.lock = True
         fori = False
         untilar = []
