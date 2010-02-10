@@ -27,6 +27,7 @@ import idfabstractmodel
 import idfmodeldelegate
 import newclassdialog
 import loadclassdialog
+import idfeditorclasslistpage
 
 class idfmodeltest(QtGui.QMainWindow):
     def __init__(self):
@@ -38,9 +39,9 @@ class idfmodeltest(QtGui.QMainWindow):
         self.readSettings()
         self.createActions()
         self.createMenus()
-        
+        self.idfdata = idfdata.idfData()
+        self.idfgroup = []
         self.tabs.addTab(self.headerPage(),'IDF File Description')
-        self.tabs.addTab(self.classPage(), 'IDF Data')
         self.setCentralWidget(self.tabs)
 
 
@@ -57,62 +58,6 @@ class idfmodeltest(QtGui.QMainWindow):
         print 'mainwindow closeEvent'
         self.writeSettings()
         event.accept()
-
-    def classPage(self):
-        self.idf = idfdata.idfData()
-        self.model = idfabstractmodel.idfAbstractModel(self.idf)
-
-        self.querylist = QtGui.QComboBox()
-        self.querylist.addItems(['All','Classname','Name','Group','Dependancy','Reference','Fieldname','Fieldvalue'])
-
-        self.queryline = QtGui.QLineEdit()
-        self.querybutton = QtGui.QPushButton("Query")
-
-        self.view = QtGui.QTreeView()
-        self.view.setModel(self.model)
-        self.view.sizePolicy().setHorizontalPolicy(QtGui.QSizePolicy.Fixed)
-        self.view.header().setClickable(True)
-        
-        splitter = QtGui.QSplitter()
-        widget = QtGui.QWidget()
-
-        mainhbox = QtGui.QHBoxLayout(widget)
-        self.viewwidget = QtGui.QWidget()
-        vbox = QtGui.QVBoxLayout()
-        vbox.setSizeConstraint(QtGui.QLayout.SetMinAndMaxSize)
-        hbox = QtGui.QHBoxLayout()
-
-        hbox.addWidget(self.querylist)
-        hbox.addWidget(self.queryline)
-
-        vbox.addLayout(hbox)
-        vbox.addWidget(self.querybutton)
-        vbox.addWidget(self.view)
-        self.viewwidget.setLayout(vbox)
-        splitter.addWidget(self.viewwidget)
-#        mainhbox.addWidget(viewwidget)
-        classvbox = QtGui.QVBoxLayout()
-        self.classviewname = QtGui.QLabel()
-        self.classview = QtGui.QTableView()
-        self.delegate  = idfmodeldelegate.idfClassDelegate()
-        self.classview.setItemDelegate(self.delegate)
-        self.classview.setEditTriggers(QtGui.QAbstractItemView.AllEditTriggers)
-        self.classview.horizontalHeader().setStretchLastSection(True)
-        self.classview.horizontalHeader().setClickable(True)
-        self.classview.verticalHeader().setResizeMode(QtGui.QHeaderView.Interactive)
-        self.classview.horizontalHeader().setResizeMode(QtGui.QHeaderView.Interactive)
-        self.classview.setSelectionMode(QtGui.QAbstractItemView.NoSelection)
-        classvbox.addWidget(self.classviewname)
-        classvbox.addWidget(self.classview)
-        mainhbox.addLayout(classvbox)
-        splitter.addWidget(widget)
-        self.connect(self.view, QtCore.SIGNAL('activated (QModelIndex)'),self.classActivated)
-        
-        self.connect(self.querybutton, QtCore.SIGNAL('clicked ( bool)'),self.querybuttonclicked)
-        self.connect(self.view.header(),QtCore.SIGNAL('sectionClicked ( int )'),self.viewlistsort)
-        self.connect(self.classview.horizontalHeader(),QtCore.SIGNAL('sectionClicked ( int )'),self.changeunits)
-
-        return splitter
         
 
     def headerPage(self):
@@ -200,16 +145,17 @@ class idfmodeltest(QtGui.QMainWindow):
         
 
     def writeFile(self,destfile):
-        self.idf.comments = str(self.commentedit.toPlainText())
-        self.idf.writeIdf(destfile)
+        self.idfdata.comments = str(self.commentedit.toPlainText())
+        self.idfdata.writeIdf(destfile)
 
 
     def openFile(self):
         self.fileName = QtGui.QFileDialog.getOpenFileName(self,"Open IDF File", ".", "*.idf *.IDF");
-        self.idf.openIdf(self.fileName)
-        self.commentedit.setText(self.idf.comments)
-        self.model.reset()
-        self.sizeTree()
+        self.idfdata.openIdf(self.fileName)
+        self.commentedit.setText(self.idfdata.comments)
+        for g in self.idfdata.groups:
+            self.tabs.addTab(idfeditorclasslistpage.idfEditorClassListPage(g,self.idfdata),g)
+        
 
     def newobject(self):
         newdialog = newclassdialog.newClassDialog()
@@ -237,15 +183,6 @@ class idfmodeltest(QtGui.QMainWindow):
 
 
 
-    def classActivated(self,index):
-        
-        idf = index.internalPointer().data
-        text = idf.getClassnameIDD() + ' : '+ idf.getName()
-        self.classviewname.setText(text)
-        self.idfmodel = idfabstractmodel.idfClassModel(idf,index.model())
-        self.classview.setModel(self.idfmodel)
-
-
     def delobject(self):
         indexlist = self.view.selectedIndexes()
         if len(indexlist) == 0:
@@ -260,19 +197,6 @@ class idfmodeltest(QtGui.QMainWindow):
                     self.idf.deleteRecord(i.internalPointer().data)
             self.model.reset()
 
-    def viewlistsort(self,column):
-        if self.sortorderlist[column] != 0:
-            self.sortorderlist[column] = 0
-        else:
-            self.sortorderlist[column] = 1
-
-        self.model.sort(column,self.sortorderlist[column])
-    
-    def changeunits(self,column):
-        print 'changeunits',column
-        if column == 0:
-            if self.idfmodel != None:
-                self.idfmodel.toggleUnits()
 
 
 if __name__ == "__main__":

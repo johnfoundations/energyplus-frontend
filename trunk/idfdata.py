@@ -70,6 +70,7 @@ class idfData(QtCore.QObject):
         self.current = 0        #pointer to current class, used in iterating through list
         self.idftree = []
         self.referencedict = dict()
+        self.groups = []
         self.cmpcolumn = 0
         self.comments = ''
 
@@ -212,6 +213,9 @@ class idfData(QtCore.QObject):
     def buildDependsTree(self):
         self.referencedict = dict()
         for i in self.idflist:
+            #build groups list
+            if i.getGroup() not in self.groups:
+                self.groups.append(i.getGroup())
             #first get a list of depend from object
             rl = i.getReference()
             #look through references and build dict
@@ -309,16 +313,16 @@ class idfData(QtCore.QObject):
         #zclist contains all classes that have a object-list field with reference 'zonenames' that contains zoneclass.getName
         #extract group
         zgrouplist = self.queryList(idfglobals.IdfQueryGroup,group,zalllist)
-        print
-        print zgrouplist
+#        print
+#        print zgrouplist
 
         zonetree = treeItem(None,zoneclass)
         
         sublist = []
         for g in zgrouplist:
             sublist = self.queryList(idfglobals.IdfQueryFieldValue,g.getName(),self.idflist)
-            print
-            print sublist
+#            print
+#            print sublist
             citem = treeItem(zonetree,g)
             for c in sublist:
                 if c not in zgrouplist:
@@ -373,3 +377,23 @@ class idfData(QtCore.QObject):
                 
         for k in keys(groupdict):
             groupdict[k].close()
+            
+            
+            
+class idfGroup(idfData):
+    def __init__(self,idfdataclass,group):
+        idfData.__init__(self,0)
+        self.idfdataclass = idfdataclass
+        self.groupname = group
+        self.createGroupList()
+        self.populateTree(self.idflist)
+        self.buildDependsTree()
+        
+        
+    def createGroupList(self):
+        for rec in self.idfdataclass.idflist:
+            if rec.getGroup() == self.groupname:
+                self.idflist.append(rec)
+                
+
+                
