@@ -344,3 +344,32 @@ class idfData(QtCore.QObject):
             fh.write(rec.__str__()+"\n")
         fh.close()
         
+    def writeIdfByGroup(self,destfile):
+        #destfile.group.idf 
+        
+        try:
+            cfh = open(destfile+'.comments.idf')
+        except:
+            return
+            
+        commentlines = self.comments.splitlines()
+        for l in commentlines:
+            cfh.write('! ' + l + '\n')
+            
+        cfh.close()
+        
+        groupdict = dict()
+        
+        for rec in self.idflist:
+            if rec.getGroup() in groupdict:
+                groupdict[rec.getGroup()].write(rec.__str__()+"\n")
+                
+            else:
+                s = rec.getGroup()
+                #remove spaces
+                s = s.replace(' ','')
+                groupdict[rec.getGroup] = open(destfile+'.'+s+'.idf')
+                groupdict[rec.getGroup()].write(rec.__str__()+"\n")
+                
+        for k in keys(groupdict):
+            groupdict[k].close()
