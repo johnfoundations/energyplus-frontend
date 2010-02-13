@@ -302,7 +302,7 @@ class ObjectCompactSchedule(ObjectAbstract) :
         self.schedulehandler = compactschedulewidget.compactScheduleHandler(self,self.fieldlist)
         
     def parseRawData(self) :
-        print self.rawdatalist
+#        print self.rawdatalist
         for i,fd in enumerate(self.rawdatalist) :
             if i == 0:  #first item is classname
                 continue
