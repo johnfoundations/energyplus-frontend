@@ -211,52 +211,6 @@ class idfmodeltest(QtGui.QMainWindow):
         if self.filename = '':
             self.saveAsFile()
         
-        epdir = ''
-        settings = QtCore.QSettings("EPlus", "IDF Editor")    
-        if settings.value("epfolder",'') == '':
-            #find energyplus folder
-            import fnmatch
-            import os
-            foundep = False
-            
-            if os.name() == 'posix':
-                epdir = '/usr/local/'
-                for f in os.listdir(epdir):
-                    if fnmatch.fnmatch(f, 'Energy*'):
-                        epdir += f
-                        foundep = True
-                        
-            else:
-                print 'Operating System Not Supported'
-                return
-                
-            if not foundep:
-                epdir = QtGui.QFileDialog.getExistingDirectory(self, 'Find Energy Plus Installation Folder',
-                                                 "/",QtGui.QFileDialog.ShowDirsOnly)
-                                                 
-            settings.setValue('epfolder',epdir)
-            
-            
-        else:
-            epdir = settings.value('epfolder','')
-            
-        if epdir == '':
-            return
-            
-        weatherfile = ''
-        if settings.value('weather','') == '':
-            weatherfile = QtGui.QFileDialog.getOpenFileName(self,"Open IDF File", epdir, "*.epw *.EPW")
-            
-        else:
-            weatherfile = settings.value('weather','')
-            
-        if weatherfile == '':
-            return
-                
-        #change to idf file directory
-        os.chdir(os.dirname(self.filename))
-        
-        #run energyplus
         
                 
         
