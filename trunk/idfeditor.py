@@ -33,14 +33,14 @@ class idfmodeltest(QtGui.QMainWindow):
     def __init__(self):
         QtGui.QMainWindow.__init__(self)
         self.tabs = QtGui.QTabWidget()
-        self.idfmodel = None
+        self.parentmodel = None
         self.sortorderlist = [-1,-1]
         self.filename = ''
         self.readSettings()
         self.createActions()
         self.createMenus()
         self.idfdata = idfdata.idfData()
-        self.idfgroup = []
+        self.idfgroups = []
         self.tabs.addTab(self.headerPage(),'IDF File Description')
         self.setCentralWidget(self.tabs)
 
@@ -104,6 +104,11 @@ class idfmodeltest(QtGui.QMainWindow):
         self.delobj.setStatusTip('Delete Selected Object')
         self.connect(self.delobj, QtCore.SIGNAL('triggered()'), self.delobject)
 
+        self.runsim = QtGui.QAction('&Run Simulation',self)
+        self.runsim = QtGui.setShortCut('Ctrl+S')
+        self.runsim = QtGui.setStatusTip('Run Simulation on IDF File')
+        self.connect(self.runsim, QtCore.SIGNAL('triggered()'), self.runsimulation)
+
 
     def createMenus(self):
         menubar = self.menuBar()
@@ -116,14 +121,10 @@ class idfmodeltest(QtGui.QMainWindow):
         objm.addAction(self.newobj)
         objm.addAction(self.loadobj)
         objm.addAction(self.delobj)
+        simm = menubar.addMenu('&Simulation')
+        simm.addAction(self.runsim)
 
 
-    def sizeTree(self):
-        width = self.view.sizeHintForColumn(0) + self.view.sizeHintForColumn(1)
-        if width < 200:
-            width = 200
-        print width
-        self.viewwidget.setMaximumWidth(width)
 
 
     def querybuttonclicked(self):
@@ -152,9 +153,12 @@ class idfmodeltest(QtGui.QMainWindow):
     def openFile(self):
         self.fileName = QtGui.QFileDialog.getOpenFileName(self,"Open IDF File", ".", "*.idf *.IDF");
         self.idfdata.openIdf(self.fileName)
+        self.parentmodel = idfabstractmodel.idfAbstractModel(self.idfdata)
         self.commentedit.setText(self.idfdata.comments)
         for g in self.idfdata.groups:
-            self.tabs.addTab(idfeditorclasslistpage.idfEditorClassListPage(g,self.idfdata),g)
+            t = idfeditorclasslistpage.idfEditorClassListPage(g,self.parentmodel)
+            self.idfgroups.append(t)
+            self.tabs.addTab(t,g)
         
 
     def newobject(self):
@@ -163,11 +167,13 @@ class idfmodeltest(QtGui.QMainWindow):
         if result:
             newclasses = newdialog.selected
             for n  in newclasses:
-                self.idf.insertRecordByClassname(n)
+                self.idfdata.insertRecordByClassname(n)
 
-            self.idf.buildDependsTree()
-            self.model.reset()
-            self.sizeTree()
+            self.idfdata.buildDependsTree()
+            self.idfdata.datachanged.emit()
+            for t in self.idfgroups:
+                t.model.reset()
+                t.sizeTree()
                 
 
     def loadobject(self):
@@ -175,16 +181,16 @@ class idfmodeltest(QtGui.QMainWindow):
         result = loaddialog.exec_()
         if result:
             for c in loaddialog.destidf.idflist:
-                self.idf.insertRecord(c)
+                self.idfdata.insertRecord(c)
 
-            self.idf.buildDependsTree()
+            self.idfdata.buildDependsTree()
             self.model.reset()
             self.sizeTree()
 
 
 
     def delobject(self):
-        indexlist = self.view.selectedIndexes()
+        indexlist = self.tabs.currentWidget().view.selectedIndexes()
         if len(indexlist) == 0:
             return
         msgBox = QtGui.QMessageBox()
@@ -194,10 +200,66 @@ class idfmodeltest(QtGui.QMainWindow):
         if msgBox.exec_():
             for i in indexlist:
                 if i.column() == 0:
-                    self.idf.deleteRecord(i.internalPointer().data)
-            self.model.reset()
+                    self.idfdata.deleteRecord(i.internalPointer().data)
+            self.idfdata.datachanged.emit()
+            for t in self.idfgroups:
+                t.model.reset()
+                t.sizeTree()
 
-
+    def runsimulation(self):
+        #get filename of idf
+        if self.filename = '':
+            self.saveAsFile()
+        
+        epdir = ''
+        settings = QtCore.QSettings("EPlus", "IDF Editor")    
+        if settings.value("epfolder",'') == '':
+            #find energyplus folder
+            import fnmatch
+            import os
+            foundep = False
+            
+            if os.name() == 'posix':
+                epdir = '/usr/local/'
+                for f in os.listdir(epdir):
+                    if fnmatch.fnmatch(f, 'Energy*'):
+                        epdir += f
+                        foundep = True
+                        
+            else:
+                print 'Operating System Not Supported'
+                return
+                
+            if not foundep:
+                epdir = QtGui.QFileDialog.getExistingDirectory(self, 'Find Energy Plus Installation Folder',
+                                                 "/",QtGui.QFileDialog.ShowDirsOnly)
+                                                 
+            settings.setValue('epfolder',epdir)
+            
+            
+        else:
+            epdir = settings.value('epfolder','')
+            
+        if epdir == '':
+            return
+            
+        weatherfile = ''
+        if settings.value('weather','') == '':
+            weatherfile = QtGui.QFileDialog.getOpenFileName(self,"Open IDF File", epdir, "*.epw *.EPW")
+            
+        else:
+            weatherfile = settings.value('weather','')
+            
+        if weatherfile == '':
+            return
+                
+        #change to idf file directory
+        os.chdir(os.dirname(self.filename))
+        
+        #run energyplus
+        
+                
+        
 
 if __name__ == "__main__":
 

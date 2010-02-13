@@ -64,7 +64,10 @@ class treeItem:
 
 
 class idfData(QtCore.QObject):
-    def __init__(self,parent = 0):
+    datachanged = QtCore.pyqtSignal()
+    
+    def __init__(self,parent = None):
+        QtCore.QObject.__init__(self,None)
         self.idfreadlist = []   #list of idfread classes, allowing multiple idf files to be loaded
         self.idflist = []       #list of classes from idf files
         self.current = 0        #pointer to current class, used in iterating through list
@@ -388,12 +391,18 @@ class idfGroup(idfData):
         self.createGroupList()
         self.populateTree(self.idflist)
         self.buildDependsTree()
+        self.connect(self.idfdataclass, QtCore.SIGNAL('datachanged ()'),self.updatedata)
         
         
     def createGroupList(self):
+        self.idflist = []
         for rec in self.idfdataclass.idflist:
             if rec.getGroup() == self.groupname:
                 self.idflist.append(rec)
                 
-
+    def updatedata(self):
+        print 'updatedata'
+        self.createGroupList()
+        self.populateTree(self.idflist)
+        self.buildDependsTree()
                 
