@@ -62,7 +62,8 @@ class idfRead :
             
            
             
-        
+    def closeFile(self):
+        self.fh.close()
         
 
     def getActiveList(self):

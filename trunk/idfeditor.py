@@ -28,11 +28,13 @@ import idfmodeldelegate
 import newclassdialog
 import loadclassdialog
 import idfeditorclasslistpage
+import runsimulation
 
 class idfmodeltest(QtGui.QMainWindow):
     def __init__(self):
         QtGui.QMainWindow.__init__(self)
         self.tabs = QtGui.QTabWidget()
+        self.log = None
         self.parentmodel = None
         self.sortorderlist = [-1,-1]
         self.filename = ''
@@ -41,7 +43,6 @@ class idfmodeltest(QtGui.QMainWindow):
         self.createMenus()
         self.idfdata = idfdata.idfData()
         self.idfgroups = []
-        self.tabs.addTab(self.headerPage(),'IDF File Description')
         self.setCentralWidget(self.tabs)
 
 
@@ -89,6 +90,11 @@ class idfmodeltest(QtGui.QMainWindow):
         self.openfile.setStatusTip('Open an IDF File')
         self.connect(self.openfile, QtCore.SIGNAL('triggered()'), self.openFile)
 
+        self.closefile = QtGui.QAction('&Close File', self)
+        self.closefile.setShortcut('Ctrl+C')
+        self.closefile.setStatusTip('Close IDF file and all tabs')
+        self.connect(self.closefile, QtCore.SIGNAL('triggered()'), self.closeFile)
+
         self.newobj = QtGui.QAction('&New Object',self)
         self.newobj.setShortcut('Ctrl+N')
         self.newobj.setStatusTip('Create New Object')
@@ -105,9 +111,16 @@ class idfmodeltest(QtGui.QMainWindow):
         self.connect(self.delobj, QtCore.SIGNAL('triggered()'), self.delobject)
 
         self.runsim = QtGui.QAction('&Run Simulation',self)
-        self.runsim = QtGui.setShortCut('Ctrl+S')
-        self.runsim = QtGui.setStatusTip('Run Simulation on IDF File')
+        self.runsim.setShortcut('Ctrl+S')
+        self.runsim.setStatusTip('Run Simulation on IDF File')
         self.connect(self.runsim, QtCore.SIGNAL('triggered()'), self.runsimulation)
+
+        self.tabshowall = QtGui.QAction('Sho&w all Tabs',self)
+        self.tabshowall.setShortcut('Ctrl+W')
+        self.tabshowall.setStatusTip('Show all hidden tabs')
+        self.connect(self.tabshowall,QtCore.SIGNAL('triggered()'),self.tabShowAll)
+        
+        
 
 
     def createMenus(self):
@@ -116,6 +129,7 @@ class idfmodeltest(QtGui.QMainWindow):
         filem.addAction(self.openfile)
         filem.addAction(self.savefile)
         filem.addAction(self.saveasfile)
+        filem.addAction(self.closefile)
         filem.addAction(self.exit)
         objm = menubar.addMenu('&Objects')
         objm.addAction(self.newobj)
@@ -154,12 +168,21 @@ class idfmodeltest(QtGui.QMainWindow):
         self.fileName = QtGui.QFileDialog.getOpenFileName(self,"Open IDF File", ".", "*.idf *.IDF");
         self.idfdata.openIdf(self.fileName)
         self.parentmodel = idfabstractmodel.idfAbstractModel(self.idfdata)
+        self.tabs.addTab(self.headerPage(),'IDF File Description')
         self.commentedit.setText(self.idfdata.comments)
         for g in self.idfdata.groups:
             t = idfeditorclasslistpage.idfEditorClassListPage(g,self.parentmodel)
             self.idfgroups.append(t)
             self.tabs.addTab(t,g)
         
+    def closeFile(self):
+        self.saveFile()
+        while self.tabs.count() > 0:
+            #self.tabs.widget(self.tabs.currentIndex())
+            self.tabs.removeTab(self.tabs.currentIndex())
+            
+        self.idfdata.closeData()
+
 
     def newobject(self):
         newdialog = newclassdialog.newClassDialog()
@@ -206,10 +229,20 @@ class idfmodeltest(QtGui.QMainWindow):
                 t.model.reset()
                 t.sizeTree()
 
+    def tabShowAll(self):
+        pass
+
     def runsimulation(self):
         #get filename of idf
-        if self.filename = '':
+        if self.filename == '':
             self.saveAsFile()
+        
+        if self.log == None:
+            self.log = runsimulation.LogWidget()
+            self.tabs.insertTab(0,self.log,'Simulation Results')
+            
+        self.tabs.setCurrentIndex(0)
+        self.simulation = runsimulation.simulation(self.filename,self.log)
         
         
                 

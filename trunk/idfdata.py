@@ -83,6 +83,17 @@ class idfData(QtCore.QObject):
             dlist.append(o.getName())
         return dlist
 
+    def closeData(self):
+        for i in self.idfreadlist:
+            i.closeFile()
+        self.idfreadlist = []
+        self.idflist = []
+        self.idftree = []
+        self.referencedict = dict()
+        self.groups = []
+        self.current = 0
+        self.comments = ''
+        self.cmpcolumn= 0
 
     def next(self):
         if self.current == len(self.idflist):
