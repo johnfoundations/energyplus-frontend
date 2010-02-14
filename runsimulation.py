@@ -43,8 +43,8 @@ class simulation(QtCore.QObject):
         self.log = log
         self.idffile = idffile
         self.args = QtCore.QStringList()
-        self.basename = os.path.split(idffile)[1]
-        self.directory = os.path.split(idffile)[0]
+        self.basename = os.path.split(str(idffile))[1]
+        self.directory = os.path.split(str(idffile))[0]
         print self.basename, self.directory
 
         self.p = QtCore.QProcess()
