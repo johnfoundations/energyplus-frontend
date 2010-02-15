@@ -34,15 +34,22 @@ class idfmodeltest(QtGui.QMainWindow):
     def __init__(self):
         QtGui.QMainWindow.__init__(self)
         self.tabs = QtGui.QTabWidget()
+        self.tabs.setMovable(True)
+        self.tabs.setTabsClosable(True)
         self.log = None
         self.parentmodel = None
         self.sortorderlist = [-1,-1]
         self.filename = ''
+        self.signalmapper = QtCore.QSignalMapper(self)
+        self.connect(self.signalmapper,QtCore.SIGNAL('mapped(int)'),self.grouptoggle)
+        self.connect(self.tabs,QtCore.SIGNAL('tabCloseRequested (int)'),self.tabclosetab)
         self.readSettings()
         self.createActions()
         self.createMenus()
         self.idfdata = idfdata.idfData()
-        self.idfgroups = []
+        self.idfgroupsdict = dict()
+        self.idfgroupsmenu = []
+        
         self.setCentralWidget(self.tabs)
 
 
@@ -137,6 +144,8 @@ class idfmodeltest(QtGui.QMainWindow):
         objm.addAction(self.delobj)
         simm = menubar.addMenu('&Simulation')
         simm.addAction(self.runsim)
+        self.groupTabMenu = menubar.addMenu('&Tabs')
+        self.groupTabMenu.addAction(self.tabshowall)
 
 
 
@@ -166,14 +175,20 @@ class idfmodeltest(QtGui.QMainWindow):
 
     def openFile(self):
         self.fileName = QtGui.QFileDialog.getOpenFileName(self,"Open IDF File", ".", "*.idf *.IDF");
+        print self.fileName
+        if self.fileName == '':
+            return
         self.idfdata.openIdf(self.fileName)
         self.parentmodel = idfabstractmodel.idfAbstractModel(self.idfdata)
         self.tabs.addTab(self.headerPage(),'IDF File Description')
         self.commentedit.setText(self.idfdata.comments)
         for g in self.idfdata.groups:
             t = idfeditorclasslistpage.idfEditorClassListPage(g,self.parentmodel)
-            self.idfgroups.append(t)
+            self.idfgroupsdict[g] = t
             self.tabs.addTab(t,g)
+            self.createGroupAction(g)
+        
+
         
     def closeFile(self):
         self.saveFile()
@@ -194,10 +209,31 @@ class idfmodeltest(QtGui.QMainWindow):
 
             self.idfdata.buildDependsTree()
             self.idfdata.datachanged.emit()
-            for t in self.idfgroups:
-                t.model.reset()
-                t.sizeTree()
+            self.updateTabs()
+
+    def createGroupAction(self,group):
+        a = QtGui.QAction(group,self)
+        self.idfgroupsmenu.append(a)
+        a.setStatusTip('Click to Toggle Tab '+group)
+        a.setCheckable(True)
+        a.setChecked(True)
+        self.connect(a, QtCore.SIGNAL('toggled (bool)'),self.signalmapper, QtCore.SLOT('map()'))
+        self.signalmapper.setMapping(a,len(self.idfgroupsmenu) - 1)
+        self.groupTabMenu.addAction(a)
+
+
+    def updateTabs(self):
+        for g in self.idfdata.groups:
+            if g in self.idfgroupsdict:
+                self.idfgroupsdict[g].model.reset()
+                self.idfgroupsdict[g].sizeTree()
+            else:
+                t = idfeditorclasslistpage.idfEditorClassListPage(g,self.parentmodel)
+                self.idfgroupsdict[g] = t
+                self.tabs.addTab(t,g)
                 
+            if g not in self.idfgroupsmenudict:
+                self.createGroupAction(g)
 
     def loadobject(self):
         loaddialog = loadclassdialog.loadClassDialog()
@@ -207,9 +243,8 @@ class idfmodeltest(QtGui.QMainWindow):
                 self.idfdata.insertRecord(c)
 
             self.idfdata.buildDependsTree()
-            self.model.reset()
-            self.sizeTree()
-
+            self.idfdata.datachanged.emit()
+            self.updateTabs()
 
 
     def delobject(self):
@@ -230,7 +265,30 @@ class idfmodeltest(QtGui.QMainWindow):
                 t.sizeTree()
 
     def tabShowAll(self):
-        pass
+        print 'tabshowall'
+
+    def tabclosetab(self,i):
+        if self.tabs.tabText(i) != 'IDF File Description':
+            self.tabs.removeTab(i)
+
+
+    def grouptoggle(self,i):
+        print 'grouptoggle',i
+        ga = self.idfgroupsmenu[i]
+        g = str(ga.text())
+        tabexists = False
+        #find tab
+        for c in range(self.tabs.count()):
+            print c,self.tabs.tabText(c),g
+            if g == self.tabs.tabText(c):
+                if not ga.isChecked():
+                    self.tabs.removeTab(c)
+                    
+                return
+                
+        if ga.isChecked():
+            self.tabs.addTab(self.idfgroupsdict[g],g)
+            
 
     def runsimulation(self):
         #get filename of idf
