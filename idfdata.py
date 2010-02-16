@@ -76,6 +76,7 @@ class idfData(QtCore.QObject):
         self.groups = []
         self.cmpcolumn = 0
         self.comments = ''
+        self.destfile = ''
 
     def getDepends(self,name):
         dlist = []
@@ -245,6 +246,7 @@ class idfData(QtCore.QObject):
 
         
     def openIdf(self,filename):
+        self.destfile = filename
         idf = idfread.idfRead(filename)
         if idf.success == False:
             msgBox = QtGui.QMessageBox()
@@ -347,6 +349,7 @@ class idfData(QtCore.QObject):
 
 
     def writeIdf(self,destfile):
+        self.destfile = destfile
         try:
             fh = open(destfile,'w')
         except:
