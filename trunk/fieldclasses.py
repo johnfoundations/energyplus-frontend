@@ -25,6 +25,7 @@ import pdb
 from gwidgetclass import *
 from verticewidget import *
 import conversion
+import rddvariable
 
 
 class FieldAbstract :
@@ -402,10 +403,26 @@ class FieldObjectlist(FieldAbstract):
 
     def createEditor(self,parent,index) :
         self.fieldeditor = QtGui.QComboBox(parent)
-        try:
-            self.choices = index.model().parentmodel.idfsource.getDepends(self.objectlistname)
-        except:
-            self.choices = []
+        self.choices = []
+        if self.objectlistname.find("autoRDD") != -1:
+            print 'found autoRDD'
+            if self.objectlistname.find('autoRDDvariable') != -1:
+                print 'reading rdd'
+                for v in rddvariable.getRDDVariables(index.model().parentmodel.idfsource.destfile,True):
+                    self.choices.append(v[0])
+            
+            if self.objectlistname.find('eter') != -1:
+                print 'reading mdd'
+                for v in rddvariable.getRDDVariables(index.model().parentmodel.idfsource.destfile,False):
+                    self.choices.append(v[0])
+            
+            self.choices.sort()
+        else:
+            try:
+                self.choices = index.model().parentmodel.idfsource.getDepends(self.objectlistname)
+            except:
+                self.choices = []
+
         self.fieldeditor.addItem("None")
         self.fieldeditor.addItems(self.choices)
         return self.fieldeditor
