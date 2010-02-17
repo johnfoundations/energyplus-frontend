@@ -27,22 +27,39 @@ import math
 import numpy
 from classinfo import *
 import pdb
+import idfzonemodel
 
 class zoneCreate():
     def __init__(self,model,vertices,height,name):
         self.vertices = vertices
         self.height = height
         self.name = name
+        self.model = model
         #self.vmath = verticemath.verticeMath()
-        
+        self.checkBorders()
     
+    def checkBorders(self):
+        print 'checkBorders'
+        for r in range(self.model.rowCount(QtCore.QModelIndex())):
+            print 'row',r
+            index = self.model.index(r,0,QtCore.QModelIndex())
+            #index to first zone
+            if index.internalPointer().data.idfclass.getClassnameIDD() == 'Zone':
+                l = self.isAdjacent(self.vertices,index.internalPointer().data.verticelist)
+                if len(l) > 0:
+                    #we have a bordering zone
+                    for cv in l:
+                        print cv
+                        
+            
+            
         
     
     def isAdjacent(self,orig,new):
         #checks if zones are adjacent, returns series of points that are adjacent
 #        pdb.set_trace()
-#        print 'orig',orig
-#        print 'new',new
+        print 'orig',orig
+        print 'new',new
         reslist = []
         for c,i in enumerate(orig):
             if c == len(orig) - 1:
@@ -140,16 +157,25 @@ class zoneCreate():
         
         
 if __name__ == "__main__":
-    z = zoneCreate(None,[],1,1)
-    a = [[0,0,0],[0,8,0],[10,8,0],[10,0,0]]
-    b = [[0,8,0],[0,28,0],[14,28,0],[14,8,0]]
-    c = [[14,12,0],[14,28,0],[24,28,0],[24,12,0]]
-    d = [[24,0,0],[24,14,0],[28,14,0],[28,0,0]]
-    e = [[10,0,0],[10,8,0],[14,8,0],[14,12,0],[16,12,0],[16,0,0]]
-    print 'a,b',z.isAdjacent(a,b)
-    print 'a,c',z.isAdjacent(a,c)
-    print 'b,c',z.isAdjacent(b,c)
-    print 'c,d',z.isAdjacent(c,d)
-    print 'b,e',z.isAdjacent(b,e)
-    print 'a,e',z.isAdjacent(a,e)
-    print 'c,e',z.isAdjacent(c,e)
+    import pdb
+#    pdb.set_trace()
+    idata = idfdata.idfData()
+    idata.openIdf('scholz/scholz.idf')
+    print 'idfData opened'
+    model = idfzonemodel.idfZoneModel(None,idata)
+    model.createZoneTree()
+    print 'zonemodel created'
+    z = zoneCreate(model,[],1,1)
+    #a = [[0,0,0],[0,8,0],[10,8,0],[10,0,0]]
+    #b = [[0,8,0],[0,28,0],[14,28,0],[14,8,0]]
+    #c = [[14,12,0],[14,28,0],[24,28,0],[24,12,0]]
+    #d = [[24,0,0],[24,14,0],[28,14,0],[28,0,0]]
+    #e = [[10,0,0],[10,8,0],[14,8,0],[14,12,0],[16,12,0],[16,0,0]]
+    #print 'a,b',z.isAdjacent(a,b)
+    #print 'a,c',z.isAdjacent(a,c)
+    #print 'b,c',z.isAdjacent(b,c)
+    #print 'c,d',z.isAdjacent(c,d)
+    #print 'b,e',z.isAdjacent(b,e)
+    #print 'a,e',z.isAdjacent(a,e)
+    #print 'c,e',z.isAdjacent(c,e)
+    

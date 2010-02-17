@@ -52,7 +52,7 @@ class surfaceItem():
         if self.idfclass.getClassnameIDD() in zoneclasses:
             self.buildzonePolygons()
 
-        self.getFaceAngle(self.verticelist)
+#        self.getFaceAngle(self.verticelist)
 
     def getGeometryRules(self):
         return self.model.getGeometryRules()
@@ -61,7 +61,8 @@ class surfaceItem():
     def buildVerticePolygons(self):
         #translate into lower left, clockwise
         #first get vertices
-        print 'buildVerticePolygons',self.idfclass.getFieldDataByName('Surface Type')
+        print 'buildVerticePolygons',self.idfclass.getFieldDataByName('Surface Type'),self.idfclass.getName()
+        
         vindex = 0
         vertices = []
         v = []
@@ -73,7 +74,11 @@ class surfaceItem():
                 continue
 
             if vindex > 0:
-                v.append(float(f.getValue()))
+                try:
+                    v.append(float(f.getValue()))
+                except:
+                    v.append(0.0)
+                    
                 if ei == 2:
                     vertices.append(v)
                     v = []

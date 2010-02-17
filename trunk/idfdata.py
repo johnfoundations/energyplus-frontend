@@ -355,7 +355,12 @@ class idfData(QtCore.QObject):
         except:
             return
 
-        commentlines = self.comments.splitlines()
+        try:
+            c = str(self.comments)
+        except:
+            c = str(self.comments.toUtf8())
+
+        commentlines = c.splitlines()
         for l in commentlines:
             fh.write('! ' + l + '\n')
 

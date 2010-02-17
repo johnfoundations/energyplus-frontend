@@ -169,7 +169,7 @@ class idfmodeltest(QtGui.QMainWindow):
         
 
     def writeFile(self,destfile):
-        self.idfdata.comments = str(self.commentedit.toPlainText())
+        self.idfdata.comments = self.commentedit.toPlainText()
         self.idfdata.writeIdf(destfile)
 
 
@@ -232,7 +232,7 @@ class idfmodeltest(QtGui.QMainWindow):
                 self.idfgroupsdict[g] = t
                 self.tabs.addTab(t,g)
                 
-            if g not in self.idfgroupsmenudict:
+            if g not in self.idfgroupsmenu:
                 self.createGroupAction(g)
 
     def loadobject(self):
