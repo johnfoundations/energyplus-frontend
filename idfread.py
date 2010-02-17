@@ -41,6 +41,7 @@ class idfRead :
         try:
             self.fh = open(filename, 'r')
         except:
+            print 'error opening ',filename
             return
         self.parseFile()
         if self.createInstances():
