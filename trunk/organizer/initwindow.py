@@ -31,6 +31,7 @@ import os
 import crop
 import paperlist
 import subprocess
+import sys
 
 
 
@@ -323,7 +324,9 @@ class scannerThread(QtCore.QThread):
 
     def run(self):
         dest = config.getScansFolder()+self.destfolder
-        args = ['python','/home/derek/organizer/scanprocess.py','--scanner='+self.currentscanner, \
+        scriptpath = sys.path[0]
+        print scriptpath
+        args = ['python',scriptpath+'/scanprocess.py','--scanner='+self.currentscanner, \
                '--paper='+self.paper,'--source='+self.source,'--dest='+dest]
         print 'start subprocess',args
         sproc = subprocess.Popen(args,stdout=subprocess.PIPE,stderr=subprocess.PIPE,)
@@ -334,6 +337,7 @@ class scannerThread(QtCore.QThread):
             #s is filename
             self.emit(QtCore.SIGNAL('scanfinished(QString,int)'),s,self.resolution)
         print 'finished readline'
+        print sproc.stderr.read()
 
 
 

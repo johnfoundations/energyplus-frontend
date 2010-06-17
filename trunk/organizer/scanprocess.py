@@ -52,18 +52,18 @@ def timeStamp():
 
 
 def runScan(device,source,paper,dest):
-#    print 'runScan',device,source,paper,dest
+    #print 'runScan',device,source,paper,dest
     sane.init()
-#    print sane.get_devices()
-#    print 'try to open scanner',device
+    #print sane.get_devices()
+    #print 'try to open scanner',device
     scandev = sane.open(device)
- #   except:
- #       'open scanner failed'
- #       return -1
+#   except:
+#       'open scanner failed'
+#       return -1
 
-#    print 'set source', source
+    #print 'set source', source
     if source == 'ADF':
-#        print 'setting batch_scan'
+        #print 'setting batch_scan'
         scandev.source = source
         scandev.batch_scan = 1
         scancount = 50
@@ -75,30 +75,30 @@ def runScan(device,source,paper,dest):
 
     #calculate size and set x,y
     sizes = paperlist.paperlist[paper]
-#    print 'setPaper',paper,sizes
+    #print 'setPaper',paper,sizes
 #        print self.scandev.opt
     scandev.tl_x = 0
     scandev.tl_y = 0
     scandev.br_x = sizes[0]
     scandev.br_y = sizes[1]
-#    print 'about to start scan'
+    #print 'about to start scan'
 #    s = raw_input()
     while scancount > 0:
-#        print 'run',scancount
+        #print 'run',scancount
         try:
                 scandev.start()
                 scancount -= 1
         except:
-                #print 'Out of paper'
+                traceback.print_exc()
                 scancount = 0
                 break
 
-#        print 'scanning'
+        #print 'scanning'
         img = scandev.snap()
         img = crop.autoCrop(img)
         filename = str(dest)+'/'+str(timeStamp())+'.png'
         img.save(filename,"PNG")
-#        print 'closing scanner device'
+        #print 'closing scanner device'
         print filename
         flush()
 
