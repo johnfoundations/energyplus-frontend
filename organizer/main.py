@@ -19,10 +19,13 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************"""
 
-
+print 'import'
 from PyKDE4 import kdecore
+print 'i1'
 from PyKDE4 import kdeui
+print 'i2'
 from PyQt4 import QtGui, QtCore
+print 'i3'
 import sys
 import initwindow
 #import config
@@ -73,12 +76,13 @@ def createAboutData():
 
 def main():
 
-
+    print 'createaboutdata'
     about = createAboutData()
+    print 'kcmdlineargs'
     kdecore.KCmdLineArgs.init(sys.argv, about)
-
+    print 'kapplication'
     app = kdeui.KApplication()
-
+    print 'initwindow'
 #    config.setupConfig()
 
     win = initwindow.scanWindow()
