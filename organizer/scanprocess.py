@@ -24,6 +24,7 @@ import sys
 import sane
 import paperlist
 import crop
+import traceback
 
 def timeStamp():
     import time
@@ -72,6 +73,8 @@ def runScan(device,source,paper,dest):
         scandev.batch_scan = 0
         scancount = 1
 
+    #set dpi to 200
+    scandev.resolution = 200
 
     #calculate size and set x,y
     sizes = paperlist.paperlist[paper]
@@ -89,7 +92,7 @@ def runScan(device,source,paper,dest):
                 scandev.start()
                 scancount -= 1
         except:
-                traceback.print_exc()
+                #traceback.print_exc()
                 scancount = 0
                 break
 
@@ -100,7 +103,7 @@ def runScan(device,source,paper,dest):
         img.save(filename,"PNG")
         #print 'closing scanner device'
         print filename
-        flush()
+        #flush()
 
     scandev.close()
     return 0

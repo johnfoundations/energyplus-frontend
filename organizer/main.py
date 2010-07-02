@@ -19,52 +19,48 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************"""
 
-print 'import'
-from PyKDE4 import kdecore
-print 'i1'
-from PyKDE4 import kdeui
-print 'i2'
+#from PyKDE4 import kdecore
+#from PyKDE4 import kdeui
 from PyQt4 import QtGui, QtCore
-print 'i3'
 import sys
 import initwindow
 #import config
 
-def createAboutData():
-    """
-    Create a KAboutData with information about this application.
-    """
-    return kdecore.KAboutData(
-            # Program name used internally
-            "hello",
+#def createAboutData():
+    #"""
+    #Create a KAboutData with information about this application.
+    #"""
+    #return kdecore.KAboutData(
+            ## Program name used internally
+            #"hello",
 
-            # Catalog name
-            "",
+            ## Catalog name
+            #"",
 
-            # Displayable program name
-            kdecore.ki18n("Scan and Send"),
+            ## Displayable program name
+            #kdecore.ki18n("Scan and Send"),
 
-            # Program version
-            "0.1.0",
+            ## Program version
+            #"0.1.0",
 
-            # Short description about the program
-            kdecore.ki18n("An application that scans and emails a pdf"),
+            ## Short description about the program
+            #kdecore.ki18n("An application that scans and emails a pdf"),
 
-            # Program license
-            kdecore.KAboutData.License_BSD,
+            ## Program license
+            #kdecore.KAboutData.License_BSD,
 
-            # Copyright statement
-            kdecore.ki18n ("(c) 2010 Derek Kite"),
+            ## Copyright statement
+            #kdecore.ki18n ("(c) 2010 Derek Kite"),
 
-            # Free form text
-            kdecore.ki18n("Free form text\nsupporting newlines"),
+            ## Free form text
+            #kdecore.ki18n("Free form text\nsupporting newlines"),
 
-            # Home page address for this program
-            "",
+            ## Home page address for this program
+            #"",
 
-            # Bug report email address
-            "derekkite@gmail.com",
-            )
+            ## Bug report email address
+            #"derekkite@gmail.com",
+            #)
 
 
 
@@ -76,12 +72,12 @@ def createAboutData():
 
 def main():
 
-    print 'createaboutdata'
-    about = createAboutData()
-    print 'kcmdlineargs'
-    kdecore.KCmdLineArgs.init(sys.argv, about)
-    print 'kapplication'
-    app = kdeui.KApplication()
+    #print 'createaboutdata'
+    #about = createAboutData()
+    #print 'kcmdlineargs'
+    #kdecore.KCmdLineArgs.init(sys.argv, about)
+    #print 'kapplication'
+    app = QtGui.QApplication(sys.argv)
     print 'initwindow'
 #    config.setupConfig()
 
