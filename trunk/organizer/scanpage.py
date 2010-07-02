@@ -75,12 +75,12 @@ class scanPage(QtGui.QWidget):
             return 1
 
 
-    def addImage(self,filename,dpi):
+    def addImage(self,filename):
         #qt image
         if self.imagecount == 0:
             print 'addImage 0'
             self.gwidget = scanImage(filename)
-            self.gwidget.setDPI(dpi)
+            #self.gwidget.setDPI(dpi)
             self.layout.addWidget(self.gwidget)
             self.imagecount += 1
 
@@ -97,7 +97,7 @@ class scanPage(QtGui.QWidget):
 
             print 'addImage inserting new'
             imgclass = scanImage(filename)
-            imgclass.setDPI(dpi)
+            #imgclass.setDPI(dpi)
             self.workingtab.addTab(imgclass,imgclass.name)
             self.imagecount += 1
 
@@ -132,7 +132,7 @@ class scanPage(QtGui.QWidget):
             if not self.gwidget == 0:
                 self.gwidget.saveText()
                 imglist.append(self.gwidget.getImageFile())
-                dpi = self.gwidget.dpi
+                #dpi = self.gwidget.dpi
 
         else:
             #multiple
@@ -147,7 +147,7 @@ class scanPage(QtGui.QWidget):
 
         print imglist
         print str(config.getDestFolder())+'/pdf/spool/'+str(self.identifier)+'.pdf'
-        pdfgen.createPDF(str(config.getDestFolder())+'/pdf/spool/'+str(self.identifier)+'.pdf',imglist,dpi)
+        pdfgen.createPDF(str(config.getDestFolder())+'/pdf/spool/'+str(self.identifier)+'.pdf',imglist)
 #        self.emit(QtCore.SIGNAL('spoolready()'))
 
     def saveFile(self):
@@ -205,9 +205,9 @@ class scanImage(QtGui.QWidget):
         pil_im = Image.open(strio)
         return pil_im
 
-    def setDPI(self,dpi):
-        print 'setDPI',dpi
-        self.dpi = dpi
+#    def setDPI(self,dpi):
+#        print 'setDPI',dpi
+#        self.dpi = dpi
 
     def descriptionEdited(self):
         if not self.savetimer.isActive():
