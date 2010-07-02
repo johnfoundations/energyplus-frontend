@@ -134,6 +134,7 @@ class scanWindow(QtGui.QMainWindow):
 
 
     def setUpEmailThread(self):
+        print 'setUpEmailThread'
         config.setupConfig()
         if config.getMailAutostart():
             print 'setUpEmailThread auto start on'
@@ -175,7 +176,7 @@ class scanWindow(QtGui.QMainWindow):
                     if os.path.splitext(imf)[1] != '.png':
                         continue
 
-                    self.currentpagewidget.addImage(path+'/'+f+'/'+imf,100)
+                    self.currentpagewidget.addImage(path+'/'+f+'/'+imf)
 
 
     def cleanupFile(self,s):
