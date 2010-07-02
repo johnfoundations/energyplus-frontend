@@ -19,8 +19,8 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************"""
 
-from PyKDE4 import kdeui
-from PyKDE4 import kdecore
+#from PyKDE4 import kdeui
+#from PyKDE4 import kdecore
 from PyQt4 import QtCore, QtGui
 import sane
 import config
@@ -35,9 +35,11 @@ import sys
 
 
 
-class scanWindow(kdeui.KMainWindow):
+class scanWindow(QtGui.QMainWindow):
     def __init__(self):
         super(scanWindow, self).__init__()
+        self.readSizeSettings()
+        print 'email thread'
         self.setUpEmailThread()
         self.tabwidget = QtGui.QTabWidget()
 
@@ -45,61 +47,99 @@ class scanWindow(kdeui.KMainWindow):
 
 
         self.setCentralWidget(self.tabwidget)
-        dwidget = kdeui.KApplication.desktop()
-        self.setGeometry(0,0,dwidget.frameGeometry().width(),dwidget.frameGeometry().height()/2)
+        dwidget = QtGui.QApplication.desktop()
+        print 'scannerthread'
         self.createScannerToolbar()
+        self.setupMenus()
         self.setUpScannerThread()
-
+        print 'loadImageFiles'
         self.loadImageFiles()
 
+    def readSizeSettings(self):
+        settings = QtCore.QSettings("ScannSave", "Viewer")
+        size = settings.value("size", QtCore.QSize(1000, 600)).toSize()
+        self.resize(size)
+
+    def writeSizeSettings(self):
+        settings = QtCore.QSettings("ScannSave", "Viewer");
+        settings.setValue("size", self.size());
+ 
+    def closeEvent(self,event):
+        print 'mainwindow closeEvent'
+        self.writeSizeSettings()
+        event.accept()
+ 
 
     def createScannerToolbar(self):
+        print 'createScannerToolbar'
         self.scannertoolbar = self.addToolBar('Scanner')
+        print 'create statusbar'
         self.scannerstatusbar = self.statusBar()
+        print 'seticonsize'
         self.scannertoolbar.setIconSize(QtCore.QSize(64,64))
 
-
+        print 'create scan action'
         self.scan = QtGui.QAction('Start S&can', self)
         self.scan.setShortcut('Ctrl+S')
         self.scan.setStatusTip('Start Scanner')
         self.scan.setIcon(QtGui.QIcon('/usr/share/icons/default.kde4/128x128/devices/scanner.png'))
         self.connect(self.scan, QtCore.SIGNAL('triggered()'), self.scanButtonClicked)
 
-
+        print 'create email action'
         self.send = QtGui.QAction('E&mail', self)
         self.send.setShortcut('Ctrl+E')
         self.send.setStatusTip('Send by email')
         self.send.setIcon(QtGui.QIcon('/usr/share/icons/default.kde4/128x128/actions/mail-send.png'))
         self.connect(self.send, QtCore.SIGNAL('triggered()'), self.sendButtonClicked)
 
+        print 'create delete action'
         self.delete = QtGui.QAction('D&lete', self)
         self.delete.setShortcut('Ctrl+D')
         self.delete.setStatusTip('Delete current image')
         self.delete.setIcon(QtGui.QIcon('/usr/share/icons/default.kde4/128x128/actions/edit-bomb.png'))
         self.connect(self.delete, QtCore.SIGNAL('triggered()'), self.deleteButtonClicked)
 
+        self.settings = QtGui.QAction('S&ettings',self)
+        self.settings.setShortcut('Ctrl-T')
+        self.settings.setStatusTip('Email settings')
+        self.connect(self.settings, QtCore.SIGNAL('triggered()'), self.settingsButtonClicked)
 
 
+        print 'add actions'
 
         self.scannertoolbar.addAction(self.scan)
         self.scannertoolbar.addAction(self.send)
 
+        print 'create comboboxes'
+        self.scanner = QtGui.QComboBox()
+        self.source = QtGui.QComboBox()
+        self.paper = QtGui.QComboBox()
 
-        self.scanner = kdeui.KComboBox()
-        self.source = kdeui.KComboBox()
-        self.paper = kdeui.KComboBox()
-
+        print 'add widgets'
         self.scannertoolbar.addWidget(self.scanner)
         self.scannertoolbar.addWidget(self.source)
         self.scannertoolbar.addWidget(self.paper)
         self.scannertoolbar.addAction(self.delete)
         #self.connect(self.source, QtCore.SIGNAL("currentIndexChanged (int)"),self.sourceChanged)
+        print 'createpaperlist'
         self.createPaperList()
+        print 'createScannerToolbar done'
+
+    def setupMenus(self):
+        menubar = self.menuBar()
+        filem = menubar.addMenu('&File')
+        filem.addAction(self.settings)
+
+
+
 
     def setUpEmailThread(self):
-        self.mailthread = mailhandler.mailerThread()
-        self.mailthread.start()
-        self.connect(self.mailthread,QtCore.SIGNAL('fileSent(QString)'),self.cleanupFile)
+        config.setupConfig()
+        if config.getMailAutostart():
+            print 'setUpEmailThread auto start on'
+            self.mailthread = mailhandler.mailerThread()
+            self.mailthread.start()
+            self.connect(self.mailthread,QtCore.SIGNAL('fileSent(QString)'),self.cleanupFile)
 
     def sendButtonClicked(self):
         self.tabwidget.currentWidget().sendEmail()
@@ -107,6 +147,13 @@ class scanWindow(kdeui.KMainWindow):
     def deleteButtonClicked(self):
         if self.tabwidget.currentWidget().removeCurrentImage() == 0:
             self.tabwidget.removeTab(self.tabwidget.currentIndex())
+
+    def settingsButtonClicked(self):
+        dialog = config.configDialog()
+        dialog.exec_()
+        self.setUpEmailThread()
+
+
 
     def loadImageFiles(self):
         path = str(config.getScansFolder())
@@ -264,19 +311,23 @@ class scanWindow(kdeui.KMainWindow):
 
     def setUpScannerThread(self):
         self.scannerthread = scannerThread()
+        print 'thread created'
 #        self.connect(self.scannerthread, QtCore.SIGNAL("finished()"), self.updateUi)
 #        self.connect(self.scannerthread, QtCore.SIGNAL("terminated()"), self.updateUi)
         self.connect(self.scannerthread, QtCore.SIGNAL("scanfinished(QString,int)"), self.handleImage,QtCore.Qt.QueuedConnection)
         self.connect(self.scannerthread, QtCore.SIGNAL("scannerlist(list)"), self.updateScannerList)
         self.connect(self.scannerthread, QtCore.SIGNAL("sourcelist(list)"),  self.updateSourceList)
         self.connect(self.scannerthread, QtCore.SIGNAL("papersize(QString)"), self.updatePaperList)
+        print 'signals and slots connected'
         self.scannerthread.threadInitialize()
+        print 'thread initialized'
 
 
 class scannerThread(QtCore.QThread):
     def __init__(self, parent = None):
         QtCore.QThread.__init__(self, parent)
         #set up variables
+        print 'scannerThread init'
         self.scancount = 0
         self.currentscanner = ''
 

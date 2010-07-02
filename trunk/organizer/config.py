@@ -20,23 +20,20 @@
 ***************************************************************************"""
 
 
-from PyKDE4 import kdecore
-from PyKDE4 import kdeui
+#from PyKDE4 import kdecore
+#from PyKDE4 import kdeui
 from PyQt4 import QtGui, QtCore
 import sys
 import os
 import keyring
 
 
-class configDialog(kdeui.KDialog):
-    def __init__(self,dest):
+class configDialog(QtGui.QDialog):
+    def __init__(self):
         super(configDialog, self).__init__()
-        self.setCaption( "Configuration" )
+        self.setWindowTitle( "Email Configuration" )
 
-        self.destgroup = dest
-
-        widget = QtGui.QWidget(self)
-        layout = QtGui.QVBoxLayout()
+        layout = QtGui.QVBoxLayout(self)
         layout.addWidget(QtGui.QLabel('Destination Folder for storing files:'))
         self.destfolder = QtGui.QLineEdit()
         layout.addWidget(self.destfolder)
@@ -53,58 +50,72 @@ class configDialog(kdeui.KDialog):
         self.smtppassword.setEchoMode(QtGui.QLineEdit.PasswordEchoOnEdit)
         layout.addWidget(QtGui.QLabel('SMTP login password:'))
         layout.addWidget(self.smtppassword)
-        widget.setLayout(layout)
-        self.setMainWidget( widget )
-
-        QtCore.QObject.connect( self, QtCore.SIGNAL( 'okClicked()' ), self.saveconfig)
+        self.autostart = QtGui.QCheckBox('Start email sending automatically')
+        layout.addWidget(self.autostart)
+        
+#        self.setMainWidget( widget )
+        
+        
+        buttonBox = QtGui.QDialogButtonBox(QtGui.QDialogButtonBox.Ok | QtGui.QDialogButtonBox.Cancel)
+        layout.addWidget(buttonBox)
+        
+        self.connect(buttonBox, QtCore.SIGNAL('accepted()'),self.saveconfig)
+        self.connect(buttonBox, QtCore.SIGNAL('rejected()'),self.reject)
 
         self.destfolder.setText(getDestFolder())
         self.destemail.setText(getDestEmail())
         self.smtpserver.setText(getSMTPServer())
         self.smtpaccount.setText(getSMTPUser())
         self.smtppassword.setText(getSMTPPassword())
-        self.setButtons(kdeui.KDialog.ButtonCode(kdeui.KDialog.Ok | kdeui.KDialog.Cancel))
-        self.show();
+        self.autostart.setChecked(getMailAutostart())
+            
+ 
 
     def saveconfig(self):
-        self.destgroup.writePathEntry('SaveFolder',self.destfolder.text())
-        self.destgroup.writeEntry('Email',self.destemail.text())
-        self.destgroup.writeEntry('Server',self.smtpserver.text())
-        self.destgroup.writeEntry('User',self.smtpaccount.text())
+        print 'saveconfig'
+        settings = QtCore.QSettings("ScannSave", "Email")
+        settings.setValue('SaveFolder',self.destfolder.text())
+        settings.setValue('Email',self.destemail.text())
+        settings.setValue('Server',self.smtpserver.text())
+        settings.setValue('User',self.smtpaccount.text())
         keyring.set_password('email_login', 'scanandsave', str(self.smtppassword.text()))
-
+        settings.setValue('Autostart',self.autostart.isChecked())
+        self.accept()
 
 
 config = None
 destgroup = None
 
 def getDestFolder():
-    return destgroup.readPathEntry('SaveFolder',os.path.expanduser('~/scanandsave'))
+    settings = QtCore.QSettings("ScannSave", "Email")
+    return settings.value('SaveFolder',os.path.expanduser('~/scanandsave')).toString()
 
 def getDestEmail():
-    return destgroup.readEntry('Email',' ').toString()
+    settings = QtCore.QSettings("ScannSave", "Email")
+    return settings.value('Email',' ').toString()
 
 def getSMTPServer():
-    return destgroup.readEntry('Server','smtp.gmail.com').toString()
+    settings = QtCore.QSettings("ScannSave", "Email")
+    return settings.value('Server','smtp.gmail.com').toString()
 
 def getSMTPUser():
-    return destgroup.readEntry('User','').toString()
+    settings = QtCore.QSettings("ScannSave", "Email")
+    return settings.value('User','').toString()
 
 def getSMTPPassword():
     p = keyring.get_password('email_login','scanandsave')
     if p == None:
         p = ''
     return p
+    
+def getMailAutostart():
+    settings = QtCore.QSettings("ScannSave", "Email")
+    return settings.value('Autostart',False).toBool()
 
 def setupConfig():
-    global config
-    config = kdecore.KConfig()
-    global destgroup
-    destgroup = kdecore.KConfigGroup(config,'Destinations')
-
     #set up configuration
     if getDestEmail() == ' ':
-        dialog = configDialog(destgroup)
+        dialog = configDialog()
         dialog.exec_()
 
     if not os.path.exists(getDestFolder()):

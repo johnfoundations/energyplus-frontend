@@ -19,12 +19,12 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************"""
 
-from PyKDE4 import kdecore
+#from PyKDE4 import kdecore
 from PyQt4 import QtCore, QtGui
 import os
 import sys
 import config
-from smptclass import Smtp
+from smtpclass import Smtp
 
 
 class mailerThread(QtCore.QThread):
@@ -32,7 +32,6 @@ class mailerThread(QtCore.QThread):
         QtCore.QThread.__init__(self, parent)
         #set up variables
         self.mailercontinue = True
-        config.setupConfig()
 
 
 
@@ -59,12 +58,15 @@ class mailerThread(QtCore.QThread):
                 try:
                     smtp.send()
                     #move file
-                    os.rename(filepath,str(config.getDestFolder())+'/pdf/save/'+filename)
-                    print 'sending completed signal'
-                    self.emit(QtCore.SIGNAL('fileSent(QString)'),os.path.splitext(filename)[0])
+                
                 except:
                     print 'send failed'
-
+                    continue
+                
+                os.rename(filepath,str(config.getDestFolder())+'/pdf/save/'+filename)
+                print 'sending completed signal'
+                self.emit(QtCore.SIGNAL('fileSent(QString)'),os.path.splitext(filename)[0])
+                
                 self.sleep(2)
 
             else:

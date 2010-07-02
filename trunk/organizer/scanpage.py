@@ -19,8 +19,8 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************"""
 
-from PyKDE4 import kdeui
-from PyKDE4 import kdecore
+#from PyKDE4 import kdeui
+#from PyKDE4 import kdecore
 from PyQt4 import QtCore, QtGui
 import sane
 import ImageQt

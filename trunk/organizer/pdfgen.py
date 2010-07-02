@@ -32,7 +32,7 @@ import Image
 
 
 
-def createPDF(outputPDFName,imglist,dpi):
+def createPDF(outputPDFName,imglist):
     PAGE_HEIGHT = defaultPageSize[1]
     PAGE_WIDTH  = defaultPageSize[0]
     styles = getSampleStyleSheet()
