@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# -*- coding: iso-8859-1 -*-
 """***************************************************************************
 *   Copyright (C) 2010 by Derek Kite   *
 *   dkite@shaw.ca   *
@@ -25,7 +25,7 @@
 from PyQt4 import QtGui, QtCore
 import sys
 import os
-import keyring
+#import keyring
 
 
 class configDialog(QtGui.QDialog):
@@ -78,7 +78,7 @@ class configDialog(QtGui.QDialog):
         settings.setValue('Email',self.destemail.text())
         settings.setValue('Server',self.smtpserver.text())
         settings.setValue('User',self.smtpaccount.text())
-        keyring.set_password('email_login', 'scanandsave', str(self.smtppassword.text()))
+        settings.setValue('email_login',str(self.smtppassword.text()))
         settings.setValue('Autostart',self.autostart.isChecked())
         self.accept()
 
@@ -103,10 +103,12 @@ def getSMTPUser():
     return settings.value('User','').toString()
 
 def getSMTPPassword():
-    p = keyring.get_password('email_login','scanandsave')
-    if p == None:
-        p = ''
-    return p
+    settings = QtCore.QSettings("ScannSave", "Email")
+    return settings.value('email_login','').toString()
+    #p = keyring.get_password('email_login','scanandsave')
+    #if p == None:
+    #    p = ''
+    #return p
     
 def getMailAutostart():
     settings = QtCore.QSettings("ScannSave", "Email")
