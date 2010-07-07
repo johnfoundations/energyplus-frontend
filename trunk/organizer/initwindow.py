@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# -*- coding: iso-8859-1 -*-
 """***************************************************************************
 *   Copyright (C) 2010 by Derek Kite   *
 *   dkite@shaw.ca   *
@@ -39,8 +39,7 @@ class scanWindow(QtGui.QMainWindow):
     def __init__(self):
         super(scanWindow, self).__init__()
         self.readSizeSettings()
-        print 'email thread'
-        self.setUpEmailThread()
+
         self.tabwidget = QtGui.QTabWidget()
 
         #self.tabwidget.addTab(self.scannerPage(),'Scanner')
@@ -48,10 +47,10 @@ class scanWindow(QtGui.QMainWindow):
 
         self.setCentralWidget(self.tabwidget)
         dwidget = QtGui.QApplication.desktop()
-        print 'scannerthread'
         self.createScannerToolbar()
         self.setupMenus()
         self.setUpScannerThread()
+        self.setUpEmailThread()
         print 'loadImageFiles'
         self.loadImageFiles()
 
@@ -138,9 +137,13 @@ class scanWindow(QtGui.QMainWindow):
         config.setupConfig()
         if config.getMailAutostart():
             print 'setUpEmailThread auto start on'
+            print 'create thread'
             self.mailthread = mailhandler.mailerThread()
+            print 'start thread'
             self.mailthread.start()
+            print 'connect signal'
             self.connect(self.mailthread,QtCore.SIGNAL('fileSent(QString)'),self.cleanupFile)
+            print 'signal connected'
 
     def sendButtonClicked(self):
         self.tabwidget.currentWidget().sendEmail()

@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# -*- coding: iso-8859-1 -*-
 """***************************************************************************
 *   Copyright (C) 2010 by Derek Kite   *
 *   dkite@shaw.ca   *
@@ -136,7 +136,8 @@ class Smtp:
             m_message = self.load_attachments(m_message)
             try:
                 print 'attempting send'
-                self._server.sendmail(self._from_addr, self._rcpt_to, m_message.as_string())
+                self._server.sendmail(self._from_addr, self._rcpt_to.split(','), m_message.as_string())
 
             except smtplib.SMTPException, e:
+		print e
                 raise EmailSendError("Email has not been sent")

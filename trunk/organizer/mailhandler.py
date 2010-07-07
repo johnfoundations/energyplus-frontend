@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# -*- coding: iso-8859-1 -*-
 """***************************************************************************
 *   Copyright (C) 2010 by Derek Kite   *
 *   dkite@shaw.ca   *
@@ -61,7 +61,7 @@ class mailerThread(QtCore.QThread):
                 
                 except:
                     print 'send failed'
-                    continue
+                    break
                 
                 os.rename(filepath,str(config.getDestFolder())+'/pdf/save/'+filename)
                 print 'sending completed signal'
