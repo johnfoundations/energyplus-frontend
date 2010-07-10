@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# -*- coding: iso-8859-1 -*-
 """***************************************************************************
 *   Copyright (C) 2010 by Derek Kite   *
 *   dkite@shaw.ca   *
@@ -74,6 +74,20 @@ class scanPage(QtGui.QWidget):
             self.imagecount -= 1
             return 1
 
+    def moveCurrentImage(self):
+	print "move current image to it's own folder"
+	res = ''
+	if self.imagecount > 1:
+	    newdir = self.workingtab.currentWidget().name
+	    dest = str(config.getScansFolder())+'/'+newdir
+	    print dest
+	    os.mkdir(dest)
+	    self.workingtab.currentWidget().moveFile(dest)
+	    self.workingtab.removeTab(self.workingtab.currentIndex())
+	    self.imagecount -= 1
+	    res = newdir
+	    
+    	return res
 
     def addImage(self,filename):
         #qt image
@@ -93,7 +107,7 @@ class scanPage(QtGui.QWidget):
                 self.workingtab.setTabPosition(QtGui.QTabWidget.East)
                 self.layout.removeWidget(self.gwidget)
                 self.layout.addWidget(self.workingtab)
-                self.workingtab.addTab(self.gwidget,self.identifier)
+                self.workingtab.addTab(self.gwidget,self.gwidget.name)
 
             print 'addImage inserting new'
             imgclass = scanImage(filename)
@@ -143,7 +157,7 @@ class scanPage(QtGui.QWidget):
                 print 'getting multiple images',c
                 self.workingtab.widget(c).saveText()
                 imglist.append(self.workingtab.widget(c).getImageFile())
-                dpi = self.workingtab.widget(c).dpi
+                #dpi = self.workingtab.widget(c).dpi
 
         print imglist
         print str(config.getDestFolder())+'/pdf/spool/'+str(self.identifier)+'.pdf'
@@ -220,6 +234,12 @@ class scanImage(QtGui.QWidget):
     def deleteFile(self):
         print 'deleteFile', self.filename
         os.remove(self.filename)
+        
+    def moveFile(self,destdir):
+	print 'moveFile',destdir
+	path,pfile = os.path.split(self.filename)
+	print 'moving to', destdir+'/'+pfile
+	os.rename(self.filename,destdir+'/'+pfile)
 
     def saveText(self):
         if self.description.document().characterCount() > 0:

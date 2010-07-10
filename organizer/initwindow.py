@@ -98,6 +98,12 @@ class scanWindow(QtGui.QMainWindow):
         self.delete.setIcon(QtGui.QIcon('/usr/share/icons/default.kde4/128x128/actions/edit-bomb.png'))
         self.connect(self.delete, QtCore.SIGNAL('triggered()'), self.deleteButtonClicked)
 
+	self.move = QtGui.QAction('M&ove', self)
+	self.move.setShortcut('Ctrl+M')
+	self.move.setStatusTip('Separate current image to its own tab')
+	self.move.setIcon(QtGui.QIcon('/usr/share/icons/default.kde4/128x128/actions/go-last.png'))
+	self.connect(self.move, QtCore.SIGNAL('triggered()'), self.moveButtonClicked)
+
         self.settings = QtGui.QAction('S&ettings',self)
         self.settings.setShortcut('Ctrl-T')
         self.settings.setStatusTip('Email settings')
@@ -119,6 +125,7 @@ class scanWindow(QtGui.QMainWindow):
         self.scannertoolbar.addWidget(self.source)
         self.scannertoolbar.addWidget(self.paper)
         self.scannertoolbar.addAction(self.delete)
+        self.scannertoolbar.addAction(self.move)
         #self.connect(self.source, QtCore.SIGNAL("currentIndexChanged (int)"),self.sourceChanged)
         print 'createpaperlist'
         self.createPaperList()
@@ -146,6 +153,7 @@ class scanWindow(QtGui.QMainWindow):
             print 'signal connected'
 
     def sendButtonClicked(self):
+	self.tabwidget.setTabEnabled(self.tabwidget.currentIndex(),False)
         self.tabwidget.currentWidget().sendEmail()
 
     def deleteButtonClicked(self):
@@ -157,7 +165,26 @@ class scanWindow(QtGui.QMainWindow):
         dialog.exec_()
         self.setUpEmailThread()
 
+    def moveButtonClicked(self):
+	print 'moveButtonClicked'
+	destdir = self.tabwidget.currentWidget().moveCurrentImage()
+	if destdir != '':
+	    print 'file moved', destdir
+	    self.currentpagewidget=scanpage.scanPage(destdir)
+            self.currentpagewidget.identifier = destdir
+            self.tabwidget.addTab(self.currentpagewidget,destdir)
+            imagedir = os.listdir(str(config.getScansFolder())+'/'+destdir)
+            imagedir.sort()
+	    for imf in imagedir:
+		print imf
+		if os.path.splitext(imf)[1] != '.png':
+		    continue
 
+		self.currentpagewidget.addImage(str(config.getScansFolder())+'/'+destdir+'/'+imf)
+
+               
+	    
+	    
 
     def loadImageFiles(self):
         path = str(config.getScansFolder())
@@ -236,7 +263,7 @@ class scanWindow(QtGui.QMainWindow):
 
     def handleImage(self,filename,i):
         print 'handleImage'
-        self.currentpagewidget.addImage(str(filename),i)
+        self.currentpagewidget.addImage(str(filename))
         self.scan.setEnabled(True)
         print 'imagehandled'
 
